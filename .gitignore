@@ -1,0 +1,7 @@
+build/
+.frames/
+*.gif
+!docs/*.gif
+__pycache__/
+*.pyc
+.DS_Store

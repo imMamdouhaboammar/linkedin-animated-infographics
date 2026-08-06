@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Specimen Grid — artboard</title>
+<!--
+  TEMPLATE: Specimen Grid
+  Family:   Charlie Hills "Every Motion Claude Can Make"
+  Motion:   Ambient Micro-Loops (every cell) + Category Sweep (tinted highlight)
+  Loop:     6000ms @ 20fps = 120 frames
+
+  Render:
+    bash scripts/render.sh assets/template-specimen-grid.html build/out.gif \
+         --duration 6 --fps 20
+
+  ── THE RULE THAT MATTERS ───────────────────────────────────────────────────
+  Every micro-loop must be an INTEGER DIVISION of --loop. Set --n per cell.
+  With --loop:6000ms the only legal values are 1,2,3,4,5,6,8,10,12.
+  --n:7 gives 857.14ms and the loop will not close. There is no exception.
+
+  ── WHY THIS IS AFFORDABLE ──────────────────────────────────────────────────
+  ~85% of this canvas is visibly moving and it still encodes cheaply, because
+  the ground is dark and flat and every individual animation is tiny and
+  flat-coloured. On a light textured ground the same grid costs 3-4x.
+  See references/animation-recipes.md, "Motion budget".
+
+  ── EDITING ─────────────────────────────────────────────────────────────────
+  Each .cell carries --cat (category index, drives the sweep colour and order),
+  --i (phase offset so the grid does not pulse in unison) and --n (its own
+  loop rate). Cell width comes from --w (grid column span).
+-->
+<style>
+:root{
+  /* ── loop clock ─────────────────────────────────────────── */
+  --loop: 6000ms;
+  --cats: 7;                /* number of categories in the legend */
+
+  /* ── palette (house: Deep Glow, midnight variant) ───────── */
+  --bg:     #081020;
+  --cell:   #0D1728;
+  --cell-2: #101D33;
+  --line:   rgba(255,255,255,.07);
+  --ink:    #EEF3FA;
+  --muted:  #7F8DA3;
+
+  /* category colours, matched to the legend dots */
+  --c-text:  #4D9BFF;
+  --c-data:  #4ADEA0;
+  --c-trans: #B47BFF;
+  --c-tex:   #FFC93D;
+  --c-3d:    #4ADEA0;
+  --c-code:  #FF7A45;
+  --c-ui:    #4D9BFF;
+
+  --sans: -apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --mono: "SF Mono",ui-monospace,"Cascadia Mono",Menlo,Consolas,monospace;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#8A8F98;display:flex;justify-content:center}
+
+#artboard{
+  width:1080px;height:1350px;flex:none;position:relative;overflow:hidden;
+  background:var(--bg);color:var(--ink);font-family:var(--sans);
+  padding:34px 30px 0;
+}
+
+/* ══ header ══════════════════════════════════════════════════ */
+.head{display:flex;gap:18px;align-items:flex-start;padding:0 6px}
+.mascot{
+  width:78px;height:78px;flex:none;display:grid;place-items:center;
+}
+/* 8-bit mascot drawn with box-shadow, no image asset needed */
+.bit{
+  /* box-shadow offsets with no colour resolve to currentColor, not background */
+  color:#C4714E;
+  width:9px;height:9px;background:currentColor;
+  box-shadow:
+     9px 0, 18px 0, 27px 0,
+    -9px 9px, 0 9px, 9px 9px, 18px 9px, 27px 9px, 36px 9px,
+    -9px 18px, 0 18px, 18px 18px, 36px 18px,
+     0 27px, 9px 27px, 18px 27px, 27px 27px, 36px 27px,
+    -9px 36px, 9px 36px, 27px 36px, 36px 36px;
+  transform:translate(-13px,-22px);
+}
+.h1{font-size:47px;font-weight:800;letter-spacing:-.024em;line-height:1.02}
+.h1 em{font-style:normal;color:#E0603A}
+.sub{font-size:19px;color:var(--muted);margin-top:7px;font-weight:500}
+
+.legend{display:flex;gap:17px;margin:11px 0 0;flex-wrap:wrap}
+.legend b{
+  font-size:13.5px;font-weight:700;display:flex;align-items:center;gap:6px;
+}
+.legend b::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+
+/* ══ grid ════════════════════════════════════════════════════ */
+.grid{
+  display:grid;grid-template-columns:repeat(12,1fr);gap:9px;margin-top:17px;
+}
+
+.cell{
+  grid-column:span var(--w,2);
+  background:var(--cell);border:1px solid var(--line);border-radius:9px;
+  padding:14px 13px 11px;min-height:126px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  overflow:hidden;
+  /* Category Sweep — one category lights at a time, in legend order.
+     Delays run in REVERSE. See references/animation-recipes.md. */
+  animation:sweep var(--loop) steps(1,end) infinite;
+  animation-delay:calc(var(--loop) * -1 * (var(--cats) - var(--cat)) / var(--cats));
+}
+@keyframes sweep{
+  0%  {border-color:var(--tint)}
+  14% {border-color:var(--line)}
+  100%{border-color:var(--line)}
+}
+.cell .lbl{font-size:13px;font-weight:600;color:var(--ink);margin-top:9px}
+.cell .demo{
+  flex:1;display:flex;align-items:center;justify-content:center;position:relative;
+}
+
+/* Every micro-loop derives its duration from --n, an integer division of --loop,
+   and its phase from --i so the grid does not pulse in unison. */
+.demo > *{
+  animation-duration:calc(var(--loop) / var(--n,1));
+  animation-iteration-count:infinite;
+  animation-delay:calc(var(--loop) * -0.037 * var(--i,0));
+}
+/* SVG-driven specimens animate a child <path>/<circle>, not the <svg> itself, so
+   they need the duration and phase applied one level deeper or they all start
+   together at offset 0 and render blank in frame 0. */
+.demo > svg > *{
+  animation-duration:calc(var(--loop) / var(--n,1));
+  animation-iteration-count:infinite;
+  animation-delay:calc(var(--loop) * -0.037 * var(--i,0) - var(--loop) * 0.3);
+}
+
+/* ── specimen: kinetic type ─────────────────────────────── */
+.sp-kinetic{
+  font-family:var(--mono);font-size:34px;font-weight:800;letter-spacing:.06em;
+  color:var(--c-text);animation-name:kinetic;animation-timing-function:steps(4,end);
+}
+@keyframes kinetic{
+  0%{opacity:.15;transform:translateY(9px)}
+  30%{opacity:1;transform:translateY(0)}
+  85%{opacity:1;transform:translateY(0)}
+  100%{opacity:.15;transform:translateY(9px)}
+}
+
+/* ── specimen: typewriter ───────────────────────────────── */
+.sp-type{
+  font-family:var(--mono);font-size:17px;color:var(--c-text);white-space:nowrap;
+  overflow:hidden;width:9ch;border-right:2px solid var(--c-text);
+  animation-name:typing;animation-timing-function:steps(9,end);
+}
+@keyframes typing{0%{width:0}55%{width:9ch}92%{width:9ch}100%{width:0}}
+
+/* ── specimen: count-up (stepped, seek-safe) ────────────── */
+.sp-count{
+  font-family:var(--mono);font-size:26px;font-weight:800;color:var(--c-data);
+  animation-name:countfade;animation-timing-function:steps(1,end);
+}
+@keyframes countfade{
+  0%{content:"0"}
+  100%{content:"100,000"}
+}
+.sp-count span{display:none}
+.sp-count span:nth-child(1){
+  display:block;animation:cyc var(--loop) steps(1,end) infinite;
+}
+@keyframes cyc{0%,24%{opacity:1}25%,100%{opacity:1}}
+
+/* ── specimen: bar race ─────────────────────────────────── */
+.sp-bars{width:100%;display:flex;flex-direction:column;gap:6px;
+  animation-name:none}
+.sp-bars i{
+  display:block;height:9px;border-radius:3px;background:var(--c-data);
+  transform-origin:left center;
+  animation:race var(--loop) cubic-bezier(.3,.8,.3,1) infinite;
+}
+.sp-bars i:nth-child(1){animation-delay:calc(var(--loop) * -0.00)}
+.sp-bars i:nth-child(2){animation-delay:calc(var(--loop) * -0.25);opacity:.72}
+.sp-bars i:nth-child(3){animation-delay:calc(var(--loop) * -0.50);opacity:.52}
+@keyframes race{
+  0%{transform:scaleX(.18)}45%{transform:scaleX(1)}
+  90%{transform:scaleX(1)}100%{transform:scaleX(.18)}
+}
+
+/* ── specimen: line draw ────────────────────────────────── */
+.sp-line{width:100%;height:56px}
+.sp-line path{
+  fill:none;stroke:var(--c-data);stroke-width:3;stroke-linecap:round;
+  stroke-dasharray:126;              /* measured with path.getTotalLength() */
+  /* Longhands, not the `animation:` shorthand. The shorthand resets
+     animation-delay to 0s and would cancel the phase offset that
+     `.demo > svg > *` applies at identical specificity. */
+  animation-name:draw;
+  animation-timing-function:ease-in-out;
+}
+@keyframes draw{
+  0%{stroke-dashoffset:126}55%{stroke-dashoffset:0}
+  90%{stroke-dashoffset:0}100%{stroke-dashoffset:126}
+}
+
+/* ── specimen: progress bars ────────────────────────────── */
+.sp-prog{width:100%;display:flex;flex-direction:column;gap:7px;animation-name:none}
+.sp-prog i{
+  height:7px;border-radius:4px;background:var(--c-data);transform-origin:left;
+  animation:grow var(--loop) ease-out infinite;
+}
+.sp-prog i:nth-child(2){animation-delay:calc(var(--loop) * -0.2);opacity:.7}
+.sp-prog i:nth-child(3){animation-delay:calc(var(--loop) * -0.4);opacity:.45}
+@keyframes grow{0%{transform:scaleX(.1)}50%{transform:scaleX(1)}
+  88%{transform:scaleX(1)}100%{transform:scaleX(.1)}}
+
+/* ── specimen: countdown ring ───────────────────────────── */
+.sp-ring{width:56px;height:56px}
+.sp-ring circle{
+  fill:none;stroke:var(--c-data);stroke-width:5;stroke-linecap:round;
+  stroke-dasharray:150;transform:rotate(-90deg);transform-origin:center;
+  animation-name:ring;
+  animation-timing-function:linear;
+}
+@keyframes ring{from{stroke-dashoffset:0}to{stroke-dashoffset:150}}
+
+/* ── specimen: crossfade ────────────────────────────────── */
+.sp-fade{
+  width:100%;height:52px;border-radius:6px;
+  background:linear-gradient(90deg,var(--c-trans),#3B2A5E);
+  animation:xfade var(--loop) ease-in-out infinite;
+}
+@keyframes xfade{0%,100%{opacity:1}50%{opacity:.28}}
+
+/* ── specimen: glitch ───────────────────────────────────── */
+.sp-glitch{width:100%;display:flex;flex-direction:column;gap:5px;animation-name:none}
+.sp-glitch i{
+  height:12px;border-radius:2px;background:var(--c-trans);
+  animation:glitch var(--loop) steps(2,end) infinite;
+}
+.sp-glitch i:nth-child(2){animation-delay:calc(var(--loop) * -0.17);opacity:.55}
+.sp-glitch i:nth-child(3){animation-delay:calc(var(--loop) * -0.33)}
+@keyframes glitch{
+  0%{transform:translateX(0)}25%{transform:translateX(9px)}
+  50%{transform:translateX(-6px)}75%{transform:translateX(3px)}
+  100%{transform:translateX(0)}
+}
+
+/* ── specimen: light leak ───────────────────────────────── */
+.sp-leak{
+  width:100%;height:40px;border-radius:6px;background:#160E28;
+  position:relative;overflow:hidden;animation-name:none;
+}
+.sp-leak i{
+  position:absolute;inset:0 auto 0 0;width:52%;
+  background:linear-gradient(90deg,transparent,var(--c-trans),#fff,transparent);
+  animation:leak var(--loop) ease-in-out infinite;
+}
+@keyframes leak{0%{transform:translateX(-110%)}100%{transform:translateX(210%)}}
+
+/* ── specimen: zoom punch ───────────────────────────────── */
+.sp-zoom{
+  width:66px;height:44px;border:2px solid var(--c-trans);border-radius:5px;
+  display:grid;place-items:center;animation:zoom var(--loop) ease-in-out infinite;
+}
+.sp-zoom i{width:26px;height:16px;border:2px solid var(--c-trans);border-radius:3px}
+@keyframes zoom{0%,100%{transform:scale(1)}50%{transform:scale(1.28)}}
+
+/* ── specimen: whip pan ─────────────────────────────────── */
+.sp-whip{display:flex;gap:5px;animation:whip var(--loop) ease-in-out infinite}
+.sp-whip i{
+  width:15px;height:44px;background:var(--c-trans);transform:skewX(-17deg);
+  border-radius:2px;
+}
+.sp-whip i:nth-child(2){opacity:.72}.sp-whip i:nth-child(3){opacity:.5}
+.sp-whip i:nth-child(4){opacity:.3}
+@keyframes whip{0%,100%{transform:translateX(-16px)}50%{transform:translateX(16px)}}
+
+/* ── specimen: grid wipe ────────────────────────────────── */
+.sp-wipe{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:4px;animation-name:none;
+}
+.sp-wipe i{
+  width:15px;height:15px;border-radius:2px;background:var(--c-trans);
+  animation:wipe var(--loop) steps(1,end) infinite;
+}
+.sp-wipe i:nth-child(1){animation-delay:calc(var(--loop) * -0.00)}
+.sp-wipe i:nth-child(2){animation-delay:calc(var(--loop) * -0.11)}
+.sp-wipe i:nth-child(3){animation-delay:calc(var(--loop) * -0.22)}
+.sp-wipe i:nth-child(4){animation-delay:calc(var(--loop) * -0.33)}
+.sp-wipe i:nth-child(5){animation-delay:calc(var(--loop) * -0.44)}
+.sp-wipe i:nth-child(6){animation-delay:calc(var(--loop) * -0.55)}
+.sp-wipe i:nth-child(7){animation-delay:calc(var(--loop) * -0.66)}
+.sp-wipe i:nth-child(8){animation-delay:calc(var(--loop) * -0.77)}
+.sp-wipe i:nth-child(9){animation-delay:calc(var(--loop) * -0.88)}
+@keyframes wipe{0%{opacity:1}50%{opacity:.22}100%{opacity:1}}
+
+/* ── specimen: particles ────────────────────────────────── */
+.sp-dots{display:flex;gap:6px;align-items:center;animation-name:none}
+.sp-dots i{
+  width:6px;height:6px;border-radius:50%;background:var(--c-3d);
+  animation:pop var(--loop) ease-in-out infinite;
+}
+.sp-dots i:nth-child(1){animation-delay:calc(var(--loop) * -0.00)}
+.sp-dots i:nth-child(2){animation-delay:calc(var(--loop) * -0.12)}
+.sp-dots i:nth-child(3){animation-delay:calc(var(--loop) * -0.24)}
+.sp-dots i:nth-child(4){animation-delay:calc(var(--loop) * -0.36)}
+.sp-dots i:nth-child(5){animation-delay:calc(var(--loop) * -0.48)}
+.sp-dots i:nth-child(6){animation-delay:calc(var(--loop) * -0.60)}
+.sp-dots i:nth-child(7){animation-delay:calc(var(--loop) * -0.72)}
+@keyframes pop{0%,100%{transform:scale(.4);opacity:.3}
+  50%{transform:scale(1.25);opacity:1}}
+
+/* ── specimen: code typing ──────────────────────────────── */
+.sp-code{width:100%;display:flex;flex-direction:column;gap:6px;animation-name:none}
+.sp-code i{
+  height:6px;border-radius:3px;background:var(--c-code);transform-origin:left;
+  animation:grow var(--loop) steps(6,end) infinite;
+}
+.sp-code i:nth-child(1){width:78%}
+.sp-code i:nth-child(2){width:52%;animation-delay:calc(var(--loop) * -0.16)}
+.sp-code i:nth-child(3){width:65%;animation-delay:calc(var(--loop) * -0.32)}
+
+/* ── specimen: code diff ────────────────────────────────── */
+.sp-diff{width:100%;display:flex;flex-direction:column;gap:6px;animation-name:none}
+.sp-diff .add{height:8px;border-radius:3px;background:var(--c-data);
+  transform-origin:left;animation:grow var(--loop) ease-out infinite}
+.sp-diff .rem{height:8px;border-radius:3px;background:var(--c-code);
+  transform-origin:left;animation:shrink var(--loop) ease-out infinite}
+@keyframes shrink{0%{transform:scaleX(1)}50%{transform:scaleX(.12)}
+  88%{transform:scaleX(.12)}100%{transform:scaleX(1)}}
+
+/* ── specimen: cursor demo ──────────────────────────────── */
+.sp-cursor{
+  width:52px;height:44px;border:2px solid var(--c-ui);border-radius:5px;
+  position:relative;animation-name:none;
+}
+.sp-cursor i{
+  position:absolute;width:0;height:0;
+  border-left:8px solid var(--c-ui);
+  border-bottom:5px solid transparent;border-top:5px solid transparent;
+  animation:cursor var(--loop) ease-in-out infinite;
+}
+@keyframes cursor{
+  0%,100%{transform:translate(6px,6px)}
+  50%{transform:translate(36px,30px)}
+}
+
+/* ── specimen: phone mockup ─────────────────────────────── */
+.sp-phone{
+  width:28px;height:52px;border:2px solid var(--c-ui);border-radius:6px;
+  animation:breathe var(--loop) ease-in-out infinite;
+}
+@keyframes breathe{0%,100%{opacity:.45}50%{opacity:1}}
+
+/* ── specimen: lower thirds ─────────────────────────────── */
+.sp-lower{width:100%;display:flex;flex-direction:column;gap:6px;animation-name:none}
+.sp-lower i{height:9px;border-radius:3px;background:var(--c-ui);transform-origin:left;
+  animation:grow var(--loop) cubic-bezier(.2,.9,.2,1) infinite}
+.sp-lower i:nth-child(2){width:62%;opacity:.55;
+  animation-delay:calc(var(--loop) * -0.12)}
+
+/* ── specimen: beat cut ─────────────────────────────────── */
+.sp-beat{display:flex;gap:5px;align-items:center;animation-name:none}
+.sp-beat i{
+  width:8px;background:var(--c-ui);border-radius:2px;height:44px;
+  transform-origin:center;animation:beat var(--loop) ease-in-out infinite;
+}
+.sp-beat i:nth-child(1){animation-delay:calc(var(--loop) * -0.00)}
+.sp-beat i:nth-child(2){animation-delay:calc(var(--loop) * -0.13)}
+.sp-beat i:nth-child(3){animation-delay:calc(var(--loop) * -0.26)}
+.sp-beat i:nth-child(4){animation-delay:calc(var(--loop) * -0.39)}
+.sp-beat i:nth-child(5){animation-delay:calc(var(--loop) * -0.52)}
+@keyframes beat{0%,100%{transform:scaleY(.32)}50%{transform:scaleY(1)}}
+
+/* ── specimen: map route ────────────────────────────────── */
+.sp-route{width:100%;height:50px}
+.sp-route path{
+  fill:none;stroke:var(--c-data);stroke-width:3;stroke-linecap:round;
+  stroke-dasharray:121;
+  animation-name:drawRoute;
+  animation-timing-function:ease-in-out;
+}
+@keyframes drawRoute{
+  0%{stroke-dashoffset:121}55%{stroke-dashoffset:0}
+  90%{stroke-dashoffset:0}100%{stroke-dashoffset:121}
+}
+
+/* ── specimen: lens warp ────────────────────────────────── */
+.sp-warp{
+  width:52px;height:44px;border:2px solid var(--c-trans);border-radius:50%;
+  animation:warp var(--loop) ease-in-out infinite;
+}
+@keyframes warp{0%,100%{transform:scaleX(1)}50%{transform:scaleX(.42)}}
+
+/* ══ footer pill ═════════════════════════════════════════════ */
+.foot{
+  position:absolute;left:50%;bottom:26px;transform:translateX(-50%);
+  display:flex;align-items:center;gap:12px;
+  background:var(--cell-2);border:1px solid var(--line);border-radius:999px;
+  padding:11px 26px 11px 12px;
+}
+.foot .av{width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,#3C4757,#232B38)}
+.foot .nm{font-size:15px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+.foot .dot{width:5px;height:5px;border-radius:50%;background:#E0603A}
+.foot .url{font-size:14px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<div id="artboard">
+
+  <div class="head">
+    <div class="mascot"><div class="bit"></div></div>
+    <div>
+      <div class="h1" data-slot="headline">Every <em>Motion</em> Claude Can Make</div>
+      <div class="sub" data-slot="subline">25 types. One install. Free.</div>
+      <div class="legend">
+        <b style="color:var(--c-text)">Text</b>
+        <b style="color:var(--c-data)">Data</b>
+        <b style="color:var(--c-trans)">Transitions</b>
+        <b style="color:var(--c-tex)">Texture</b>
+        <b style="color:var(--c-3d)">3D</b>
+        <b style="color:var(--c-code)">Code</b>
+        <b style="color:var(--c-ui)">Interface</b>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <!-- ── category 0: TEXT ─────────────────────────────── -->
+    <div class="cell" style="--w:5;--cat:0;--tint:var(--c-text)">
+      <div class="demo"><span class="sp-kinetic" style="--n:2;--i:0">WORD</span></div>
+      <div class="lbl">Kinetic type</div>
+    </div>
+    <div class="cell" style="--w:4;--cat:0;--tint:var(--c-text)">
+      <div class="demo"><span class="sp-type" style="--n:1;--i:1">render()</span></div>
+      <div class="lbl">Typewriter</div>
+    </div>
+    <div class="cell" style="--w:3;--cat:0;--tint:var(--c-text)">
+      <div class="demo"><span class="sp-kinetic" style="--n:6;--i:2;font-size:16px">A7X2M9</span></div>
+      <div class="lbl">Matrix decode</div>
+    </div>
+
+    <!-- ── category 1: DATA ─────────────────────────────── -->
+    <div class="cell" style="--w:5;--cat:1;--tint:var(--c-data)">
+      <div class="demo"><span class="sp-bars" style="--i:3"><i></i><i></i><i></i></span></div>
+      <div class="lbl">Bar race</div>
+    </div>
+    <div class="cell" style="--w:4;--cat:1;--tint:var(--c-data)">
+      <div class="demo"><svg class="sp-line" style="--n:1;--i:4" viewBox="0 0 120 56">
+        <path d="M4,50 C34,50 40,10 70,10 C96,10 104,6 116,6"/></svg></div>
+      <div class="lbl">Line draw</div>
+    </div>
+    <div class="cell" style="--w:3;--cat:1;--tint:var(--c-data)">
+      <div class="demo"><svg class="sp-ring" style="--n:1;--i:5" viewBox="0 0 56 56">
+        <circle cx="28" cy="28" r="24"/></svg></div>
+      <div class="lbl">Countdown</div>
+    </div>
+    <div class="cell" style="--w:4;--cat:1;--tint:var(--c-data)">
+      <div class="demo"><span class="sp-prog" style="--i:6"><i></i><i></i><i></i></span></div>
+      <div class="lbl">Progress bars</div>
+    </div>
+    <div class="cell" style="--w:4;--cat:1;--tint:var(--c-data)">
+      <div class="demo"><svg class="sp-route" style="--n:1;--i:7" viewBox="0 0 120 50">
+        <path d="M6,44 C30,44 26,10 56,18 C86,26 92,8 114,8"/></svg></div>
+      <div class="lbl">Map route</div>
+    </div>
+
+    <!-- ── category 2: TRANSITIONS ──────────────────────── -->
+    <div class="cell" style="--w:4;--cat:2;--tint:var(--c-trans)">
+      <div class="demo"><span class="sp-fade" style="--n:2;--i:8"></span></div>
+      <div class="lbl">Crossfade</div>
+    </div>
+    <div class="cell" style="--w:4;--cat:2;--tint:var(--c-trans)">
+      <div class="demo"><span class="sp-glitch" style="--i:9"><i></i><i></i><i></i></span></div>
+      <div class="lbl">Glitch</div>
+    </div>
+    <div class="cell" style="--w:4;--cat:2;--tint:var(--c-trans)">
+      <div class="demo"><span class="sp-zoom" style="--n:3;--i:10"><i></i></span></div>
+      <div class="lbl">Zoom punch</div>
+    </div>
+    <div class="cell" style="--w:5;--cat:2;--tint:var(--c-trans)">
+      <div class="demo"><span class="sp-leak" style="--i:11"><i style="--n:1"></i></span></div>
+      <div class="lbl">Light leak</div>
+    </div>
+    <div class="cell" style="--w:4;--cat:2;--tint:var(--c-trans)">
+      <div class="demo"><span class="sp-whip" style="--n:2;--i:12"><i></i><i></i><i></i><i></i></span></div>
+      <div class="lbl">Whip pan</div>
+    </div>
+    <div class="cell" style="--w:3;--cat:2;--tint:var(--c-trans)">
+      <div class="demo"><span class="sp-wipe" style="--i:13"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+      <div class="lbl">Grid wipe</div>
+    </div>
+
+    <!-- ── category 3/4: TEXTURE + 3D ───────────────────── -->
+    <div class="cell" style="--w:5;--cat:3;--tint:var(--c-tex)">
+      <div class="demo"><span class="sp-dots" style="--i:14"><i style="background:var(--c-tex)"></i><i style="background:var(--c-tex)"></i><i style="background:var(--c-tex)"></i><i style="background:var(--c-tex)"></i><i style="background:var(--c-tex)"></i><i style="background:var(--c-tex)"></i><i style="background:var(--c-tex)"></i></span></div>
+      <div class="lbl">Film grain</div>
+    </div>
+    <div class="cell" style="--w:4;--cat:4;--tint:var(--c-3d)">
+      <div class="demo"><span class="sp-dots" style="--i:15"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+      <div class="lbl">Particles</div>
+    </div>
+    <div class="cell" style="--w:3;--cat:4;--tint:var(--c-3d)">
+      <div class="demo"><span class="sp-warp" style="--n:2;--i:16;border-color:var(--c-3d)"></span></div>
+      <div class="lbl">Lens warp</div>
+    </div>
+
+    <!-- ── category 5: CODE ─────────────────────────────── -->
+    <div class="cell" style="--w:4;--cat:5;--tint:var(--c-code)">
+      <div class="demo"><span class="sp-code" style="--i:17"><i></i><i></i><i></i></span></div>
+      <div class="lbl">Code typing</div>
+    </div>
+    <div class="cell" style="--w:5;--cat:5;--tint:var(--c-code)">
+      <div class="demo"><span class="sp-diff" style="--i:18">
+        <i class="add" style="--n:1"></i><i class="rem" style="--n:1"></i><i class="add" style="--n:1"></i></span></div>
+      <div class="lbl">Code diff</div>
+    </div>
+
+    <!-- ── category 6: INTERFACE ────────────────────────── -->
+    <div class="cell" style="--w:3;--cat:6;--tint:var(--c-ui)">
+      <div class="demo"><span class="sp-cursor" style="--i:19"><i style="--n:1"></i></span></div>
+      <div class="lbl">Cursor demo</div>
+    </div>
+    <div class="cell" style="--w:3;--cat:6;--tint:var(--c-ui)">
+      <div class="demo"><span class="sp-phone" style="--n:2;--i:20"></span></div>
+      <div class="lbl">Phone mockup</div>
+    </div>
+    <div class="cell" style="--w:3;--cat:6;--tint:var(--c-ui)">
+      <div class="demo"><span class="sp-beat" style="--i:21"><i></i><i></i><i></i><i></i><i></i></span></div>
+      <div class="lbl">Beat cut</div>
+    </div>
+    <div class="cell" style="--w:3;--cat:6;--tint:var(--c-ui)">
+      <div class="demo"><span class="sp-lower" style="--i:22"><i></i><i></i></span></div>
+      <div class="lbl">Lower thirds</div>
+    </div>
+    <div class="cell" style="--w:3;--cat:6;--tint:var(--c-ui)">
+      <div class="demo"><span class="sp-wipe" style="--i:23"><i style="background:var(--c-ui)"></i><i style="background:var(--c-ui)"></i><i style="background:var(--c-ui)"></i><i style="background:var(--c-ui)"></i><i style="background:var(--c-ui)"></i><i style="background:var(--c-ui)"></i><i style="background:var(--c-ui)"></i><i style="background:var(--c-ui)"></i><i style="background:var(--c-ui)"></i></span></div>
+      <div class="lbl">App showcase</div>
+    </div>
+    <div class="cell" style="--w:5;--cat:3;--tint:var(--c-tex)">
+      <div class="demo"><span class="sp-leak" style="--i:24"><i style="--n:2;background:linear-gradient(90deg,transparent,var(--c-tex),#fff,transparent)"></i></span></div>
+      <div class="lbl">Lens flare</div>
+    </div>
+    <div class="cell" style="--w:4;--cat:0;--tint:var(--c-text)">
+      <div class="demo"><span class="sp-kinetic" style="--n:3;--i:25;font-size:22px">GLOW</span></div>
+      <div class="lbl">Neon glow</div>
+    </div>
+
+  </div>
+
+  <div class="foot">
+    <div class="av"></div>
+    <span class="nm" data-slot="foot-name">Your Name</span>
+    <span class="dot"></span>
+    <span class="url" data-slot="foot-url">yoursite.com</span>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Directory Map — artboard</title>
+<!--
+  TEMPLATE: Directory Map
+  Family:   DRIP ".cro-bundle/ fully mapped"
+  Motion:   Sequential Highlight (tree rows) + Staggered Reveal (pills only)
+  Loop:     6000ms @ 12.5fps = 75 frames
+
+  Render:
+    bash scripts/render.sh assets/template-directory-map.html build/out.gif \
+         --duration 6 --fps 12.5
+
+  ── RTL / ARABIC ────────────────────────────────────────────────────────────
+  Switch the artboard to Arabic by changing the opening tag to:
+      <div id="artboard" dir="rtl" lang="ar" class="rtl">
+  Everything else adapts through logical properties and the [dir="rtl"] block
+  near the bottom of this stylesheet. File paths and command names stay LTR
+  because they are wrapped in <bdi dir="ltr">. Read references/arabic-rtl.md
+  before you edit any Arabic copy.
+
+  ── EDITING ─────────────────────────────────────────────────────────────────
+  Rows are .row elements. --i on each row drives its highlight delay and must
+  run 0,1,2,… in DOM order. Update --rows when you change the count. Keep the
+  total under 20 leaf items or the tree becomes a wall.
+-->
+<style>
+:root{
+  /* ── loop clock ─────────────────────────────────────────── */
+  --loop: 6000ms;
+  --rows: 15;              /* number of .row elements */
+
+  /* ── palette (house: Deep Glow) ─────────────────────────── */
+  --bg:      #0B0D12;
+  --panel:   #12151C;
+  --ink:     #F2F4F7;
+  --muted:   #8C97A8;
+  --dim:     #5A6577;
+  --line:    rgba(255,255,255,.09);
+  --accent:  #E0603A;
+
+  /* annotation pill colours — dark text on pastel */
+  --p1:#FBE8A6; --p2:#A9E9F0; --p3:#A9EBC8;
+  --p4:#CFC2F5; --p5:#F5B7B7; --p6:#EFE3D0;
+  --pink:#16202C;
+
+  --sans: -apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --mono: "SF Mono",ui-monospace,"Cascadia Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  --arabic: "SF Arabic","Segoe UI","Noto Naskh Arabic","Dubai","Geeza Pro",Tahoma,sans-serif;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#8A8F98;display:flex;justify-content:center}
+
+#artboard{
+  width:1080px;height:1350px;flex:none;position:relative;overflow:hidden;
+  background:var(--bg);color:var(--ink);font-family:var(--sans);
+}
+/* faint circuit glow behind everything, static */
+#artboard::before{
+  content:"";position:absolute;inset:0;
+  background:
+    radial-gradient(680px 420px at 82% 6%,  rgba(224,96,58,.10), transparent 62%),
+    radial-gradient(560px 380px at 14% 94%, rgba(122,92,224,.09), transparent 64%);
+}
+
+/* ══ header ══════════════════════════════════════════════════ */
+.head{position:relative;padding:52px 60px 0;display:flex;gap:20px;align-items:flex-start}
+.glyph{
+  width:84px;height:84px;border-radius:20px;background:var(--accent);flex:none;
+  display:grid;place-items:center;font-size:42px;color:#fff;line-height:1;
+}
+.h1{font-size:56px;font-weight:800;letter-spacing:-.022em;line-height:1.02}
+.h1 .lt{font-weight:400;color:var(--muted)}
+.sub{font-size:19px;color:var(--accent);margin-top:10px;font-weight:600}
+
+/* ══ tree ════════════════════════════════════════════════════ */
+.tree{position:relative;padding:48px 60px 0;font-family:var(--mono)}
+
+.root{
+  display:flex;align-items:baseline;gap:12px;
+  font-size:27px;font-weight:700;margin-bottom:8px;
+}
+.root .ico{font-size:23px}
+
+.row{
+  position:relative;display:flex;align-items:center;
+  padding-block:12px;border-radius:8px;
+}
+/* Sequential Highlight — a wash walks down the tree, one row at a time.
+   Delays run in REVERSE (see references/animation-recipes.md). */
+.row.hl{
+  animation:rowOn var(--loop) steps(1,end) infinite;
+  /* For --i:0 this evaluates to -1 x --loop, which is equivalent to 0.
+     Do NOT add a :first-of-type override — .row elements live inside several
+     .grp parents, so :first-of-type would match once per group and fire six
+     rows simultaneously. */
+  animation-delay:calc(var(--loop) * -1 * (var(--rows) - var(--i)) / var(--rows));
+}
+@keyframes rowOn{
+  0%  {background:rgba(224,96,58,.13)}
+  6.6%{background:transparent}
+  100%{background:transparent}
+}
+
+.glyphs{
+  color:var(--dim);white-space:pre;font-size:20px;flex:none;
+  padding-inline-start:6px;
+}
+.name{font-size:21px;white-space:nowrap}
+.name.dir{font-weight:700}
+.name.dir .cnt{color:var(--muted);font-weight:400}
+.name .fi{color:var(--dim);margin-inline-end:8px}
+
+/* dotted leader fills the gap to the pill column */
+.lead{
+  flex:1;height:1px;margin-inline:14px;
+  background-image:linear-gradient(90deg,var(--dim) 0 3px,transparent 3px 9px);
+  background-size:9px 1px;background-repeat:repeat-x;opacity:.5;
+  align-self:center;
+}
+.lead::after{content:"▸";color:var(--dim);font-size:12px;
+  position:relative;top:-7px;inset-inline-start:100%}
+
+.pill{
+  flex:none;border-radius:8px;padding:7px 15px;
+  font-size:16.5px;font-weight:600;color:var(--pink);
+  font-family:var(--mono);white-space:nowrap;
+  /* Staggered Reveal on the pills only — the tree text never moves */
+  animation:pillIn var(--loop) ease-out infinite;
+  animation-delay:calc(var(--loop) * -1 * (var(--rows) - var(--i)) / var(--rows));
+}
+@keyframes pillIn{
+  0%   {opacity:1;   transform:scale(1.035)}
+  5%   {opacity:1;   transform:scale(1)}
+  100% {opacity:.82; transform:scale(1)}
+}
+
+/* group spacing */
+.grp{margin-top:30px}
+.grp:first-of-type{margin-top:14px}
+
+/* ══ footer ══════════════════════════════════════════════════ */
+.foot{
+  position:absolute;left:0;right:0;bottom:0;height:86px;
+  border-top:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;gap:22px;
+}
+.foot .wm{font-size:30px;font-weight:800;letter-spacing:-.02em}
+.foot .div{width:1px;height:30px;background:var(--line)}
+.foot .who{display:flex;align-items:center;gap:11px}
+.foot .av{width:38px;height:38px;border-radius:50%;
+  background:linear-gradient(135deg,#3C4757,#232B38)}
+.foot .nm{font-size:16px;font-weight:700;line-height:1.25}
+.foot .rl{font-size:13px;color:var(--muted)}
+
+/* ══ RTL ═════════════════════════════════════════════════════ */
+[dir="rtl"]{font-family:var(--arabic);line-height:1.65}
+[dir="rtl"] .h1{font-size:50px;line-height:1.16}
+[dir="rtl"] .sub{font-size:21px}
+[dir="rtl"] .name,[dir="rtl"] .pill{font-size:19px}
+/* Arabic never gets letter-spacing; it breaks the glyph joins. */
+[dir="rtl"] .h1,[dir="rtl"] .sub,[dir="rtl"] .pill{letter-spacing:0}
+/* Tree glyphs are drawn characters, so mirror them visually. */
+[dir="rtl"] .glyphs{transform:scaleX(-1)}
+[dir="rtl"] .lead::after{content:"◂"}
+/* Anything inside <bdi dir="ltr"> keeps its own direction automatically. */
+[dir="rtl"] code,[dir="rtl"] .path{font-family:var(--mono);direction:ltr;
+  unicode-bidi:isolate}
+</style>
+</head>
+<body>
+
+<div id="artboard">
+
+  <div class="head">
+    <div class="glyph">✳</div>
+    <div>
+      <div class="h1" data-slot="headline">.cro-bundle/ <span class="lt">fully mapped</span></div>
+      <div class="sub" data-slot="subline">10 Claude skills · 5 AI agents · 4 workflow categories</div>
+    </div>
+  </div>
+
+  <div class="tree">
+
+    <div class="root"><span class="ico">📁</span>
+      <bdi dir="ltr" data-slot="root">your-cro-stack/</bdi></div>
+
+    <div class="row hl" style="--i:0">
+      <span class="glyphs">└── 📁 </span>
+      <span class="name dir"><bdi dir="ltr">.cro/</bdi></span>
+      <span class="lead"></span>
+      <span class="pill" style="background:var(--p5)">10 skills + 5 agents</span>
+    </div>
+
+    <div class="grp">
+      <div class="row hl" style="--i:1">
+        <span class="glyphs">    ├── 📁 </span>
+        <span class="name dir"><bdi dir="ltr">research-skills/</bdi> <span class="cnt">(4)</span></span>
+        <span class="lead"></span>
+        <span class="pill" style="background:var(--p1)">Raw research → friction points</span>
+      </div>
+      <div class="row hl" style="--i:2">
+        <span class="glyphs">    │   ├── </span>
+        <span class="name"><span class="fi">📄</span><bdi dir="ltr">session-recording-analyzer</bdi></span>
+        <span class="lead"></span>
+        <span class="pill" style="background:var(--p2)">Friction points in 5 mins</span>
+      </div>
+      <div class="row hl" style="--i:3">
+        <span class="glyphs">    │   ├── </span>
+        <span class="name"><span class="fi">📄</span><bdi dir="ltr">heatmap-pattern-decoder</bdi></span>
+        <span class="lead"></span>
+        <span class="pill" style="background:var(--p3)">Behaviour patterns, attention gaps</span>
+      </div>
+      <div class="row hl" style="--i:4">
+        <span class="glyphs">    │   ├── </span>
+        <span class="name"><span class="fi">📄</span><bdi dir="ltr">mobile-friction-diagnostic</bdi></span>
+        <span class="lead"></span>
+        <span class="pill" style="background:var(--p4)">15-point mobile audit</span>
+      </div>
+      <div class="row hl" style="--i:5">
+        <span class="glyphs">    │   └── </span>
+        <span class="name"><span class="fi">📄</span><bdi dir="ltr">competitor-conversion-teardown</bdi></span>
+        <span class="lead"></span>
+        <span class="pill" style="background:var(--p4)">Positioning gaps in one workflow</span>
+      </div>
+    </div>
+
+    <div class="grp">
+      <div class="row hl" style="--i:6">
+        <span class="glyphs">    ├── 📁 </span>
+        <span class="name dir"><bdi dir="ltr">page-audit-skills/</bdi> <span class="cnt">(3)</span></span>
+        <span class="lead"></span>
+        <span class="pill" style="background:var(--p4)">Behavioural psychology grounded</span>
+      </div>
+      <div class="row hl" style="--i:7">
+        <span class="glyphs">    │   ├── </span>
+        <span class="name"><span class="fi">📄</span><bdi dir="ltr">product-page-auditor</bdi></span>
+        <span class="lead"></span>
+        <span class="pill" style="background:var(--p5)">Psychology triggers, trust signals</span>
+      </div>
+      <div class="row hl" style="--i:8">
+        <span class="glyphs">    │   ├── </span>
+        <span class="name"><span class="fi">📄</span><bdi dir="ltr">landing-page-optimizer</bdi></span>
+        <span class="lead"></span>
+        <span class="pill" style="background:var(--p1)">Headline, CTA, mobile conversion</span>
+      </div>
+      <div class="row hl" style="--i:9">
+        <span class="glyphs">    │   └── </span>
+        <span class="name"><span class="fi">📄</span><bdi dir="ltr">pricing-psychology-scanner</bdi></span>
+        <span class="lead"></span>
+        <span class="pill" style="background:var(--p2)">Anchoring, scarcity, value perception</span>
+      </div>
+    </div>
+
+    <div class="grp">
+      <div class="row hl" style="--i:10">
+        <span class="glyphs">    ├── 📁 </span>
+        <span class="name dir"><bdi dir="ltr">test-ops-skills/</bdi> <span class="cnt">(2)</span></span>
+        <span class="lead"></span>
+        <span class="pill" style="background:var(--p3)">Backlog in, readout out</span>
+      </div>
+      <div class="row hl" style="--i:11">
+        <span class="glyphs">    │   ├── </span>
+        <span class="name"><span class="fi">📄</span><bdi dir="ltr">test-prioritization-matrix</bdi></span>
+        <span class="lead"></span>
+        <span class="pill" style="background:var(--p4)">ICE scoring, test sequence</span>
+      </div>
+      <div class="row hl" style="--i:12">
+        <span class="glyphs">    │   └── </span>
+        <span class="name"><span class="fi">📄</span><bdi dir="ltr">ab-test-result-interpreter</bdi></span>
+        <span class="lead"></span>
+        <span class="pill" style="background:var(--p4)">Full test readout in 10 mins</span>
+      </div>
+    </div>
+
+    <div class="grp">
+      <div class="row hl" style="--i:13">
+        <span class="glyphs">    └── 📁 </span>
+        <span class="name dir"><bdi dir="ltr">cro-agents/</bdi> <span class="cnt">(5)</span></span>
+        <span class="lead"></span>
+        <span class="pill" style="background:var(--p1)">One agent per workflow stage</span>
+      </div>
+      <div class="row hl" style="--i:14">
+        <span class="glyphs">        └── </span>
+        <span class="name"><span class="fi">📄</span><bdi dir="ltr">cro-manager · designer · dev · qa · analyst</bdi></span>
+        <span class="lead"></span>
+        <span class="pill" style="background:var(--p6)">Research → verdict</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="foot">
+    <div class="wm" data-slot="brand">BRAND.</div>
+    <div class="div"></div>
+    <div class="who">
+      <div class="av"></div>
+      <div>
+        <div class="nm" data-slot="foot-name">Your Name</div>
+        <div class="rl" data-slot="foot-role">Your Agency</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

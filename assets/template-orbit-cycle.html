@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Orbit Cycle — artboard</title>
+<!--
+  TEMPLATE: Orbit Cycle
+  Family:   FullEnrich "Claude code /newpage"
+  Motion:   Orbit (node markers) + Path Draw-On (the ring)
+  Loop:     6000ms @ 25fps = 150 frames
+
+  Render:
+    bash scripts/render.sh assets/template-orbit-cycle.html build/out.gif \
+         --duration 6 --fps 25
+
+  The ring is a circle of radius R centred at (CX, CY). Node cards sit outside it,
+  node markers ride on it. If you change R, CX, CY or the node count, update:
+    - --R --CX --CY below
+    - the .node positions
+    - --ring-len (2 x PI x R, rounded)
+    - the nth-child orbit delays (loop x -i / count)
+-->
+<style>
+:root{
+  /* ── loop clock ─────────────────────────────────────────── */
+  --loop: 6000ms;
+  --nodes: 5;
+
+  /* ── ring geometry ──────────────────────────────────────── */
+  --CX: 540px;
+  --CY: 672px;
+  --R: 300px;
+  --ring-len: 1885;      /* 2 x PI x 300 */
+
+  /* ── palette (house: Warm Paper, violet accent) ─────────── */
+  --bg:      #F4F4F6;
+  --card:    #FFFFFF;
+  --ink:     #14161C;
+  --muted:   #656B78;
+  --line:    #E0E2E7;
+  --accent:  #6A42D4;
+  --accent-2:#8E6BE8;
+  --mascot:  #F2622B;
+
+  --sans: -apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --mono: "SF Mono",ui-monospace,"Cascadia Mono",Menlo,Consolas,monospace;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#8A8F98;display:flex;justify-content:center}
+
+#artboard{
+  width:1080px;height:1350px;flex:none;position:relative;overflow:hidden;
+  background:var(--bg);color:var(--ink);font-family:var(--sans);
+}
+
+/* ══ header ══════════════════════════════════════════════════ */
+.head{padding:52px 60px 0;text-align:center}
+.eyebrow{
+  font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+  font-weight:800;color:var(--accent);
+}
+.h1{font-size:46px;font-weight:800;letter-spacing:-.02em;margin-top:12px;line-height:1.08}
+.h1 .cmd{
+  display:block;font-family:var(--mono);font-size:30px;font-weight:600;
+  color:var(--accent);margin-top:8px;text-decoration:underline;
+  text-underline-offset:6px;text-decoration-thickness:2px;
+}
+
+/* ══ ring layer ══════════════════════════════════════════════ */
+.ring{position:absolute;inset:0;width:1080px;height:1350px;pointer-events:none}
+
+/* the dashed base ring is static; the solid one draws over it */
+.ring-base{
+  fill:none;stroke:var(--line);stroke-width:2;stroke-dasharray:8 10;
+}
+.ring-draw{
+  fill:none;stroke:var(--accent-2);stroke-width:2.5;stroke-linecap:round;
+  stroke-dasharray:var(--ring-len);
+  animation:draw var(--loop) ease-in-out infinite;
+}
+@keyframes draw{
+  0%  {stroke-dashoffset:var(--ring-len)}
+  55% {stroke-dashoffset:0}
+  88% {stroke-dashoffset:0;opacity:1}
+  97% {stroke-dashoffset:0;opacity:0}
+  100%{stroke-dashoffset:var(--ring-len);opacity:0}
+}
+
+/* ══ centre artifact ═════════════════════════════════════════ */
+.core{
+  position:absolute;left:var(--CX);top:calc(var(--CY) - 128px);
+  transform:translateX(-50%);
+  width:360px;background:var(--card);border-radius:14px;
+  box-shadow:0 8px 34px rgba(20,22,28,.13);overflow:hidden;
+}
+.core .bar{
+  height:34px;background:#FAFAFB;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;padding:0 12px;gap:6px;
+}
+.core .bar i{width:8px;height:8px;border-radius:50%;background:#D7DAE0;display:block}
+.core .body{padding:24px 22px 26px;text-align:center}
+.core .body h5{font-size:23px;font-weight:800;line-height:1.22}
+.core .body h5 span{color:var(--accent)}
+.core .body p{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.45}
+.core .btn{
+  margin-top:14px;display:inline-block;background:var(--ink);color:#fff;
+  border-radius:7px;padding:8px 20px;font-size:12.5px;font-weight:700;
+}
+.core .checks{
+  display:flex;gap:6px;justify-content:center;margin-top:14px;
+  font-size:9px;color:var(--muted);
+}
+.core .checks span{border:1px solid var(--line);border-radius:5px;padding:4px 7px}
+
+/* ══ orbiting markers ════════════════════════════════════════ */
+.orbiter{
+  position:absolute;left:0;top:0;width:44px;height:44px;margin:-22px 0 0 -22px;
+  border-radius:50%;background:var(--card);
+  box-shadow:0 3px 12px rgba(20,22,28,.16);
+  display:grid;place-items:center;
+  offset-path:circle(var(--R) at var(--CX) var(--CY));
+  offset-rotate:0deg;
+  animation:orbit var(--loop) linear infinite;
+}
+@keyframes orbit{from{offset-distance:0%}to{offset-distance:100%}}
+.orbiter:nth-of-type(1){animation-delay:calc(var(--loop) *  0 / 5)}
+.orbiter:nth-of-type(2){animation-delay:calc(var(--loop) * -1 / 5)}
+.orbiter:nth-of-type(3){animation-delay:calc(var(--loop) * -2 / 5)}
+.orbiter:nth-of-type(4){animation-delay:calc(var(--loop) * -3 / 5)}
+.orbiter:nth-of-type(5){animation-delay:calc(var(--loop) * -4 / 5)}
+
+/* 8-bit mascot, drawn with box-shadow so no image asset is needed */
+.bit{
+  width:6px;height:6px;background:var(--mascot);
+  box-shadow:
+     6px 0,  12px 0,  18px 0,
+    -6px 6px, 0 6px, 6px 6px, 12px 6px, 18px 6px, 24px 6px,
+    -6px 12px, 0 12px, 12px 12px, 24px 12px,
+     0 18px, 6px 18px, 12px 18px, 18px 18px, 24px 18px,
+    -6px 24px, 6px 24px, 18px 24px, 24px 24px;
+  transform:translate(-9px,-14px) scale(.72);
+}
+.bit.dark{background:#14161C}
+
+/* ══ node cards ══════════════════════════════════════════════ */
+.node{position:absolute;width:250px}
+.node .tag{
+  display:inline-block;background:var(--accent);color:#fff;border-radius:7px;
+  padding:5px 13px;font-size:12.5px;font-weight:800;letter-spacing:.02em;
+}
+.node h4{font-size:22px;font-weight:800;line-height:1.14;margin-top:9px}
+.node p{font-size:12.5px;color:var(--muted);line-height:1.48;margin-top:7px}
+.node p u{color:var(--accent);text-decoration-color:var(--line)}
+
+.n1{left:800px;top:288px;text-align:left}
+.n2{left:812px;top:620px;text-align:left}
+.n3{left:600px;top:958px;text-align:left}
+.n4{left:230px;top:958px;text-align:right}
+.n5{left:28px;top:576px;text-align:right}
+
+/* ══ output artifact ═════════════════════════════════════════ */
+.out{position:absolute;left:56px;top:196px;width:250px;text-align:center}
+.out h4{font-size:26px;font-weight:800;margin-bottom:10px}
+.out .mini{
+  background:var(--card);border-radius:11px;padding:14px 12px;
+  box-shadow:0 5px 20px rgba(20,22,28,.11);
+}
+.out .mini .ln{height:7px;border-radius:4px;background:#E7E4F2;margin:6px 0}
+.out .mini .ln.a{width:78%;background:var(--accent);opacity:.75}
+.out .mini .ln.b{width:56%}
+.out .mini .ln.c{width:88%}
+.out .mini .btnm{
+  margin:11px auto 3px;width:96px;height:19px;border-radius:5px;background:var(--ink);
+}
+.out .arrow{
+  width:2.5px;height:74px;background:var(--ink);margin:12px auto 0;position:relative;
+}
+.out .arrow::before{
+  content:"";position:absolute;top:-1px;left:50%;transform:translateX(-50%);
+  border-left:8px solid transparent;border-right:8px solid transparent;
+  border-bottom:11px solid var(--ink);
+}
+
+/* ══ footer ══════════════════════════════════════════════════ */
+.foot{
+  position:absolute;left:0;right:0;bottom:0;height:74px;
+  border-top:1px solid var(--line);background:var(--bg);
+  display:flex;align-items:center;justify-content:center;gap:11px;
+}
+.foot .av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#C9CEDA,#9AA3B4)}
+.foot .nm{font-size:14px;font-weight:800;letter-spacing:.09em;text-transform:uppercase}
+.foot .url{font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<div id="artboard">
+
+  <svg class="ring" viewBox="0 0 1080 1350" fill="none">
+    <circle class="ring-base" cx="540" cy="672" r="300"/>
+    <circle class="ring-draw" cx="540" cy="672" r="300"
+            transform="rotate(-90 540 672)"/>
+  </svg>
+
+  <div class="head">
+    <div class="eyebrow" data-slot="eyebrow">FIVE AGENTS · ONE COMMAND</div>
+    <div class="h1" data-slot="headline">Claude Code<span class="cmd">/newpage</span></div>
+  </div>
+
+  <div class="out">
+    <h4 data-slot="out-title">Website Ready</h4>
+    <div class="mini">
+      <div class="ln a"></div><div class="ln b"></div>
+      <div class="ln c"></div><div class="ln b"></div>
+      <div class="btnm"></div>
+    </div>
+    <div class="arrow"></div>
+  </div>
+
+  <div class="core">
+    <div class="bar"><i></i><i></i><i></i></div>
+    <div class="body">
+      <h5 data-slot="core-h">Find <span>Emails</span> &amp; <span>Phone Numbers</span><br>Of Your Prospects</h5>
+      <p data-slot="core-p">Waterfall enrichment with +80% find rate. Stop missing out on deals.</p>
+      <div class="btn">Get Started for Free</div>
+      <div class="checks"><span>✓ 50 free</span><span>✓ No card</span><span>✓ GDPR</span></div>
+    </div>
+  </div>
+
+  <!-- orbiting markers ride the ring -->
+  <div class="orbiter"><div class="bit"></div></div>
+  <div class="orbiter"><div class="bit"></div></div>
+  <div class="orbiter"><div class="bit"></div></div>
+  <div class="orbiter"><div class="bit"></div></div>
+  <div class="orbiter"><div class="bit"></div></div>
+
+  <div class="node n1">
+    <span class="tag">Agent-1</span>
+    <h4>Context Collector</h4>
+    <p>Reads the full repository of markdown docs, product content and internal notes
+       to build the project's working context.</p>
+  </div>
+  <div class="node n2">
+    <span class="tag">Agent-2</span>
+    <h4>Benchmarking</h4>
+    <p>Runs competitive benchmarking, finds design patterns and positioning insights,
+       outputs <u>benchmark.md</u></p>
+  </div>
+  <div class="node n3">
+    <span class="tag">Agent-3</span>
+    <h4>Content</h4>
+    <p>Combines copywriting, positioning and review agents to produce accurate,
+       high-converting copy in <u>copy.md</u></p>
+  </div>
+  <div class="node n4">
+    <span class="tag">Agent-4</span>
+    <h4>Visual</h4>
+    <p>Creates visual concepts and illustrations through specialised agents,
+       producing final assets in <u>illustrations/</u></p>
+  </div>
+  <div class="node n5">
+    <span class="tag">Agent-5</span>
+    <h4>Assembly</h4>
+    <p>Combines every generated asset into one complete, production-ready webpage.</p>
+  </div>
+
+  <div class="foot">
+    <div class="av"></div>
+    <span class="nm" data-slot="foot-name">YOUR NAME</span>
+    <span class="url" data-slot="foot-url">· yoursite.com</span>
+  </div>
+
+</div>
+</body>
+</html>

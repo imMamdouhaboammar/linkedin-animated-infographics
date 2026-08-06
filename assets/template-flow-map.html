@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Flow Map + Verdict — artboard</title>
+<!--
+  TEMPLATE: Flow Map + Verdict
+  Family:   Charlie Hills "Board of AI advisers"
+  Motion:   Sequential Highlight (setup row) + Path Particles (converging wires)
+  Loop:     4800ms @ 12.5fps = 60 frames
+
+  Render:
+    bash scripts/render.sh assets/template-flow-map.html build/out.gif \
+         --duration 4.8 --fps 12.5
+
+  EDIT ONLY the text inside data-slot elements and the :root tokens.
+  If you change the number of setup steps or input cards, update --steps and the
+  nth-child delays, and redraw the SVG wires to match the new card centres.
+-->
+<style>
+:root{
+  /* ── loop clock ─────────────────────────────────────────── */
+  --loop: 4800ms;
+  --steps: 4;
+
+  /* ── palette (house: Warm Paper) ────────────────────────── */
+  --bg:        #FFFFFF;
+  --paper:     #FDFCFA;
+  --ink:       #16202C;
+  --muted:     #6B7787;
+  --line:      #E3E6EA;
+  --accent:    #D9744F;
+  --accent-wash:#FBEDE6;
+  --footer-bg: #101B29;
+
+  /* wire colours, one per input card */
+  --w1:#E9B48F; --w2:#9CC6E8; --w3:#C9AEE6; --w4:#8FD2C0;
+
+  /* ── type ───────────────────────────────────────────────── */
+  --display: "Georgia","Times New Roman",serif;
+  --sans: -apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --mono: "SF Mono",ui-monospace,"Cascadia Mono",Menlo,Consolas,monospace;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#8A8F98;display:flex;justify-content:center}
+
+#artboard{
+  width:1080px;height:1350px;flex:none;position:relative;overflow:hidden;
+  background:var(--bg);color:var(--ink);
+  font-family:var(--sans);
+  /* faint grid paper */
+  background-image:
+    linear-gradient(rgba(22,32,44,.028) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(22,32,44,.028) 1px,transparent 1px);
+  background-size:36px 36px;
+}
+
+/* ══ header ══════════════════════════════════════════════════ */
+.head{padding:54px 60px 0}
+.eyebrow{
+  font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;
+  color:var(--accent);
+}
+.eyebrow b{color:var(--muted);font-weight:700}
+.h1{
+  font-family:var(--display);font-size:60px;line-height:1.04;
+  letter-spacing:-.018em;margin-top:16px;font-weight:700;
+}
+.h1 em{font-style:normal;color:var(--accent)}
+.sub{font-size:20px;color:var(--muted);margin-top:14px;line-height:1.42;max-width:840px}
+.byline{font-size:13px;color:var(--muted);margin-top:12px;letter-spacing:.02em}
+.byline b{color:var(--ink);letter-spacing:.1em;text-transform:uppercase;font-size:12px}
+
+.sechead{
+  display:flex;align-items:center;gap:10px;
+  font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;
+  margin:38px 0 16px;
+}
+.sechead::before{content:"";width:9px;height:9px;background:var(--accent);border-radius:2px}
+.sechead .right{
+  margin-left:auto;color:var(--muted);font-weight:700;font-size:10px;letter-spacing:.12em;
+}
+
+/* ══ setup row — animated with Sequential Highlight ══════════ */
+.setup{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:0 60px}
+.step{
+  position:relative;border:2px solid var(--line);border-radius:12px;
+  background:var(--paper);padding:22px 18px 20px;
+  animation:stepOn var(--loop) steps(1,end) infinite;
+}
+/* Delays run in REVERSE. A negative delay pushes the animation FORWARD in its
+   cycle, so the last step needs the smallest offset to fire last. See
+   references/animation-recipes.md, "The reverse-delay trap". */
+.step:nth-child(1){animation-delay:calc(var(--loop) *  0 / 4)}
+.step:nth-child(2){animation-delay:calc(var(--loop) * -3 / 4)}
+.step:nth-child(3){animation-delay:calc(var(--loop) * -2 / 4)}
+.step:nth-child(4){animation-delay:calc(var(--loop) * -1 / 4)}
+@keyframes stepOn{
+  0%  {border-color:var(--accent);background:var(--accent-wash)}
+  25% {border-color:var(--line);  background:var(--paper)}
+  100%{border-color:var(--line);  background:var(--paper)}
+}
+.step .n{
+  position:absolute;top:-13px;left:16px;width:26px;height:26px;border-radius:50%;
+  background:var(--accent);color:#fff;font-size:13px;font-weight:800;
+  display:grid;place-items:center;
+}
+.step h4{font-size:19px;font-weight:700;margin-bottom:5px}
+.step p{font-size:14px;color:var(--muted);line-height:1.4}
+.step p code{font-family:var(--mono);color:var(--accent);font-size:13px}
+
+/* ══ the question pill ═══════════════════════════════════════ */
+.qwrap{display:flex;justify-content:center;margin-top:40px}
+.q{
+  display:flex;align-items:center;gap:12px;
+  border:2px solid var(--ink);border-radius:999px;padding:13px 26px;background:#fff;
+  font-size:19px;font-weight:600;
+}
+.q .dot{
+  width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;
+  font-size:14px;font-weight:800;display:grid;place-items:center;flex:none;
+}
+
+/* ══ wires (SVG) ═════════════════════════════════════════════ */
+.wires{position:absolute;inset:0;width:1080px;height:1350px;pointer-events:none}
+
+/* ══ input cards ═════════════════════════════════════════════ */
+.cards{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
+  padding:0 60px;margin-top:118px;position:relative;z-index:2;
+}
+.card{
+  border:1px solid var(--line);border-radius:14px;background:#fff;padding:18px 16px;
+  box-shadow:0 1px 2px rgba(22,32,44,.05);
+}
+.card .who{display:flex;align-items:center;gap:10px;margin-bottom:11px}
+.card .av{
+  width:40px;height:40px;border-radius:50%;flex:none;
+  border:2px solid var(--ring,var(--line));
+  background:linear-gradient(135deg,#DDE3EA,#C3CCD6);
+}
+.card .nm{font-size:16px;font-weight:700;line-height:1.15}
+.card .rl{
+  font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;
+  color:var(--ring,var(--muted));margin-top:3px;
+}
+.card q{font-size:14px;line-height:1.42;color:var(--ink);quotes:'"' '"'}
+
+/* ══ synthesiser node ════════════════════════════════════════ */
+.synth{display:flex;justify-content:center;margin-top:112px;position:relative;z-index:2}
+.synthbox{
+  display:flex;align-items:center;gap:13px;background:#fff;
+  border:1px solid var(--line);border-radius:14px;padding:14px 26px;
+  box-shadow:0 2px 10px rgba(22,32,44,.07);
+}
+.synthbox .g{
+  width:34px;height:34px;border-radius:50%;border:2px solid var(--accent);
+  display:grid;place-items:center;color:var(--accent);font-size:17px;
+}
+.synthbox h4{font-size:19px;font-weight:800;letter-spacing:.02em}
+.synthbox p{font-size:13px;color:var(--muted);margin-top:2px}
+
+/* ══ verdict panel ═══════════════════════════════════════════ */
+.verdict{
+  margin:34px 60px 0;border:1px solid var(--line);border-radius:16px;
+  background:#fff;padding:24px 26px 22px;box-shadow:0 2px 10px rgba(22,32,44,.05);
+}
+.vgrid{display:grid;grid-template-columns:1fr 1fr;gap:20px 30px;margin-top:16px}
+.vq .lbl{
+  font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;font-weight:800;
+  margin-bottom:5px;
+}
+.vq p{font-size:14.5px;line-height:1.44;color:var(--ink)}
+.vq p b{font-weight:700}
+.c1{color:#2E9E7B}.c2{color:#C9862F}.c3{color:#8B5FBF}.c4{color:#2F7FBF}
+.vrule{height:1px;background:var(--line);margin:18px 0 14px}
+.first{display:flex;gap:12px;align-items:baseline}
+.first .lbl{
+  font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;font-weight:800;
+  color:#2E9E7B;flex:none;
+}
+.first p{font-size:14.5px;line-height:1.44}
+
+/* ══ chips ═══════════════════════════════════════════════════ */
+.chips{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:26px}
+.chips .lbl{
+  font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;
+  color:var(--muted);margin-right:4px;
+}
+.chip{
+  border:1px solid var(--accent);border-radius:999px;padding:8px 16px;
+  font-size:14px;color:var(--ink);background:#fff;
+}
+
+/* ══ footer — must never animate ═════════════════════════════ */
+.foot{
+  position:absolute;left:0;right:0;bottom:0;height:78px;background:var(--footer-bg);
+  display:flex;align-items:center;justify-content:center;gap:12px;color:#fff;
+}
+.foot .av{
+  width:34px;height:34px;border-radius:50%;
+  background:linear-gradient(135deg,#4A5A6E,#2C3A4C);
+}
+.foot .nm{font-size:15px;font-weight:800;letter-spacing:.09em;text-transform:uppercase}
+.foot .url{font-size:14px;color:#9BA8B8}
+</style>
+</head>
+<body>
+
+<div id="artboard">
+
+  <!-- wires sit behind everything; coordinates are artboard-absolute -->
+  <svg class="wires" viewBox="0 0 1080 1350" fill="none">
+    <!-- question pill (540,443) fanning out to the four card tops (y=560) -->
+    <path id="wA" d="M540,490 C540,556 300,548 175,604" stroke="var(--w1)" stroke-width="2"/>
+    <path id="wB" d="M540,490 C540,562 470,556 418,604" stroke="var(--w2)" stroke-width="2"/>
+    <path id="wC" d="M540,490 C540,562 610,556 662,604" stroke="var(--w3)" stroke-width="2"/>
+    <path id="wD" d="M540,490 C540,556 780,548 905,604" stroke="var(--w4)" stroke-width="2"/>
+
+    <!-- card bottoms converging on the synthesiser (540,845) -->
+    <path id="wE" d="M175,741 C175,812 360,800 536,845" stroke="var(--w1)" stroke-width="2"/>
+    <path id="wF" d="M418,741 C418,806 480,808 536,845" stroke="var(--w2)" stroke-width="2"/>
+    <path id="wG" d="M662,741 C662,806 600,808 544,845" stroke="var(--w3)" stroke-width="2"/>
+    <path id="wH" d="M905,741 C905,812 720,800 544,845" stroke="var(--w4)" stroke-width="2"/>
+
+    <!-- Path Particles: one dot per converging wire, staggered by loop/4 -->
+    <circle r="5" fill="var(--accent)">
+      <animateMotion dur="4.8s" begin="0s"    repeatCount="indefinite"><mpath href="#wE"/></animateMotion>
+    </circle>
+    <circle r="5" fill="var(--accent)">
+      <animateMotion dur="4.8s" begin="-1.2s" repeatCount="indefinite"><mpath href="#wF"/></animateMotion>
+    </circle>
+    <circle r="5" fill="var(--accent)">
+      <animateMotion dur="4.8s" begin="-2.4s" repeatCount="indefinite"><mpath href="#wG"/></animateMotion>
+    </circle>
+    <circle r="5" fill="var(--accent)">
+      <animateMotion dur="4.8s" begin="-3.6s" repeatCount="indefinite"><mpath href="#wH"/></animateMotion>
+    </circle>
+  </svg>
+
+  <div class="head">
+    <div class="eyebrow" data-slot="eyebrow">YOUR NAME <b>// SYSTEM NAME</b></div>
+    <div class="h1" data-slot="headline">How to build a <em>board</em> of AI advisers</div>
+    <div class="sub" data-slot="subline">
+      A Claude skill that turns any decision into a board meeting with the mentors you admire
+    </div>
+    <div class="byline"><b data-slot="author">YOUR NAME</b> &nbsp;·&nbsp;
+      <span data-slot="handle">yoursite.com</span></div>
+
+    <div class="sechead">Set it up once <span class="right" data-slot="note">DROPS INTO ~/.CLAUDE/SKILLS/</span></div>
+  </div>
+
+  <div class="setup">
+    <div class="step"><span class="n">1</span><h4>Download</h4><p>Grab the <code>board-of-advisers</code> skill</p></div>
+    <div class="step"><span class="n">2</span><h4>Install</h4><p>Drop it in <code>~/.claude/skills/</code></p></div>
+    <div class="step"><span class="n">3</span><h4>Name it</h4><p>List the mentors you admire</p></div>
+    <div class="step"><span class="n">4</span><h4>Convene</h4><p>Say <code>"convene my board"</code></p></div>
+  </div>
+
+  <div class="qwrap">
+    <div class="q"><span class="dot">?</span>
+      <span data-slot="question">"How do I take my creator business forward?"</span></div>
+  </div>
+
+  <div class="cards">
+    <div class="card" style="--ring:#D98A4F">
+      <div class="who"><div class="av"></div><div>
+        <div class="nm">Adviser One</div><div class="rl">Offers &amp; money</div></div></div>
+      <q>It is a conversion problem, so fix the offer first.</q>
+    </div>
+    <div class="card" style="--ring:#4F8FD9">
+      <div class="who"><div class="av"></div><div>
+        <div class="nm">Adviser Two</div><div class="rl">Solopreneur systems</div></div></div>
+      <q>Five streams is fragmentation. Double the newsletter.</q>
+    </div>
+    <div class="card" style="--ring:#8B5FBF">
+      <div class="who"><div class="av"></div><div>
+        <div class="nm">Adviser Three</div><div class="rl">One-person business</div></div></div>
+      <q>Pick the one product that lets you leave the work.</q>
+    </div>
+    <div class="card" style="--ring:#2E9E7B">
+      <div class="who"><div class="av"></div><div>
+        <div class="nm">Adviser Four</div><div class="rl">Leverage</div></div></div>
+      <q>Only the SaaS scales without your time.</q>
+    </div>
+  </div>
+
+  <div class="synth">
+    <div class="synthbox">
+      <div class="g">✳</div>
+      <div><h4 data-slot="synth-name">THE CHAIRMAN</h4>
+        <p data-slot="synth-role">Weighs every angle, makes the call</p></div>
+    </div>
+  </div>
+
+  <div class="verdict">
+    <div class="sechead" style="margin:0">The chairman's verdict
+      <span class="right">ONE SYNTHESIS · A REAL OUTPUT</span></div>
+    <div class="vgrid">
+      <div class="vq"><div class="lbl c1">Where they agree</div>
+        <p>Your audience is the asset. <b>Too many active priorities.</b></p></div>
+      <div class="vq"><div class="lbl c2">Where they clash</div>
+        <p>One wants revenue now, one wants leverage later, <b>both right on different clocks.</b></p></div>
+      <div class="vq"><div class="lbl c3">The blind spot</div>
+        <p>Nobody checked the agency. <b>Funding it all, or running without you?</b></p></div>
+      <div class="vq"><div class="lbl c4">The recommendation</div>
+        <p>Don't quit, sequence. <b>The community is the 12-month bet</b>, it funds the SaaS.</p></div>
+    </div>
+    <div class="vrule"></div>
+    <div class="first"><div class="lbl">First move</div>
+      <p>List revenue and your hours per product, side by side. The focus becomes obvious.</p></div>
+  </div>
+
+  <div class="chips">
+    <span class="lbl">Invoke it</span>
+    <span class="chip">convene my board</span>
+    <span class="chip">what would X say</span>
+    <span class="chip">board this decision</span>
+  </div>
+
+  <div class="foot">
+    <div class="av"></div>
+    <span class="nm" data-slot="foot-name">YOUR NAME</span>
+    <span class="url" data-slot="foot-url">· yoursite.com</span>
+  </div>
+
+</div>
+</body>
+</html>
