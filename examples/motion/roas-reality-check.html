@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ROAS Reality Check</title>
+<style>
+:root{
+  --loop:4800ms;--bg:#F6F2EA;--paper:#FFFDFC;--ink:#15202B;--muted:#66717E;
+  --line:#D9D6CF;--accent:#D45F3C;--accent-wash:#F9E5DC;--footer:#14212D;
+  --c1:#E49B6B;--c2:#6FA8D6;--c3:#8E79BF;--c4:#5FAE98;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  --display:Georgia,"Times New Roman",serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#7C838B;display:flex;justify-content:center}
+#artboard{width:1080px;height:1350px;position:relative;overflow:hidden;background:var(--bg);color:var(--ink);font-family:var(--sans)}
+#artboard:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(21,32,43,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(21,32,43,.035) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
+.head{padding:54px 64px 0;position:relative;z-index:2}
+.eyebrow{font-size:24px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.eyebrow span{color:var(--muted)}
+h1{font-family:var(--display);font-size:64px;line-height:1.02;letter-spacing:-.02em;margin-top:16px;max-width:900px}
+h1 em{font-style:normal;color:var(--accent)}
+.sub{font-size:25px;line-height:1.4;color:var(--muted);margin-top:18px;max-width:900px}
+.section-label{display:flex;align-items:center;gap:12px;margin:38px 64px 18px;font-size:23px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;position:relative;z-index:2}
+.section-label:before{content:"";width:12px;height:12px;border-radius:3px;background:var(--accent)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:0 64px;position:relative;z-index:2}
+.step{height:152px;border:2px solid var(--line);border-radius:16px;background:var(--paper);padding:24px 18px 18px;position:relative;animation:stepOn var(--loop) steps(1,end) infinite}
+.step:nth-child(1){animation-delay:calc(var(--loop) * 0 / 4)}
+.step:nth-child(2){animation-delay:calc(var(--loop) * -3 / 4)}
+.step:nth-child(3){animation-delay:calc(var(--loop) * -2 / 4)}
+.step:nth-child(4){animation-delay:calc(var(--loop) * -1 / 4)}
+@keyframes stepOn{0%{border-color:var(--accent);background:var(--accent-wash)}25%{border-color:var(--line);background:var(--paper)}100%{border-color:var(--line);background:var(--paper)}}
+.step.active{border-color:var(--accent);background:var(--accent-wash)}
+.step .n{position:absolute;top:-15px;left:18px;width:31px;height:31px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:#fff;font-weight:900;font-size:22px}
+.step h3{font-size:25px;margin:7px 0 7px}
+.step p{font-size:22px;line-height:1.2;color:var(--muted)}
+.question{margin:28px auto 0;width:max-content;max-width:850px;border:2px solid var(--ink);border-radius:999px;padding:15px 28px;background:var(--paper);font-size:25px;font-weight:750;position:relative;z-index:3}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:0 64px;margin-top:58px;position:relative;z-index:3}
+.card{height:156px;border:1px solid var(--line);border-radius:16px;background:var(--paper);padding:20px 18px}
+.card .tag{font-size:22px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
+.card .big{font-family:var(--display);font-size:34px;font-weight:700;margin-bottom:8px;white-space:nowrap}
+.card p{font-size:22px;line-height:1.22;color:var(--muted)}
+.wires{position:absolute;inset:0;width:1080px;height:1350px;z-index:1;pointer-events:none}
+.verdict{position:relative;z-index:3;margin:62px 64px 0;border:1px solid var(--line);border-radius:20px;background:var(--paper);padding:22px 28px 22px;box-shadow:0 2px 9px rgba(21,32,43,.06)}
+.verdict .top{display:flex;align-items:center;justify-content:space-between}
+.verdict h2{font-family:var(--display);font-size:35px}
+.verdict .pill{font-size:22px;font-weight:800;color:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:8px 14px}
+.verdict-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 28px;margin-top:16px}
+.item .label{font-size:22px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.item p{font-size:22px;line-height:1.25;color:var(--ink)}
+.item b{color:var(--accent)}
+.c1{color:var(--c1)}.c2{color:var(--c2)}.c3{color:var(--c3)}.c4{color:var(--c4)}
+.first{margin-top:12px;padding-top:10px;border-top:1px solid var(--line);display:flex;gap:18px;align-items:flex-start}
+.first .label{font-size:22px;font-weight:900;text-transform:uppercase;color:var(--accent);white-space:nowrap}
+.first p{font-size:22px;line-height:1.25}
+.foot{position:absolute;left:0;right:0;bottom:0;height:78px;background:var(--footer);color:#fff;display:flex;align-items:center;justify-content:center;gap:14px;font-size:22px;z-index:4}
+.foot b{letter-spacing:.06em;text-transform:uppercase}
+.foot span{color:#A9B3BD}
+</style>
+</head>
+<body>
+<div id="artboard">
+  <svg class="wires" viewBox="0 0 1080 1350" fill="none">
+    <path id="w1" d="M177 835 C177 875 330 890 515 925" stroke="var(--c1)" stroke-width="3"/>
+    <path id="w2" d="M419 835 C419 878 470 895 526 925" stroke="var(--c2)" stroke-width="3"/>
+    <path id="w3" d="M661 835 C661 878 610 895 554 925" stroke="var(--c3)" stroke-width="3"/>
+    <path id="w4" d="M903 835 C903 875 750 890 565 925" stroke="var(--c4)" stroke-width="3"/>
+    <circle r="7" fill="var(--accent)"><animateMotion dur="4.8s" begin="0s" repeatCount="indefinite"><mpath href="#w1"/></animateMotion><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.12;.88;1" dur="4.8s" begin="0s" repeatCount="indefinite"/></circle>
+    <circle r="7" fill="var(--accent)"><animateMotion dur="4.8s" begin="-1.2s" repeatCount="indefinite"><mpath href="#w2"/></animateMotion><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.12;.88;1" dur="4.8s" begin="-1.2s" repeatCount="indefinite"/></circle>
+    <circle r="7" fill="var(--accent)"><animateMotion dur="4.8s" begin="-2.4s" repeatCount="indefinite"><mpath href="#w3"/></animateMotion><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.12;.88;1" dur="4.8s" begin="-2.4s" repeatCount="indefinite"/></circle>
+    <circle r="7" fill="var(--accent)"><animateMotion dur="4.8s" begin="-3.6s" repeatCount="indefinite"><mpath href="#w4"/></animateMotion><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.12;.88;1" dur="4.8s" begin="-3.6s" repeatCount="indefinite"/></circle>
+  </svg>
+  <header class="head">
+    <div class="eyebrow">PAID MEDIA <span>// PROFIT CHECK</span></div>
+    <h1>Your campaign has a <em>4.2 ROAS</em>. Are you actually making money?</h1>
+    <p class="sub">Platform ROAS stops too early. Run these four checks before you call a campaign profitable.</p>
+  </header>
+  <div class="section-label">Read the numbers in this order</div>
+  <section class="steps">
+    <article class="step"><span class="n">1</span><h3>Platform revenue</h3><p>Use attributed sales.</p></article>
+    <article class="step"><span class="n">2</span><h3>Refunds</h3><p>Remove refunds.</p></article>
+    <article class="step"><span class="n">3</span><h3>Gross margin</h3><p>Apply gross margin.</p></article>
+    <article class="step"><span class="n">4</span><h3>Blended CAC</h3><p>Combine every acquisition cost.</p></article>
+  </section>
+  <div class="question">What remains after the platform dashboard?</div>
+  <section class="cards">
+    <article class="card"><div class="tag c1">Dashboard</div><div class="big">4.2 ROAS</div><p>Platform view looks strong.</p></article>
+    <article class="card"><div class="tag c2">After refunds</div><div class="big">3.5 ROAS</div><p>Refunds remove 17%.</p></article>
+    <article class="card"><div class="tag c3">After margin</div><div class="big">1.4 MER</div><p>Margin cuts the result.</p></article>
+    <article class="card"><div class="tag c4">CM ROAS</div><div class="big">0.8×</div><p>Below break-even.</p></article>
+  </section>
+  <section class="verdict">
+    <div class="top"><h2>The commercial verdict</h2><span class="pill">Not profitable yet</span></div>
+    <div class="verdict-grid">
+      <div class="item"><div class="label c1">What looked good</div><p>Strong attributed demand.</p></div>
+      <div class="item"><div class="label c2">What changed</div><p>Refunds removed <b>17%</b>.</p></div>
+      <div class="item"><div class="label c3">What was missing</div><p>Margin and non-media costs were missing.</p></div>
+      <div class="item"><div class="label c4">What to track</div><p>Use <b>CM ROAS</b> for budget decisions.</p></div>
+    </div>
+    <div class="first"><div class="label">First move</div><p>Review CM ROAS weekly before changing budgets.</p></div>
+  </section>
+  <footer class="foot"><b>Mamdouh Aboammar</b><span>· Paid media economics, without dashboard theatre</span></footer>
+</div>
+</body>
+</html>
