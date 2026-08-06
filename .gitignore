@@ -1,7 +1,7 @@
 build/
 .frames/
-*.gif
-!docs/*.gif
 __pycache__/
 *.pyc
+node_modules/
 .DS_Store
+

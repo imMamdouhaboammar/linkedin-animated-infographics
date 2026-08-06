@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mascot Flow . template</title>
+<!--
+  template-mascot-flow.html
+
+  Reference build for the mascot layer. One pointer mascot hops a rail, each stage
+  card lights as it lands, and a payoff mascot reacts at the last stop with two
+  idle mascots beside it.
+
+  Every number in the motion below was generated, not tuned:
+      python3 scripts/bake_mascot.py hop    --loop 6000 --id mf  --stops 5 --apex 40 --dwell .11
+      python3 scripts/bake_mascot.py idle   --loop 6000 --id amb --n 2 --amp 3 --blink
+      python3 scripts/bake_mascot.py payoff --loop 6000 --id win --at .89 --rise 18 --zeta .30
+
+  Re-run those before changing timing by hand. Read references/mascots.md first.
+-->
+<style>
+:root{
+  --loop:6000ms;
+  --bg:#FDFAF5; --paper:#FCFCF9; --ink:#3A342F; --ink-2:#4C413D; --muted:#7C736C;
+  --line:#E4DED4; --accent:#A85B36; --accent-wash:#F7EAE1; --accent-deep:#8C4526;
+  --foot:#2E2A26;
+  --s1-bar:#EACCAE; --s1-mid:#D07418; --s1-ink:#A35508;
+  --s4-bar:#BACCCC; --s4-mid:#5D8C8C; --s4-ink:#426969;
+  --s6-bar:#BA9CB4; --s6-mid:#905885; --s6-ink:#6D3E64;
+  --s8-bar:#C0C6BA; --s8-mid:#748365; --s8-ink:#556249;
+  --s9-bar:#909090; --s9-mid:#747474; --s9-ink:#575454;
+  --display:Lora,"Bitstream Charter","TeX Gyre Pagella",Georgia,serif;
+  --sans:Carlito,-apple-system,"Liberation Sans",Arial,sans-serif;
+  --mono:"Liberation Mono",ui-monospace,"DejaVu Sans Mono",monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#DDD9D2}
+#artboard{
+  width:1080px;height:1350px;position:relative;overflow:hidden;
+  background-color:var(--bg);
+  background-image:
+    radial-gradient(rgba(58,52,47,.055) .6px,transparent .7px),
+    radial-gradient(rgba(58,52,47,.038) .6px,transparent .7px);
+  background-size:13px 13px,21px 21px;background-position:0 0,7px 11px;
+  font-family:var(--sans);color:var(--ink);
+}
+.hd{position:absolute;left:60px;top:56px;right:60px}
+.eyebrow{font-size:13px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--muted);display:flex;align-items:center;gap:10px}
+.eyebrow .d{width:8px;height:8px;border-radius:99px;background:var(--accent)}
+h1{font-family:var(--display);font-size:60px;line-height:1.08;font-weight:700;
+  letter-spacing:-.018em;margin-top:16px}
+h1 .hi{color:var(--accent)}
+.sub{font-size:20px;line-height:1.5;color:var(--muted);margin-top:16px;max-width:880px}
+
+/* ── stage cards ────────────────────────────────────── */
+.stage{
+  position:absolute;left:200px;width:820px;height:136px;
+  background:var(--paper);border:2px solid var(--line);border-radius:14px;
+  display:flex;align-items:center;gap:20px;padding:0 24px;
+  animation-name:mfOn;animation-duration:var(--loop);
+  animation-timing-function:steps(1,end);animation-iteration-count:infinite;
+}
+@keyframes mfOn{0%{border-color:var(--accent)}11%{border-color:var(--line)}100%{border-color:var(--line)}}
+/* Delays are the baked arrival instants, reversed, then shifted a further half
+   loop so the seam fade lands mid-cycle and frame 0 shows a complete scene.
+   |d| = (0.5 - arrival) mod 1  ->  see references/mascots.md, "the seam". */
+.st1{top:366px;animation-delay:calc(var(--loop) * -0.5)}
+.st2{top:526px;animation-delay:calc(var(--loop) * -0.2775)}
+.st3{top:686px;animation-delay:calc(var(--loop) * -0.055)}
+.st4{top:846px;animation-delay:calc(var(--loop) * -0.8325)}
+.stage .num{
+  width:44px;height:44px;border-radius:12px;flex:none;
+  display:flex;align-items:center;justify-content:center;
+  font-size:17px;font-weight:800;color:#fff;background:var(--mid)}
+.stage .txt h2{font-family:var(--display);font-size:27px;line-height:1.15;font-weight:700}
+.stage .txt p{font-size:16px;line-height:1.45;color:var(--muted);margin-top:6px}
+.stage .out{
+  margin-left:auto;flex:none;text-align:right;font-size:14.5px;line-height:1.65;color:var(--ink-2)}
+.stage .out b{display:block;font-size:11px;font-weight:800;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--sink);margin-bottom:4px}
+.g1{--mid:var(--s1-mid);--sink:var(--s1-ink);--bar:var(--s1-bar)}
+.g2{--mid:var(--s4-mid);--sink:var(--s4-ink);--bar:var(--s4-bar)}
+.g3{--mid:var(--s6-mid);--sink:var(--s6-ink);--bar:var(--s6-bar)}
+.g4{--mid:var(--s8-mid);--sink:var(--s8-ink);--bar:var(--s8-bar)}
+
+/* ── payoff panel ───────────────────────────────────── */
+.payoff{
+  position:absolute;left:60px;top:1014px;width:960px;height:170px;
+  background:var(--accent-wash);border:2px solid var(--accent);border-radius:14px;
+  display:flex;align-items:center;padding:0 26px 0 336px}
+.payoff h3{font-family:var(--display);font-size:28px;font-weight:700;color:var(--accent-deep)}
+.payoff p{font-size:16px;line-height:1.5;color:var(--ink-2);margin-top:7px;max-width:430px}
+.payoff .stat{margin-left:auto;text-align:right;flex:none}
+.payoff .stat .n{font-family:var(--display);font-size:40px;font-weight:700;
+  color:var(--accent-deep);white-space:nowrap}
+.payoff .stat .l{font-size:11.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--accent-deep);opacity:.75;margin-top:2px}
+
+.close{position:absolute;left:60px;top:1206px;font-family:var(--display);font-style:italic;
+  font-size:21px;color:var(--muted)}
+
+/* ── mascot layer ───────────────────────────────────── */
+#stage-svg{position:absolute;inset:0;width:1080px;height:1350px;pointer-events:none}
+.rail{fill:none;stroke:var(--line);stroke-width:2;stroke-dasharray:5 7}
+
+@keyframes mf-squash{0%{transform:scale(1,1)}21.42%{transform:scale(1,1)}22.25%{transform:scale(1.11,0.8)}23.42%{transform:scale(0.97,1.06)}24.92%{transform:scale(1,1)}43.67%{transform:scale(1,1)}44.5%{transform:scale(1.11,0.8)}45.67%{transform:scale(0.97,1.06)}47.17%{transform:scale(1,1)}65.92%{transform:scale(1,1)}66.75%{transform:scale(1.11,0.8)}67.92%{transform:scale(0.97,1.06)}69.42%{transform:scale(1,1)}88.17%{transform:scale(1,1)}89%{transform:scale(1.11,0.8)}90.17%{transform:scale(0.97,1.06)}91.67%{transform:scale(1,1)}100%{transform:scale(1,1)}}
+@keyframes mf-shadow{0%{rx:15px;opacity:0.3}16.62%{rx:7px;opacity:0.1}22.25%{rx:16px;opacity:0.32}24.92%{rx:15px;opacity:0.3}38.88%{rx:7px;opacity:0.1}44.5%{rx:16px;opacity:0.32}47.17%{rx:15px;opacity:0.3}61.12%{rx:7px;opacity:0.1}66.75%{rx:16px;opacity:0.32}69.42%{rx:15px;opacity:0.3}83.37%{rx:7px;opacity:0.1}89%{rx:16px;opacity:0.32}91.67%{rx:15px;opacity:0.3}100%{rx:15px;opacity:0.3}}
+@keyframes mf-seam{0%{opacity:0}4.95%{opacity:1}95.05%{opacity:1}100%{opacity:0}}
+@keyframes amb-breathe{0%{transform:translateY(0px)}8.33%{transform:translateY(1.5px)}16.67%{transform:translateY(2.6px)}25%{transform:translateY(3px)}33.33%{transform:translateY(2.6px)}41.67%{transform:translateY(1.5px)}50%{transform:translateY(0px)}58.33%{transform:translateY(-1.5px)}66.67%{transform:translateY(-2.6px)}75%{transform:translateY(-3px)}83.33%{transform:translateY(-2.6px)}91.67%{transform:translateY(-1.5px)}100%{transform:translateY(0px)}}
+@keyframes amb-blink{0%{transform:scaleY(1)}5%{transform:scaleY(1)}5.75%{transform:scaleY(0.08)}6.83%{transform:scaleY(1)}100%{transform:scaleY(1)}}
+@keyframes win-pop{0%{transform:translateY(0px)}89%{transform:translateY(0px)}90.08%{transform:translateY(-23.2px)}91.17%{transform:translateY(-17.82px)}92.25%{transform:translateY(-17.08px)}93.33%{transform:translateY(-18.72px)}94.42%{transform:translateY(-17.66px)}95.5%{transform:translateY(-18.11px)}96.58%{transform:translateY(-17.99px)}97.67%{transform:translateY(-17.98px)}100%{transform:translateY(0px)}}
+
+.mf-squash{transform-box:fill-box;transform-origin:50% 100%;
+  animation-name:mf-squash;animation-duration:var(--loop);
+  animation-delay:calc(var(--loop) * -0.5);
+  animation-timing-function:linear;animation-iteration-count:infinite}
+.mf-shadow{animation-name:mf-shadow;animation-duration:var(--loop);
+  animation-delay:calc(var(--loop) * -0.5);
+  animation-timing-function:linear;animation-iteration-count:infinite}
+.mf-seam{animation-name:mf-seam;animation-duration:var(--loop);
+  animation-delay:calc(var(--loop) * -0.5);
+  animation-timing-function:linear;animation-iteration-count:infinite}
+.amb-breathe{animation-name:amb-breathe;animation-duration:calc(var(--loop) / 2);
+  animation-timing-function:linear;animation-iteration-count:infinite}
+.amb-blink{transform-box:fill-box;transform-origin:50% 50%;
+  animation-name:amb-blink;animation-duration:var(--loop);
+  animation-timing-function:steps(1,end);animation-iteration-count:infinite}
+.win-pop{animation-name:win-pop;animation-duration:var(--loop);
+  animation-delay:calc(var(--loop) * -0.5);
+  animation-timing-function:linear;animation-iteration-count:infinite}
+.d1{animation-delay:calc(var(--loop) * -0.31)}
+.d2{animation-delay:calc(var(--loop) * -0.63)}
+
+@media (prefers-reduced-motion:reduce){
+  .mf-squash,.mf-shadow,.mf-seam,.amb-breathe,.amb-blink,.win-pop,.stage{animation:none}
+  .mf-seam{opacity:1}
+}
+
+/* ── footer ─────────────────────────────────────────── */
+.foot{position:absolute;left:0;right:0;bottom:0;height:78px;background:var(--foot);
+  color:#F3F1ED;display:flex;align-items:center;justify-content:center;gap:14px}
+.foot .av{width:40px;height:40px;border-radius:99px;background:var(--accent);
+  display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#fff}
+.foot .nm{font-size:15px;font-weight:800;letter-spacing:.09em;text-transform:uppercase}
+.foot .url{font-size:14.5px;color:#A79E95;font-family:var(--mono)}
+</style>
+</head>
+<body>
+<div id="artboard">
+
+  <div class="hd">
+    <div class="eyebrow"><span class="d"></span>template · mascot flow</div>
+    <h1>One brief in.<br>Four passes to a <span class="hi">shipped page</span>.</h1>
+    <div class="sub">The mascot is the reading pointer. It lands on a stage, the stage
+      lights, and the eye follows it down the rail in the order the work actually happens.</div>
+  </div>
+
+  <div class="stage st1 g1"><div class="num">01</div>
+    <div class="txt"><h2>Brief</h2><p>Audience, offer, objection, and the one decision the page has to win.</p></div>
+    <div class="out"><b>Returns</b>Positioning note<br>Awareness stage</div></div>
+
+  <div class="stage st2 g2"><div class="num">02</div>
+    <div class="txt"><h2>Angle</h2><p>The promise, tested against what the reader already believes.</p></div>
+    <div class="out"><b>Returns</b>3 angles<br>Objection map</div></div>
+
+  <div class="stage st3 g3"><div class="num">03</div>
+    <div class="txt"><h2>Draft</h2><p>Section order first, then hero, proof blocks, and CTA variants.</p></div>
+    <div class="out"><b>Returns</b>Page structure<br>Hero + CTA set</div></div>
+
+  <div class="stage st4 g4"><div class="num">04</div>
+    <div class="txt"><h2>Review</h2><p>Claims checked, banned phrasing stripped, one CTA left standing.</p></div>
+    <div class="out"><b>Returns</b>Edit pass<br>Ship checklist</div></div>
+
+  <div class="payoff">
+    <div><h3>Shipped</h3>
+      <p>Four passes, one chat, and the angle survives all of them because each stage
+        hands the next one a brief rather than a paragraph.</p></div>
+    <div class="stat"><div class="n">1 loop</div><div class="l">brief to live page</div></div>
+  </div>
+
+  <div class="close">Swap the four stages for your own. The motion stays.</div>
+
+  <svg id="stage-svg" viewBox="0 0 1080 1350" xmlns="http://www.w3.org/2000/svg"
+       role="img" aria-labelledby="mf-t mf-d">
+    <title id="mf-t">A mascot hopping down a four-stage rail into a shipped panel</title>
+    <desc id="mf-d">A small character lands on each of four stage cards in turn, lighting
+      the card it lands on, then drops into the payoff panel where a second character
+      pops up in response and two smaller characters breathe beside it.</desc>
+
+    <defs>
+      <!-- normalized so the feet sit at (0,0), per svg-mascot-animator/references/rigging.md -->
+      <g id="mf-body" transform="translate(-23,-52)">
+        <rect x="3" y="10" width="40" height="42" rx="14" fill="var(--accent)"/>
+        <rect x="19" y="0" width="7" height="13" rx="3.5" fill="var(--accent-deep)"/>
+        <circle cx="22.5" cy="2" r="4" fill="var(--accent-deep)"/>
+        <circle cx="16" cy="28" r="7.5" fill="#FCFCF9"/>
+        <circle cx="31" cy="28" r="7.5" fill="#FCFCF9"/>
+        <g class="mf-eyes">
+          <circle cx="17" cy="29" r="3.6" fill="#2E2A26"/>
+          <circle cx="32" cy="29" r="3.6" fill="#2E2A26"/>
+        </g>
+        <rect x="16" y="40" width="14" height="4" rx="2" fill="#FCFCF9" opacity=".5"/>
+      </g>
+      <g id="mf-small" transform="translate(-16,-36)">
+        <rect x="2" y="7" width="28" height="29" rx="10" fill="var(--mini)"/>
+        <rect x="13" y="0" width="5" height="9" rx="2.5" fill="var(--mini-d)"/>
+        <circle cx="11" cy="20" r="5.2" fill="#FCFCF9"/>
+        <circle cx="21" cy="20" r="5.2" fill="#FCFCF9"/>
+        <g class="amb-blink">
+          <circle cx="11.5" cy="21" r="2.5" fill="#2E2A26"/>
+          <circle cx="21.5" cy="21" r="2.5" fill="#2E2A26"/>
+        </g>
+      </g>
+
+      <!-- the rail. The pointer follows this exact path via <mpath>. -->
+      <path id="mf-rail" d="M 118 490
+        C 152 470, 152 610, 118 650
+        C 152 630, 152 770, 118 810
+        C 152 790, 152 930, 118 970
+        C 152 1010, 148 1110, 112 1152"/>
+    </defs>
+
+    <use href="#mf-rail" class="rail"/>
+
+    <!-- payoff mascot, fires once at 89% of the loop -->
+    <g transform="translate(186,1152)">
+      <ellipse cx="0" cy="2" rx="20" ry="6" fill="#3A342F" opacity=".16"/>
+      <g class="win-pop"><use href="#mf-body" transform="scale(1.06)"/></g>
+    </g>
+    <!-- two idles, phase-offset so they never breathe in unison -->
+    <g transform="translate(250,1154)" style="--mini:var(--s4-mid);--mini-d:var(--s4-ink)">
+      <g class="amb-breathe d1"><use href="#mf-small"/></g></g>
+    <g transform="translate(302,1156)" style="--mini:var(--s6-mid);--mini-d:var(--s6-ink)">
+      <g class="amb-breathe d2"><use href="#mf-small"/></g></g>
+
+    <!-- the pointer -->
+    <g class="mf-seam">
+      <g>
+        <animateMotion dur="6s" begin="-3s" repeatCount="indefinite" calcMode="linear" rotate="0"
+          keyTimes="0;0.11;0.2225;0.3325;0.445;0.555;0.6675;0.7775;0.89;1"
+          keyPoints="0;0;0.25;0.25;0.5;0.5;0.75;0.75;1;1">
+          <mpath href="#mf-rail"/>
+        </animateMotion>
+        <ellipse class="mf-shadow" cx="0" cy="3" rx="15" ry="5" fill="#3A342F" opacity=".22"/>
+        <g class="mf-squash"><use href="#mf-body"/></g>
+      </g>
+    </g>
+  </svg>
+
+  <div class="foot"><div class="av">MA</div>
+    <span class="nm">Mamdouh Aboammar</span>
+    <span class="url">· template-mascot-flow</span></div>
+</div>
+</body></html>

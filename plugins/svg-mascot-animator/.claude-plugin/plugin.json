@@ -1,0 +1,19 @@
+{
+  "name": "svg-mascot-animator",
+  "description": "Turn a static SVG mascot, logo, or icon into physics-driven animation using Anime.js at runtime and baked CSS keyframes for README assets.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Mamdouh Aboammar",
+    "url": "https://github.com/imMamdouhaboammar"
+  },
+  "homepage": "https://github.com/imMamdouhaboammar/vibe-svgs",
+  "license": "MIT",
+  "keywords": [
+    "svg",
+    "animation",
+    "mascot",
+    "animejs",
+    "physics",
+    "readme"
+  ]
+}

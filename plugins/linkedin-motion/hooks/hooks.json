@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path // empty' | grep -Ei '\\.html$' | xargs -r grep -lE 'id=\"artboard\"' 2>/dev/null | xargs -r -n1 bash ${CLAUDE_PLUGIN_ROOT}/scripts/lint_artboard.sh || true"
+          }
+        ]
+      }
+    ]
+  }
+}

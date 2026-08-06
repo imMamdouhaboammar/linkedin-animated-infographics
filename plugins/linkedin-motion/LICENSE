@@ -1,6 +1,7 @@
 MIT License
 
-Copyright (c) 2026 Mamdouh Aboammar
+Copyright (c) 2026 Mamdouh Aboammar (@imMamdouhaboammar)
+OpenOps Studio · PrePilot.cloud
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +20,16 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+A note on the reference material.
+
+The archetypes documented in references/caption-patterns.md and
+references/visual-archetypes.md were derived by analysing publicly posted
+LinkedIn content. They describe structural patterns, not the content itself.
+No copyrighted text, image, or design from any referenced post is redistributed
+in this repository. The templates in assets/ are original work.
+
+If you use this skill to produce work, attribution is appreciated but not
+required. If you fork it and publish the fork, keep the copyright line above.

@@ -1,0 +1,109 @@
+/* House 0 — Muted Reference. The default palette for this skill.
+   Paste inline into the artboard's <style>. Never link it over the network;
+   capture_frames.py needs the page to be fully self-contained.
+   Full rules: references/design-systems.md → House 0. */
+
+:root{
+  /* ── core ─────────────────────────────────────────── */
+  --bg:          #FDFAF5;
+  --paper:       #FCFCF9;
+  --ink:         #3A342F;
+  --ink-2:       #4C413D;
+  --muted:       #7C736C;
+  --line:        #E4DED4;
+  --accent:      #A85B36;
+  --accent-wash: #F7EAE1;
+  --accent-deep: #8C4526;
+  --foot:        #2E2A26;
+
+  /* ── nine section hues, four tiers each ───────────── */
+  /* bar  = header strip        wash = panel body
+     mid  = filled badge, white text only
+     ink  = label text on bar or wash                    */
+  --s1-bar:#EACCAE; --s1-wash:#FAF1E7; --s1-mid:#D07418; --s1-ink:#A35508; /* apricot */
+  --s2-bar:#DEBAD2; --s2-wash:#F7EBF3; --s2-mid:#AB3D86; --s2-ink:#842765; /* blush   */
+  --s3-bar:#D2B4AE; --s3-wash:#F6EEEC; --s3-mid:#A15647; --s3-ink:#7B3C30; /* clay    */
+  --s4-bar:#BACCCC; --s4-wash:#EFF3F3; --s4-mid:#5D8C8C; --s4-ink:#426969; /* mist    */
+  --s5-bar:#CCC0D2; --s5-wash:#F2EEF4; --s5-mid:#7D5A8E; --s5-ink:#5D3F6B; /* lilac   */
+  --s6-bar:#BA9CB4; --s6-wash:#F4EEF3; --s6-mid:#905885; --s6-ink:#6D3E64; /* mauve   */
+  --s7-bar:#D8CC96; --s7-wash:#F8F6EA; --s7-mid:#BCA22C; --s7-ink:#927C19; /* wheat   */
+  --s8-bar:#C0C6BA; --s8-wash:#F1F3EF; --s8-mid:#748365; --s8-ink:#556249; /* sage    */
+  --s9-bar:#909090; --s9-wash:#F1F1F1; --s9-mid:#747474; --s9-ink:#575454; /* slate   */
+
+  /* ── type ─────────────────────────────────────────── */
+  --display: Lora, "Bitstream Charter", "Iowan Old Style", "TeX Gyre Pagella",
+             Georgia, serif;
+  --sans: Carlito, -apple-system, "Segoe UI", "Liberation Sans", Arial, sans-serif;
+  --mono: "Liberation Mono", "SF Mono", ui-monospace, "DejaVu Sans Mono",
+          Menlo, monospace;
+  --arabic: "SF Arabic", "Noto Naskh Arabic", "Segoe UI", Tahoma, sans-serif;
+}
+
+/* ── paper ground ───────────────────────────────────── */
+/* Two speckle layers at coprime sizes so no repeat is visible.
+   This is the most expensive thing on a light ground. If the GIF
+   comes back over budget, delete the second radial-gradient first. */
+.paper-ground{
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(rgba(58,52,47,.055) .6px, transparent .7px),
+    radial-gradient(rgba(58,52,47,.038) .6px, transparent .7px);
+  background-size: 13px 13px, 21px 21px;
+  background-position: 0 0, 7px 11px;
+}
+
+/* ── panel ──────────────────────────────────────────── */
+/* Set one --s*-group per panel via a modifier class. Nothing else changes. */
+.panel{
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.panel > .head{
+  background: var(--bar);
+  padding: 11px 18px;
+  display: flex; align-items: center; gap: 11px;
+}
+.panel > .head .num{
+  width: 26px; height: 26px; border-radius: 8px;
+  background: var(--mid); color: #fff;
+  font: 800 14px/26px var(--sans); text-align: center;
+}
+.panel > .head .ttl{
+  color: var(--ink-sec);
+  font: 800 19px var(--sans); letter-spacing: .01em;
+}
+.panel > .body{ padding: 18px; color: var(--ink-2); }
+
+.s1{--bar:var(--s1-bar);--wash:var(--s1-wash);--mid:var(--s1-mid);--ink-sec:var(--s1-ink);}
+.s2{--bar:var(--s2-bar);--wash:var(--s2-wash);--mid:var(--s2-mid);--ink-sec:var(--s2-ink);}
+.s3{--bar:var(--s3-bar);--wash:var(--s3-wash);--mid:var(--s3-mid);--ink-sec:var(--s3-ink);}
+.s4{--bar:var(--s4-bar);--wash:var(--s4-wash);--mid:var(--s4-mid);--ink-sec:var(--s4-ink);}
+.s5{--bar:var(--s5-bar);--wash:var(--s5-wash);--mid:var(--s5-mid);--ink-sec:var(--s5-ink);}
+.s6{--bar:var(--s6-bar);--wash:var(--s6-wash);--mid:var(--s6-mid);--ink-sec:var(--s6-ink);}
+.s7{--bar:var(--s7-bar);--wash:var(--s7-wash);--mid:var(--s7-mid);--ink-sec:var(--s7-ink);}
+.s8{--bar:var(--s8-bar);--wash:var(--s8-wash);--mid:var(--s8-mid);--ink-sec:var(--s8-ink);}
+.s9{--bar:var(--s9-bar);--wash:var(--s9-wash);--mid:var(--s9-mid);--ink-sec:var(--s9-ink);}
+
+/* ── active state ───────────────────────────────────── */
+/* The only colour allowed to change between frames. */
+@keyframes stepOn{
+  0%  { border-color: var(--accent); }
+  15% { border-color: var(--line); }
+  100%{ border-color: var(--line); }
+}
+
+/* ── attribution footer ─────────────────────────────── */
+.foot{
+  position: absolute; left: 0; right: 0; bottom: 0; height: 78px;
+  background: var(--foot); color: #F3F1ED;
+  display: flex; align-items: center; justify-content: center; gap: 14px;
+}
+.foot .av{
+  width: 40px; height: 40px; border-radius: 99px; background: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  font: 800 15px var(--sans); color: #fff;
+}
+.foot .nm{ font: 800 15px var(--sans); letter-spacing: .09em; text-transform: uppercase; }
+.foot .url{ font: 400 14.5px var(--mono); color: #A79E95; }

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>House 0 — Muted Reference</title>
+<style>
+:root{
+  --bg:#FDFAF5; --paper:#FCFCF9; --ink:#3A342F; --ink-2:#4C413D; --muted:#7C736C;
+  --line:#E4DED4; --accent:#A85B36; --accent-wash:#F7EAE1; --accent-deep:#8C4526;
+  --foot:#2E2A26;
+  --display: Lora,"Bitstream Charter",Georgia,serif;
+  --sans: Carlito,-apple-system,"Liberation Sans",Arial,sans-serif;
+  --mono:"Liberation Mono",ui-monospace,"DejaVu Sans Mono",monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#DDD9D2}
+#artboard{
+  width:1080px;height:1350px;position:relative;overflow:hidden;
+  background-color:var(--bg);
+  background-image:
+    radial-gradient(rgba(58,52,47,.055) .6px, transparent .7px),
+    radial-gradient(rgba(58,52,47,.038) .6px, transparent .7px);
+  background-size:13px 13px,21px 21px; background-position:0 0,7px 11px;
+  font-family:var(--sans); color:var(--ink); padding:56px 60px 0;
+}
+.eyebrow{font-size:13px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--muted);display:flex;align-items:center;gap:10px}
+.eyebrow .d{width:8px;height:8px;border-radius:99px;background:var(--accent)}
+h1{font-family:var(--display);font-size:60px;line-height:1.08;font-weight:700;
+  letter-spacing:-.018em;margin-top:16px}
+h1 .hi{color:var(--accent)}
+.sub{font-size:20px;line-height:1.5;color:var(--muted);margin-top:16px;max-width:900px}
+
+.sect{font-size:11.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);margin:30px 0 12px}
+
+.core{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.core .sw{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--paper)}
+.core .chip{height:74px}
+.core .meta{padding:9px 11px 11px}
+.core .nm{font-size:12.5px;font-weight:800;letter-spacing:.02em}
+.core .hex{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:2px}
+
+table{width:100%;border-collapse:separate;border-spacing:0 8px}
+th{font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--muted);text-align:left;padding:0 0 4px 0}
+td{vertical-align:middle}
+.row td:first-child{width:120px}
+.hue{font-size:15px;font-weight:800}
+.hue small{display:block;font-weight:400;font-size:11.5px;color:var(--muted);
+  letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+.tier{height:52px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:12.5px;letter-spacing:.02em}
+.tw{width:8px}
+.job{font-size:12.5px;color:var(--muted);padding-left:14px;line-height:1.4}
+
+.note{margin-top:26px;border:1px solid var(--line);border-radius:12px;background:var(--paper);
+  padding:16px 20px;font-size:15px;line-height:1.55;color:var(--ink-2)}
+.note b{color:var(--ink)}
+.note .k{font-family:var(--mono);font-size:14px;color:var(--accent-deep);
+  background:var(--accent-wash);padding:1px 6px;border-radius:5px}
+
+.foot{position:absolute;left:0;right:0;bottom:0;height:78px;background:var(--foot);
+  color:#F3F1ED;display:flex;align-items:center;justify-content:center;gap:14px}
+.foot .av{width:40px;height:40px;border-radius:99px;background:var(--accent);
+  display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#fff}
+.foot .nm{font-size:15px;font-weight:800;letter-spacing:.09em;text-transform:uppercase}
+.foot .url{font-size:14.5px;color:#A79E95;font-family:var(--mono)}
+</style></head><body>
+<div id="artboard">
+  <div class="eyebrow"><span class="d"></span>linkedin-animated-infographics · default palette</div>
+  <h1>House 0 <span class="hi">Muted Reference</span></h1>
+  <div class="sub">Warm paper ground, nine desaturated section hues in four tiers each,
+    one terracotta carrying every active state.</div>
+
+  <div class="sect">Core</div>
+  <div class="core">
+    <div class="sw"><div class="chip" style="background:#FDFAF5"></div><div class="meta"><div class="nm">bg</div><div class="hex">#FDFAF5</div></div></div>
+    <div class="sw"><div class="chip" style="background:#FCFCF9"></div><div class="meta"><div class="nm">paper</div><div class="hex">#FCFCF9</div></div></div>
+    <div class="sw"><div class="chip" style="background:#E4DED4"></div><div class="meta"><div class="nm">line</div><div class="hex">#E4DED4</div></div></div>
+    <div class="sw"><div class="chip" style="background:#7C736C"></div><div class="meta"><div class="nm">muted</div><div class="hex">#7C736C</div></div></div>
+    <div class="sw"><div class="chip" style="background:#3A342F"></div><div class="meta"><div class="nm">ink</div><div class="hex">#3A342F</div></div></div>
+    <div class="sw"><div class="chip" style="background:#4C413D"></div><div class="meta"><div class="nm">ink-2</div><div class="hex">#4C413D</div></div></div>
+    <div class="sw"><div class="chip" style="background:#A85B36"></div><div class="meta"><div class="nm">accent</div><div class="hex">#A85B36</div></div></div>
+    <div class="sw"><div class="chip" style="background:#F7EAE1"></div><div class="meta"><div class="nm">accent-wash</div><div class="hex">#F7EAE1</div></div></div>
+    <div class="sw"><div class="chip" style="background:#8C4526"></div><div class="meta"><div class="nm">accent-deep</div><div class="hex">#8C4526</div></div></div>
+    <div class="sw"><div class="chip" style="background:#2E2A26"></div><div class="meta"><div class="nm">foot</div><div class="hex">#2E2A26</div></div></div>
+  </div>
+
+  <div class="sect">Nine section hues · bar / wash / mid / ink</div>
+  <table>
+    <tr><th></th><th>bar</th><th class="tw"></th><th>wash</th><th class="tw"></th><th>mid</th><th class="tw"></th><th>ink</th><th></th></tr>
+    <tr class="row"><td><div class="hue">1<small>apricot</small></div></td>
+      <td><div class="tier" style="background:#EACCAE;color:#A35508">#EACCAE</div></td><td></td>
+      <td><div class="tier" style="background:#FAF1E7;color:#A35508">#FAF1E7</div></td><td></td>
+      <td><div class="tier" style="background:#D07418;color:#fff">#D07418</div></td><td></td>
+      <td><div class="tier" style="background:#FCFCF9;color:#A35508;border:1px solid #E4DED4">#A35508</div></td>
+      <td class="job">header strip / panel body / filled badge / label text</td></tr>
+    <tr class="row"><td><div class="hue">2<small>blush</small></div></td>
+      <td><div class="tier" style="background:#DEBAD2;color:#842765">#DEBAD2</div></td><td></td>
+      <td><div class="tier" style="background:#F7EBF3;color:#842765">#F7EBF3</div></td><td></td>
+      <td><div class="tier" style="background:#AB3D86;color:#fff">#AB3D86</div></td><td></td>
+      <td><div class="tier" style="background:#FCFCF9;color:#842765;border:1px solid #E4DED4">#842765</div></td><td></td></tr>
+    <tr class="row"><td><div class="hue">3<small>clay</small></div></td>
+      <td><div class="tier" style="background:#D2B4AE;color:#7B3C30">#D2B4AE</div></td><td></td>
+      <td><div class="tier" style="background:#F6EEEC;color:#7B3C30">#F6EEEC</div></td><td></td>
+      <td><div class="tier" style="background:#A15647;color:#fff">#A15647</div></td><td></td>
+      <td><div class="tier" style="background:#FCFCF9;color:#7B3C30;border:1px solid #E4DED4">#7B3C30</div></td><td></td></tr>
+    <tr class="row"><td><div class="hue">4<small>mist</small></div></td>
+      <td><div class="tier" style="background:#BACCCC;color:#426969">#BACCCC</div></td><td></td>
+      <td><div class="tier" style="background:#EFF3F3;color:#426969">#EFF3F3</div></td><td></td>
+      <td><div class="tier" style="background:#5D8C8C;color:#fff">#5D8C8C</div></td><td></td>
+      <td><div class="tier" style="background:#FCFCF9;color:#426969;border:1px solid #E4DED4">#426969</div></td><td></td></tr>
+    <tr class="row"><td><div class="hue">5<small>lilac</small></div></td>
+      <td><div class="tier" style="background:#CCC0D2;color:#5D3F6B">#CCC0D2</div></td><td></td>
+      <td><div class="tier" style="background:#F2EEF4;color:#5D3F6B">#F2EEF4</div></td><td></td>
+      <td><div class="tier" style="background:#7D5A8E;color:#fff">#7D5A8E</div></td><td></td>
+      <td><div class="tier" style="background:#FCFCF9;color:#5D3F6B;border:1px solid #E4DED4">#5D3F6B</div></td><td></td></tr>
+    <tr class="row"><td><div class="hue">6<small>mauve</small></div></td>
+      <td><div class="tier" style="background:#BA9CB4;color:#6D3E64">#BA9CB4</div></td><td></td>
+      <td><div class="tier" style="background:#F4EEF3;color:#6D3E64">#F4EEF3</div></td><td></td>
+      <td><div class="tier" style="background:#905885;color:#fff">#905885</div></td><td></td>
+      <td><div class="tier" style="background:#FCFCF9;color:#6D3E64;border:1px solid #E4DED4">#6D3E64</div></td><td></td></tr>
+    <tr class="row"><td><div class="hue">7<small>wheat</small></div></td>
+      <td><div class="tier" style="background:#D8CC96;color:#927C19">#D8CC96</div></td><td></td>
+      <td><div class="tier" style="background:#F8F6EA;color:#927C19">#F8F6EA</div></td><td></td>
+      <td><div class="tier" style="background:#BCA22C;color:#fff">#BCA22C</div></td><td></td>
+      <td><div class="tier" style="background:#FCFCF9;color:#927C19;border:1px solid #E4DED4">#927C19</div></td><td></td></tr>
+    <tr class="row"><td><div class="hue">8<small>sage</small></div></td>
+      <td><div class="tier" style="background:#C0C6BA;color:#556249">#C0C6BA</div></td><td></td>
+      <td><div class="tier" style="background:#F1F3EF;color:#556249">#F1F3EF</div></td><td></td>
+      <td><div class="tier" style="background:#748365;color:#fff">#748365</div></td><td></td>
+      <td><div class="tier" style="background:#FCFCF9;color:#556249;border:1px solid #E4DED4">#556249</div></td><td></td></tr>
+    <tr class="row"><td><div class="hue">9<small>slate</small></div></td>
+      <td><div class="tier" style="background:#909090;color:#3A342F">#909090</div></td><td></td>
+      <td><div class="tier" style="background:#F1F1F1;color:#575454">#F1F1F1</div></td><td></td>
+      <td><div class="tier" style="background:#747474;color:#fff">#747474</div></td><td></td>
+      <td><div class="tier" style="background:#FCFCF9;color:#575454;border:1px solid #E4DED4">#575454</div></td>
+      <td class="job">the closer. summary and action panels only</td></tr>
+  </table>
+
+  <div class="note">
+    <b>Order is the meaning.</b> Walk the hues top to bottom, one per section. Under six
+    sections use <span class="k">apricot · mist · mauve · wheat · sage · slate</span>.
+    Section hues stay frozen for the whole loop; the terracotta is the only colour allowed
+    to change between frames.
+  </div>
+
+  <div class="foot"><div class="av">MA</div>
+    <span class="nm">Mamdouh Aboammar</span>
+    <span class="url">· house0-tokens.css</span></div>
+</div>
+</body></html>

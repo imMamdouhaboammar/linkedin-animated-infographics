@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<!--
+  Runtime template for the interactive track. Copy, swap in the mascot artwork,
+  and rewrite the timeline. Everything here is Anime.js v4.
+
+  The rig is identical to the static track: normalized artwork in <defs>, one
+  transform concern per nested group. That is what lets the same motion design
+  ship as a baked CSS file for a README and as this file for a web page.
+-->
+<meta charset="utf-8">
+<title>mascot scene</title>
+<style>
+  body { margin: 0; display: grid; place-items: center; min-height: 100vh;
+         background: #FAF9F5; font: 13px ui-monospace, Menlo, monospace; color: #6E6C66; }
+  @media (prefers-color-scheme: dark) { body { background: #1A1915; color: #A9A69D; } }
+  .stage { width: min(560px, 92vw); }
+  .controls { display: flex; gap: 12px; align-items: center; margin-top: 12px; }
+  button { font: inherit; padding: 6px 12px; border: 1px solid currentColor;
+           background: none; color: inherit; border-radius: 8px; cursor: pointer; }
+</style>
+
+<div class="stage">
+  <svg id="scene" viewBox="0 0 460 200" role="img" aria-labelledby="scene-t scene-d">
+    <title id="scene-t">Mascot scene</title>
+    <desc id="scene-d">Describe the motion here, since a screen reader cannot watch it.</desc>
+
+    <defs>
+      <!-- normalized artwork: origin at the pivot (feet for grounded subjects) -->
+      <g id="scene-m" transform="translate(-12,-20)">
+        <path fill="#D97757" clip-rule="evenodd" fill-rule="evenodd"
+              d="M20.998 10.949H24v3.102h-3v3.028h-1.487V20H18v-2.921h-1.487V20H15v-2.921H9V20H7.488v-2.921H6V20H4.487v-2.921H3V14.05H0V10.95h3V5h17.998v5.949zM6 10.949h1.488V8.102H6v2.847zm10.51 0H18V8.102h-1.49v2.847z"/>
+      </g>
+      <!-- optional motion path: hide it, or stroke it as a guide -->
+      <path id="scene-route" fill="none" stroke="currentColor" stroke-width="1"
+            stroke-dasharray="3 6" opacity=".35"
+            d="M78 152 C 150 40, 300 40, 372 152"/>
+    </defs>
+
+    <line x1="24" y1="152" x2="436" y2="152" stroke="currentColor" stroke-width="2" opacity=".35"/>
+    <ellipse id="shadow" cx="78" cy="152" rx="34" ry="5" fill="#000" opacity=".3"/>
+
+    <g id="pos">
+      <g id="body" style="transform-box: fill-box; transform-origin: 50% 100%">
+        <use href="#scene-m" transform="translate(0,152) scale(2.6)"/>
+      </g>
+    </g>
+  </svg>
+
+  <div class="controls">
+    <button id="play">play</button>
+    <button id="restart">restart</button>
+    <span id="readout"></span>
+  </div>
+</div>
+
+<script type="module">
+import {
+  animate, createTimeline, createScope, stagger, spring, svg, utils, engine,
+} from 'https://esm.sh/animejs@4.5.0';
+
+// One global honour of the reduced-motion preference. Setting the engine speed
+// rather than skipping the code keeps every onComplete and every final value
+// intact, so the scene lands on its resting pose immediately.
+const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+engine.defaults.ease = 'inOut(3)';
+
+// createScope isolates selectors and gives one cleanup handle. Use it whenever
+// the scene lives inside a component that can unmount.
+const scope = createScope({ root: '#scene' }).add(() => {
+
+  const tl = createTimeline({
+    loop: true,
+    defaults: { duration: 600 },
+    autoplay: !calm,
+  });
+
+  tl
+    // anticipation: slow settle into the crouch
+    .add('#body', { scaleY: 0.8, scaleX: 1.14, duration: 380, ease: 'outQuart' }, 400)
+    // release: short and sharp
+    .add('#body', { scaleY: 1.22, scaleX: 0.88, duration: 70, ease: 'inCubic' })
+    // flight along the motion path, constant speed because nothing pushes sideways
+    .add('#pos', {
+      ...svg.createMotionPath('#scene-route'),
+      duration: 850,
+      ease: 'linear',
+    }, '<')
+    .add('#body', { scaleY: 1, scaleX: 1, duration: 260, ease: 'outQuad' }, '<')
+    // contact: brief squash, then a spring recovery whose length the solver picks
+    .add('#body', { scaleY: 0.72, scaleX: 1.2, duration: 70, ease: 'inQuad' })
+    .add('#body', {
+      scaleY: 1, scaleX: 1,
+      ease: spring({ stiffness: 140, damping: 9, mass: 1 }),
+    })
+    .add('#pos', { duration: 900 }, '<'); // hold before the loop restarts
+
+  // Secondary motion: the shadow reads the subject's own height every frame
+  // rather than running its own curve, so it can never drift out of phase.
+  const $body = utils.$('#pos')[0];
+  const $shadow = utils.$('#shadow')[0];
+  const apex = 112;
+  animate($shadow, {
+    duration: tl.duration,
+    loop: true,
+    ease: 'linear',
+    autoplay: !calm,
+    onUpdate: () => {
+      const m = new DOMMatrix(getComputedStyle($body).transform);
+      const h = Math.min(1, Math.abs(m.f) / apex);
+      utils.set($shadow, { rx: 34 - 19 * h, opacity: 0.3 - 0.2 * h, cx: 78 + m.e });
+    },
+  });
+
+  if (calm) tl.seek(tl.duration * 0.72);   // rest on the payoff, not on frame zero
+
+  const $readout = utils.$('#readout')[0];
+  utils.$('#play')[0].onclick = () => (tl.paused ? tl.play() : tl.pause());
+  utils.$('#restart')[0].onclick = () => tl.restart();
+  $readout.textContent = `${Math.round(tl.duration)}ms loop`;
+
+  return () => tl.revert();   // cleanup handle for the host framework
+});
+
+// scope.revert() when the component unmounts
+</script>

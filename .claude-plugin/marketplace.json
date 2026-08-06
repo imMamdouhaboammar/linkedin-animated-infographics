@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "linkedin-animated-infographics",
+  "description": "The animated-infographic post format for LinkedIn, plus the motion tooling behind it. Deterministic 1080x1350 looping GIFs rendered from HTML, and physics-driven SVG mascots.",
+  "owner": {
+    "name": "Mamdouh Aboammar",
+    "url": "https://github.com/imMamdouhaboammar"
+  },
+  "metadata": {
+    "pluginRoot": "./plugins"
+  },
+  "plugins": [
+    {
+      "name": "linkedin-motion",
+      "source": "./plugins/linkedin-motion",
+      "displayName": "LinkedIn Motion",
+      "description": "Ship a LinkedIn post as a structured caption plus a 1080x1350 looping GIF infographic. Seven skills, four agents, deterministic headless-Chrome rendering, and the House 0 palette.",
+      "version": "2.0.0",
+      "author": {
+        "name": "Mamdouh Aboammar",
+        "url": "https://github.com/imMamdouhaboammar"
+      },
+      "homepage": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics",
+      "repository": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics",
+      "license": "MIT",
+      "category": "design",
+      "keywords": [
+        "linkedin",
+        "infographic",
+        "gif",
+        "animation",
+        "marketing",
+        "svg",
+        "arabic",
+        "rtl"
+      ],
+      "tags": [
+        "content",
+        "design",
+        "motion",
+        "social"
+      ]
+    },
+    {
+      "name": "svg-mascot-animator",
+      "source": "./plugins/svg-mascot-animator",
+      "displayName": "SVG Mascot Animator",
+      "description": "Turn a static SVG mascot or logo into physics-driven animation. Anime.js for runtime pages, baked CSS keyframes for README and docs assets.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Mamdouh Aboammar",
+        "url": "https://github.com/imMamdouhaboammar"
+      },
+      "homepage": "https://github.com/imMamdouhaboammar/vibe-svgs",
+      "license": "MIT",
+      "category": "design",
+      "keywords": [
+        "svg",
+        "animation",
+        "mascot",
+        "animejs",
+        "readme",
+        "physics"
+      ],
+      "tags": [
+        "design",
+        "motion"
+      ]
+    }
+  ]
+}
