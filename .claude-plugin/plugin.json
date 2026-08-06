@@ -1,6 +1,6 @@
 {
-  "name": "linkedin-motion",
-  "description": "Ship a LinkedIn post as a structured caption plus a 1080x1350 looping GIF infographic, rendered deterministically from HTML through seeked headless Chrome.",
+  "name": "linkedin-animated-infographics",
+  "description": "Claude Code plugin for designing, rendering, and animating deterministic 1080x1350 GIF infographics and SVG mascots for LinkedIn (Arabic & RTL supported).",
   "version": "2.0.0",
   "author": {
     "name": "Mamdouh Aboammar",
@@ -16,6 +16,8 @@
     "animation",
     "marketing",
     "arabic",
-    "rtl"
+    "rtl",
+    "svg",
+    "mascot"
   ]
 }
