@@ -11,6 +11,12 @@ Topic: **$ARGUMENTS**
 
 The parent workflow owns orchestration. Workers return artifacts to this workflow; do not ask one worker to coordinate its peers.
 
+## 0. Mascot asset gate
+
+If `--mascot` is present or the user names a specific mascot, identify whether the request refers to an official or exact character. For a named or official mascot, require the **exact SVG** from the user unless that SVG is already task-attached. Do not redraw, approximate, substitute, or generate a lookalike. If the exact SVG is missing, ask the user to attach it and stop the mascot path until it is available.
+
+Record `build/mascot-request.json` with requested name, SVG path, source classification (`user-supplied` or `task-attached`), and `allow_substitute: false`. Validate it with `scripts/mascot_contract.py check` before continuing any mascot planning.
+
 ## 1. Reference diagnosis
 
 If the user supplied screenshots, GIFs, previous designs, or visual references, delegate to `design-study` and save the structured result as `build/design-study.json`. If there is no visual reference, record that this stage is not applicable and continue.
@@ -35,7 +41,7 @@ Delegate to `copy-compressor` with the source, evidence record, Story Archetype,
 
 ## 6. Static layout specification
 
-Delegate to `layout-composer` with the story brief, palette check, artboard copy, and optional design study. Save `build/layout-spec.json`, including zone order, visual anchor, hierarchy, structural fingerprint, and asset requirements.
+Delegate to `layout-composer` with the story brief, palette check, artboard copy, optional design study, and mascot placement requirement when present. Save `build/layout-spec.json`, including zone order, visual anchor, hierarchy, structural fingerprint, and asset requirements.
 
 ## 7. Caption
 
@@ -53,23 +59,27 @@ Show the still. This is the visual approval gate. Get approval before motion.
 
 For animated output, delegate to `motion-director` with the approved still, layout spec, story brief, and mascot role when applicable. Save `build/motion-direction.json`. Static output records this stage as skipped.
 
-## 10. Motion implementation
+## 10. Mascot animation component
 
-For animated output, delegate to `motion-engineer` with the approved still, story brief, and motion-direction artifact. It returns the animated `build/post.html`. Static output skips this stage.
+When the mascot path is active, delegate to `mascot-animator` with the validated exact SVG request, approved still, layout spec, selected mascot role, and motion direction. Save its inspection and identity-preservation evidence under `build/mascot/` and pass the resulting motion contract forward. The supplied SVG remains the identity source and must not be replaced.
 
-## 11. Render mechanics and gates
+## 11. Motion implementation
+
+For animated output, delegate to `motion-engineer` with the approved still, story brief, motion-direction artifact, and validated mascot component when present. It returns the animated `build/post.html`. Static output skips this stage.
+
+## 12. Render mechanics and gates
 
 Delegate to `render-qa`. Save its gate-by-gate evidence as `build/render-report.json`. A `HOLD` returns control to this parent workflow for a targeted fix and re-run.
 
-## 12. Adversarial review
+## 13. Adversarial review
 
-Delegate to `post-critic` with the rendered artifact, caption, evidence record, structural fingerprint, and render report. Save `build/critic-report.json`. Resolve every must-fix item or record why it is not applicable before independent verification.
+Delegate to `post-critic` with the rendered artifact, caption, evidence record, structural fingerprint, mascot identity notes when present, and render report. Save `build/critic-report.json`. Resolve every must-fix item or record why it is not applicable before independent verification.
 
-## 13. Independent acceptance
+## 14. Independent acceptance
 
 Delegate to `story-verifier` with the artifact paths, story brief, evidence record, render report, critic report, and explicit acceptance criteria. Save `build/verification-report.json`. `FAIL:fixable` may trigger a targeted fix and re-check. Maximum two targeted fix attempts; a third unresolved failure escalates.
 
-## 14. Deliver
+## 15. Deliver
 
 Deliver, in this order:
 
@@ -80,4 +90,4 @@ Deliver, in this order:
 5. render numbers when applicable
 6. final verification verdict
 
-If `--arabic` is present, apply `linkedin-animated-infographics:arabic` before copy/layout production. If `--mascot` is present, the exact-SVG mascot gate defined by the mascot skills must pass before any mascot animation is attempted.
+If `--arabic` is present, apply `linkedin-animated-infographics:arabic` before copy/layout production.
