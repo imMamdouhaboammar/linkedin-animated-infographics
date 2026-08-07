@@ -30,6 +30,21 @@ If the effect looks good but adds no meaning, it is decoration
 
 `creative-director` develops the concept before layout starts, then the rest of the workflow tests whether the idea still works through copy, layout, motion, QA, and final verification
 
+## Demos
+
+Good outputs can live in the repo as working examples, not screenshots buried in a README
+
+There are two shelves:
+
+- **Created by Mamdouh** under `demos/owned/`
+- **Created by the community** under `demos/community/<github-user>/`
+
+Every accepted demo is the same portable package: **GIF + HTML + demo.json**
+
+After a finished post reaches final verification `PASS`, the plugin can ask `Share this demo with the community?` If the user says yes, `share-demo` validates the public package and `community-publisher` can prepare a contributor fork, branch, commit, push, and pull request. It stops at the PR. Every contribution still needs maintainer manual review and merge
+
+[Browse the demo gallery](demos/README.md) · [Read the contribution contract](docs/community-demos.md)
+
 ## Install from Claude Marketplace
 
 ```text
@@ -143,11 +158,12 @@ design-study
   -> render-qa
   -> post-critic
   -> story-verifier
+  -> optional share-demo
 ```
 
-`new-post` is the parent workflow
+`new-post` is the production parent workflow. `share-demo` is a separate opt-in parent workflow after verified delivery
 
-Workers return artifacts to the parent instead of coordinating peers through hidden handoffs
+Workers return artifacts to their parent instead of coordinating peers through hidden handoffs
 
 ## Research that ships as behavior
 
@@ -178,6 +194,7 @@ Center-first can be overridden when comprehension or fidelity improves, includin
 /linkedin-animated-infographics:new-post    [topic or URL] [--arabic] [--mascot]
 /linkedin-animated-infographics:render-gif  [path.html] [--duration 6.0] [--fps 12.5]
 /linkedin-animated-infographics:qa-post     [path.html] [caption.md]
+/linkedin-animated-infographics:share-demo  [build directory]
 ```
 
 Programmatic routing
@@ -198,6 +215,7 @@ python3 scripts/ecosystem_router.py check
 python3 scripts/research_gates.py check
 python3 scripts/plugin_graph.py check
 python3 scripts/ecosystem_doctor.py check
+python3 scripts/demo_gallery.py check
 python3 scripts/validate_marketplace.py
 claude plugin validate .
 ```
@@ -216,6 +234,8 @@ tools/copy_slop_check.py
 tools/contrast_check.py
 tools/fingerprint_check.py
 tools/route_request.py
+scripts/demo_gallery.py
+scripts/demo_submit.py
 ```
 
 ## Documentation
@@ -224,6 +244,8 @@ tools/route_request.py
 - [Routing protocol](docs/routing.md)
 - [Agents](docs/agents.md)
 - [Skills](docs/skills.md)
+- [Community demos](docs/community-demos.md)
+- [Demo gallery](demos/README.md)
 - [Research gates and provenance](docs/research.md)
 - [Claude Marketplace](docs/marketplace.md)
 - [Development and validation](docs/development.md)
