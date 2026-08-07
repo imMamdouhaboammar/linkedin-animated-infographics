@@ -51,3 +51,18 @@ jobs:
 
       - name: Run official Claude plugin validator
         run: claude plugin validate .
+
+      - name: Smoke-test marketplace registration and install
+        run: |
+          export HOME="${RUNNER_TEMP}/claude-marketplace-smoke"
+          mkdir -p "$HOME"
+          claude plugin marketplace add . --scope user
+          claude plugin marketplace list --json > "${RUNNER_TEMP}/marketplaces.json"
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          data = json.loads(Path(os.environ["RUNNER_TEMP"]).joinpath("marketplaces.json").read_text())
+          text = json.dumps(data)
+          assert "mamdouh-creative-tools" in text, data
+          PY
+          claude plugin install linkedin-animated-infographics@mamdouh-creative-tools
