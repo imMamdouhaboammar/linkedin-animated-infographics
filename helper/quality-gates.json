@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "gates": {
+    "hooked-design-copy": {
+      "stage": "concept-copy-and-final-review",
+      "severity": "blocking",
+      "owners": ["creative-director", "copy-compressor", "caption-writer", "post-critic"],
+      "applies_to_intents": ["create-post", "info-story", "qa"],
+      "behavior": "Hero copy must earn attention through specificity, useful tension, concrete outcome, recognizable problem, or useful surprise. Section openers may use micro-hooks when they advance the story. Literal labels, commands, UI controls, and table headers stay literal when clarity wins. Do not invent stakes, urgency, proof, facts, or numbers."
+    },
+    "creative-payoff": {
+      "stage": "concept-and-story-planning",
+      "severity": "blocking",
+      "owners": ["creative-director", "story-architect", "layout-composer", "post-critic"],
+      "applies_to_intents": ["create-post", "info-story"],
+      "behavior": "A complete concept must contain at least one useful visual payoff or aha mechanism such as a reveal, relationship, comparison, transformation, state change, or interaction that improves understanding or memory. This is not spectacle and does not justify decorative 3D, glow, extreme saturation, excessive motion, or novelty without a story job."
+    },
+    "restrained-palette": {
+      "stage": "palette-artboard-and-final-review",
+      "severity": "blocking",
+      "owners": ["palette-curator", "artboard-builder", "post-critic"],
+      "applies_to_intents": ["create-post", "info-story", "qa"],
+      "behavior": "Apply the creative-attractive-restrained palette default. Use memorable harmonious color combinations with one clear accent and enough personality to feel designed. Avoid exaggerated saturation, unnecessary neon, or competing accents unless the approved brief explicitly requires a louder treatment."
+    },
+    "center-first-composition": {
+      "stage": "layout-artboard-and-final-review",
+      "severity": "blocking",
+      "owners": ["layout-composer", "artboard-builder", "post-critic"],
+      "applies_to_intents": ["create-post", "info-story", "qa"],
+      "behavior": "Use center-first composition for the primary visual anchor and major story zones. A non-centered alignment is valid only when the layout artifact records a comprehension or fidelity reason such as tables, UI mockups, code or terminal surfaces, timelines, Arabic RTL flow, or documented reference DNA."
+    }
+  }
+}

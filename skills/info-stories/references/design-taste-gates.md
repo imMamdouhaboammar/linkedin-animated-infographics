@@ -2,6 +2,15 @@
 
 Taste is checked against the story job, not against a generic website aesthetic. These gates are adapted for fixed 1080x1350 LinkedIn artboards.
 
+## Plugin-local visual defaults
+
+These defaults are local product choices, not claims imported from the research sources.
+
+- Palette character: `creative-attractive-restrained`. Prefer memorable, harmonious color combinations with a clear accent and enough personality to feel designed. Avoid exaggerated saturation, unnecessary neon, or multiple competing accents unless the brief explicitly requires them.
+- Composition alignment: `center-first`. Center the primary infographic content, visual anchor, and major story zones by default so the page reads as one deliberate composition rather than a loose document layout.
+- An alignment exception is allowed when the content structure requires it, including tables, UI mockups, code or terminal surfaces, timelines, Arabic/RTL reading flow, or a documented reference-DNA decision.
+- An exception must improve comprehension or fidelity, not merely introduce asymmetry for decoration.
+
 ## Pre-emit critique
 
 Score 1-5 before production on six axes: **Purpose, Hierarchy, Execution, Specificity, Restraint, Variety**. Any score below 3 sends the composition back for one targeted revision.
@@ -23,11 +32,13 @@ When a previous brief is supplied, change at least two structural axes. Changing
 
 - One visual anchor must dominate in two seconds at feed scale
 - Every zone has one reading job
+- Start center-first, then use a documented alignment exception only when the content benefits
 - Card count follows content count; do not create empty decorative cells
 - Repetition is allowed when it improves comparison, but the full page must not become one repeated card template
 - Shape choices follow a rule; mixed radii need an explicit role distinction
 - Section hues, supporting colours, and accent roles stay token-driven
 - No arbitrary colour values or type families appear halfway through a build
+- Keep palette character creative-attractive-restrained and avoid exaggerated saturation unless specifically briefed
 - A dense story earns density through hierarchy, not smaller text
 - Real screenshots stay real screenshots; a diagrammatic terminal must be labelled and styled as an illustration rather than presented as captured UI
 - Do not fabricate proof bars, metrics, logos, or testimonials because the selected style has a slot for them

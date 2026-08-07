@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "gates": {
+    "prose-specificity": {
+      "sources": ["stop-slop", "no-ai-slop"],
+      "stage": "copy-and-final-review",
+      "severity": "blocking",
+      "owners": ["copy-compressor", "caption-writer", "post-critic"],
+      "applies_to_intents": ["create-post", "qa"],
+      "local_behavior": "Detect named low-information prose patterns per text slot, preserve intentional labels, and block generic filler or unsupported rhetorical setup before delivery.",
+      "implementation_refs": ["skills/info-stories/references/anti-slop-gates.md", "agents/copy-compressor.md", "agents/caption-writer.md", "agents/post-critic.md"]
+    },
+    "voice-preservation": {
+      "sources": ["no-ai-slop", "stop-slop"],
+      "stage": "copy-compression",
+      "severity": "blocking",
+      "owners": ["copy-compressor", "caption-writer", "post-critic"],
+      "applies_to_intents": ["create-post", "qa"],
+      "local_behavior": "Protect specific facts, mechanisms, names, numbers, and deliberate voice while applying the minimum effective edit; detect before rewriting.",
+      "implementation_refs": ["skills/info-stories/references/anti-slop-gates.md", "agents/copy-compressor.md", "agents/caption-writer.md"]
+    },
+    "design-dials": {
+      "sources": ["taste-skill"],
+      "stage": "story-and-layout-planning",
+      "severity": "blocking",
+      "owners": ["story-architect", "layout-composer", "motion-director"],
+      "applies_to_intents": ["create-post", "info-story"],
+      "local_behavior": "Resolve design variance, visual density, and motion intensity as explicit bounded decisions derived from content shape rather than random aesthetic choice.",
+      "implementation_refs": ["skills/info-stories/catalog.json", "skills/info-stories/references/design-taste-gates.md", "agents/story-architect.md", "agents/layout-composer.md", "agents/motion-director.md"]
+    },
+    "structural-originality": {
+      "sources": ["taste-skill", "hallmark"],
+      "stage": "layout-and-artboard",
+      "severity": "blocking",
+      "owners": ["layout-composer", "artboard-builder", "post-critic"],
+      "applies_to_intents": ["create-post", "qa", "info-story"],
+      "local_behavior": "Require meaningful variation in section topology, card grammar, connectors, hero ratio, or density pattern and reject palette-only reskins.",
+      "implementation_refs": ["skills/info-stories/references/design-taste-gates.md", "agents/layout-composer.md", "agents/artboard-builder.md", "agents/post-critic.md", "tools/fingerprint_check.py"]
+    },
+    "reference-dna": {
+      "sources": ["hallmark"],
+      "stage": "reference-diagnosis",
+      "severity": "blocking",
+      "owners": ["design-study", "layout-composer"],
+      "applies_to_intents": ["create-post", "design-study", "info-story"],
+      "requires": "visual_reference",
+      "local_behavior": "When references are supplied, extract reusable canvas rhythm, topology, card and connector grammar, token roles, density, motion grammar, attribution, and visual anchor without cloning distinctive work.",
+      "implementation_refs": ["skills/info-stories/references/study-protocol.md", "agents/design-study.md", "agents/layout-composer.md"]
+    },
+    "contrast-discipline": {
+      "sources": ["taste-skill", "hallmark"],
+      "stage": "palette-artboard-and-render-qa",
+      "severity": "blocking",
+      "owners": ["palette-curator", "artboard-builder", "render-qa"],
+      "applies_to_intents": ["create-post", "qa", "info-story"],
+      "local_behavior": "Use one resolved semantic token set per artifact and enforce established text and state contrast floors before still approval and delivery.",
+      "implementation_refs": ["skills/info-stories/catalog.json", "agents/palette-curator.md", "agents/artboard-builder.md", "tools/contrast_check.py"]
+    },
+    "evidence-traceability": {
+      "sources": ["COG-second-brain", "hallmark", "no-ai-slop"],
+      "stage": "evidence-copy-and-verification",
+      "severity": "blocking",
+      "owners": ["evidence-checker", "copy-compressor", "story-verifier"],
+      "applies_to_intents": ["create-post", "qa"],
+      "local_behavior": "Trace factual claims, proof, product states, metrics, logos, and protected facts to supplied evidence and require direct evidence rows for acceptance criteria.",
+      "implementation_refs": ["agents/evidence-checker.md", "agents/copy-compressor.md", "agents/story-verifier.md", "skills/info-stories/references/verification-loop.md"]
+    },
+    "bounded-verification": {
+      "sources": ["COG-second-brain"],
+      "stage": "render-review-and-final-verification",
+      "severity": "blocking",
+      "owners": ["render-qa", "post-critic", "story-verifier"],
+      "applies_to_intents": ["create-post", "qa", "render"],
+      "local_behavior": "Keep verification independent and evidence-backed, report PASS or bounded failure states, and allow at most two targeted repair attempts before escalation.",
+      "implementation_refs": ["agents/render-qa.md", "agents/post-critic.md", "agents/story-verifier.md", "skills/info-stories/references/verification-loop.md"]
+    }
+  }
+}

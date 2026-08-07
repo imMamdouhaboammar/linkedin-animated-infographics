@@ -12,8 +12,8 @@
       "name": "linkedin-animated-infographics",
       "source": "./",
       "strict": true,
-      "version": "2.2.0",
-      "description": "Design, validate, render, and animate LinkedIn Info-stories with agent orchestration, exact-SVG mascots, and deterministic QA.",
+      "version": "3.0.0",
+      "description": "Create evidence-safe LinkedIn Info-stories with LLM routing, creative concepting, research gates, exact-SVG mascots, UI mockup stories, and deterministic QA.",
       "author": {
         "name": "Mamdouh Aboammar",
         "url": "https://github.com/imMamdouhaboammar"
@@ -22,7 +22,7 @@
       "repository": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics",
       "license": "MIT",
       "category": "design",
-      "tags": ["linkedin", "infographic", "animation", "info-stories", "svg", "mascot", "ui-mockup"]
+      "tags": ["linkedin", "infographic", "animation", "creative-direction", "info-stories", "research-gates", "svg", "mascot", "ui-mockup"]
     }
   ]
 }

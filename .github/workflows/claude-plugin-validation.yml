@@ -11,19 +11,20 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.12"
 
       - name: Set up Node for Claude Code validator
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: "22"
 
@@ -36,15 +37,30 @@ jobs:
       - name: Validate Info-stories registry
         run: python3 scripts/info_stories.py check
 
+      - name: Validate ecosystem router
+        run: python3 scripts/ecosystem_router.py check
+
+      - name: Validate research gates
+        run: python3 scripts/research_gates.py check
+
       - name: Validate executable plugin graph
         run: python3 scripts/plugin_graph.py check
+
+      - name: Run strict ecosystem doctor
+        run: python3 scripts/ecosystem_doctor.py check
 
       - name: Validate marketplace contract
         run: python3 scripts/validate_marketplace.py
 
-      - name: Validate hook and shell syntax
+      - name: Validate hook, JSON, and shell syntax
         run: |
           python3 -m json.tool hooks/hooks.json >/dev/null
+          python3 -m json.tool helper/router.json >/dev/null
+          python3 -m json.tool helper/capabilities.json >/dev/null
+          python3 -m json.tool helper/artifacts.json >/dev/null
+          python3 -m json.tool helper/quality-gates.json >/dev/null
+          python3 -m json.tool helper/modules.json >/dev/null
+          python3 -m json.tool research/capability-notes/gates.json >/dev/null
           bash -n scripts/lint_artboard.sh
           bash -n scripts/setup.sh
 

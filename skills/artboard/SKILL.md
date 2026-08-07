@@ -1,84 +1,67 @@
 ---
 name: artboard
-description: >-
-  Choose a visual layout and build the 1080x1350 still. Use when picking a visual archetype for
-  an infographic, laying out cards, panels, nodes, or a route, choosing colours, type, or
-  spacing for a LinkedIn visual, or building the HTML artboard before any animation. Covers 13
-  layout archetypes, the House 0 default palette with its nine section hues, offline-safe font
-  stacks, the type scale, and the mandatory attribution footer.
+description: Choose and execute the static 1080x1350 infographic composition, including hierarchy, Story House tokens, center-first alignment, UI surfaces, contrast, and feed-scale legibility before motion.
 ---
 
 # Artboard
 
-The still is the approval gate. Build it, show it, get a yes, then animate.
+## Purpose
 
-## Pick the layout from the shape of the content
+Build or evaluate the approved static infographic composition before animation. The still is the visual approval gate and the base artifact consumed by motion and render workers.
 
-| Content shape | Archetype |
-|---|---|
-| A hierarchy of files or modules | Directory Map |
-| A linear process with stages | Pipeline Stages |
-| A cyclical process with no start | Orbit Cycle |
-| Many inputs converging on one output | Flow Map + Verdict |
-| A flat catalogue of third-party tools | Logo Grid |
-| N independent items of equal weight | Trading Card Grid |
-| A branching dependency graph | Node Tree |
-| One product or integration announcement | Terminal Card |
-| Dense reference material meant to be saved | Cheat Sheet Poster |
-| A benchmark, spec, or timeline | Spec Sheet |
-| A sequential how-to | Annotated Blueprint |
-| A sequence made friendly, with a character | Character Flowchart |
-| A catalogue you can *show* running | Specimen Grid |
+Read `helper/GUIDE.md` before choosing structure. When Info-stories is active, the resolved Story House, Visual Style, Story Archetype, creative concept, and layout spec are authoritative inputs.
 
-Caption archetype and visual archetype are chosen independently.
-`references/visual-archetypes.md` has the structural spec, what to animate, and the failure
-mode for each, plus a table for choosing between adjacent ones.
+## Use when
 
-## Colour: House 0 is the default
+Use for selecting a static visual archetype, executing cards/panels/routes/UI mockups, applying typography and spacing, building `build/post.html`, or checking whether a still is ready for motion.
 
-Warm paper ground, nine desaturated section hues in four tiers each, one terracotta carrying
-every active state. Build in it unless the content is genuinely dark-technical (House 2 or 3)
-or the brief names a brand palette, and say which house you switched to and why.
+## Inputs
 
-Drop-in token sheet: `${CLAUDE_PLUGIN_ROOT}/assets/house0-tokens.css`.
-Rendered swatches: `${CLAUDE_PLUGIN_ROOT}/assets/house0-swatches.html`.
+- selected creative concept when present
+- `build/story-brief.json`
+- `build/palette-check.json`
+- `build/artboard-copy.json`
+- `build/layout-spec.json`
+- optional caption, UI evidence, exact mascot-zone requirement, and brand assets
 
-Tier discipline is what keeps it calm. `bar` for header strips, `wash` for panel bodies, `mid`
-for filled badges with white text, `ink` for label text. Never a `mid` on a background larger
-than 60px, never an `ink` as a fill. Full rules in `references/design-systems.md`.
+## Outputs
 
-Section hues are **static identity**. The accent is **state**. The moment a section hue
-animates, the reader loses the ability to tell "this is panel four" from "this is the panel
-being pointed at".
+Return or support generation of `build/post.html`, `build/still.png`, structural/fidelity notes, visual default compliance, and any blocking render/layout finding to the parent workflow.
 
-## Hard constraints
+## Procedure
 
-1. Exactly one `#artboard` element, `width:1080px; height:1350px`. The capture script
-   screenshots that element, not the viewport.
-2. Fonts are system-safe or base64-embedded in the same file. A webfont that loads over the
-   network renders as a fallback in some frames and not others, and the GIF flickers.
-3. Nothing in the outer 48px margin may ever move. That band holds the title and the footer.
-4. **The attribution footer is mandatory.** Avatar, name, one URL. These images get reposted
-   stripped of the caption, and the footer is the only thing that survives.
-5. Anything load-bearing stays at or above 22px in artboard units, which is about 7px at
-   LinkedIn's 350px feed width.
-6. Text must reach **4.5:1 contrast** and use **500 weight or heavier**. Use each house's
-   `--accent-deep` for accent-coloured text, never the raw accent token. See
-   `references/design-systems.md#contrast-floor-every-house` for the calculation and token
-   rules.
-
-## Templates
-
-`${CLAUDE_PLUGIN_ROOT}/assets/` holds `template-flow-map.html`, `template-orbit-cycle.html`,
-`template-directory-map.html`, `template-specimen-grid.html`, and `template-mascot-flow.html`.
-Start from one rather than from an empty file.
-
-## Check the still
+1. Read `references/visual-archetypes.md` and `references/design-systems.md`.
+2. Choose or execute structure from the content shape. Existing archetypes include Directory Map, Pipeline Stages, Orbit Cycle, Flow Map + Verdict, Logo Grid, Trading Card Grid, Node Tree, Terminal Card, Cheat Sheet Poster, Spec Sheet, Annotated Blueprint, Character Flowchart, and Specimen Grid.
+3. When Info-stories is active, use the resolved Story House token block. Do not silently replace it with legacy House 0. Legacy work without a story brief may still use the existing House 0 fallback.
+4. Apply the plugin-local palette default `creative-attractive-restrained`. Keep the palette memorable and harmonious, with a clear accent and enough personality to feel designed. Avoid exaggerated saturation, unnecessary neon, and competing accents unless the approved brief explicitly requires them.
+5. Apply `center-first` composition to the primary visual anchor and major zones. Use a documented alignment exception only for content that benefits from it, including tables, UI mockups, code/terminal surfaces, timelines, Arabic/RTL reading flow, or reference-DNA fidelity.
+6. Build macro zones first, then hierarchy, cards/connectors/UI, then attribution. One zone gets one reading job.
+7. For UI stories, read `skills/info-stories/references/ui-mockup-rules.md`. Preserve evidence-qualified product states and feed-width legibility. Concept UI must remain identifiable when it could be mistaken for real product evidence.
+8. Keep exactly one `#artboard` at `1080x1350`, system-safe or embedded fonts, mandatory attribution, and load-bearing text at or above the existing feed-scale floor.
+9. Enforce text contrast of at least 4.5:1 and the existing state-pair floor. Use the resolved semantic tokens rather than arbitrary one-off colors.
+10. Run the static checks:
 
 ```bash
 python3 ${CLAUDE_PLUGIN_ROOT}/scripts/check_render.py build/post.html --out build/still.png
 python3 ${CLAUDE_PLUGIN_ROOT}/scripts/check_render.py build/post.html --mobile
 ```
 
-The mobile downscale is the one to judge legibility on. Micro labels below 22px are
-unreadable in feed by design; every flag is a judgement call, not an automatic failure.
+11. Inspect the rendered still at feed width. Confirm visual anchor, alignment decision, structural fingerprint, footer clearance, UI readability, and restrained palette character.
+
+## HOLD conditions
+
+Return a HOLD when contrast fails, the selected Story House/style combination is incompatible, the layout needs unsupported factual/product UI, a required asset is missing, center-first is overridden without a defensible reason, or the still is unreadable at feed width.
+
+## Related components
+
+- routing authority: `helper/GUIDE.md`
+- local quality gates: `helper/quality-gates.json`
+- design defaults: `skills/info-stories/references/design-taste-gates.md`
+- UI fidelity: `skills/info-stories/references/ui-mockup-rules.md`
+- structural check: `tools/fingerprint_check.py`
+- contrast check: `tools/contrast_check.py`
+- worker: `agents/artboard-builder.md`
+
+## Research gates
+
+Apply `structural-originality` and `contrast-discipline` on every Info-stories artboard. Apply `reference-dna` when a visual reference drives the layout. Evidence-bearing UI also inherits `evidence-traceability`.

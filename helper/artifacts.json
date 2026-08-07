@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "artifacts": {
+    "build/design-study.json": {"producer": "design-study", "consumers": ["creative-director", "story-architect", "layout-composer"], "blocking": false},
+    "build/evidence.json": {"producer": "evidence-checker", "consumers": ["creative-director", "story-architect", "copy-compressor", "post-critic", "story-verifier"], "blocking": true},
+    "build/creative-concepts.json": {
+      "producer": "creative-director",
+      "consumers": ["story-architect", "copy-compressor", "layout-composer", "motion-director"],
+      "blocking": true,
+      "required_fields": ["concept_name", "visual_hook", "copy_hook", "aha_mechanic", "story_shape", "recommended_visual_style", "recommended_story_archetype", "recommended_motion_behavior", "evidence_dependencies", "risk_notes", "why_it_earns_attention"]
+    },
+    "build/story-brief.json": {"producer": "story-architect", "consumers": ["palette-curator", "copy-compressor", "layout-composer", "artboard-builder", "motion-director", "motion-engineer", "story-verifier"], "blocking": true},
+    "build/palette-check.json": {"producer": "palette-curator", "consumers": ["layout-composer", "artboard-builder"], "blocking": true},
+    "build/artboard-copy.json": {"producer": "copy-compressor", "consumers": ["layout-composer", "artboard-builder"], "blocking": true},
+    "build/layout-spec.json": {"producer": "layout-composer", "consumers": ["artboard-builder", "motion-director", "mascot-animator", "post-critic"], "blocking": true},
+    "build/caption.md": {"producer": "caption-writer", "consumers": ["artboard-builder", "post-critic", "story-verifier"], "blocking": false},
+    "build/first-comment.md": {"producer": "caption-writer", "consumers": ["parent:new-post"], "blocking": false},
+    "build/post.html": {"producer": "artboard-builder", "consumers": ["motion-engineer", "render-qa", "post-critic", "story-verifier"], "blocking": true},
+    "build/still.png": {"producer": "artboard-builder", "consumers": ["motion-director", "mascot-animator", "parent:new-post"], "blocking": true},
+    "build/motion-direction.json": {"producer": "motion-director", "consumers": ["mascot-animator", "motion-engineer"], "blocking": false},
+    "build/mascot-request.json": {"producer": "parent:new-post", "consumers": ["mascot-animator"], "blocking": true},
+    "build/mascot/motion-contract.json": {"producer": "mascot-animator", "consumers": ["motion-engineer", "post-critic", "story-verifier"], "blocking": true},
+    "build/render-report.json": {"producer": "render-qa", "consumers": ["post-critic", "story-verifier"], "blocking": true},
+    "build/critic-report.json": {"producer": "post-critic", "consumers": ["story-verifier"], "blocking": true},
+    "build/verification-report.json": {"producer": "story-verifier", "consumers": ["parent:new-post"], "blocking": true}
+  }
+}

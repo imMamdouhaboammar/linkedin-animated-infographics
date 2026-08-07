@@ -37,6 +37,17 @@ def load_component_graph(root: Path = ROOT) -> dict:
     return json.loads((root / "architecture" / "plugin-graph.json").read_text())
 
 
+def _load_optional_json(path: Path, errors: list[str], label: str):
+    if not path.exists():
+        errors.append(f"missing {label}: {path}")
+        return None
+    try:
+        return json.loads(path.read_text())
+    except json.JSONDecodeError as exc:
+        errors.append(f"invalid JSON in {label}: {exc}")
+        return None
+
+
 def validate_component_graph(root: Path = ROOT) -> list[str]:
     errors = []
     graph_path = root / "architecture" / "plugin-graph.json"
@@ -90,12 +101,47 @@ def validate_component_graph(root: Path = ROOT) -> list[str]:
             errors.append(f"conditional edge {name} is missing asset_gate")
 
     shipping = set(sequence) | conditional_agents
-    for capability, owners in graph.get("capabilities", {}).items():
+    graph_capabilities = graph.get("capabilities", {})
+    for capability, owners in graph_capabilities.items():
         unknown = sorted(set(owners) - graph_agents)
         if unknown:
             errors.append(f"{capability} has unknown owners: {', '.join(unknown)}")
         if not shipping.intersection(owners):
             errors.append(f"{capability} has no owner on the shipping path")
+
+    helper_dir = root / "helper"
+    helper_capabilities_doc = _load_optional_json(helper_dir / "capabilities.json", errors, "helper capabilities")
+    helper_router = _load_optional_json(helper_dir / "router.json", errors, "helper router")
+    if helper_capabilities_doc is not None:
+        helper_capabilities = helper_capabilities_doc.get("capabilities", {})
+        if set(helper_capabilities) != set(graph_capabilities):
+            missing = sorted(set(helper_capabilities) - set(graph_capabilities))
+            extra = sorted(set(graph_capabilities) - set(helper_capabilities))
+            if missing:
+                errors.append(f"plugin graph missing helper capabilities: {', '.join(missing)}")
+            if extra:
+                errors.append(f"helper registry missing graph capabilities: {', '.join(extra)}")
+        for capability in sorted(set(helper_capabilities) & set(graph_capabilities)):
+            helper_owners = set(helper_capabilities[capability].get("owners", []))
+            graph_owners = set(graph_capabilities[capability])
+            if helper_owners != graph_owners:
+                errors.append(
+                    f"helper capability {capability} owner drift: "
+                    f"helper={sorted(helper_owners)} graph={sorted(graph_owners)}"
+                )
+
+    if helper_router is not None:
+        create_route = helper_router.get("routes", {}).get("create-post", {})
+        helper_agents = create_route.get("agents", [])
+        if helper_agents != sequence:
+            errors.append("helper create-post agent order does not match plugin graph new-post sequence")
+        mascot_condition = helper_router.get("conditions", {}).get("official_mascot", {})
+        mascot_edge = workflow.get("conditional", {}).get("mascot", {})
+        helper_mascot_agents = mascot_condition.get("adds_agents", [])
+        if helper_mascot_agents != ([mascot_edge.get("agent")] if mascot_edge.get("agent") else []):
+            errors.append("helper official_mascot agent does not match plugin graph mascot edge")
+        if mascot_condition.get("asset_gate") != mascot_edge.get("asset_gate"):
+            errors.append("helper official_mascot asset gate does not match plugin graph mascot edge")
     return errors
 
 

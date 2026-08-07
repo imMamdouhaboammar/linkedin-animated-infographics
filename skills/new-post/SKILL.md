@@ -1,6 +1,6 @@
 ---
 name: new-post
-description: Run the full post pipeline end to end, from topic to a delivered GIF or static infographic plus caption and first comment.
+description: Run the complete evidence-to-delivery workflow for a static or animated LinkedIn infographic, including creative concepting, story architecture, production, critique, and independent verification.
 disable-model-invocation: true
 argument-hint: "[topic or URL] [optional: --arabic] [optional: --mascot]"
 ---
@@ -9,85 +9,163 @@ argument-hint: "[topic or URL] [optional: --arabic] [optional: --mascot]"
 
 Topic: **$ARGUMENTS**
 
-The parent workflow owns orchestration. Workers return artifacts to this workflow; do not ask one worker to coordinate its peers.
+## Purpose
 
-## 0. Mascot asset gate
+Run the canonical parent workflow for a complete LinkedIn infographic. The workflow owns routing, user approvals, HOLD resolution, targeted repair loops, and final delivery. Workers return bounded artifacts here and never coordinate peer workers directly.
 
-If `--mascot` is present or the user names a specific mascot, identify whether the request refers to an official or exact character. For a named or official mascot, require the **exact SVG** from the user unless that SVG is already task-attached. Do not redraw, approximate, substitute, or generate a lookalike. If the exact SVG is missing, ask the user to attach it and stop the mascot path until it is available.
+Read `helper/GUIDE.md` before execution. Treat `helper/router.json`, `helper/capabilities.json`, `helper/quality-gates.json`, `helper/artifacts.json`, `research/capability-notes/gates.json`, and `architecture/plugin-graph.json` as machine-readable contracts.
 
-Record `build/mascot-request.json` with requested name, SVG path, source classification (`user-supplied` or `task-attached`), and `allow_substitute: false`. Validate it with `scripts/mascot_contract.py check` before continuing any mascot planning.
+## Use when
 
-## 1. Reference diagnosis
+Use this workflow when the user wants a complete new infographic or a substantial redesign that should proceed from source/evidence through concept, copy, artboard, optional motion, QA, and delivery.
 
-If the user supplied screenshots, GIFs, previous designs, or visual references, delegate to `design-study` and save the structured result as `build/design-study.json`. If there is no visual reference, record that this stage is not applicable and continue.
+Use focused skills instead when the request is only a render, only QA, only mascot animation, or only a design study.
 
-## 2. Evidence inventory
+## Inputs
 
-Delegate to `evidence-checker` with the source material and all claims, numbers, product names, proof slots, and logos likely to appear. Save `build/evidence.json`. Unsupported proof is blocked before copy or layout work begins. A source with no external factual claims still gets a short evidence record saying so.
+- topic, source material, URL, files, or user-provided facts
+- intended audience and one primary takeaway when they cannot be inferred safely
+- desired CTA when applicable
+- language and static/animated output preference
+- optional visual references
+- optional brand/UI assets
+- exact SVG when a named or official mascot is requested
 
-## 3. Story contract
+## Outputs
 
-Delegate to `story-architect` with the topic, one takeaway, CTA, language, output mode, `build/design-study.json` when present, and `build/evidence.json`. Save the deterministic result as `build/story-brief.json`.
+The parent workflow may produce:
 
-State the four Info-stories choices and one reason per choice. If the user explicitly chose an axis, preserve it unless a hard compatibility or contrast rule fails.
+- `build/design-study.json`
+- `build/evidence.json`
+- `build/creative-concepts.json`
+- `build/story-brief.json`
+- `build/palette-check.json`
+- `build/artboard-copy.json`
+- `build/layout-spec.json`
+- `build/caption.md`
+- `build/first-comment.md`
+- `build/post.html`
+- `build/still.png`
+- `build/motion-direction.json` for animated output
+- `build/mascot/motion-contract.json` when a mascot is active
+- `build/render-report.json`
+- `build/critic-report.json`
+- `build/verification-report.json`
+- final static/GIF artifact plus resolved story and validation summary
 
-## 4. Palette contract
+## Procedure
 
-Delegate to `palette-curator` with `build/story-brief.json` and any brand colours. Save the complete verified token block and contrast result as `build/palette-check.json`. A failing text or state pair holds the build.
+### 0. Route and asset gates
 
-## 5. Artboard copy
+Resolve the request through the helper. Apply local quality gates and research gates before production.
 
-Delegate to `copy-compressor` with the source, evidence record, Story Archetype, and target story beats. Save slot-keyed copy and protected facts as `build/artboard-copy.json`. Keep intentional short labels; remove generic filler and unsupported claims.
+If the user names a specific or official mascot, require the exact user-supplied or task-attached SVG. Record `build/mascot-request.json` and validate it with `scripts/mascot_contract.py check`. Never redraw, approximate, substitute, or silently generate a lookalike.
 
-## 6. Static layout specification
+If Arabic/RTL is active, load the `arabic` skill before copy or layout work.
 
-Delegate to `layout-composer` with the story brief, palette check, artboard copy, optional design study, and mascot placement requirement when present. Save `build/layout-spec.json`, including zone order, visual anchor, hierarchy, structural fingerprint, and asset requirements.
+### 1. Reference diagnosis
 
-## 7. Caption
+When visual references exist, delegate to `design-study` and save `build/design-study.json`. Activate `reference-dna`. Study reusable structure, hierarchy, rhythm, density, and motion grammar without cloning distinctive work.
 
-Delegate to `caption-writer` with the approved facts, one takeaway, CTA, and narrative context. Save the caption as `build/caption.md` and first-comment text as `build/first-comment.md`.
+### 2. Evidence inventory
 
-Show the caption and the resolved story direction. Get approval before building the still.
+Delegate to `evidence-checker`. Save `build/evidence.json` with protected claims, metrics, product states, logos, proof, and unsupported slots. Unsupported proof is blocked before creative/copy/layout production.
 
-## 8. Still construction
+### 3. Creative concept directions
 
-Delegate to `artboard-builder` with `build/story-brief.json`, `build/palette-check.json`, `build/artboard-copy.json`, `build/layout-spec.json`, and the approved caption. It returns `build/post.html` and `build/still.png` after static checks.
+Delegate to `creative-director` with the evidence record, optional design study, audience, language, output mode, and approved constraints. Save `build/creative-concepts.json`.
 
-Show the still. This is the visual approval gate. Get approval before motion.
+Require at least three meaningfully different directions. Every direction contains a visual hook, copy hook, aha mechanic, story shape, recommended style/archetype/motion behavior, evidence dependencies, risk notes, and why it earns attention. At least one direction must contain a useful visual payoff or aha moment through a reveal, relationship, comparison, transformation, state change, or interaction. Spectacle without a story job does not count.
 
-## 9. Motion direction
+Apply `hooked-design-copy` and `creative-payoff`. The parent workflow selects or approves one direction before story architecture.
 
-For animated output, delegate to `motion-director` with the approved still, layout spec, story brief, and mascot role when applicable. Save `build/motion-direction.json`. Static output records this stage as skipped.
+### 4. Story contract
 
-## 10. Mascot animation component
+Delegate to `story-architect` with the selected concept, evidence, optional design study, one takeaway, CTA, language, and output mode. Save `build/story-brief.json` with Story House, Visual Style, Story Archetype, Motion Patterns, design dials, and execution bridge.
 
-When the mascot path is active, delegate to `mascot-animator` with the validated exact SVG request, approved still, layout spec, selected mascot role, and motion direction. Save its inspection and identity-preservation evidence under `build/mascot/` and pass the resulting motion contract forward. The supplied SVG remains the identity source and must not be replaced.
+### 5. Palette contract
 
-## 11. Motion implementation
+Delegate to `palette-curator`. Save `build/palette-check.json`.
 
-For animated output, delegate to `motion-engineer` with the approved still, story brief, motion-direction artifact, and validated mascot component when present. It returns the animated `build/post.html`. Static output skips this stage.
+The plugin default is `creative-attractive-restrained`: use an engaging, memorable, harmonious palette without exaggerated saturation, unnecessary neon, or competing accents unless the approved brief explicitly calls for them. Text/state contrast floors remain blocking.
 
-## 12. Render mechanics and gates
+### 6. Artboard copy
 
-Delegate to `render-qa`. Save its gate-by-gate evidence as `build/render-report.json`. A `HOLD` returns control to this parent workflow for a targeted fix and re-run.
+Delegate to `copy-compressor` with evidence, selected concept, story brief, and target slots. Save `build/artboard-copy.json`. The hero and attention-bearing story openers must use evidence-safe hooks; literal labels remain literal where clarity wins.
 
-## 13. Adversarial review
+### 7. Static layout specification
 
-Delegate to `post-critic` with the rendered artifact, caption, evidence record, structural fingerprint, mascot identity notes when present, and render report. Save `build/critic-report.json`. Resolve every must-fix item or record why it is not applicable before independent verification.
+Delegate to `layout-composer`. Save `build/layout-spec.json` with zone order, proportions, visual anchor, component counts, structural fingerprint, assets, alignment mode, and any exception reason.
 
-## 14. Independent acceptance
+Use `center-first` for the primary visual anchor and major story zones. A non-centered alignment requires a recorded comprehension/fidelity reason such as tables, UI mockups, code/terminal surfaces, timelines, Arabic/RTL flow, or reference-DNA fidelity.
 
-Delegate to `story-verifier` with the artifact paths, story brief, evidence record, render report, critic report, and explicit acceptance criteria. Save `build/verification-report.json`. `FAIL:fixable` may trigger a targeted fix and re-check. Maximum two targeted fix attempts; a third unresolved failure escalates.
+### 8. Caption
 
-## 15. Deliver
+Delegate to `caption-writer`. Save `build/caption.md` and `build/first-comment.md`. The opening hook must be specific and evidence-safe. Show the caption and selected story direction for approval before still construction when interactive approval is available.
 
-Deliver, in this order:
+### 9. Still construction
 
-1. GIF or static artifact
-2. caption
-3. first-comment text
-4. resolved Story House, Visual Style, Story Archetype, and Motion Patterns
-5. render numbers when applicable
-6. final verification verdict
+Delegate to `artboard-builder` with the approved story, palette, copy, layout, and caption artifacts. It returns `build/post.html` and `build/still.png` after static checks. Show the still as the visual approval gate when interaction is available.
 
-If `--arabic` is present, apply `linkedin-animated-infographics:arabic` before copy/layout production.
+### 10. Motion direction
+
+For animated output, delegate to `motion-director` with the approved still, selected concept, story brief, layout spec, and mascot role when applicable. Save `build/motion-direction.json`. Static output records this stage as skipped.
+
+### 11. Mascot component when active
+
+After still construction and before motion implementation, delegate the validated exact SVG to `mascot-animator`. Save identity and rig evidence plus `build/mascot/motion-contract.json`. The supplied SVG remains the identity source.
+
+### 12. Motion implementation
+
+For animated output, delegate to `motion-engineer` with the approved still, story brief, motion direction, and mascot contract when present. It returns the animated `build/post.html`. Static output skips this stage.
+
+### 13. Render mechanics and QA
+
+Delegate to `render-qa`. Save `build/render-report.json`. A render HOLD returns control to this parent workflow for a targeted fix and re-run.
+
+### 14. Adversarial review
+
+Delegate to `post-critic` with the artifact, caption, evidence, selected concept, layout, mascot identity notes when present, and render report. Save `build/critic-report.json`.
+
+The critic must explicitly evaluate `hooked-design-copy`, `creative-payoff`, `restrained-palette`, and `center-first-composition` in addition to applicable research gates.
+
+### 15. Independent acceptance
+
+Delegate to `story-verifier`. Save `build/verification-report.json`. The verifier reads artifacts directly. `FAIL:fixable` may trigger a targeted fix and re-check. Maximum two targeted repair attempts; a third unresolved failure escalates.
+
+### 16. Deliver
+
+Deliver the final artifact, caption, first comment, resolved Info-stories choices, selected creative concept, render numbers when applicable, active gate summary, and final verification verdict.
+
+## HOLD conditions
+
+Stop and return a precise HOLD when any blocking requirement is unresolved, including:
+
+- missing exact SVG for a named or official mascot
+- unsupported factual proof, metric, product state, logo, or claim
+- hook or aha concept that depends on invented evidence
+- failing contrast or Story House compatibility
+- unresolved blocking local quality gate
+- unresolved blocking research gate
+- render evidence unavailable when required
+- third unresolved verification failure after two targeted repair attempts
+
+Do not fill missing inputs with plausible content.
+
+## Related components
+
+- helper: `helper/GUIDE.md`
+- router: `helper/router.json`
+- local gates: `helper/quality-gates.json`
+- artifacts: `helper/artifacts.json`
+- executable graph: `architecture/plugin-graph.json`
+- creative copy reference: `skills/info-stories/references/hook-driven-design-copy.md`
+- design defaults: `skills/info-stories/references/design-taste-gates.md`
+- focused QA: `qa-post`
+- focused render: `render-gif`
+
+## Research gates
+
+Complete post creation may activate `prose-specificity`, `voice-preservation`, `design-dials`, `structural-originality`, `reference-dna`, `contrast-discipline`, `evidence-traceability`, and `bounded-verification` according to `research/capability-notes/gates.json`.
+
+The two final safety gates are `evidence-traceability` and `bounded-verification`; they remain active even when the chosen creative direction is intentionally simple.

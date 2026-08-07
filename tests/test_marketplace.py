@@ -32,20 +32,21 @@ class MarketplaceTests(unittest.TestCase):
         self.assertEqual("./", entry["source"])
         self.assertIs(True, entry["strict"])
 
-    def test_marketplace_and_plugin_versions_match(self):
+    def test_marketplace_and_plugin_versions_match_v3_release(self):
         market = json.loads(MARKETPLACE.read_text())["plugins"][0]
         plugin = json.loads(PLUGIN.read_text())
-        self.assertEqual("2.2.0", plugin["version"])
+        self.assertEqual("3.0.0", plugin["version"])
         self.assertEqual(plugin["version"], market["version"])
 
     def test_standard_component_directories_exist(self):
-        for relative in ("skills", "agents", "hooks/hooks.json"):
+        for relative in ("skills", "agents", "hooks/hooks.json", "helper"):
             self.assertTrue((ROOT / relative).exists(), relative)
 
     def test_readme_documents_marketplace_install(self):
         text = README.read_text()
         self.assertIn("/plugin marketplace add imMamdouhaboammar/linkedin-animated-infographics", text)
         self.assertIn("/plugin install linkedin-animated-infographics@mamdouh-creative-tools", text)
+        self.assertIn("3.0.0", text)
 
     def test_local_marketplace_validator_is_clean(self):
         module = load_validator()

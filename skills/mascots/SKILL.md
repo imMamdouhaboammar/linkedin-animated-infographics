@@ -1,60 +1,47 @@
 ---
 name: mascots
-description: >-
-  Use when an infographic contains a mascot or character, especially when the user names an
-  official mascot, supplies an SVG, wants a mascot to guide reading order, or needs character
-  motion that stays inside the infographic motion budget.
+description: Use an exact supplied mascot SVG as a story element, choose a communication role and creative motion direction, preserve identity, and keep character motion inside the infographic budget.
 ---
 
-# Mascots for Infographics
+# Mascots for infographics
 
-A mascot is a communication element, not filler. It must have one clear job in the story and it must preserve the identity of the user's asset.
+## Purpose
 
-## Hard gate: exact official mascot
+Use a mascot as a communication element rather than decoration. The mascot should guide reading, reveal a state, confirm a payoff, or provide a small contextual reaction while preserving the exact identity of the supplied asset.
 
-When the user names a specific official mascot or says to use a mascot exactly:
+Read `helper/GUIDE.md` first. `mascot-identity` is a plugin-local capability and the exact-SVG asset gate is mandatory for named or official mascots.
 
-1. Require the exact SVG from the user unless it is already attached to the current task.
-2. Treat that SVG as the identity source.
-3. Never redraw, approximate, substitute, generate a lookalike, or silently use a different mascot.
-4. Preserve recognizable silhouette, colours, marks, face details, and proportions.
-5. If the SVG structure cannot support the requested articulation, explain the rig limitation and propose safe motion that still uses the original asset.
+## Use when
 
-The parent workflow owns this intake gate because the focused mascot worker should receive a validated asset, not ask the user for one itself.
+Use when the user names an official mascot, supplies a mascot SVG, asks for mascot motion, wants a character to guide reading order, or needs a mascot component inside an Info-story.
 
-Validate the request before planning motion:
+## Inputs
+
+- `build/mascot-request.json`
+- exact user-supplied or task-attached SVG for named/official mascots
+- approved still/layout zone
+- selected creative concept and mascot communication job
+- motion direction and output track
+
+## Outputs
+
+Return validated mascot role, chosen creative direction, inspection/identity notes, motion budget, rig constraints, and a mascot motion contract for downstream motion/render verification.
+
+## Procedure
+
+1. For a named or official mascot, require the **exact SVG** before any production. Treat it as the identity source. Never redraw, approximate, substitute, generate a lookalike, or silently use a different mascot.
+2. If the exact SVG is missing, return `HOLD: exact SVG required`. In the main conversational context, ask the user to upload the SVG; inside a worker, return the HOLD to the parent workflow.
+3. Validate the request:
 
 ```bash
 python3 ${CLAUDE_PLUGIN_ROOT}/scripts/mascot_contract.py check build/mascot-request.json
 ```
 
-## Roles
-
-| Role | Count | Motion budget | Job |
-|---|---:|---:|---|
-| Pointer | exactly 1 | route travel | carries reading order |
-| Payoff | 0 or 1 | one short reaction | confirms the final state |
-| Idle | 0 to 6 | 3px target, 4px cap | quiet presence in a panel/footer |
-
-A mascot pointer replaces an abstract pointer. Do not create two simultaneous reading orders.
-
-## Creative direction
-
-Read `skills/svg-mascot-animator/references/creative-directions.md`. Good starting directions include Guide the Eye, Curious Peek, Inspect and React, Carry and Place, Reveal Assistant, Status Confirmation, Route Follow, Card-to-Card Handoff, Calm Idle Breathing, and Contextual Micro-Reaction.
-
-A direction is valid only when it states:
-
-- what the motion communicates
-- which existing mascot parts may move
-- which support elements may be added outside the mascot
-- how the loop resets
-- what competing primitive it replaces
-
-## Seek-safe infographic motion
-
-Use one artboard clock. Frame 0 stays complete. Motion in the outer 48px margin is prohibited. Use baked CSS/SMIL/seekable motion for deterministic frame capture. Do not use runtime `requestAnimationFrame` animation in a rendered LinkedIn GIF.
-
-Generate physics/timing rather than nudging arbitrary keyframes:
+4. Pick one communication role. Pointer carries reading order, Payoff confirms the final state, and Idle provides quiet presence. A mascot pointer replaces another pointer primitive rather than adding a competing route.
+5. Read `skills/svg-mascot-animator/references/creative-directions.md`. Adapt a direction such as Guide the Eye, Curious Peek, Inspect and React, Carry and Place, Reveal Assistant, Status Confirmation, Route Follow, Card-to-Card Handoff, Calm Idle Breathing, or Contextual Micro-Reaction.
+6. The direction must state what the motion communicates, which existing SVG parts may move, which support elements may be added outside the identity, how the loop resets, and what competing primitive it replaces.
+7. Preserve frame 0, the outer 48px safe zone, one artboard clock, and deterministic seekable timing for rendered infographic output.
+8. Generate timing/physics from the existing tools rather than hand-nudging arbitrary keyframes:
 
 ```bash
 python3 ${CLAUDE_PLUGIN_ROOT}/scripts/bake_mascot.py budget --mascot 64 --travel 1 --idles 4
@@ -63,22 +50,23 @@ python3 ${CLAUDE_PLUGIN_ROOT}/scripts/bake_mascot.py idle --loop 6000 --id amb -
 python3 ${CLAUDE_PLUGIN_ROOT}/scripts/bake_mascot.py payoff --loop 6000 --id win --at .89 --rise 18 --zeta .30
 ```
 
-Never hand-edit baked timing output. Change the parameters and regenerate.
+9. UI mockup stories may use a mascot only when it does not cover story-critical controls or imply a product assistant that does not actually exist.
+10. Verify identity, purpose, frame-zero readability, loop reset, motion budget, and accessibility before returning the component.
 
-## Structural fit
+## HOLD conditions
 
-Mascots work best in route, process, annotated, and state-change stories. Dense catalogs and reference sheets usually need no moving character. UI Mockup Stories may use a mascot as a guide, assistant, or state reaction only if it does not cover core controls or imitate a product assistant that does not actually exist.
+Return a HOLD when the exact SVG is missing, the SVG cannot support the requested articulation without identity-changing redraw, required brand details are ambiguous, or the requested mascot behavior would fabricate product behavior or compete with the approved reading order.
 
-## Verification
+## Related components
 
-Before shipment confirm:
+- routing authority: `helper/GUIDE.md`
+- exact-SVG worker: `agents/mascot-animator.md`
+- animator skill: `skills/svg-mascot-animator/SKILL.md`
+- creative directions: `skills/svg-mascot-animator/references/creative-directions.md`
+- detailed doctrine: `references/mascots.md`
+- request validator: `scripts/mascot_contract.py`
+- motion baker: `scripts/bake_mascot.py`
 
-- the exact supplied SVG remains recognizably unchanged
-- the role is singular and clear
-- the selected creative direction has a story purpose
-- frame 0 is complete
-- the motion budget is respected
-- the mascot does not compete with UI, copy, or route highlights
-- reduced-motion and accessibility requirements from the SVG animator contract are satisfied
+## Research gates
 
-Full infographic mascot doctrine and failure modes remain in `references/mascots.md`.
+Mascot identity itself is local-native and has no upstream provenance requirement. When the mascot is embedded in a complete Info-story, still respect active `design-dials`, `structural-originality`, `evidence-traceability`, and `bounded-verification` gates from the parent route.

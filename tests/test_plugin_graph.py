@@ -1,5 +1,7 @@
 import importlib.util
 import json
+import shutil
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -17,6 +19,11 @@ def load_module():
     return module
 
 
+def copy_graph_fixture(destination: Path):
+    for relative in ("architecture", "agents", "skills", "helper"):
+        shutil.copytree(ROOT / relative, destination / relative)
+
+
 class PluginGraphTests(unittest.TestCase):
     def test_graph_contract_files_exist(self):
         self.assertTrue(SCRIPT.exists(), "missing scripts/plugin_graph.py")
@@ -31,10 +38,16 @@ class PluginGraphTests(unittest.TestCase):
         graph = json.loads(GRAPH.read_text())
         sequence = graph["workflows"]["new-post"]["sequence"]
         required = {
-            "story-architect", "palette-curator", "copy-compressor", "layout-composer",
-            "caption-writer", "artboard-builder", "render-qa", "post-critic", "story-verifier",
+            "creative-director", "story-architect", "palette-curator", "copy-compressor",
+            "layout-composer", "caption-writer", "artboard-builder", "render-qa",
+            "post-critic", "story-verifier",
         }
         self.assertTrue(required.issubset(sequence))
+
+    def test_creative_director_runs_between_evidence_and_story(self):
+        sequence = json.loads(GRAPH.read_text())["workflows"]["new-post"]["sequence"]
+        self.assertLess(sequence.index("evidence-checker"), sequence.index("creative-director"))
+        self.assertLess(sequence.index("creative-director"), sequence.index("story-architect"))
 
     def test_conditional_mascot_edge_is_explicit(self):
         edge = json.loads(GRAPH.read_text())["workflows"]["new-post"]["conditional"]["mascot"]
@@ -56,8 +69,8 @@ class PluginGraphTests(unittest.TestCase):
     def test_capability_families_have_shipping_owners(self):
         graph = json.loads(GRAPH.read_text())
         expected = {
-            "anti-slop", "design-taste", "structural-fingerprint", "evidence",
-            "verification-loop", "mascot-identity", "ui-mockup-fidelity",
+            "anti-slop", "creative-direction", "design-taste", "evidence", "hook-design-copy",
+            "mascot-identity", "structural-fingerprint", "ui-mockup-fidelity", "verification-loop",
         }
         self.assertEqual(expected, set(graph["capabilities"]))
         workflow = graph["workflows"]["new-post"]
@@ -79,10 +92,35 @@ class PluginGraphTests(unittest.TestCase):
         self.assertIn("post-critic", text)
         self.assertIn("story-verifier", text)
 
+    def test_validator_detects_helper_capability_owner_drift(self):
+        module = load_module()
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            copy_graph_fixture(root)
+            capabilities_path = root / "helper" / "capabilities.json"
+            capabilities = json.loads(capabilities_path.read_text())
+            capabilities["capabilities"]["anti-slop"]["owners"] = ["story-verifier"]
+            capabilities_path.write_text(json.dumps(capabilities))
+            errors = module.validate_component_graph(root)
+            self.assertTrue(any("helper capability anti-slop" in error.lower() for error in errors), errors)
+
+    def test_validator_detects_helper_workflow_order_drift(self):
+        module = load_module()
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            copy_graph_fixture(root)
+            router_path = root / "helper" / "router.json"
+            router = json.loads(router_path.read_text())
+            agents = router["routes"]["create-post"]["agents"]
+            router["routes"]["create-post"]["agents"] = list(reversed(agents))
+            router_path.write_text(json.dumps(router))
+            errors = module.validate_component_graph(root)
+            self.assertTrue(any("helper create-post agent order" in error.lower() for error in errors), errors)
+
 
 class WorkerCoordinationTests(unittest.TestCase):
     def test_planning_workers_return_to_parent_orchestrator(self):
-        for name in ("story-architect", "layout-composer", "motion-director"):
+        for name in ("creative-director", "story-architect", "layout-composer", "motion-director"):
             text = (ROOT / "agents" / f"{name}.md").read_text()
             self.assertIn("parent workflow", text.lower(), name)
             self.assertNotIn("Handoff the approved brief to", text, name)
