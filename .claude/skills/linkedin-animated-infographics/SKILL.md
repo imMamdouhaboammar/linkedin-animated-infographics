@@ -1,67 +1,65 @@
 ---
 name: linkedin-animated-infographics-conventions
-description: Development conventions for a Python, Markdown, HTML, CSS, SVG, and shell based LinkedIn infographic plugin with Info-stories composition.
+description: Repository conventions for the Python, Markdown, HTML/CSS/SVG, shell, agent, research-gate, and Claude Marketplace ecosystem.
 ---
 
-# Linkedin Animated Infographics Conventions
+# LinkedIn Animated Infographics Repository Conventions
 
-Use this skill when changing this repository, adding a skill or agent, modifying the render pipeline, or writing regression tests.
+Use this skill when modifying this repository. Start with `helper/GUIDE.md`; do not create a parallel routing or capability model.
 
-## Tech Stack
+## Machine-readable authority
 
-- **Python 3**: registries, validators, frame capture, GIF assembly, and utility tools
-- **Markdown**: skills, agents, references, plans, and research notes
-- **HTML / CSS / SVG**: 1080x1350 artboards and deterministic animation
-- **Shell**: setup, lint, and render wrappers
-- **JSON**: plugin metadata, hooks, Story House / style registry data, extensions, and structured briefs
-- **unittest**: regression and acceptance tests
+- `helper/router.json`: routes
+- `helper/capabilities.json`: owners and plugin-local defaults
+- `helper/quality-gates.json`: local creative/product gates
+- `helper/artifacts.json`: handoff artifacts
+- `helper/modules.json`: active skills, agents, and public tools
+- `research/capability-notes/gates.json`: adopted research-derived runtime gates
+- `architecture/plugin-graph.json`: shipping sequence and required skill preloads
+- `scripts/info_stories.py::load_catalog()`: merged Info-stories registry
 
-There is no TypeScript application layer in the current repository. Do not introduce frontend framework conventions unless a task explicitly adds one.
+The merged registry combines `skills/info-stories/catalog.json` with `skills/info-stories/extensions/*.json`. `catalog.json` alone is not the complete authority.
 
-## Architecture
+## Actual stack
 
-- `skills/`: user-facing capabilities and their references
-- `agents/`: focused worker contracts with narrow inputs and outputs
-- `scripts/`: implementation and validation logic shared by skills and tools
-- `tools/`: thin public CLIs over shared Python logic
-- `assets/`: templates and generated-but-tracked visual reference assets
-- `tests/`: unit, contract, portability, and acceptance tests
-- `research/`: tracked provenance and design/capability studies; ignored upstream clones never ship
+- Python 3 for validators, registries, render tooling, and public CLIs
+- Markdown for skills, agents, docs, research, and plans
+- HTML / CSS / SVG for fixed 1080x1350 artboards and deterministic motion
+- shell for setup/lint/render wrappers
+- JSON for plugin, routing, capability, gate, artifact, module, and Info-stories contracts
+- unittest for regression and architecture tests
 
-## Info-stories
+There is no TypeScript application layer in the current repository.
 
-Info-stories is the composition layer. Keep its four axes independent:
+## Production architecture
 
-1. Story House
-2. Visual Style
-3. Story Archetype
-4. Motion Pattern
+`new-post` is the parent workflow. Workers return artifacts to the parent workflow; they do not coordinate peer agents directly.
 
-The machine-readable source of truth is the **merged registry returned by `scripts/info_stories.py::load_catalog()`**. It combines the stable base `skills/info-stories/catalog.json` with first-party registry families in `skills/info-stories/extensions/*.json`, merged deterministically by filename. Human references explain the merged registry and must not contradict the merged result. Existing artboard, motion, render, Arabic, and mascot skills remain the execution layer.
+Shipping order:
 
-When adding a base item or extension item, add or update tests before implementation. Preserve 4.5:1 text contrast, 3:1 state-pair contrast, deterministic briefs, unique slugs/names across the merged registry, and explicit compatibility failures.
+`design-study -> evidence-checker -> creative-director -> story-architect -> palette-curator -> copy-compressor -> layout-composer -> caption-writer -> artboard-builder -> motion-director -> optional mascot-animator -> motion-engineer -> render-qa -> post-critic -> story-verifier`
 
-## Development Method
+`creative-director` owns early concept generation. Apply `hooked-design-copy`, `creative-payoff`, `creative-attractive-restrained`, and `center-first` as declared in helper contracts. Named official mascots require the exact SVG.
 
-- Follow existing architecture before adding a parallel implementation
-- Prefer one shared implementation with thin CLIs rather than duplicated logic
-- Write a failing regression test for behavior changes, then implement the minimum fix
-- Run the focused test first, then the complete test suite
-- Run `python3 -m compileall -q scripts tools`
-- Run `python3 scripts/info_stories.py check` when the base registry or extensions change
-- Run `python3 scripts/plugin_graph.py check` when agent routing or preloads change
-- Run `python3 scripts/validate_marketplace.py` when plugin packaging changes
-- Run `git diff --check` before committing
-- Treat browser render verification separately from non-browser tests and report environment blockers precisely
+## Research
 
-## Commit Conventions
+Research is activated through `research/capability-notes/gates.json`. Keep upstream source URL, inspected SHA, license, local Adopt/Adapt/Reject notes, owners, and implementation references. Ignored `research/upstreams/` working copies never ship.
 
-Use conventional commits such as `feat:`, `fix:`, `test:`, `docs:`, and `chore:`. Keep one coherent concern per commit when practical.
+## Development method
 
-## Safety and Provenance
+Write a failing test first for behavior changes, implement the minimum coherent fix, then run focused and full validation.
 
-- Never commit credentials, private MCP configuration, or user secrets
-- Never ship `research/upstreams/`
-- Track source URL, inspected SHA, license, adopted ideas, and rejected ideas for capability research
-- Prefer independently worded local rules over wholesale copying
-- Do not fabricate visual proof or factual content to satisfy a template or UI slot
+```bash
+python3 -m unittest discover -s tests -v
+python3 -m compileall -q scripts tools skills/svg-mascot-animator/scripts
+python3 scripts/info_stories.py check
+python3 scripts/ecosystem_router.py check
+python3 scripts/research_gates.py check
+python3 scripts/plugin_graph.py check
+python3 scripts/ecosystem_doctor.py check
+python3 scripts/validate_marketplace.py
+```
+
+Use `scripts/ecosystem_doctor.py` as the strict reality gate. A declared module must exist, be reachable, have tests, and remain linked to the live architecture.
+
+Never fabricate factual content or product/UI proof to satisfy a template. Never commit credentials or private MCP configuration.
