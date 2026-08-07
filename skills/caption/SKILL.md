@@ -1,61 +1,58 @@
 ---
 name: caption
-description: >-
-  Write or edit the caption for a LinkedIn post. Use when drafting a LinkedIn caption, a hook,
-  an opening line, a CTA, a comment gate, or a first comment, and when rewriting a caption that
-  sounds AI-written. Covers seven caption archetypes, the mobile truncation cut, the hook and
-  CTA libraries, and the hard ban on denial-then-reveal contrast and em dashes in English and
-  Arabic. Trigger on "اكتبلي كابشن", "hook للبوست", "caption for my post", or any request to
-  improve LinkedIn post copy.
+description: Write or edit evidence-safe LinkedIn captions, opening hooks, CTAs, and first comments using one caption archetype, mobile truncation discipline, and the repository anti-slop rules.
 ---
 
 # Caption
 
-The caption is 90% of the work. It decides what the visual has to carry, so it gets written
-before the artboard.
+## Purpose
 
-## Pick one archetype and stay in it
+Write or evaluate the post caption and opening hook without weakening evidence or turning the copy into generic marketing language. Attention-bearing copy should earn the click; literal information should remain literal when clarity is the job.
 
-| Archetype | Use when | Signature move |
-|---|---|---|
-| **A. Numbered Inventory** | N discrete items of equal weight | "My 9 X." then 9 one-line entries |
-| **B. Result Case Study** | you have a real before/after metric | the metric appears three times |
-| **C. Bundle Manifest** | gating a free resource | `▫️` list plus a comment keyword |
-| **D. Setup Walkthrough** | the value is a procedure | numbered clicks, an oddly specific time claim |
-| **E. Operating Story** | you made a real decision at your company | first person, cost admitted, no CTA at all |
-| **F. Belief Correction** | you have a POV and nothing to sell | 3 to 8 word lines, aphoristic close |
-| **G. Catalogue Tease** | giving away a large set the visual can show | "That is 5 of 42." |
+Read `helper/GUIDE.md` first. For Info-stories, also read `skills/info-stories/references/hook-driven-design-copy.md`.
 
-Blending archetypes is the most common failure. A manifest with a case study bolted on reads
-as a pitch deck.
+## Use when
 
-## The four rules that carry most of the quality
+Use for a new caption, hook, opening line, CTA, first comment, caption rewrite, or caption QA. Use the `caption-writer` worker inside the full parent workflow.
 
-1. **Line 1 survives the truncation cut.** LinkedIn shows roughly 140 characters on mobile.
-   Keep line 1 under 55 characters and make it worth the click on its own.
-2. **One idea per line, blank line between almost every line.** These captions are 90%
-   whitespace by area. When a block hits three lines, break it.
-3. **Specific numbers and specific product names.** Categories are invisible; names are proof.
-   Replace every generic noun with the actual name or delete the line.
-4. **One CTA, at the end.** Comment keyword, repost, newsletter, or question. Pick one.
+## Inputs
 
-## Hard bans
+- approved facts/evidence
+- audience and one primary takeaway
+- selected creative concept and story brief when available
+- CTA or explicitly CTA-free intent
+- language and any brand/voice constraints
 
-Never write the denial-then-reveal contrast in any language:
-`This is not X, this is Y` / `Not just X, but Y` / `ده مش X، ده Y` / `مش مجرد X` /
-`هذا ليس X، بل Y`. State the thing directly instead.
+## Outputs
 
-No em dashes. Use a period and a line break. No buzzword list
-(unlock, leverage, seamless, transform, empower, robust, and the rest).
+Return finished caption copy, first-comment copy when applicable, selected caption archetype, hook mechanism, and any unsupported claim that prevents a safe final version.
 
-## Full reference
+## Procedure
 
-`references/caption-patterns.md` has the line-by-line skeleton for each archetype, the hook
-library grouped by mechanism, the CTA table, the bullet-glyph vocabulary, and the complete
-ban list with the self-check to run before output.
+1. Read `references/caption-patterns.md` and the active helper gates.
+2. Pick one caption archetype and stay in it: Numbered Inventory, Result Case Study, Bundle Manifest, Setup Walkthrough, Operating Story, Belief Correction, or Catalogue Tease.
+3. Apply `hooked-design-copy` to line 1. Use specificity, supported tension, concrete outcome, recognizable problem, useful surprise, or strong framing. A portable generic opening fails.
+4. Keep line 1 compact enough to survive the mobile truncation cut; under roughly 55 characters is a strong default when the language allows it.
+5. Keep one idea per line and use deliberate whitespace. Do not let a short-form caption collapse into dense paragraphs.
+6. Use specific names and numbers only when evidence supports them. Unsupported precision is removed, not approximated.
+7. Use one CTA at the end unless the chosen archetype intentionally has none.
+8. Run anti-slop checks. Reject denial-then-reveal constructions, generic puffery, faux insight, repetitive recap, and buzzword substitution. No em dashes.
+9. Preserve useful voice and concrete mechanisms. Do not make every line clever; one strong opening and a clear progression are enough.
+10. For Arabic/bilingual output, use the `arabic` skill before finalizing rhythm, bidi, and truncation behavior.
 
-## Self-check before returning a caption
+## HOLD conditions
 
-Read every line. If a line reduces to "not X, but Y", delete it and write the positive
-statement. If a line contains a banned word, rewrite the line rather than swapping synonyms.
-If line 1 exceeds 60 characters, cut it.
+Return a HOLD when the requested hook, result, price, metric, testimonial, product claim, or CTA premise cannot be supported from the available evidence and cannot be rewritten truthfully without changing the approved idea.
+
+## Related components
+
+- routing authority: `helper/GUIDE.md`
+- local hook gate: `helper/quality-gates.json`
+- design-copy reference: `skills/info-stories/references/hook-driven-design-copy.md`
+- detailed patterns: `references/caption-patterns.md`
+- worker: `agents/caption-writer.md`
+- copy compression: `agents/copy-compressor.md`
+
+## Research gates
+
+Apply `prose-specificity` and `voice-preservation` to all visible prose. Apply `evidence-traceability` whenever the caption contains numbers, product behavior, proof, or other checkable factual claims.
