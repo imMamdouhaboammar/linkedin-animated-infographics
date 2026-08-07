@@ -1,0 +1,72 @@
+#!/usr/bin/env python3
+import json
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def _load_json(path: Path, errors: list[str]):
+    try:
+        return json.loads(path.read_text())
+    except FileNotFoundError:
+        errors.append(f"missing {path.relative_to(path.parents[1]) if len(path.parents) > 1 else path}")
+    except json.JSONDecodeError as exc:
+        errors.append(f"invalid JSON in {path}: {exc}")
+    return None
+
+
+def validate_marketplace(root: Path = ROOT) -> list[str]:
+    errors = []
+    market_path = root / ".claude-plugin" / "marketplace.json"
+    plugin_path = root / ".claude-plugin" / "plugin.json"
+    market = _load_json(market_path, errors)
+    plugin = _load_json(plugin_path, errors)
+    if not market or not plugin:
+        return errors
+
+    if market.get("name") != "mamdouh-creative-tools":
+        errors.append("unexpected marketplace name")
+    owner = market.get("owner") or {}
+    if not owner.get("name"):
+        errors.append("marketplace owner.name is required")
+    entries = market.get("plugins")
+    if not isinstance(entries, list) or len(entries) != 1:
+        errors.append("marketplace must expose exactly one root plugin")
+        return errors
+    entry = entries[0]
+    if entry.get("name") != plugin.get("name"):
+        errors.append("marketplace plugin name does not match plugin.json")
+    if entry.get("source") != "./":
+        errors.append("root plugin source must be ./")
+    if entry.get("strict") is not True:
+        errors.append("root plugin must use strict mode")
+    if entry.get("version") != plugin.get("version"):
+        errors.append("marketplace plugin version does not match plugin.json")
+    if plugin.get("version") != "2.2.0":
+        errors.append("plugin release version must be 2.2.0")
+
+    for relative in ("skills", "agents", "hooks/hooks.json"):
+        if not (root / relative).exists():
+            errors.append(f"missing standard plugin component {relative}")
+    hooks = _load_json(root / "hooks" / "hooks.json", errors)
+    if hooks is not None and "hooks" not in hooks:
+        errors.append("hooks/hooks.json is missing top-level hooks")
+    for directory in (root / "skills", root / "agents"):
+        for path in directory.rglob("*.md"):
+            if not path.read_text().startswith("---\n"):
+                errors.append(f"missing YAML frontmatter: {path.relative_to(root)}")
+    return errors
+
+
+def main():
+    errors = validate_marketplace(ROOT)
+    if errors:
+        for error in errors:
+            print(f"ERROR: {error}")
+        return 1
+    print("Claude marketplace: OK")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
