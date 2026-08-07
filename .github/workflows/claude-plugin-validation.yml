@@ -56,7 +56,7 @@ jobs:
         run: |
           export HOME="${RUNNER_TEMP}/claude-marketplace-smoke"
           mkdir -p "$HOME"
-          claude plugin marketplace add . --scope user
+          claude plugin marketplace add ./ --scope user
           claude plugin marketplace list --json > "${RUNNER_TEMP}/marketplaces.json"
           python3 - <<'PY'
           import json, os
