@@ -1,6 +1,6 @@
 # Ecosystem Architecture
 
-Version 3 organizes the repository around a central routing helper and explicit worker contracts. Skills, agents, research, tools, artifacts, and Claude Marketplace packaging are validated as one connected product.
+Version 3 organizes the repository around a central routing helper and explicit worker contracts. Skills, agents, research, tools, artifacts, Claude Marketplace packaging, and the demo gallery are validated as one connected product.
 
 ## Authority
 
@@ -16,10 +16,12 @@ Machine-readable contracts:
 - `research/capability-notes/gates.json`: adopted research-derived gates
 - `architecture/plugin-graph.json`: shipping worker order and skill preloads
 - `scripts/info_stories.py::load_catalog()`: merged Info-stories registry
+- `schemas/demo.schema.json`: public demo metadata contract
+- `scripts/demo_gallery.py`: owned/community demo validation and deterministic catalog
 
 ## Complete shipping path
 
-`new-post` owns the complete parent workflow:
+`new-post` owns the complete production parent workflow:
 
 1. `design-study`, when references exist
 2. `evidence-checker`
@@ -36,8 +38,29 @@ Machine-readable contracts:
 13. `render-qa`
 14. `post-critic`
 15. `story-verifier`
+16. deliver
+17. optional handoff to `share-demo` after PASS
 
-Workers return bounded artifacts to the parent workflow. A worker never assumes it can secretly coordinate peer workers.
+Workers return bounded artifacts to their parent workflow. A worker never assumes it can secretly coordinate peer workers.
+
+## Optional community publishing
+
+Community publishing is deliberately outside the critical production sequence. A delivered artifact is complete before publication is considered.
+
+After `story-verifier` returns `PASS`, `new-post` may offer one opt-in question. An explicit yes transfers control to the focused `share-demo` parent workflow. A decline or no answer causes no GitHub write.
+
+`share-demo` prepares a strict public package containing exactly `demo.gif`, `index.html`, and `demo.json`. `scripts/demo_submit.py` enforces final-verification, rights, privacy, and export checks. `community-publisher` then handles only contributor fork, branch, commit, push, and pull-request mechanics.
+
+The publisher never merges, enables auto-merge, or pushes to upstream `main`. Every community contribution waits for maintainer manual review and merge.
+
+Gallery namespaces:
+
+```text
+demos/owned/<slug>/
+demos/community/<github-user>/<slug>/
+```
+
+The root `demos/catalog.json` is generated deterministically from accepted manifests.
 
 ## Creative runtime
 
@@ -73,9 +96,9 @@ The registry is the deterministic result of `load_catalog()`, merging the base c
 
 ## Research and local rules
 
-Research-derived gates have source provenance and local independently-worded behavior. Plugin-local behavior such as exact mascot identity, hook-led design copy, restrained palettes, center-first composition, and creative payoff is kept separate from upstream attribution.
+Research-derived gates have source provenance and local independently-worded behavior. Plugin-local behavior such as exact mascot identity, hook-led design copy, restrained palettes, center-first composition, creative payoff, and opt-in public demo export is kept separate from upstream attribution.
 
-See [`research.md`](research.md) for the provenance chain.
+See [`research.md`](research.md) for the provenance chain and [`community-demos.md`](community-demos.md) for the public-export contract.
 
 ## Strict reality gate
 
@@ -83,6 +106,7 @@ See [`research.md`](research.md) for the provenance chain.
 
 ```bash
 python3 scripts/ecosystem_doctor.py check
+python3 scripts/demo_gallery.py check
 ```
 
-A module that exists only in documentation does not pass this gate.
+A module or demo contract that exists only in documentation does not pass these gates.
