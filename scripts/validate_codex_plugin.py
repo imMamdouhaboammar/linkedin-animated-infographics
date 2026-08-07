@@ -36,6 +36,20 @@ REQUIRED_INTERFACE = {
     "termsOfServiceURL",
     "defaultPrompt",
 }
+REQUIRED_POSITIVE_CASE_FIELDS = {
+    "id",
+    "user_prompt",
+    "expected_behavior",
+    "expected_result_shape",
+    "fixture_data",
+}
+REQUIRED_NEGATIVE_CASE_FIELDS = {
+    "id",
+    "user_prompt_or_scenario",
+    "expected_safe_behavior",
+    "why_not_complete",
+}
+POLICY_FILES = ("PRIVACY.md", "TERMS.md", "SUPPORT.md")
 
 
 def _load_json(path: Path, errors: list[str], label: str) -> dict[str, Any] | None:
@@ -268,6 +282,70 @@ def _validate_codex_config(root: Path, errors: list[str]) -> None:
         errors.append(f"missing required project-scoped Codex agents: {', '.join(missing)}")
 
 
+def _validate_submission(root: Path, errors: list[str]) -> None:
+    for filename in POLICY_FILES:
+        path = root / filename
+        if not path.is_file():
+            errors.append(f"missing public policy document {filename}")
+        elif len(path.read_text(encoding="utf-8").strip()) < 200:
+            errors.append(f"public policy document is unexpectedly small: {filename}")
+
+    metadata = _load_json(root / "submission" / "openai-plugin.json", errors, "OpenAI submission metadata")
+    cases = _load_json(root / "submission" / "test-cases.json", errors, "OpenAI submission test cases")
+    readme = root / "submission" / "README.md"
+    if not readme.is_file():
+        errors.append("missing OpenAI submission README")
+
+    if metadata:
+        if metadata.get("name") != EXPECTED_NAME:
+            errors.append("OpenAI submission plugin name drift")
+        if metadata.get("version") != EXPECTED_VERSION:
+            errors.append("OpenAI submission version drift")
+        if metadata.get("submission_type") != "skills-only":
+            errors.append("OpenAI submission type must be skills-only")
+        if metadata.get("category") != "Productivity":
+            errors.append("OpenAI submission category must be Productivity")
+        if metadata.get("submission_status") != "prepared-not-submitted":
+            errors.append("OpenAI submission status must remain prepared-not-submitted until external publication completes")
+        prompts = metadata.get("starter_prompts")
+        if not isinstance(prompts, list) or len(prompts) < 4 or any(not isinstance(item, str) or not item.strip() for item in prompts):
+            errors.append("OpenAI submission must include at least four starter prompts")
+        if not isinstance(metadata.get("release_notes"), str) or not metadata["release_notes"].strip():
+            errors.append("OpenAI submission release notes are required")
+        urls = metadata.get("urls")
+        if not isinstance(urls, dict) or any(not isinstance(urls.get(key), str) or not urls[key].startswith("https://") for key in ("website", "support", "privacy", "terms")):
+            errors.append("OpenAI submission requires public HTTPS website/support/privacy/terms URLs")
+        prerequisites = metadata.get("external_prerequisites")
+        prerequisite_text = " ".join(prerequisites).lower() if isinstance(prerequisites, list) and all(isinstance(item, str) for item in prerequisites) else ""
+        for marker in ("apps management", "verified", "manual", "review"):
+            if marker not in prerequisite_text:
+                errors.append(f"OpenAI submission external prerequisites missing marker: {marker}")
+
+    if cases:
+        positive = cases.get("positive")
+        negative = cases.get("negative")
+        if not isinstance(positive, list) or len(positive) != 5:
+            errors.append("OpenAI submission requires exactly five positive reviewer test cases")
+        if not isinstance(negative, list) or len(negative) != 3:
+            errors.append("OpenAI submission requires exactly three negative reviewer test cases")
+        if isinstance(positive, list):
+            for index, case in enumerate(positive, start=1):
+                if not isinstance(case, dict):
+                    errors.append(f"OpenAI positive reviewer case {index} must be an object")
+                    continue
+                missing = sorted(field for field in REQUIRED_POSITIVE_CASE_FIELDS if not case.get(field))
+                if missing:
+                    errors.append(f"OpenAI positive reviewer case {index} missing: {', '.join(missing)}")
+        if isinstance(negative, list):
+            for index, case in enumerate(negative, start=1):
+                if not isinstance(case, dict):
+                    errors.append(f"OpenAI negative reviewer case {index} must be an object")
+                    continue
+                missing = sorted(field for field in REQUIRED_NEGATIVE_CASE_FIELDS if not case.get(field))
+                if missing:
+                    errors.append(f"OpenAI negative reviewer case {index} missing: {', '.join(missing)}")
+
+
 def validate_codex_plugin(root: Path = ROOT) -> list[str]:
     errors: list[str] = []
     manifest = _load_json(root / ".codex-plugin" / "plugin.json", errors, "OpenAI plugin manifest")
@@ -284,6 +362,7 @@ def validate_codex_plugin(root: Path = ROOT) -> list[str]:
     if manifest and claude and manifest.get("name") != claude.get("name"):
         errors.append("Claude/OpenAI plugin name drift")
     _validate_codex_config(root, errors)
+    _validate_submission(root, errors)
 
     return errors
 
