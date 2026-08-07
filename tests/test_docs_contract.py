@@ -12,13 +12,17 @@ DOCS = {
     "research": ROOT / "docs" / "research.md",
     "marketplace": ROOT / "docs" / "marketplace.md",
     "development": ROOT / "docs" / "development.md",
+    "community_demos": ROOT / "docs" / "community-demos.md",
 }
 README = ROOT / "README.md"
+DEMOS_README = ROOT / "demos" / "README.md"
 
 
 class DocsContractTests(unittest.TestCase):
     def test_required_v3_docs_exist(self):
         failures = [name for name, path in DOCS.items() if not path.exists()]
+        if not DEMOS_README.exists():
+            failures.append("demos_readme")
         self.assertEqual([], failures)
 
     def test_readme_is_a_concise_gateway_to_focused_docs(self):
@@ -26,11 +30,38 @@ class DocsContractTests(unittest.TestCase):
         for relative in (
             "docs/ecosystem.md", "docs/routing.md", "docs/agents.md", "docs/skills.md",
             "docs/research.md", "docs/marketplace.md", "docs/development.md",
+            "docs/community-demos.md", "demos/README.md",
         ):
             self.assertIn(relative, text)
         self.assertIn("helper/GUIDE.md", text)
         self.assertIn("creative-director", text)
         self.assertIn("ecosystem_doctor.py", text)
+
+    def test_demo_gallery_readme_names_both_sections_and_contract(self):
+        self.assertTrue(DEMOS_README.exists())
+        text = DEMOS_README.read_text()
+        for needle in (
+            "Created by Mamdouh",
+            "Created by the community",
+            "GIF + HTML + demo.json",
+            "manual review",
+            "scripts/demo_gallery.py check",
+        ):
+            self.assertIn(needle, text)
+
+    def test_community_demo_doc_names_export_and_pr_safety_contract(self):
+        self.assertTrue(DOCS["community_demos"].exists())
+        text = DOCS["community_demos"].read_text()
+        for needle in (
+            "rights_confirmed",
+            "source_prompt",
+            "verification `PASS`",
+            "community-publisher",
+            "Never merge",
+            "demos/community/<github-user>/<slug>/",
+            "python3 scripts/demo_submit.py check",
+        ):
+            self.assertIn(needle, text)
 
     def test_agent_doc_covers_every_active_agent(self):
         self.assertTrue(DOCS["agents"].exists())
@@ -75,13 +106,14 @@ class DocsContractTests(unittest.TestCase):
             "python3 scripts/research_gates.py check",
             "python3 scripts/plugin_graph.py check",
             "python3 scripts/ecosystem_doctor.py check",
+            "python3 scripts/demo_gallery.py check",
             "python3 scripts/validate_marketplace.py",
         ):
             self.assertIn(command, text)
 
     def test_docs_local_markdown_links_resolve(self):
         missing = []
-        files = [README, *DOCS.values()]
+        files = [README, DEMOS_README, *DOCS.values()]
         for path in files:
             if not path.exists():
                 continue

@@ -12,6 +12,7 @@ The repository routes requests through `helper/` before choosing production work
 | `design-study` | Reference diagnosis through `design-study` |
 | `mascot-animation` | Focused exact-SVG mascot path |
 | `info-story` | Focused Info-stories concept/story composition |
+| `share-demo` | Opt-in verified public demo export through `share-demo` + `community-publisher` |
 
 Inspect a route:
 
@@ -51,6 +52,21 @@ Adds the mascot path only when the exact SVG exists. Missing asset returns `HOLD
 
 Static work can skip motion-specific workers after still approval, but it does not skip adversarial critique or independent verification.
 
+## Community publishing route
+
+`share-demo` is separate from `create-post`. It is not inserted into the critical creation graph.
+
+`new-post` may offer sharing only after final verification `PASS` and after delivery. Explicit acceptance transfers control to the `share-demo` parent workflow. A decline or no answer stops with no GitHub write.
+
+The focused route resolves to:
+
+- workflow: `share-demo`
+- skill: `share-demo`
+- agent: `community-publisher`
+- capability: `verification-loop`
+
+The parent workflow owns consent, rights confirmation, metadata, source-prompt consent, packaging, and export preflight. The worker owns only fork, fresh branch, scoped commit, push, and pull-request creation. Publication ends at the PR and requires maintainer manual review and merge.
+
 ## Creative route behavior
 
 Complete creation runs evidence before concepting. `creative-director` then produces several evidence-safe concept directions with:
@@ -73,11 +89,11 @@ Complete creation and Info-story composition apply:
 - `restrained-palette`
 - `center-first-composition`
 
-QA applies the relevant review variants. Rendering applies mechanical and verification gates rather than creative rewriting.
+QA applies the relevant review variants. Rendering applies mechanical and verification gates rather than creative rewriting. Community publishing applies its own consent/export boundary after verification rather than reopening creative production.
 
 ## Research gates
 
-Research gates are selected from capability ownership and route context. `reference-dna`, for example, only activates when visual references are actually present.
+Research gates are selected from capability ownership and route context. `reference-dna`, for example, only activates when visual references are actually present. `share-demo` inherits `bounded-verification` as a prerequisite and cannot publish a non-PASS artifact.
 
 Validate the router:
 
@@ -85,4 +101,5 @@ Validate the router:
 python3 scripts/ecosystem_router.py check
 python3 scripts/research_gates.py check
 python3 scripts/ecosystem_doctor.py check
+python3 scripts/demo_gallery.py check
 ```

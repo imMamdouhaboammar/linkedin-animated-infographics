@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-EXPECTED_PLUGIN_VERSION = "3.0.0"
+EXPECTED_PLUGIN_VERSION = "3.1.0"
 
 
 def _load_json(path: Path, errors: list[str]):
@@ -52,14 +52,13 @@ def validate_marketplace(root: Path = ROOT) -> list[str]:
     if plugin.get("version") != EXPECTED_PLUGIN_VERSION:
         errors.append(f"plugin release version must be {EXPECTED_PLUGIN_VERSION}")
 
-    for relative in ("skills", "agents", "hooks/hooks.json", "helper"):
+    for relative in ("skills", "agents", "hooks/hooks.json", "helper", "demos", "schemas/demo.schema.json"):
         if not (root / relative).exists():
             errors.append(f"missing standard plugin component {relative}")
     hooks = _load_json(root / "hooks" / "hooks.json", errors)
     if hooks is not None and "hooks" not in hooks:
         errors.append("hooks/hooks.json is missing top-level hooks")
 
-    # Claude component entrypoints require frontmatter. Supporting references do not.
     _require_frontmatter((root / "skills").glob("*/SKILL.md"), root, errors)
     _require_frontmatter((root / "agents").glob("*.md"), root, errors)
     return errors

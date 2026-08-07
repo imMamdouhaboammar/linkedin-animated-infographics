@@ -22,8 +22,10 @@ python3 scripts/ecosystem_router.py check
 python3 scripts/research_gates.py check
 python3 scripts/plugin_graph.py check
 python3 scripts/ecosystem_doctor.py check
+python3 scripts/demo_gallery.py check
 python3 scripts/validate_marketplace.py
 python3 -m json.tool hooks/hooks.json >/dev/null
+python3 -m json.tool schemas/demo.schema.json >/dev/null
 bash -n scripts/lint_artboard.sh
 bash -n scripts/setup.sh
 git diff --check HEAD^ HEAD
@@ -59,9 +61,31 @@ Validates agent inventory, required skill preloads, shipping order, conditional 
 
 Strict repository reality gate. It validates active module inventory, paths, tests, reachability, tool references, capability ownership, artifact participants, local/research gate owners, critical shipping workers, and cross-registry drift.
 
+### `scripts/demo_gallery.py check`
+
+Validates every owned/community demo package, author namespace, metadata contract, safe local paths, duplicate IDs, exact three-file package shape, and deterministic `demos/catalog.json` drift.
+
+### `scripts/demo_submit.py check`
+
+Validates one staged public contribution before GitHub publication. Preparation requires final verification PASS, rights confirmation, a clean export scan, and the approved GIF/HTML pair.
+
 ### `scripts/validate_marketplace.py`
 
 Validates the Claude Marketplace/plugin manifests, same-repository source, strict mode, version agreement, and required component structure.
+
+## Community demo changes
+
+Every accepted demo directory contains exactly `demo.gif`, `index.html`, and `demo.json`. The root catalog is generated, not hand-edited.
+
+Before opening a community PR:
+
+```bash
+python3 scripts/demo_submit.py check demos/community/<github-user>/<slug>
+python3 scripts/demo_gallery.py build
+python3 scripts/demo_gallery.py check
+```
+
+Review the diff after catalog generation. A community contribution should change only its three-file demo package and `demos/catalog.json`.
 
 ## Browser rendering
 
@@ -93,6 +117,6 @@ A new public module is incomplete until it is declared in `helper/modules.json` 
 
 ## Release work
 
-A plugin release requires matching version values in `.claude-plugin/plugin.json` and the plugin entry in `.claude-plugin/marketplace.json`. The current v3 release is `3.0.0`.
+A plugin release requires matching version values in `.claude-plugin/plugin.json` and the plugin entry in `.claude-plugin/marketplace.json`. The current release is `3.1.0`.
 
 Before merge, require unit/validator success, official Claude validation, marketplace install smoke, no blocking external check, and no unresolved review thread.

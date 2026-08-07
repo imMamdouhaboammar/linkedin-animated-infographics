@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "helper" / "modules.json"
 SCRIPT = ROOT / "scripts" / "ecosystem_doctor.py"
+PUBLIC_SCRIPT_TOOLS = {"demo_gallery", "demo_submit"}
 
 
 def load_module():
@@ -34,10 +35,13 @@ class EcosystemDoctorTests(unittest.TestCase):
     def test_manifest_matches_public_filesystem_inventory(self):
         self.assertTrue(MANIFEST.exists())
         modules = json.loads(MANIFEST.read_text())["modules"]
+        public_scripts = {
+            name for name in PUBLIC_SCRIPT_TOOLS if (ROOT / "scripts" / f"{name}.py").is_file()
+        }
         expected = {
             "skills": {path.parent.name for path in (ROOT / "skills").glob("*/SKILL.md")},
             "agents": {path.stem for path in (ROOT / "agents").glob("*.md")},
-            "tools": {path.stem for path in (ROOT / "tools").glob("*.py")},
+            "tools": {path.stem for path in (ROOT / "tools").glob("*.py")} | public_scripts,
         }
         self.assertEqual(expected["skills"], set(modules["skills"]))
         self.assertEqual(expected["agents"], set(modules["agents"]))
@@ -163,6 +167,22 @@ class EcosystemDoctorTests(unittest.TestCase):
             router_path.write_text(json.dumps(router))
             errors = module.validate_ecosystem_doctor(root)
             self.assertTrue(any("unreachable active agent creative-director" in error.lower() for error in errors), errors)
+
+    def test_doctor_rejects_non_parent_workflow_as_artifact_participant(self):
+        module = load_module()
+        self.assertIsNotNone(module)
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            copy_repo_fixture(root)
+            artifacts_path = root / "helper" / "artifacts.json"
+            artifacts = json.loads(artifacts_path.read_text())
+            artifacts["artifacts"]["build/community-demo.json"]["producer"] = "parent:qa-post"
+            artifacts_path.write_text(json.dumps(artifacts))
+            errors = module.validate_ecosystem_doctor(root)
+            self.assertTrue(
+                any("build/community-demo.json" in error and "parent:qa-post" in error for error in errors),
+                errors,
+            )
 
     def test_doctor_requires_critical_shipping_workers(self):
         module = load_module()

@@ -6,7 +6,7 @@ The active skill inventory is declared in `helper/modules.json`. Every public sk
 
 ### `post`
 
-Public routing entrypoint. It reads `helper/GUIDE.md`, resolves the request, and routes complete creation to `new-post` or focused work to QA, render, design-study, mascot-animation, or Info-stories paths.
+Public routing entrypoint. It reads `helper/GUIDE.md`, resolves the request, and routes complete creation to `new-post` or focused work to QA, render, design-study, mascot-animation, Info-stories, or verified community publishing.
 
 ### `new-post`
 
@@ -19,6 +19,10 @@ Focused QA parent workflow for an existing artifact. It runs deterministic rende
 ### `render-gif`
 
 Focused rendering workflow for approved HTML. It renders and reports motion, seam, and file-size evidence without redesigning the artifact.
+
+### `share-demo`
+
+Focused opt-in parent workflow for publishing a finished verified GIF/HTML result to the repository gallery. It requires explicit consent, final verification PASS, rights confirmation, a clean public-export preflight, and the exact `demo.gif + index.html + demo.json` package. Source-prompt publication is separately opt-in. It delegates only fork/branch/commit/push/PR mechanics to `community-publisher`; every PR requires maintainer manual review and merge.
 
 ## Domain skills
 
@@ -67,7 +71,7 @@ These defaults are blocking unless an approved brief or valid comprehension/fide
 
 ## Research integration
 
-Skills name the research gates they own or consume. The runtime gate registry lives in `research/capability-notes/gates.json`; research notes do not independently redefine production behavior.
+Skills name the research gates they own or consume. The runtime gate registry lives in `research/capability-notes/gates.json`; research notes do not independently redefine production behavior. `share-demo` inherits `bounded-verification` as a publication prerequisite and does not create new claims.
 
 Validate skill contracts with:
 

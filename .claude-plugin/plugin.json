@@ -1,7 +1,7 @@
 {
   "name": "linkedin-animated-infographics",
-  "description": "Claude Code plugin for creative, evidence-safe LinkedIn infographics with LLM routing, Info-stories, research gates, UI mockup stories, exact-SVG mascots, deterministic rendering, and strict QA.",
-  "version": "3.0.0",
+  "description": "Claude Code plugin for creative LinkedIn infographics with LLM routing, Info-stories, research gates, UI stories, exact-SVG mascots, deterministic rendering, strict QA, and opt-in community demo publishing.",
+  "version": "3.1.0",
   "author": {
     "name": "Mamdouh Aboammar",
     "url": "https://github.com/imMamdouhaboammar"
@@ -18,6 +18,7 @@
     "creative-direction",
     "llm-router",
     "research-gates",
+    "community-demos",
     "arabic",
     "rtl",
     "svg",

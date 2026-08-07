@@ -32,6 +32,7 @@
   "agents": {
     "artboard-builder": {"required_skills": ["artboard", "info-stories"]},
     "caption-writer": {"required_skills": ["caption"]},
+    "community-publisher": {"required_skills": ["share-demo"]},
     "copy-compressor": {"required_skills": ["info-stories", "caption"]},
     "creative-director": {"required_skills": ["info-stories", "caption", "artboard"]},
     "design-study": {"required_skills": ["info-stories"]},
