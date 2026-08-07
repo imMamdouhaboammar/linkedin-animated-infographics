@@ -1,9 +1,13 @@
-model = "gpt-5.4"
+name = "explorer"
+description = "Read-only codebase explorer for gathering evidence before changes are proposed."
+model = "gpt-5.6-terra"
 model_reasoning_effort = "medium"
 sandbox_mode = "read-only"
 
 developer_instructions = """
 Stay in exploration mode.
-Trace the real execution path, cite files and symbols, and avoid proposing fixes unless the parent agent asks for them.
-Prefer targeted search and file reads over broad scans.
+Read helper/GUIDE.md before reasoning about product behavior.
+Trace real execution paths through skills, helper registries, agents, scripts, tests, and the plugin graph.
+Return concise evidence with exact file and symbol references.
+Do not edit files or propose implementation until the parent asks for options.
 """
