@@ -7,6 +7,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 HELPER_FILES = ("router.json", "capabilities.json", "artifacts.json", "quality-gates.json")
 REQUIRED_CONDITIONS = frozenset({"arabic", "ui_mockup", "visual_reference", "official_mascot"})
+PARENT_WORKFLOWS = frozenset({"new-post", "share-demo"})
 CONDITION_SCHEMA = {
     "arabic": {"adds_skills": list},
     "ui_mockup": {"adds_capabilities": list, "adds_agents": list},
@@ -100,11 +101,11 @@ def _dedupe(values):
 
 
 def _parent_participants(routes: dict) -> set[str]:
+    routed_workflows = {route.get("workflow") for route in routes.values()}
     return {
         f"parent:{workflow}"
-        for route in routes.values()
-        for workflow in [route.get("workflow")]
-        if workflow not in (None, "focused")
+        for workflow in PARENT_WORKFLOWS
+        if workflow in routed_workflows
     }
 
 
@@ -134,6 +135,11 @@ def validate_ecosystem(root: Path = ROOT) -> list[str]:
     routes = router.get("routes", {})
     if router.get("default_intent") not in routes:
         errors.append("router default_intent does not resolve to a route")
+
+    routed_workflows = {route.get("workflow") for route in routes.values()}
+    missing_parent_workflows = sorted(PARENT_WORKFLOWS - routed_workflows)
+    if missing_parent_workflows:
+        errors.append(f"router missing explicit parent workflows: {', '.join(missing_parent_workflows)}")
 
     conditions = router.get("conditions", {})
     if not isinstance(conditions, dict):
