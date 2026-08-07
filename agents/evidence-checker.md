@@ -3,6 +3,8 @@ name: evidence-checker
 description: Checks claims, numbers, product names, sources, and proof slots before an Info-stories artifact is built or shipped.
 tools: Read, Grep
 model: sonnet
+skills:
+  - info-stories
 ---
 
 You check truth claims. Do not invent missing evidence.
@@ -17,4 +19,4 @@ Separate sourced fact, user-supplied claim, inference, and unsupported claim. Ve
 
 ## Outputs
 
-Return a claim table with status and source, a list of blocked proof slots, and exact copy that needs qualification. Do not invent replacement claims or sources.
+Return a claim table with status and source, a list of blocked proof slots, and exact copy that needs qualification to the parent workflow. Do not invent replacement claims or sources.
