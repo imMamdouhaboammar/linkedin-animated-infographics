@@ -56,6 +56,11 @@ class MascotContractTests(unittest.TestCase):
         self.assertLess(text.index("artboard-builder"), text.index("mascot-animator"))
         self.assertLess(text.index("mascot-animator"), text.index("motion-engineer"))
 
+    def test_direct_skill_tells_main_model_to_request_svg(self):
+        text = (ROOT / "skills" / "svg-mascot-animator" / "SKILL.md").read_text().lower()
+        self.assertIn("ask the user to upload the exact svg", text)
+        self.assertIn("hold: exact svg required", text)
+
     def test_mascot_agent_preloads_both_mascot_skills(self):
         path = ROOT / "agents" / "mascot-animator.md"
         self.assertTrue(path.exists())
