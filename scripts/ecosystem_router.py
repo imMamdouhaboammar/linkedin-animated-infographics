@@ -6,6 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 HELPER_FILES = ("router.json", "capabilities.json", "artifacts.json", "quality-gates.json")
+REQUIRED_CONDITIONS = frozenset({"arabic", "ui_mockup", "visual_reference", "official_mascot"})
 
 
 def _load_json(path: Path, errors=None):
@@ -22,6 +23,19 @@ def _load_json(path: Path, errors=None):
         if errors is not None:
             errors.append(f"invalid JSON in {path}: {exc}")
     return None
+
+
+def _resolve_asset_path(root: Path, value):
+    if not value or not isinstance(value, (str, Path)):
+        return None
+    path = Path(value).expanduser()
+    if not path.is_absolute():
+        path = root / path
+    return path.resolve()
+
+
+def _is_svg_file(path: Path | None) -> bool:
+    return bool(path and path.is_file() and path.suffix.lower() == ".svg")
 
 
 def load_ecosystem(root: Path = ROOT) -> dict:
@@ -71,6 +85,13 @@ def validate_ecosystem(root: Path = ROOT) -> list[str]:
     if router.get("default_intent") not in routes:
         errors.append("router default_intent does not resolve to a route")
 
+    conditions = router.get("conditions", {})
+    if not isinstance(conditions, dict):
+        errors.append("router conditions must be an object")
+        conditions = {}
+    for condition_id in sorted(REQUIRED_CONDITIONS - set(conditions)):
+        errors.append(f"router missing required condition {condition_id}")
+
     for intent, route in routes.items():
         workflow = route.get("workflow")
         if workflow != "focused" and workflow not in skills:
@@ -85,7 +106,10 @@ def validate_ecosystem(root: Path = ROOT) -> list[str]:
             if capability not in capabilities:
                 errors.append(f"route {intent} references missing capability {capability}")
 
-    for condition, contract in router.get("conditions", {}).items():
+    for condition, contract in conditions.items():
+        if not isinstance(contract, dict):
+            errors.append(f"condition {condition} must be an object")
+            continue
         for skill in contract.get("adds_skills", []):
             if skill not in skills:
                 errors.append(f"condition {condition} references missing skill {skill}")
@@ -233,6 +257,11 @@ def route_request(request: dict, root: Path = ROOT) -> dict:
     if intent not in router["routes"]:
         raise ValueError(f"unknown routing intent: {intent}")
 
+    conditions = router.get("conditions", {})
+    missing_conditions = sorted(REQUIRED_CONDITIONS - set(conditions) if isinstance(conditions, dict) else REQUIRED_CONDITIONS)
+    if missing_conditions:
+        raise ValueError(f"router missing required conditions: {', '.join(missing_conditions)}")
+
     base = copy.deepcopy(router["routes"][intent])
     result = {
         "status": "READY",
@@ -250,33 +279,34 @@ def route_request(request: dict, root: Path = ROOT) -> dict:
 
     language = (request.get("language") or "").lower()
     if language in ("ar", "arabic") or request.get("rtl") is True:
-        result["skills"].extend(router["conditions"]["arabic"]["adds_skills"])
+        result["skills"].extend(conditions["arabic"]["adds_skills"])
 
     if request.get("ui_mockup") is True:
-        condition = router["conditions"]["ui_mockup"]
+        condition = conditions["ui_mockup"]
         result["capabilities"].extend(condition.get("adds_capabilities", []))
         result["agents"].extend(condition.get("adds_agents", []))
 
     if request.get("visual_reference") is True:
-        condition = router["conditions"]["visual_reference"]
+        condition = conditions["visual_reference"]
         result["agents"].extend(condition.get("adds_agents", []))
         result["capabilities"].extend(condition.get("adds_capabilities", []))
 
     mascot = request.get("mascot") or {}
+    svg_asset = _resolve_asset_path(root, mascot.get("svg_path"))
+    has_exact_svg = _is_svg_file(svg_asset)
     official_mascot = bool(mascot.get("official") or mascot.get("name"))
     if official_mascot:
-        condition = router["conditions"]["official_mascot"]
+        condition = conditions["official_mascot"]
         result["asset_gates"].append(condition["asset_gate"])
         result["capabilities"].extend(condition.get("adds_capabilities", []))
-        svg_path = mascot.get("svg_path")
-        if not svg_path or not Path(svg_path).exists():
+        if not has_exact_svg:
             result["status"] = "HOLD"
             result["reason"] = "exact SVG required for named or official mascot"
             return _finalize_route(result, request, ecosystem)
         result["skills"].extend(condition.get("adds_skills", []))
         result["conditional_agents"].extend(condition.get("adds_agents", []))
 
-    if intent == "mascot-animation" and not mascot.get("svg_path"):
+    if intent == "mascot-animation" and not has_exact_svg:
         result["status"] = "HOLD"
         result["reason"] = "exact SVG required for mascot animation"
         result["asset_gates"].append("exact-svg")
