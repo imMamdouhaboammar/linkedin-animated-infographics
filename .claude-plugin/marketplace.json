@@ -12,8 +12,8 @@
       "name": "linkedin-animated-infographics",
       "source": "./",
       "strict": true,
-      "version": "3.1.0",
-      "description": "Create LinkedIn Info-stories with LLM routing, creative concepting, research gates, exact-SVG mascots, UI stories, strict QA, and opt-in community demo publishing.",
+      "version": "3.2.0",
+      "description": "Create LinkedIn Info-stories with creative concepting, research gates, exact-SVG mascots, UI stories, strict QA, and opt-in community demo publishing.",
       "author": {
         "name": "Mamdouh Aboammar",
         "url": "https://github.com/imMamdouhaboammar"
