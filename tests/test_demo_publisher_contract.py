@@ -2,6 +2,8 @@ import json
 import unittest
 from pathlib import Path
 
+from scripts.ecosystem_router import route_request
+
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -16,6 +18,13 @@ class DemoPublisherContractTests(unittest.TestCase):
         self.assertEqual("share-demo", route["workflow"])
         self.assertEqual(["share-demo"], route["skills"])
         self.assertEqual(["community-publisher"], route["agents"])
+
+    def test_share_demo_runtime_route_is_real(self):
+        route = route_request({"intent": "share-demo", "request": "share this demo"}, ROOT)
+        self.assertEqual("READY", route["status"])
+        self.assertEqual("share-demo", route["intent"])
+        self.assertEqual("share-demo", route["workflow"])
+        self.assertIn("community-publisher", route["agents"])
 
     def test_share_demo_is_not_in_new_post_critical_sequence(self):
         sequence = self.graph["workflows"]["new-post"]["sequence"]
@@ -68,6 +77,23 @@ class DemoPublisherContractTests(unittest.TestCase):
             "hold",
         ):
             self.assertIn(needle, text)
+
+    def test_new_post_offers_sharing_only_after_verification_and_delivery(self):
+        text = (ROOT / "skills" / "new-post" / "SKILL.md").read_text()
+        verify = text.index("### 15. Independent acceptance")
+        deliver = text.index("### 16. Deliver")
+        share = text.index("### 17. Share with the community")
+        self.assertLess(verify, deliver)
+        self.assertLess(deliver, share)
+        self.assertIn("only when the final verification verdict is `PASS`", text)
+
+    def test_decline_or_no_answer_means_no_github_write(self):
+        text = (ROOT / "skills" / "new-post" / "SKILL.md").read_text().lower()
+        share = text[text.index("### 17. share with the community"):]
+        self.assertIn("declines", share)
+        self.assertIn("no answer", share)
+        self.assertIn("no github write", share)
+        self.assertIn("share-demo", share)
 
 
 if __name__ == "__main__":
