@@ -46,6 +46,9 @@ jobs:
           bash -n scripts/lint_artboard.sh
           bash -n scripts/setup.sh
 
+      - name: Whitespace integrity
+        run: git diff --check HEAD^ HEAD
+
       - name: Install current Claude Code
         run: npm install -g @anthropic-ai/claude-code@latest
 
