@@ -99,6 +99,15 @@ def _dedupe(values):
     return result
 
 
+def _parent_participants(routes: dict) -> set[str]:
+    return {
+        f"parent:{workflow}"
+        for route in routes.values()
+        for workflow in [route.get("workflow")]
+        if workflow not in (None, "focused")
+    }
+
+
 def validate_ecosystem(root: Path = ROOT) -> list[str]:
     errors = []
     helper = root / "helper"
@@ -197,7 +206,7 @@ def validate_ecosystem(root: Path = ROOT) -> list[str]:
         if not gate.get("behavior"):
             errors.append(f"quality gate {gate_id} has no behavior")
 
-    allowed_participants = agents | {"parent:new-post"}
+    allowed_participants = agents | _parent_participants(routes)
     for artifact, contract in artifacts_doc.get("artifacts", {}).items():
         producer = contract.get("producer")
         if producer not in allowed_participants:
@@ -237,11 +246,17 @@ def _infer_intent(request: dict, router: dict) -> str:
         "mascot-animation": "mascot-animation",
         "info-story": "info-story",
         "info-stories": "info-story",
+        "share": "share-demo",
+        "share-demo": "share-demo",
+        "publish-demo": "share-demo",
+        "community-demo": "share-demo",
     }
     if explicit in aliases:
         return aliases[explicit]
 
     text = (request.get("request") or "").lower()
+    if any(token in text for token in ("share this demo", "publish this demo", "submit this demo", "community gallery")):
+        return "share-demo"
     if any(token in text for token in ("qa this", "review this", "audit this", "check this finished")):
         return "qa"
     if "render" in text and any(token in text for token in ("html", "gif", "artboard")):
