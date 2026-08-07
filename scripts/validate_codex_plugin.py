@@ -104,11 +104,12 @@ def _validate_openai_manifest(root: Path, manifest: dict[str, Any], errors: list
         errors.append("OpenAI plugin version drift")
 
     skills_value = manifest.get("skills")
-    if skills_value != "./skills/":
-        errors.append("OpenAI plugin skills path must be ./skills/")
-    skills_path = _safe_repo_path(root, skills_value or "")
+    skills_path = _safe_repo_path(root, skills_value) if isinstance(skills_value, str) else None
+    expected_skills = (root / "skills").resolve()
     if skills_path is None:
         errors.append("unsafe OpenAI plugin skills path")
+    elif skills_path != expected_skills:
+        errors.append("OpenAI plugin skills path must resolve to the canonical skills root")
     elif not skills_path.is_dir():
         errors.append("OpenAI plugin skills path does not resolve to a directory")
 
@@ -169,12 +170,17 @@ def _validate_codex_marketplace(root: Path, marketplace: dict[str, Any], errors:
         errors.append("Codex marketplace plugin name drift")
 
     source = entry.get("source")
-    if source != {"source": "local", "path": "./"}:
-        errors.append("Codex marketplace source must resolve to local plugin root ./")
+    if not isinstance(source, dict):
+        errors.append("Codex marketplace source must be an object")
     else:
-        target = _safe_repo_path(root, source["path"])
-        if target is None or target != root.resolve():
-            errors.append("Codex marketplace source path is unsafe or does not resolve to plugin root")
+        if source.get("source") != "local":
+            errors.append("Codex marketplace source type must be local")
+        source_path = source.get("path")
+        target = _safe_repo_path(root, source_path) if isinstance(source_path, str) else None
+        if target is None:
+            errors.append("Codex marketplace source path is unsafe")
+        elif target != root.resolve():
+            errors.append("Codex marketplace source path must resolve to plugin root")
 
     policy = entry.get("policy")
     if not isinstance(policy, dict):
