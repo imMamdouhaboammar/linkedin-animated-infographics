@@ -196,9 +196,11 @@ grid-paper texture, serif headline with one accent word.
 --bg:          #FFFFFF;
 --paper:       #FDFCFA;   /* card fills, one step off white */
 --ink:         #16202C;
---muted:       #6B7787;
---line:        #E3E6EA;
---accent:      #D9744F;   /* terracotta */
+--ink-2:       #2B3540;   /* body copy */
+--muted:       #57626F;
+--line:        #D8DCE2;
+--accent:      #D9744F;   /* terracotta; fills and active state only */
+--accent-deep: #8C3E20;   /* accent-coloured text */
 --accent-wash: #FBEDE6;
 --footer-bg:   #101B29;
 
@@ -288,12 +290,14 @@ Prospeo, HeyOz. Cream ground, serif card titles, saturated accent borders, one m
 colour per card.
 
 ```css
---bg:      #FAF7F2;
---card:    #FFFFFF;
---ink:     #1A2333;
---muted:   #6A7385;
---accent:  #E2552B;
---border:  2px solid var(--accent);
+--bg:          #FAF7F2;
+--card:        #FFFFFF;
+--ink:         #1A2333;
+--ink-2:       #2B3540;   /* body copy */
+--muted:       #6A7385;
+--accent:      #E2552B;   /* fills and borders only */
+--accent-deep: #A03318;   /* accent-coloured text */
+--border:      2px solid var(--accent);
 
 /* mascot palette — one per card, never reuse within a grid */
 --m1:#E2552B; --m2:#5E8B5A; --m3:#3D7EA6;
@@ -313,11 +317,11 @@ LinkedIn's ~350px feed width, which is the number that decides legibility.
 | Role | Size | Weight | Tracking | At 350px |
 |---|---|---|---|---|
 | Headline | 56–72 | 700 | -0.018em | 18–23 |
-| Headline line 2 | 44–56 | 400–600 | -0.015em | 14–18 |
-| Subline | 19–22 | 400 | 0 | 6–7 |
+| Headline line 2 | 44–56 | 500–600 | -0.015em | 14–18 |
+| Subline | 19–22 | 500–600 | 0 | 6–7 |
 | Section header | 12–13 | 800 | 0.14em, caps | 4 |
 | Card title | 17–20 | 700 | 0 | 6 |
-| Card body | 14–15 | 400 | 0 | 4.5 |
+| Card body | 14–15 | 500–600 | 0 | 4.5 |
 | Pill / chip | 13–15 | 600 | 0 | 4.5 |
 | Micro label | 10–11 | 800 | 0.11em, caps | 3.5 |
 | Footer name | 15 | 800 | 0.09em, caps | 5 |
@@ -328,6 +332,50 @@ section headers, and the card titles.
 
 **The 22px floor** applies to anything load-bearing. `check_render.py` flags everything
 below it; you decide which flags are acceptable.
+
+## Contrast floor, every house
+
+Contrast is a token-level constraint, not a final-pass styling preference. Before using a
+foreground/background pair, calculate WCAG relative luminance and the contrast ratio:
+
+```text
+L = 0.2126 R + 0.7152 G + 0.0722 B
+contrast = (Llighter + 0.05) / (Ldarker + 0.05)
+```
+
+Convert each sRGB channel to linear light first: divide by `12.92` when the channel is at
+or below `0.04045`; otherwise use `((c + 0.055) / 1.055) ** 2.4`.
+
+```python
+def relative_luminance(hex_color: str) -> float:
+    rgb = [int(hex_color[i:i + 2], 16) / 255 for i in (1, 3, 5)]
+    linear = [
+        c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4
+        for c in rgb
+    ]
+    return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
+
+
+def contrast_ratio(foreground: str, background: str) -> float:
+    a = relative_luminance(foreground)
+    b = relative_luminance(background)
+    lighter, darker = max(a, b), min(a, b)
+    return (lighter + 0.05) / (darker + 0.05)
+```
+
+Minimums:
+
+- Text under 24px: **4.5:1**, with body-role text at **500 weight or heavier**.
+- Borders, badge outlines, and state-defining fills: **3:1** against the adjacent colour.
+
+Two recurring failures:
+
+1. **Raw accent used as text.** `--accent` is for fills, borders, and active state. When
+   accent colour carries text, use that house's `--accent-deep` and verify the pair.
+2. **Muted text placed on line-colour fills.** `--muted` is a foreground token and `--line`
+   is a boundary token. An inactive badge should use `--paper` or a wash as its fill and
+   `--muted`, `--ink-2`, or `--ink` for text. If a line-colour fill is unavoidable, verify
+   the actual pair instead of assuming the token names make it safe.
 
 ## Spacing scale
 
@@ -357,19 +405,3 @@ gets a large fill, the accent stops reading as the accent.
 House 0 extends this rather than breaking it: its nine section hues are static identity
 and are allowed header strips and panel washes, while the terracotta stays the only
 colour that ever changes between frames. See the tier table in House 0.
-
-## Attribution footer
-
-Mandatory on every artboard. These images get reposted without the caption, and the
-footer is the only thing that survives.
-
-```html
-<div class="foot">
-  <div class="av"></div>
-  <span class="nm">YOUR NAME</span>
-  <span class="url">· yoursite.com</span>
-</div>
-```
-
-Dark bar, 78px, full bleed, centred. Or a light variant with a top border. Either way
-it must be visually separated from the content zone, and it must never animate.
