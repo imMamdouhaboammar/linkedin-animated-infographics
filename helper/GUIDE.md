@@ -13,6 +13,7 @@ The machine-readable routing authority is split across:
 - `research/capability-notes/gates.json` for adopted runtime research gates
 - `architecture/plugin-graph.json` for executable worker order and required skill preloads
 - `scripts/info_stories.py::load_catalog()` for the merged Info-stories registry
+- `schemas/demo.schema.json` and `scripts/demo_gallery.py` for the public demo gallery contract
 
 If prose conflicts with one of those contracts, stop and repair the drift instead of guessing.
 
@@ -25,6 +26,7 @@ If prose conflicts with one of those contracts, stop and repair the drift instea
    - study a visual reference: `design-study`
    - animate an SVG mascot as a focused task: `mascot-animation`
    - compose an Info-story without running the whole post pipeline: `info-story`
+   - publish a verified finished demo after explicit consent: `share-demo`
 2. Load the route from `router.json`.
 3. Resolve capability owners and plugin-local defaults from `capabilities.json`.
 4. Apply the route's research gates from `research/capability-notes/gates.json`.
@@ -88,9 +90,15 @@ Use `design-study` to extract reusable design DNA. Do not copy a reference pixel
 
 Static work stops after still QA and final verification. Animated work adds motion direction, optional mascot animation, motion implementation, and render QA.
 
+### Community publishing
+
+Community publishing is an optional public export boundary after delivery. `new-post` may offer it only after final verification `PASS`. A yes routes to the focused `share-demo` parent workflow; a no or no answer performs no GitHub write.
+
+The public package is exactly `demo.gif`, `index.html`, and `demo.json`. `scripts/demo_submit.py` performs packaging/preflight and `scripts/demo_gallery.py` validates the repository gallery. Source prompts are private by default, rights confirmation is explicit, and GitHub publication stops at a pull request requiring maintainer manual review and merge.
+
 ## Parent workflow rule
 
-`new-post` is the canonical parent workflow for complete post creation. It owns user approvals, HOLD resolution, repair loops, and final delivery. Every worker returns a bounded artifact to the parent workflow.
+`new-post` is the canonical parent workflow for complete post creation. It owns user approvals, HOLD resolution, repair loops, and final delivery. `share-demo` is a separate focused parent workflow that owns the optional export consent and contribution handoff after delivery. Every worker returns a bounded artifact to its parent workflow.
 
 ## HOLD semantics
 
@@ -102,9 +110,14 @@ A HOLD means a required input or blocking quality gate is missing. Common cases:
 - incompatible Info-stories composition
 - unresolved blocking research-gate finding
 - required render evidence unavailable
+- community export requested without final verification PASS
+- community export requested without explicit rights confirmation
+- final GIF or HTML missing for a community package
+- GitHub identity/authentication, fork, push, or PR capability unavailable
+- public export preflight finds secrets, local paths, signed URLs, or unsafe remote executable resources
 
 Do not convert a HOLD into invented content. State the missing requirement and wait for the parent workflow or user to resolve it.
 
 ## Final verification
 
-A complete post is not ready because generation finished. The shipping path ends with render evidence, adversarial review, and independent verification. The final verifier may request at most two targeted repair attempts before escalation.
+A complete post is not ready because generation finished. The shipping path ends with render evidence, adversarial review, and independent verification. The final verifier may request at most two targeted repair attempts before escalation. Community sharing may be offered only after that final verdict is `PASS`.
