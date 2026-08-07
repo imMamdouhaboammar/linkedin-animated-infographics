@@ -2,7 +2,7 @@
 
 # LinkedIn Animated Infographics
 
-**Turn evidence into a visual story with a sharp hook, a memorable reveal, and motion that earns its place**
+**Turn imagination into visual stories that stop the scroll and make the idea click**
 
 `Claude Code Plugin 3.0.0` · `1080×1350` · `Info-stories` · `UI stories` · `Exact-SVG mascots` · `Arabic / RTL`
 
@@ -12,23 +12,23 @@
   <img src="./assets/demo_artboard_v4.gif" alt="Animated LinkedIn infographic demo generated with the plugin" width="720">
 </a>
 
-<sub>Live 1080×1350 demo · click the animation to open it full size</sub>
+<sub>Live 1080×1350 demo · click to open full size</sub>
 
 </div>
 
-## The idea
+## WOW first, AHA after
 
-<strong>WOW gets the scroll to stop<br>AHA makes the idea click</strong>
+<strong>WOW stops the scroll<br>AHA makes the idea click</strong>
 
-This plugin is built to earn both
+The plugin aims for both
 
-The **WOW moment** comes from a strong concept, distinctive composition, confident color, a clear visual anchor, and motion with timing and purpose
+**WOW** is the visual pull: a strong concept, a clear focal point, confident color, smart composition, and motion with a job
 
-The **AHA moment** comes when the visual changes understanding through a reveal, comparison, relationship, transformation, state change, interface sequence, or another useful payoff
+**AHA** is the payoff: the reader sees a relationship, comparison, transformation, state change, interface flow, or reveal that makes the idea easier to understand
 
-If an effect looks impressive but does not make the idea clearer, more memorable, or easier to understand, it does not count as the payoff
+If the effect looks good but adds no meaning, it is decoration
 
-That principle is enforced before layout by the `creative-director`, then checked again through story, layout, motion, review, and verification
+`creative-director` develops the concept before layout starts, then the rest of the workflow tests whether the idea still works through copy, layout, motion, QA, and final verification
 
 ## Install from Claude Marketplace
 
@@ -37,36 +37,34 @@ That principle is enforced before layout by the `creative-director`, then checke
 /plugin install linkedin-animated-infographics@mamdouh-creative-tools
 ```
 
-The marketplace and plugin live in this repository
-
 Validate a local checkout with
 
 ```bash
 claude plugin validate .
 ```
 
-## What the plugin is trying to make
+## What it makes
 
-Not another generic card stack with animated decoration
+Not a generic stack of cards with movement added at the end
 
-A finished post should have
+A strong output should have
 
-| Job | What the plugin looks for |
+| Part | Standard |
 | --- | --- |
-| **Hook** | A headline or opening frame that earns attention through specificity, tension, outcome, recognition, or useful surprise |
-| **Visual idea** | One dominant concept that the reader can understand at feed scale |
-| **WOW moment** | A visual or motion payoff that feels fresh without becoming excessive |
-| **AHA moment** | A reveal that adds understanding instead of simply adding movement |
-| **Story shape** | A deliberate sequence such as comparison, transformation, state change, process, interface story, proof view, or framework |
-| **Color** | Creative, attractive, restrained palettes with enough character to feel designed |
-| **Composition** | Center-first by default, with alignment exceptions only when content, fidelity, or reading order benefits |
-| **Motion** | Seekable, deterministic movement tied to meaning rather than constant activity |
-| **Evidence** | Claims, product states, metrics, logos, and proof tied back to supplied material |
-| **Finish** | Mechanical QA, adversarial critique, and independent verification before delivery |
+| **Hook** | One opening idea worth stopping for |
+| **Visual idea** | One dominant concept readable at feed size |
+| **WOW** | A fresh visual or motion move that serves the story |
+| **AHA** | A payoff that changes understanding |
+| **Story** | A clear shape such as comparison, process, transformation, proof, interface flow, or framework |
+| **Color** | Creative and attractive without becoming loud |
+| **Composition** | Center-first unless the content reads better another way |
+| **Motion** | Deliberate, seekable, deterministic, and tied to meaning |
+| **Evidence** | Claims, metrics, product states, logos, and proof tied to supplied material |
+| **Finish** | Mechanical QA, critique, and independent verification |
 
 ## Creative runtime
 
-Before story architecture hardens, `creative-director` produces at least three genuinely different directions in `build/creative-concepts.json`
+Before story architecture starts, `creative-director` creates at least three genuinely different directions in `build/creative-concepts.json`
 
 Each direction defines
 
@@ -74,29 +72,29 @@ Each direction defines
 - copy hook
 - aha mechanic
 - story shape
-- recommended Visual Style
-- recommended Story Archetype
-- recommended motion behavior
+- Visual Style
+- Story Archetype
+- motion behavior
 - evidence dependencies
 - risks
-- why the direction earns attention
+- why the idea deserves attention
 
-At least one direction must contain a useful visual payoff rather than a palette variation or decorative treatment
+At least one direction must contain a real visual payoff, not a palette swap or a new card arrangement
 
-The local creative gates include `hooked-design-copy`, `creative-payoff`, `restrained-palette`, and `center-first-composition`
+The local gates are `hooked-design-copy`, `creative-payoff`, `restrained-palette`, and `center-first-composition`
 
 ## Info-stories
 
-Info-stories separates four decisions that are often mixed together
+Info-stories separates four decisions
 
-1. **Story House** for the visual language and palette character
+1. **Story House** for visual character and palette
 2. **Visual Style** for composition grammar
-3. **Story Archetype** for the information structure
-4. **Motion Pattern** for how attention moves through the story
+3. **Story Archetype** for information structure
+4. **Motion Pattern** for how attention moves
 
 The source of truth is the merged registry returned by `scripts/info_stories.py::load_catalog()`
 
-UI Mockup Stories are first-class story options, including
+UI Mockup Stories are first-class options
 
 - UI Storyboard
 - Interface Cutaway
@@ -106,22 +104,26 @@ UI Mockup Stories are first-class story options, including
 - Cursor Focus
 - State Transition
 
-Real-looking product behavior stays evidence-backed, while concept UI is identified when readers could mistake it for documented product behavior
+Real-looking product behavior must be supported by evidence
+
+Concept UI stays clearly identifiable when it could be mistaken for real product proof
 
 ## Exact-SVG mascots
 
-Named or official mascots use the **exact SVG supplied by the user or attached to the task**
+If the user asks for a named or official mascot, the plugin uses the **exact SVG supplied by the user or attached to the task**
 
-The plugin does not silently redraw, approximate, replace, or generate a lookalike
+No silent redraw
+No substitute
+No lookalike
 
-The mascot path inspects the supplied SVG, finds addressable geometry, develops a communication-led motion direction, preserves the source identity, integrates the animation, and checks the result against the untouched asset
+The mascot path inspects the supplied SVG, finds usable geometry, develops motion around the real asset, preserves identity, and checks the animated result against the untouched source
 
 ```bash
 python3 scripts/mascot_contract.py directions
 python3 scripts/mascot_contract.py check build/mascot-request.json
 ```
 
-## The connected production path
+## Connected production path
 
 Read [`helper/GUIDE.md`](helper/GUIDE.md) before choosing a workflow or worker
 
@@ -145,17 +147,17 @@ design-study
 
 `new-post` is the parent workflow
 
-Workers return bounded artifacts to the parent instead of coordinating peers through hidden handoffs
+Workers return artifacts to the parent instead of coordinating peers through hidden handoffs
 
-## Research that actually runs
+## Research that ships as behavior
 
-The `research/` directory is active production guidance rather than background reading
+`research/` is part of production logic, not a reading folder
 
-Current runtime gates
+Current gates
 
 `prose-specificity` · `voice-preservation` · `design-dials` · `structural-originality` · `reference-dna` · `contrast-discipline` · `evidence-traceability` · `bounded-verification`
 
-Each adopted gate keeps source provenance, inspected commit SHA, local behavior, stage, severity, real owners, implementation references, and tests
+Each adopted gate keeps source provenance, inspected commit SHA, local behavior, stage, severity, owners, implementation references, and tests
 
 Upstream working copies are research inputs only and are not packaged as runtime dependencies
 
@@ -163,12 +165,12 @@ Upstream working copies are research inputs only and are not packaged as runtime
 
 - Palette character: `creative-attractive-restrained`
 - Composition: `center-first`
-- Text contrast: `4.5:1` minimum for meaningful text
-- State-defining contrast: `3:1` minimum
+- Text contrast: `4.5:1` minimum
+- State contrast: `3:1` minimum
 - One dominant visual anchor at feed scale
-- Motion intensity resolved from the story rather than added by default
+- Motion intensity comes from the story, not from a need to animate everything
 
-Center-first can be overridden when comprehension or fidelity genuinely improves, including tables, UI mockups, terminal surfaces, timelines, Arabic / RTL reading flow, or a documented reference-DNA decision
+Center-first can be overridden when comprehension or fidelity improves, including tables, UI mockups, terminal surfaces, timelines, Arabic / RTL reading flow, or a documented reference-DNA decision
 
 ## Workflows
 
@@ -186,7 +188,7 @@ python3 tools/route_request.py --request "Create an animated LinkedIn infographi
 
 ## Strict validation
 
-The repository treats disconnected capabilities as failures rather than documentation debt
+Disconnected capability means failure
 
 ```bash
 python3 -m unittest discover -s tests -v
@@ -202,7 +204,7 @@ claude plugin validate .
 
 `scripts/ecosystem_doctor.py` rejects dead, undeclared, unreachable, untested, disconnected, or unsafe public modules and manifest references
 
-CI also registers the checked-out repository as marketplace `mamdouh-creative-tools` and installs `linkedin-animated-infographics@mamdouh-creative-tools` into a clean Claude home
+CI also registers the checkout as marketplace `mamdouh-creative-tools` and installs `linkedin-animated-infographics@mamdouh-creative-tools` into a clean Claude home
 
 ## Public tools
 
@@ -228,7 +230,7 @@ tools/route_request.py
 
 Coding agents should also read [`AGENTS.md`](AGENTS.md) or [`CLAUDE.md`](CLAUDE.md)
 
-Both point back to the same helper, research, module, and validation authority
+Both point to the same helper, research, module, and validation authority
 
 ## License
 
