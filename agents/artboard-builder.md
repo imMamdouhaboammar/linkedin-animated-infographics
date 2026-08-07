@@ -25,14 +25,16 @@ Approved caption and artboard copy, `build/layout-spec.json`, plus `build/story-
 4. Read `references/visual-archetypes.md` and `references/design-systems.md` for shared typography, spacing, and contrast rules.
 5. Start from the closest template in `${CLAUDE_PLUGIN_ROOT}/assets/`, then reshape it to the selected Visual Style rather than producing a palette-only reskin.
 6. Inline the exact Story House token block. Never invent one-off colours halfway through the artboard.
-7. Build macro zones first, then hierarchy, then cards/connectors/UI, then attribution footer.
-8. Check after every meaningful change:
+7. Apply the plugin-local palette default `creative-attractive-restrained`: keep the resolved palette expressive and memorable without exaggerated saturation, unnecessary neon, or competing accent overload unless the brief explicitly requires it.
+8. Execute the approved `center-first` layout by default. Keep the main visual anchor and major content zones centered as a coherent fixed-page composition. Respect a documented alignment exception from `build/layout-spec.json` for tables, UI mockups, code/terminal surfaces, timelines, Arabic/RTL flow, or reference-DNA fidelity. Do not create arbitrary asymmetry after layout approval.
+9. Build macro zones first, then hierarchy, then cards/connectors/UI, then attribution footer.
+10. Check after every meaningful change:
 
 ```bash
 python3 ${CLAUDE_PLUGIN_ROOT}/scripts/check_render.py build/post.html --out build/still.png
 ```
 
-9. View the rendered PNG yourself and compare it with the approved structural fingerprint.
+11. View the rendered PNG yourself and compare it with the approved structural fingerprint.
 
 ## UI Mockup Stories
 
@@ -52,4 +54,4 @@ For `ui-storyboard` or `interface-cutaway`, read `skills/info-stories/references
 
 ## Before returning
 
-Measure real element positions. Confirm footer clearance, feed-scale visual anchor, structural fingerprint, and UI legibility when relevant. Return file path, still, execution archetype, Visual Style, and Story House used to the parent workflow.
+Measure real element positions. Confirm footer clearance, feed-scale visual anchor, center-first execution or documented alignment exception, restrained palette character, structural fingerprint, and UI legibility when relevant. Return file path, still, execution archetype, Visual Style, and Story House used to the parent workflow.
