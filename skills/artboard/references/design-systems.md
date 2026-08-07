@@ -405,3 +405,19 @@ gets a large fill, the accent stops reading as the accent.
 House 0 extends this rather than breaking it: its nine section hues are static identity
 and are allowed header strips and panel washes, while the terracotta stays the only
 colour that ever changes between frames. See the tier table in House 0.
+
+## Attribution footer
+
+Mandatory on every artboard. These images get reposted without the caption, and the
+footer is the only thing that survives.
+
+```html
+<div class="foot">
+  <div class="av"></div>
+  <span class="nm">YOUR NAME</span>
+  <span class="url">· yoursite.com</span>
+</div>
+```
+
+Dark bar, 78px, full bleed, centred. Or a light variant with a top border. Either way
+it must be visually separated from the content zone, and it must never animate.
