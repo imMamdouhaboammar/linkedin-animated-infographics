@@ -54,6 +54,20 @@ class PluginGraphTests(unittest.TestCase):
         for capability, owners in graph["capabilities"].items():
             self.assertTrue(shipping.intersection(owners), f"{capability} has no shipping owner")
 
+    def test_new_post_executes_graph_order(self):
+        text = (ROOT / "skills" / "new-post" / "SKILL.md").read_text()
+        sequence = json.loads(GRAPH.read_text())["workflows"]["new-post"]["sequence"]
+        positions = []
+        for agent in sequence:
+            self.assertIn(agent, text, f"new-post never invokes {agent}")
+            positions.append(text.index(agent))
+        self.assertEqual(sorted(positions), positions)
+
+    def test_qa_post_runs_adversarial_and_independent_review(self):
+        text = (ROOT / "skills" / "qa-post" / "SKILL.md").read_text()
+        self.assertIn("post-critic", text)
+        self.assertIn("story-verifier", text)
+
 
 class WorkerCoordinationTests(unittest.TestCase):
     def test_planning_workers_return_to_parent_orchestrator(self):
