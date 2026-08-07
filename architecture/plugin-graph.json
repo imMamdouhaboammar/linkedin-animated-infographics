@@ -49,6 +49,8 @@
     "design-taste": ["design-study", "layout-composer", "artboard-builder", "post-critic"],
     "structural-fingerprint": ["layout-composer", "artboard-builder", "post-critic"],
     "evidence": ["evidence-checker", "copy-compressor", "story-verifier"],
-    "verification-loop": ["render-qa", "post-critic", "story-verifier"]
+    "verification-loop": ["render-qa", "post-critic", "story-verifier"],
+    "mascot-identity": ["mascot-animator", "post-critic", "story-verifier"],
+    "ui-mockup-fidelity": ["evidence-checker", "layout-composer", "artboard-builder", "post-critic"]
   }
 }
