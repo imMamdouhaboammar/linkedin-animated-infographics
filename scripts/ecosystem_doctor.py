@@ -7,6 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MODULE_TYPES = ("skills", "agents", "tools")
 CRITICAL_SHIPPING = ("creative-director", "post-critic", "story-verifier")
 PUBLIC_SCRIPT_TOOLS = ("demo_gallery", "demo_submit")
+PARENT_WORKFLOWS = frozenset({"new-post", "share-demo"})
 
 
 def _load_json(path: Path, errors: list[str], label: str):
@@ -105,11 +106,11 @@ def _validate_tool_references(root: Path, tool: str, contract: dict, errors: lis
 
 
 def _parent_participants(routes: dict) -> set[str]:
+    routed_workflows = {route.get("workflow") for route in routes.values()}
     return {
         f"parent:{workflow}"
-        for route in routes.values()
-        for workflow in [route.get("workflow")]
-        if workflow not in (None, "focused")
+        for workflow in PARENT_WORKFLOWS
+        if workflow in routed_workflows
     }
 
 
@@ -173,6 +174,11 @@ def validate_ecosystem_doctor(root: Path = ROOT) -> list[str]:
     workflow = graph_doc.get("workflows", {}).get("new-post", {})
     sequence = workflow.get("sequence", [])
     conditional_edges = workflow.get("conditional", {})
+
+    routed_workflows = {route.get("workflow") for route in routes.values()}
+    missing_parent_workflows = sorted(PARENT_WORKFLOWS - routed_workflows)
+    if missing_parent_workflows:
+        errors.append(f"missing explicit parent workflows: {', '.join(missing_parent_workflows)}")
 
     reachable_skills: set[str] = set()
     reachable_agents: set[str] = set(sequence)
