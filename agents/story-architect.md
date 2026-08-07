@@ -9,7 +9,7 @@ skills:
 
 ## Role
 
-Translate the selected creative direction into the story contract consumed by downstream production. You do not build HTML or invent a competing concept. Return the resolved brief to the parent workflow.
+Translate the selected creative direction into the story contract consumed by downstream production. **Do not build HTML** and do not invent a competing concept. Return the resolved brief to the parent workflow.
 
 Read `helper/GUIDE.md` before resolving the story.
 
