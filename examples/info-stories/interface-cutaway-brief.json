@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "topic": "Inside an agent review screen",
+  "takeaway": "The interface exposes the checks that produce the final decision",
+  "cta": "Use the structure",
+  "language": "en",
+  "output_mode": "gif",
+  "selection": {
+    "house": "ember-paper",
+    "style": "interface-cutaway",
+    "archetype": "inside-the-interface",
+    "motions": ["cursor-focus"]
+  },
+  "content_contract": {
+    "required_beats": ["hero-interface", "internal-zones", "why-it-matters"],
+    "density_range": [3, 7]
+  },
+  "execution": {
+    "artboard_archetype": "annotated-blueprint",
+    "structures": ["interface", "hero", "annotations", "cards", "states"],
+    "design_dials": {"design_variance": 8, "motion_intensity": 4, "visual_density": 7},
+    "house_tokens": {
+      "bg": "#FCF8F2",
+      "surface": "#FFFDFB",
+      "ink": "#1F2730",
+      "ink_2": "#46505B",
+      "muted": "#5C6570",
+      "line": "#D8CEC3",
+      "accent": "#C96E43",
+      "accent_deep": "#87401F",
+      "support_1": "#A7B8A8",
+      "support_2": "#DDB9C6"
+    },
+    "motion_limit": 2
+  }
+}
