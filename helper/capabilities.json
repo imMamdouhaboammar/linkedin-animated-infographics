@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "capabilities": {
+    "anti-slop": {
+      "purpose": "Detect and remove generic, repetitive, or low-information copy patterns without erasing specific voice or facts.",
+      "owners": ["copy-compressor", "caption-writer", "post-critic"]
+    },
+    "design-taste": {
+      "purpose": "Translate references and briefs into deliberate visual decisions instead of template copying.",
+      "owners": ["design-study", "layout-composer", "artboard-builder", "post-critic"]
+    },
+    "structural-fingerprint": {
+      "purpose": "Require meaningful structural variation and reject palette-only reskins.",
+      "owners": ["layout-composer", "artboard-builder", "post-critic"]
+    },
+    "evidence": {
+      "purpose": "Keep factual claims, proof, logos, UI states, and product behavior tied to supplied evidence.",
+      "owners": ["evidence-checker", "copy-compressor", "story-verifier"]
+    },
+    "verification-loop": {
+      "purpose": "Produce deterministic render evidence, adversarial review, and bounded independent verification before delivery.",
+      "owners": ["render-qa", "post-critic", "story-verifier"]
+    },
+    "mascot-identity": {
+      "purpose": "Preserve the exact supplied official mascot identity through inspection, animation, and verification.",
+      "owners": ["mascot-animator", "post-critic", "story-verifier"]
+    },
+    "ui-mockup-fidelity": {
+      "purpose": "Keep product UI mockups legible and evidence-backed, and distinguish documented UI from concept UI.",
+      "owners": ["evidence-checker", "layout-composer", "artboard-builder", "post-critic"]
+    }
+  }
+}
