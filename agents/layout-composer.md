@@ -25,15 +25,16 @@ Read `helper/GUIDE.md` before composing structure.
 
 ## Method
 
-1. Map approved story beats into zones and define visual anchor, card grammar, divider/connector grammar, density, proportions, and reading order.
-2. Apply `design-dials` from the story brief rather than choosing density/variance by feel.
-3. Apply `creative-payoff`: reserve the spatial relationship needed for the selected aha mechanic so the visual payoff survives into production.
-4. Apply `structural-originality`. Treat a palette-only reskin as unchanged structure; when comparison context exists, require real distance in topology, card grammar, divider, visual anchor, density, or motion grammar.
-5. Apply `center-first-composition`: center the primary visual anchor and major story zones by default. An alignment exception is valid only when structure or fidelity benefits, including tables, UI mockups, code/terminal surfaces, timelines, Arabic/RTL flow, or a documented reference-DNA decision. Record the reason in `build/layout-spec.json`; arbitrary asymmetry is not a reason.
-6. When visual references exist, apply `reference-dna` to reuse general structural principles without cloning distinctive layout signatures.
-7. For UI Storyboard or Interface Cutaway, read `skills/info-stories/references/ui-mockup-rules.md`. Keep only story-critical controls/states, preserve feed-width legibility, distinguish documented UI from concept UI, and keep annotations outside critical controls.
-8. If a mascot is active, reserve a non-blocking mascot zone that does not cover core copy, UI controls, or attribution.
-9. Return the specification to the parent workflow. `artboard-builder` owns HTML execution.
+1. Read `skills/info-stories/references/design-taste-gates.md` and `skills/info-stories/references/anti-slop-gates.md`. Treat design-taste and anti-slop as inputs to hierarchy/density, not as permission to rewrite approved copy.
+2. Map approved story beats into zones and define visual anchor, card grammar, divider/connector grammar, density, proportions, and reading order.
+3. Apply `design-dials` from the story brief rather than choosing density/variance by feel.
+4. Apply `creative-payoff`: reserve the spatial relationship needed for the selected aha mechanic so the visual payoff survives into production.
+5. Apply `structural-originality`. Treat a palette-only reskin as unchanged structure; when comparison context exists, require real distance in topology, card grammar, divider, visual anchor, density, or motion grammar.
+6. Apply `center-first-composition`: center the primary visual anchor and major story zones by default. An alignment exception is valid only when structure or fidelity benefits, including tables, UI mockups, code/terminal surfaces, timelines, Arabic/RTL flow, or a documented reference-DNA decision. Record the reason in `build/layout-spec.json`; arbitrary asymmetry is not a reason.
+7. When visual references exist, apply `reference-dna` to reuse general structural principles without cloning distinctive layout signatures.
+8. For UI Storyboard or Interface Cutaway, read `skills/info-stories/references/ui-mockup-rules.md`. Keep only story-critical controls/states, preserve feed-width legibility, distinguish documented UI from concept UI, and keep annotations outside critical controls.
+9. If a mascot is active, reserve a non-blocking mascot zone that does not cover core copy, UI controls, or attribution.
+10. Return the specification to the parent workflow. `artboard-builder` owns HTML execution.
 
 ## HOLD conditions
 
@@ -43,6 +44,8 @@ Return a HOLD when the selected concept cannot fit the available artboard withou
 
 - `creative-payoff`
 - `center-first-composition`
+- design-taste hierarchy/density review
+- anti-slop copy-slot fit review
 - feed-scale hierarchy
 - one reading job per zone
 - explicit alignment exception when used
