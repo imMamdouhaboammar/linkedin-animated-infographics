@@ -1,0 +1,54 @@
+{
+  "styles": [
+    {
+      "slug": "ui-storyboard",
+      "name": "UI Storyboard",
+      "archetypes": ["screen-to-outcome", "state-change-story", "before-after-workflow"],
+      "preferred_artboard": "annotated-blueprint",
+      "structures": ["screens", "sequence", "cards", "annotations", "states"],
+      "dials": {"design_variance": 8, "motion_intensity": 5, "visual_density": 6}
+    },
+    {
+      "slug": "interface-cutaway",
+      "name": "Interface Cutaway",
+      "archetypes": ["inside-the-interface", "state-change-story", "working-screen"],
+      "preferred_artboard": "annotated-blueprint",
+      "structures": ["interface", "hero", "annotations", "cards", "states"],
+      "dials": {"design_variance": 8, "motion_intensity": 4, "visual_density": 7}
+    }
+  ],
+  "archetypes": [
+    {
+      "slug": "screen-to-outcome",
+      "name": "Screen to Outcome",
+      "required_beats": ["starting-screen", "interaction", "result"],
+      "density_range": [3, 7]
+    },
+    {
+      "slug": "inside-the-interface",
+      "name": "Inside the Interface",
+      "required_beats": ["hero-interface", "internal-zones", "why-it-matters"],
+      "density_range": [3, 7]
+    },
+    {
+      "slug": "state-change-story",
+      "name": "State Change Story",
+      "required_beats": ["before-state", "trigger", "after-state"],
+      "density_range": [3, 6]
+    }
+  ],
+  "motions": [
+    {
+      "slug": "cursor-focus",
+      "name": "Cursor Focus",
+      "structures": ["screens", "interface", "cards", "annotations"],
+      "roles": ["secondary"]
+    },
+    {
+      "slug": "state-transition",
+      "name": "State Transition",
+      "structures": ["screens", "interface", "states", "sequence"],
+      "roles": ["primary"]
+    }
+  ]
+}
