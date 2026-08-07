@@ -19,7 +19,8 @@ For a named or official mascot:
 - never substitute a generated mascot or a visually similar asset
 - keep an untouched copy of the source SVG
 - preserve recognizable silhouette, proportions, brand colours, face details, marks, and distinctive geometry
-- if the user has not supplied the exact SVG, the parent workflow must ask for it and hold the mascot path
+
+If the exact SVG is missing and this skill is running in the main conversational context, ask the user to upload the exact SVG and do not start mascot production. If this skill is running inside a focused subagent, return `HOLD: exact SVG required` to the parent workflow instead of contacting the user or inventing an asset.
 
 Run the request contract before inspection:
 
