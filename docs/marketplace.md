@@ -4,7 +4,7 @@ The plugin and marketplace live in the same repository.
 
 - marketplace: `mamdouh-creative-tools`
 - plugin: `linkedin-animated-infographics`
-- plugin release: `3.0.0`
+- plugin release: `3.1.0`
 - marketplace source: `./`
 - strict mode: `true`
 
@@ -26,7 +26,7 @@ python3 scripts/validate_marketplace.py
 claude plugin validate .
 ```
 
-The local validator checks the same-repository source, strict mode, plugin identity, version agreement, required component directories, and manifest fields.
+The local validator checks the same-repository source, strict mode, plugin identity, version agreement, required component directories, demo/schema components, and manifest fields.
 
 ## CI install smoke
 
@@ -36,11 +36,13 @@ The GitHub validation workflow creates a clean temporary Claude home, registers 
 linkedin-animated-infographics@mamdouh-creative-tools
 ```
 
-That smoke test proves the marketplace entry is not only schema-valid but actually installable from the repository layout used by CI.
+That smoke test proves the marketplace entry is not only schema-valid but installable from the repository layout used by CI.
 
 ## Versioning
 
-The plugin manifest version and marketplace plugin-entry version must match. Version `3.0.0` represents the routing-kernel and contract architecture release: helper routing, research gates, local creative gates, strict module doctor, creative director, standardized skills/agents, and public documentation.
+The plugin manifest version and marketplace plugin-entry version must match.
+
+Version `3.1.0` adds the owned/community demo gallery and opt-in publisher flow on top of the v3 routing-kernel architecture. It includes `share-demo`, `community-publisher`, the strict three-file demo schema, deterministic gallery catalog, export/privacy preflight, and manual-review PR policy.
 
 The top-level marketplace catalog has its own catalog version. It does not need to match the plugin version.
 
@@ -56,6 +58,7 @@ python3 scripts/ecosystem_router.py check
 python3 scripts/research_gates.py check
 python3 scripts/plugin_graph.py check
 python3 scripts/ecosystem_doctor.py check
+python3 scripts/demo_gallery.py check
 python3 scripts/validate_marketplace.py
 claude plugin validate .
 ```
