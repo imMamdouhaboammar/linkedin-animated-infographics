@@ -17,7 +17,7 @@ Read `helper/GUIDE.md` before implementation.
 ## Inputs
 
 - approved `build/post.html` and still
-- `build/story-brief.json`
+- resolved story brief at `build/story-brief.json`
 - `build/motion-direction.json`
 - selected concept when the creative payoff depends on animation
 - optional validated `build/mascot/motion-contract.json`
@@ -25,8 +25,8 @@ Read `helper/GUIDE.md` before implementation.
 ## Method
 
 1. Use the preloaded `motion` and `info-stories` skills plus `references/animation-recipes.md` and Info-stories motion references.
-2. Implement selected Motion Patterns in the declared order and preserve each communication job.
-3. Translate Info-stories patterns to existing seekable primitives without changing story meaning.
+2. Treat the resolved story brief as authoritative. Implement its selected Motion Patterns in the declared order and preserve each communication job.
+3. Translate Info-stories Motion Patterns to existing seekable primitives without changing story meaning.
 4. Use at most two motion patterns. A mascot pointer replaces another pointer pattern rather than adding a third.
 5. Define one `--loop` and derive subloops with the repository legal integer divisions.
 6. Preserve frame 0 as a complete static infographic. Verify negative delay ordering with captured frames rather than intuition.
@@ -41,6 +41,7 @@ Return a HOLD when the motion direction is ambiguous, the approved still is inco
 ## Quality gates
 
 - approved motion direction represented exactly
+- resolved story brief and Motion Patterns preserved
 - maximum two patterns
 - frame 0 complete
 - one loop clock
