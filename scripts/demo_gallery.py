@@ -175,6 +175,10 @@ def validate_demo_dir(path: Path, root: Path = ROOT) -> list[str]:
     author_url = data.get("author_url")
     if not isinstance(author_url, str) or not re.fullmatch(r"https://github\.com/[A-Za-z0-9-]+/?", author_url):
         errors.append("author_url must be an https://github.com/<user> URL")
+    elif kind == "community" and author_namespace:
+        profile_user = author_url.rstrip("/").rsplit("/", 1)[-1]
+        if profile_user.casefold() != author_namespace.casefold():
+            errors.append("author_url must match community author namespace")
 
     for field, maximum in (("title", 160), ("description", 500), ("created_with", None), ("language", 32), ("story_type", 80), ("license", 80)):
         if not _string_ok(data.get(field), maximum=maximum):
