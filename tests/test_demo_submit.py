@@ -59,6 +59,11 @@ class DemoSubmitTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "rights confirmation"):
             prepare_submission(self.build, self.stage, self.metadata(rights_confirmed=False))
 
+    def test_prepare_requires_author_url_to_match_author(self):
+        self.require_module()
+        with self.assertRaisesRegex(ValueError, "author_url must match author"):
+            prepare_submission(self.build, self.stage, self.metadata(author_url="https://github.com/bob"))
+
     def test_source_prompt_is_omitted_without_explicit_consent(self):
         self.require_module()
         out = prepare_submission(
