@@ -1,15 +1,17 @@
 ---
 name: info-stories
-description: Use when turning source material, a topic, a screenshot, or an approved caption into a structured LinkedIn infographic story and choosing its palette, visual grammar, narrative shape, or motion direction.
+description: Use when turning source material, a topic, a screenshot, an interface, or an approved caption into a structured LinkedIn infographic story and choosing its palette, visual grammar, narrative shape, or motion direction.
 ---
 
 # Info-stories
 
-Info-stories resolves four independent choices before any HTML is built: **Story House**, **Visual Style**, **Story Archetype**, and **Motion Pattern**. It is an orchestration layer over the existing artboard, motion, render, mascot, Arabic, and QA skills.
+Info-stories resolves four independent choices before HTML is built: **Story House**, **Visual Style**, **Story Archetype**, and **Motion Pattern**. It is a composition layer over the existing artboard, motion, render, mascot, Arabic, and QA skills.
 
 ## Use the registry
 
-`catalog.json` is the machine-readable source of truth. Validate it before a build:
+`catalog.json` contains the stable base registry. Optional first-party families live in `extensions/*.json`. `scripts/info_stories.py` merges them deterministically by extension filename and exposes one catalog to every agent and tool.
+
+Validate the merged registry before a build:
 
 ```bash
 python3 ${CLAUDE_PLUGIN_ROOT}/scripts/info_stories.py check
@@ -19,21 +21,43 @@ Inspect options with `list` and `show`. Use `scaffold` to emit a deterministic s
 
 ## Resolution order
 
-1. **Story Archetype** from the content's narrative job. Read `references/story-archetypes.md`.
-2. **Visual Style** from information topology and density. Read `references/visual-styles.md`.
-3. **Story House** from tone, brand constraints, and contrast. Read `references/palette-houses.md`.
-4. **Motion Patterns** from what motion must communicate. Read `references/motion-patterns.md`.
-5. Check the combination against `references/composition-matrix.md` and the registry.
+1. Story Archetype from the content's narrative job. Read `references/story-archetypes.md`.
+2. Visual Style from information topology and density. Read `references/visual-styles.md`.
+3. Story House from tone, brand constraints, and contrast. Read `references/palette-houses.md`.
+4. Motion Patterns from what motion must communicate. Read `references/motion-patterns.md`.
+5. Check the combination against `references/composition-matrix.md` and the merged registry.
 
-Explicit user choices win unless they violate a hard contrast, compatibility, or render constraint. Unknown choices fail with valid alternatives instead of silently substituting a default.
+Explicit user choices win unless they violate a hard contrast, compatibility, evidence, or render constraint. Unknown choices fail with valid alternatives instead of silently substituting a default.
+
+## UI Mockup Stories
+
+UI mockups are first-class story surfaces. Use `UI Storyboard` for a sequence of two to four screens/states and `Interface Cutaway` for one dominant interface with annotated internal regions. The dedicated archetypes are `Screen to Outcome`, `Inside the Interface`, and `State Change Story`.
+
+Read `references/ui-mockup-rules.md`. A UI mockup may simplify a documented product flow or use clearly fictional concept data, but it must not invent real product claims, features, metrics, integrations, or customer proof. Core controls and labels must remain readable at feed width. `Cursor Focus` and `State Transition` are the dedicated restrained motion patterns.
 
 ## Reference study
 
-When the direction comes from screenshots, GIFs, previous designs, or a public reference, use `design-study` and read `references/study-protocol.md` before selecting the four axes. A study diagnoses design DNA; it does not grant permission to copy source wording or distinctive assets.
+When the direction comes from screenshots, GIFs, previous designs, or a public reference, `design-study` owns design-DNA diagnosis using `references/study-protocol.md`. The diagnosis maps reusable principles into local choices and never grants permission to copy source wording or distinctive assets.
 
-## Agent handoff
+## Capability ownership
 
-Use `story-architect` for the four-axis brief. It may delegate palette, layout, motion, copy compression, and evidence checks to their focused agents. Once the brief is approved, hand the static composition to `artboard-builder`, then hand approved motion direction to `motion-engineer`. Existing render and QA skills stay authoritative for capture, GIF assembly, mobile checks, seam checks, and file budgets.
+The parent workflow coordinates focused workers and passes artifacts between them. Workers do not assume hidden peer delegation.
+
+- `evidence-checker` owns claim provenance and blocked proof slots.
+- `story-architect` owns the four-axis story contract.
+- `palette-curator` owns Story House tokens and contrast verdicts.
+- `copy-compressor` owns slot-sized visible copy and anti-slop compression.
+- `layout-composer` owns information topology, design-taste gates, and structural fingerprints.
+- `caption-writer` owns caption archetype and caption-specific copy rules.
+- `artboard-builder` owns static execution of the approved layout.
+- `motion-director` owns motion intent and pattern selection.
+- `mascot-animator` owns exact-SVG mascot inspection, identity preservation, and the approved mascot motion component when the mascot path is active.
+- `motion-engineer` owns final seekable animation integration.
+- `render-qa` owns deterministic render evidence.
+- `post-critic` owns adversarial copy, visual, motion, and fingerprint review.
+- `story-verifier` owns evidence-backed final acceptance and the bounded repair loop.
+
+The executable graph is tracked in `architecture/plugin-graph.json` and checked by `scripts/plugin_graph.py`.
 
 ## Hard constraints
 
@@ -43,7 +67,8 @@ Use `story-architect` for the four-axis brief. It may delegate palette, layout, 
 - Frame 0 remains a complete still.
 - Never invent metrics, testimonials, proof, product facts, or source claims.
 - A palette swap is not a new visual style. Structural choices must change when the story needs a different visual grammar.
+- A named official mascot uses the exact user-supplied SVG. Missing SVG means hold the mascot path, not substitute an asset.
 
 ## Independent verification
 
-Before delivery of a built Info-story, use `story-verifier` and `references/verification-loop.md`. The verifier reads artifacts directly, records evidence against stable criteria, and permits at most two targeted fix attempts before escalation.
+Before delivery, `story-verifier` uses `references/verification-loop.md`, reads artifacts directly, records evidence against stable criteria, and permits at most two targeted fix attempts before escalation.

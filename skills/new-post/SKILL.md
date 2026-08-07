@@ -1,6 +1,6 @@
 ---
 name: new-post
-description: Run the full post pipeline end to end, from topic to a delivered GIF plus caption plus first comment.
+description: Run the full post pipeline end to end, from topic to a delivered GIF or static infographic plus caption and first comment.
 disable-model-invocation: true
 argument-hint: "[topic or URL] [optional: --arabic] [optional: --mascot]"
 ---
@@ -9,58 +9,85 @@ argument-hint: "[topic or URL] [optional: --arabic] [optional: --mascot]"
 
 Topic: **$ARGUMENTS**
 
-Run the pipeline. Do not skip approval gates.
+The parent workflow owns orchestration. Workers return artifacts to this workflow; do not ask one worker to coordinate its peers.
 
-## 1. Intake
+## 0. Mascot asset gate
 
-Ask only two things in one message: **what is the one takeaway**, and **what is the CTA**. Infer everything else from the topic or supplied source. If the source contains facts or numbers, mark them for `evidence-checker` before compression.
+If `--mascot` is present or the user names a specific mascot, identify whether the request refers to an official or exact character. For a named or official mascot, require the **exact SVG** from the user unless that SVG is already task-attached. Do not redraw, approximate, substitute, or generate a lookalike. If the exact SVG is missing, ask the user to attach it and stop the mascot path until it is available.
 
-## 2. Resolve the Info-stories brief
+Record `build/mascot-request.json` with requested name, SVG path, source classification (`user-supplied` or `task-attached`), and `allow_substitute: false`. Validate it with `scripts/mascot_contract.py check` before continuing any mascot planning.
 
-Delegate to `story-architect`. It loads `linkedin-animated-infographics:info-stories` and resolves:
+## 1. Reference diagnosis
 
-- Story Archetype
-- Visual Style
-- Story House
-- zero to two Motion Patterns
-- the Visual Style design dials
+If the user supplied screenshots, GIFs, previous designs, or visual references, delegate to `design-study` and save the structured result as `build/design-study.json`. If there is no visual reference, record that this stage is not applicable and continue.
 
-If references or previous designs were supplied, run `design-study` first and pass the accepted design DNA into `story-architect`.
+## 2. Evidence inventory
 
-Save the resolved scaffold as `build/story-brief.json`. State the four choices and the caption archetype with one short reason each. If `--mascot` was passed, state the mascot role too. Wait for a yes or redirect before writing the caption.
+Delegate to `evidence-checker` with the source material and all claims, numbers, product names, proof slots, and logos likely to appear. Save `build/evidence.json`. Unsupported proof is blocked before copy or layout work begins. A source with no external factual claims still gets a short evidence record saying so.
 
-## 3. Caption and compressed artboard copy
+## 3. Story contract
 
-Delegate caption writing to `caption-writer`. Use `copy-compressor` for artboard slots when the source is too dense, and `evidence-checker` for any claim that will appear visually. Load `linkedin-animated-infographics:caption` only if writing inline.
+Delegate to `story-architect` with the topic, one takeaway, CTA, language, output mode, `build/design-study.json` when present, and `build/evidence.json`. Save the deterministic result as `build/story-brief.json`.
 
-Show the caption. Get a yes before building anything.
+State the four Info-stories choices and one reason per choice. If the user explicitly chose an axis, preserve it unless a hard compatibility or contrast rule fails.
 
-## 4. Still
+## 4. Palette contract
 
-Delegate to `artboard-builder` with the approved caption, compressed artboard copy, and `build/story-brief.json`. The story brief owns the Story House tokens, Visual Style, and preferred existing artboard archetype. The builder returns `build/post.html` and `build/still.png` already passing `check_render.py`.
+Delegate to `palette-curator` with `build/story-brief.json` and any brand colours. Save the complete verified token block and contrast result as `build/palette-check.json`. A failing text or state pair holds the build.
 
-Show the still. **This is the approval gate.** Get a yes before motion.
+## 5. Artboard copy
 
-## 5. Motion
+Delegate to `copy-compressor` with the source, evidence record, Story Archetype, and target story beats. Save slot-keyed copy and protected facts as `build/artboard-copy.json`. Keep intentional short labels; remove generic filler and unsupported claims.
 
-Delegate to `motion-engineer` with `build/story-brief.json`. It implements the resolved Motion Patterns using the existing seekable primitives. If output mode is static, skip this step. If a mascot is in play, the mascot pointer replaces any competing pointer primitive rather than becoming a third motion.
+## 6. Static layout specification
 
-## 6. Render and independent QA
+Delegate to `layout-composer` with the story brief, palette check, artboard copy, optional design study, and mascot placement requirement when present. Save `build/layout-spec.json`, including zone order, visual anchor, hierarchy, structural fingerprint, and asset requirements.
 
-Delegate render mechanics to `render-qa`. Fix render failures and re-run until the existing QA gates pass.
+## 7. Caption
 
-Then delegate final acceptance to `story-verifier`. It reads the artifact directly and uses `skills/info-stories/references/verification-loop.md`. A `FAIL:fixable` may trigger a targeted fix and re-check. Maximum two targeted fix attempts. A third unresolved failure escalates instead of looping.
+Delegate to `caption-writer` with the approved facts, one takeaway, CTA, and narrative context. Save the caption as `build/caption.md` and first-comment text as `build/first-comment.md`.
 
-## 7. Deliver
+Show the caption and the resolved story direction. Get approval before building the still.
 
-Present, in this order:
+## 8. Still construction
 
-1. the GIF or static artifact
-2. the caption in a copyable block
-3. the first-comment text
-4. the resolved Info-stories four-axis selection
-5. render numbers: motion, seam, and file size when applicable
+Delegate to `artboard-builder` with `build/story-brief.json`, `build/palette-check.json`, `build/artboard-copy.json`, `build/layout-spec.json`, and the approved caption. It returns `build/post.html` and `build/still.png` after static checks.
 
-Then stop. No postamble.
+Show the still. This is the visual approval gate. Get approval before motion.
 
-If `--arabic` was passed, load `linkedin-animated-infographics:arabic` before step 3. Arabic changes layout and type behavior; it is not a translation pass.
+## 9. Motion direction
+
+For animated output, delegate to `motion-director` with the approved still, layout spec, story brief, and mascot role when applicable. Save `build/motion-direction.json`. Static output records this stage as skipped.
+
+## 10. Mascot animation component
+
+When the mascot path is active, delegate to `mascot-animator` with the validated exact SVG request, approved still, layout spec, selected mascot role, and motion direction. Save its inspection and identity-preservation evidence under `build/mascot/` and pass the resulting motion contract forward. The supplied SVG remains the identity source and must not be replaced.
+
+## 11. Motion implementation
+
+For animated output, delegate to `motion-engineer` with the approved still, story brief, motion-direction artifact, and validated mascot component when present. It returns the animated `build/post.html`. Static output skips this stage.
+
+## 12. Render mechanics and gates
+
+Delegate to `render-qa`. Save its gate-by-gate evidence as `build/render-report.json`. A `HOLD` returns control to this parent workflow for a targeted fix and re-run.
+
+## 13. Adversarial review
+
+Delegate to `post-critic` with the rendered artifact, caption, evidence record, structural fingerprint, mascot identity notes when present, and render report. Save `build/critic-report.json`. Resolve every must-fix item or record why it is not applicable before independent verification.
+
+## 14. Independent acceptance
+
+Delegate to `story-verifier` with the artifact paths, story brief, evidence record, render report, critic report, and explicit acceptance criteria. Save `build/verification-report.json`. `FAIL:fixable` may trigger a targeted fix and re-check. Maximum two targeted fix attempts; a third unresolved failure escalates.
+
+## 15. Deliver
+
+Deliver, in this order:
+
+1. GIF or static artifact
+2. caption
+3. first-comment text
+4. resolved Story House, Visual Style, Story Archetype, and Motion Patterns
+5. render numbers when applicable
+6. final verification verdict
+
+If `--arabic` is present, apply `linkedin-animated-infographics:arabic` before copy/layout production.

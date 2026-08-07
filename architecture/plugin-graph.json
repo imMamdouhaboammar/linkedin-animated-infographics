@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "workflows": {
+    "new-post": {
+      "sequence": [
+        "design-study",
+        "evidence-checker",
+        "story-architect",
+        "palette-curator",
+        "copy-compressor",
+        "layout-composer",
+        "caption-writer",
+        "artboard-builder",
+        "motion-director",
+        "motion-engineer",
+        "render-qa",
+        "post-critic",
+        "story-verifier"
+      ],
+      "conditional": {
+        "mascot": {
+          "flag": "--mascot",
+          "asset_gate": "exact-svg",
+          "agent": "mascot-animator",
+          "after": "artboard-builder",
+          "before": "motion-engineer"
+        }
+      }
+    }
+  },
+  "agents": {
+    "artboard-builder": {"required_skills": ["artboard", "info-stories"]},
+    "caption-writer": {"required_skills": ["caption"]},
+    "copy-compressor": {"required_skills": ["info-stories", "caption"]},
+    "design-study": {"required_skills": ["info-stories"]},
+    "evidence-checker": {"required_skills": ["info-stories"]},
+    "layout-composer": {"required_skills": ["info-stories", "artboard"]},
+    "mascot-animator": {"required_skills": ["svg-mascot-animator", "mascots"]},
+    "motion-director": {"required_skills": ["info-stories", "motion"]},
+    "motion-engineer": {"required_skills": ["motion", "info-stories"]},
+    "palette-curator": {"required_skills": ["info-stories"]},
+    "post-critic": {"required_skills": ["info-stories", "caption", "render"]},
+    "render-qa": {"required_skills": ["render"]},
+    "story-architect": {"required_skills": ["info-stories"]},
+    "story-verifier": {"required_skills": ["info-stories", "render"]}
+  },
+  "capabilities": {
+    "anti-slop": ["copy-compressor", "caption-writer", "post-critic"],
+    "design-taste": ["design-study", "layout-composer", "artboard-builder", "post-critic"],
+    "structural-fingerprint": ["layout-composer", "artboard-builder", "post-critic"],
+    "evidence": ["evidence-checker", "copy-compressor", "story-verifier"],
+    "verification-loop": ["render-qa", "post-critic", "story-verifier"],
+    "mascot-identity": ["mascot-animator", "post-critic", "story-verifier"],
+    "ui-mockup-fidelity": ["evidence-checker", "layout-composer", "artboard-builder", "post-critic"]
+  }
+}

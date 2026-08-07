@@ -16,7 +16,7 @@ class InfoStoriesRegistryTests(unittest.TestCase):
         cls.catalog = info_stories.load_catalog(CATALOG)
 
     def test_registry_counts_and_unique_slugs(self):
-        expected = {"houses": 10, "styles": 10, "archetypes": 12, "motions": 10}
+        expected = {"houses": 10, "styles": 12, "archetypes": 15, "motions": 12}
         for axis, count in expected.items():
             items = self.catalog[axis]
             self.assertEqual(count, len(items), axis)
@@ -121,7 +121,7 @@ class InfoStoriesRegistryTests(unittest.TestCase):
         artboard=(ROOT/"agents/artboard-builder.md").read_text().lower(); motion=(ROOT/"agents/motion-engineer.md").read_text().lower(); self.assertIn("story brief",artboard); self.assertIn("story house",artboard); self.assertIn("motion pattern",motion); self.assertIn("story brief",motion)
 
     def test_plugin_version_and_readme_publish_info_stories(self):
-        plugin=json.loads((ROOT/".claude-plugin/plugin.json").read_text()); self.assertEqual("2.1.0",plugin["version"]); self.assertIn("info-stories",plugin["keywords"])
+        plugin=json.loads((ROOT/".claude-plugin/plugin.json").read_text()); self.assertEqual("2.2.0",plugin["version"]); self.assertIn("info-stories",plugin["keywords"])
         readme=(ROOT/"README.md").read_text().lower()
         for needle in ["info-stories","story house","scripts/info_stories.py","tools/palette_preview.py","tools/story_scaffold.py","tools/composition_check.py","tools/copy_slop_check.py"]: self.assertIn(needle,readme)
 

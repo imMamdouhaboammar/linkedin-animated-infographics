@@ -1,0 +1,73 @@
+name: Claude Plugin Validation
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Set up Node for Claude Code validator
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Python unit tests
+        run: python3 -m unittest discover -s tests -v
+
+      - name: Compile Python tools
+        run: python3 -m compileall -q scripts tools skills/svg-mascot-animator/scripts
+
+      - name: Validate Info-stories registry
+        run: python3 scripts/info_stories.py check
+
+      - name: Validate executable plugin graph
+        run: python3 scripts/plugin_graph.py check
+
+      - name: Validate marketplace contract
+        run: python3 scripts/validate_marketplace.py
+
+      - name: Validate hook and shell syntax
+        run: |
+          python3 -m json.tool hooks/hooks.json >/dev/null
+          bash -n scripts/lint_artboard.sh
+          bash -n scripts/setup.sh
+
+      - name: Whitespace integrity
+        run: git diff --check HEAD^ HEAD
+
+      - name: Install current Claude Code
+        run: npm install -g @anthropic-ai/claude-code@latest
+
+      - name: Run official Claude plugin validator
+        run: claude plugin validate .
+
+      - name: Smoke-test marketplace registration and install
+        run: |
+          export HOME="${RUNNER_TEMP}/claude-marketplace-smoke"
+          mkdir -p "$HOME"
+          claude plugin marketplace add ./ --scope user
+          claude plugin marketplace list --json > "${RUNNER_TEMP}/marketplaces.json"
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          data = json.loads(Path(os.environ["RUNNER_TEMP"]).joinpath("marketplaces.json").read_text())
+          text = json.dumps(data)
+          assert "mamdouh-creative-tools" in text, data
+          PY
+          claude plugin install linkedin-animated-infographics@mamdouh-creative-tools

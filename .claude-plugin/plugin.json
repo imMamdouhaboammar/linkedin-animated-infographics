@@ -1,7 +1,7 @@
 {
   "name": "linkedin-animated-infographics",
-  "description": "Claude Code plugin for designing, rendering, and animating deterministic 1080x1350 GIF infographics and SVG mascots for LinkedIn (Arabic & RTL supported).",
-  "version": "2.1.0",
+  "description": "Claude Code plugin for designing, rendering, and animating deterministic 1080x1350 GIF infographics, UI mockup stories, and exact-SVG mascots for LinkedIn (Arabic & RTL supported).",
+  "version": "2.2.0",
   "author": {
     "name": "Mamdouh Aboammar",
     "url": "https://github.com/imMamdouhaboammar"
@@ -19,6 +19,7 @@
     "rtl",
     "svg",
     "mascot",
-    "info-stories"
+    "info-stories",
+    "ui-mockup"
   ]
 }

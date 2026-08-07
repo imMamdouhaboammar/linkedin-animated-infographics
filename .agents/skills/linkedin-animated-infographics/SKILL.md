@@ -13,7 +13,7 @@ Use this skill when changing this repository, adding a skill or agent, modifying
 - **Markdown**: skills, agents, references, plans, and research notes
 - **HTML / CSS / SVG**: 1080x1350 artboards and deterministic animation
 - **Shell**: setup, lint, and render wrappers
-- **JSON**: plugin metadata, hooks, Story House / style registry data, and structured briefs
+- **JSON**: plugin metadata, hooks, Story House / style registry data, extensions, and structured briefs
 - **unittest**: regression and acceptance tests
 
 There is no TypeScript application layer in the current repository. Do not introduce frontend framework conventions unless a task explicitly adds one.
@@ -37,9 +37,9 @@ Info-stories is the composition layer. Keep its four axes independent:
 3. Story Archetype
 4. Motion Pattern
 
-`skills/info-stories/catalog.json` is the machine-readable source of truth. Human references explain the registry but must not contradict it. Existing artboard, motion, render, Arabic, and mascot skills remain the execution layer.
+The machine-readable source of truth is the **merged registry returned by `scripts/info_stories.py::load_catalog()`**. It combines the stable base `skills/info-stories/catalog.json` with first-party registry families in `skills/info-stories/extensions/*.json`, merged deterministically by filename. Human references explain the merged registry and must not contradict the merged result. Existing artboard, motion, render, Arabic, and mascot skills remain the execution layer.
 
-When adding a registry item, add or update tests before implementation. Preserve 4.5:1 text contrast, 3:1 state-pair contrast, deterministic briefs, and explicit compatibility failures.
+When adding a base item or extension item, add or update tests before implementation. Preserve 4.5:1 text contrast, 3:1 state-pair contrast, deterministic briefs, unique slugs/names across the merged registry, and explicit compatibility failures.
 
 ## Development Method
 
@@ -48,7 +48,9 @@ When adding a registry item, add or update tests before implementation. Preserve
 - Write a failing regression test for behavior changes, then implement the minimum fix
 - Run the focused test first, then the complete test suite
 - Run `python3 -m compileall -q scripts tools`
-- Run `python3 scripts/info_stories.py check` when the registry changes
+- Run `python3 scripts/info_stories.py check` when the base registry or extensions change
+- Run `python3 scripts/plugin_graph.py check` when agent routing or preloads change
+- Run `python3 scripts/validate_marketplace.py` when plugin packaging changes
 - Run `git diff --check` before committing
 - Treat browser render verification separately from non-browser tests and report environment blockers precisely
 
@@ -62,4 +64,4 @@ Use conventional commits such as `feat:`, `fix:`, `test:`, `docs:`, and `chore:`
 - Never ship `research/upstreams/`
 - Track source URL, inspected SHA, license, adopted ideas, and rejected ideas for capability research
 - Prefer independently worded local rules over wholesale copying
-- Do not fabricate visual proof or factual content to satisfy a template slot
+- Do not fabricate visual proof or factual content to satisfy a template or UI slot

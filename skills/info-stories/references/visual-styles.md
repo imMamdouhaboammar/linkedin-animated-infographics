@@ -121,3 +121,31 @@ Structural vocabulary: reference, rules, cards.
 Design dials: variance 4/10, motion 2/10, density 9/10.
 
 Best with: framework-in-one-page, decision-cards, what-each-piece-does.
+
+## UI Storyboard
+
+Slug: `ui-storyboard`
+
+Preferred artboard: **annotated-blueprint**
+
+Structural vocabulary: screens, sequence, cards, annotations, states.
+
+Design dials: variance 8/10, motion 5/10, density 6/10.
+
+Best with: screen-to-outcome, state-change-story, before-after-workflow.
+
+Use two to four interface states where each state has one narrative job. Read `ui-mockup-rules.md` before building.
+
+## Interface Cutaway
+
+Slug: `interface-cutaway`
+
+Preferred artboard: **annotated-blueprint**
+
+Structural vocabulary: interface, hero, annotations, cards, states.
+
+Design dials: variance 8/10, motion 4/10, density 7/10.
+
+Best with: inside-the-interface, state-change-story, working-screen.
+
+Use one dominant interface as the visual anchor and annotate only the internal zones required to understand the story.

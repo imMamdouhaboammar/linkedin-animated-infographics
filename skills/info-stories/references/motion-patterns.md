@@ -81,3 +81,23 @@ Slug: `float-micro-motion`
 Works with structural signals: hero, gallery, tiles.
 
 Allowed role: secondary.
+
+## Cursor Focus
+
+Slug: `cursor-focus`
+
+Works with structural signals: screens, interface, cards, annotations.
+
+Allowed role: secondary.
+
+Use a short cursor move, focus ring, or selection cue to identify the control or region that matters. The cursor does not wander continuously.
+
+## State Transition
+
+Slug: `state-transition`
+
+Works with structural signals: screens, interface, states, sequence.
+
+Allowed role: primary.
+
+Show one meaningful UI state change such as empty to populated, idle to active, validation failure to correction, or action to result. Frame 0 remains a complete state.

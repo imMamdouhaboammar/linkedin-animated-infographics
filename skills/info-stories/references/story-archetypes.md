@@ -97,3 +97,33 @@ Slug: `framework-in-one-page`
 Required beats: principle -> parts -> action.
 
 Recommended density: 5-10 content units.
+
+## Screen to Outcome
+
+Slug: `screen-to-outcome`
+
+Required beats: starting-screen -> interaction -> result.
+
+Recommended density: 3-7 content units.
+
+Use when the interface itself explains how an action becomes a visible outcome.
+
+## Inside the Interface
+
+Slug: `inside-the-interface`
+
+Required beats: hero-interface -> internal-zones -> why-it-matters.
+
+Recommended density: 3-7 content units.
+
+Use when one screen contains the important architecture and the story is about how its regions work together.
+
+## State Change Story
+
+Slug: `state-change-story`
+
+Required beats: before-state -> trigger -> after-state.
+
+Recommended density: 3-6 content units.
+
+Use when the key insight is the transition between two product or workflow states rather than a long process.

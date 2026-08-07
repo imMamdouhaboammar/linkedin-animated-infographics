@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "topic": "From prompt to approved campaign screen",
+  "takeaway": "Each screen shows one decision in the workflow",
+  "cta": "Save the flow",
+  "language": "en",
+  "output_mode": "gif",
+  "selection": {
+    "house": "mist-board",
+    "style": "ui-storyboard",
+    "archetype": "screen-to-outcome",
+    "motions": ["cursor-focus", "state-transition"]
+  },
+  "content_contract": {
+    "required_beats": ["starting-screen", "interaction", "result"],
+    "density_range": [3, 7]
+  },
+  "execution": {
+    "artboard_archetype": "annotated-blueprint",
+    "structures": ["screens", "sequence", "cards", "annotations", "states"],
+    "design_dials": {"design_variance": 8, "motion_intensity": 5, "visual_density": 6},
+    "house_tokens": {
+      "bg": "#F4F7F8",
+      "surface": "#FFFFFF",
+      "ink": "#1E2933",
+      "ink_2": "#4A5965",
+      "muted": "#586772",
+      "line": "#D2DEE4",
+      "accent": "#638B9A",
+      "accent_deep": "#3E6676",
+      "support_1": "#C97D4F",
+      "support_2": "#AFCBC6"
+    },
+    "motion_limit": 2
+  }
+}

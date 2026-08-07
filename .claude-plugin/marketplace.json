@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "mamdouh-creative-tools",
+  "version": "1.0.0",
+  "description": "Creative production plugins for structured visual storytelling and deterministic media workflows.",
+  "owner": {
+    "name": "Mamdouh Aboammar",
+    "url": "https://github.com/imMamdouhaboammar"
+  },
+  "plugins": [
+    {
+      "name": "linkedin-animated-infographics",
+      "source": "./",
+      "strict": true,
+      "version": "2.2.0",
+      "description": "Design, validate, render, and animate LinkedIn Info-stories with agent orchestration, exact-SVG mascots, and deterministic QA.",
+      "author": {
+        "name": "Mamdouh Aboammar",
+        "url": "https://github.com/imMamdouhaboammar"
+      },
+      "homepage": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics",
+      "repository": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics",
+      "license": "MIT",
+      "category": "design",
+      "tags": ["linkedin", "infographic", "animation", "info-stories", "svg", "mascot", "ui-mockup"]
+    }
+  ]
+}
