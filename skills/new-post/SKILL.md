@@ -19,7 +19,7 @@ Read `helper/GUIDE.md` before execution. Treat `helper/router.json`, `helper/cap
 
 Use this workflow when the user wants a complete new infographic or a substantial redesign that should proceed from source/evidence through concept, copy, artboard, optional motion, QA, and delivery.
 
-Use focused skills instead when the request is only a render, only QA, only mascot animation, or only a design study.
+Use focused skills instead when the request is only a render, only QA, only mascot animation, only a design study, or only publishing an already verified demo.
 
 ## Inputs
 
@@ -137,9 +137,21 @@ Delegate to `story-verifier`. Save `build/verification-report.json`. The verifie
 
 Deliver the final artifact, caption, first comment, resolved Info-stories choices, selected creative concept, render numbers when applicable, active gate summary, and final verification verdict.
 
+### 17. Share with the community (optional)
+
+Offer community sharing only when the final verification verdict is `PASS` and delivery is complete.
+
+Ask one concise opt-in question: `Share this demo with the community?`
+
+If the user explicitly accepts, transfer control to the focused parent workflow `share-demo`. That workflow owns publication metadata, rights confirmation, public-export preflight, source-prompt consent, packaging, and delegation to `community-publisher` for fork/branch/commit/push/PR mechanics.
+
+If the user declines or gives no answer, stop with no GitHub write. Do not repeat the offer or infer consent from the fact that the user created the demo.
+
+If `share-demo` later returns a HOLD, preserve the already delivered artifact and report only the publication blocker. A publication HOLD does not invalidate the completed post.
+
 ## HOLD conditions
 
-Stop and return a precise HOLD when any blocking requirement is unresolved, including:
+Stop and return a precise HOLD when any blocking production requirement is unresolved, including:
 
 - missing exact SVG for a named or official mascot
 - unsupported factual proof, metric, product state, logo, or claim
@@ -149,6 +161,8 @@ Stop and return a precise HOLD when any blocking requirement is unresolved, incl
 - unresolved blocking research gate
 - render evidence unavailable when required
 - third unresolved verification failure after two targeted repair attempts
+
+The optional community-sharing stage does not create a production HOLD when the user declines or gives no answer. If the user opts in, publication-specific HOLD conditions are owned by `share-demo`.
 
 Do not fill missing inputs with plausible content.
 
@@ -163,9 +177,10 @@ Do not fill missing inputs with plausible content.
 - design defaults: `skills/info-stories/references/design-taste-gates.md`
 - focused QA: `qa-post`
 - focused render: `render-gif`
+- optional community publisher: `share-demo`
 
 ## Research gates
 
 Complete post creation may activate `prose-specificity`, `voice-preservation`, `design-dials`, `structural-originality`, `reference-dna`, `contrast-discipline`, `evidence-traceability`, and `bounded-verification` according to `research/capability-notes/gates.json`.
 
-The two final safety gates are `evidence-traceability` and `bounded-verification`; they remain active even when the chosen creative direction is intentionally simple.
+The two final safety gates are `evidence-traceability` and `bounded-verification`; they remain active even when the chosen creative direction is intentionally simple. The optional `share-demo` workflow inherits the final PASS as a publication prerequisite.
