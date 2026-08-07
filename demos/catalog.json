@@ -5,6 +5,28 @@
       "author_url": "https://github.com/imMamdouhaboammar",
       "created_at": "2026-08-08",
       "created_with": "linkedin-animated-infographics v3.0.0",
+      "description": "An animated 1080x1350 LinkedIn infographic showing how Claude Code reviews marketing draft content for buried answers, weak proof, vague angles, and bloated intros before publishing.",
+      "gif": "demos/community/imMamdouhaboammar/claude-code-marketing-review/demo.gif",
+      "html": "demos/community/imMamdouhaboammar/claude-code-marketing-review/index.html",
+      "id": "claude-code-marketing-review",
+      "kind": "community",
+      "language": "en",
+      "license": "MIT",
+      "path": "demos/community/imMamdouhaboammar/claude-code-marketing-review",
+      "story_type": "marketing-thought-leadership",
+      "tags": [
+        "claude-code",
+        "marketing",
+        "content-review",
+        "editorial"
+      ],
+      "title": "Most Marketing Fails in Review — How I Use Claude Code Outside Code"
+    },
+    {
+      "author": "imMamdouhaboammar",
+      "author_url": "https://github.com/imMamdouhaboammar",
+      "created_at": "2026-08-08",
+      "created_with": "linkedin-animated-infographics v3.0.0",
       "description": "An animated 1080x1350 LinkedIn thought-leadership infographic explaining Generative Engine Optimization (GEO) and Answer Engine Optimization (AEO). Features Claude Code, Codex, and GitHub Copilot mascots inspecting page readiness.",
       "gif": "demos/community/imMamdouhaboammar/geo-aeo-marketing-infographic/demo.gif",
       "html": "demos/community/imMamdouhaboammar/geo-aeo-marketing-infographic/index.html",
