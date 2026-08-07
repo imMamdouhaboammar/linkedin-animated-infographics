@@ -1,6 +1,6 @@
 ---
 name: qa-post
-description: Run every quality gate against a built post before it ships, and red-team the caption.
+description: Run every quality gate against a built post before it ships, red-team the post, and independently verify acceptance evidence.
 disable-model-invocation: true
 argument-hint: "[path/to/artboard.html] [optional: path/to/caption.md]"
 ---
@@ -9,10 +9,9 @@ argument-hint: "[path/to/artboard.html] [optional: path/to/caption.md]"
 
 Arguments: **$ARGUMENTS**
 
-Run the gates in this order and report pass or fail per gate with the specific line or element
-that failed. Do not fix anything unless asked; this skill reports.
+This workflow reports evidence. It does not silently edit the artifact.
 
-## Artboard
+## 1. Deterministic render gates
 
 ```bash
 python3 ${CLAUDE_PLUGIN_ROOT}/scripts/check_render.py <path> --out /tmp/qa-still.png
@@ -20,25 +19,20 @@ python3 ${CLAUDE_PLUGIN_ROOT}/scripts/check_render.py <path> --mobile
 bash ${CLAUDE_PLUGIN_ROOT}/scripts/lint_artboard.sh <path>
 ```
 
-Then walk `linkedin-animated-infographics:render` → `references/qa-gates.md` in full, including the mascot
-gates if a character is present.
+Walk `linkedin-animated-infographics:render` and `references/qa-gates.md` in full. Open frame 0 and the 350px preview. For GIFs, include seam, motion, duration, and file-size evidence.
 
-## Frame 0
+## 2. Caption checks
 
-Open the first captured frame on its own. It is LinkedIn's poster frame. If it does not read as
-a complete infographic without motion, that is a fail regardless of how the loop looks.
+Use `linkedin-animated-infographics:caption` when a caption is supplied. Check the truncation cut, one archetype, factual support, exactly one CTA, anti-slop rules, and banned constructions.
 
-## Caption
+## 3. Adversarial review
 
-Load `linkedin-animated-infographics:caption` and check:
+Delegate to `post-critic` with the artifact, caption, render evidence, story brief if present, and evidence record if present. Report must-fix, improvement, and leave-alone findings. Any must-fix item produces `HOLD` until resolved or explicitly shown not applicable.
 
-- line 1 at or under 60 characters
-- one archetype, not two blended
-- every generic noun replaced by a specific name or number
-- exactly one CTA, at the end
-- **zero** denial-then-reveal constructions in any language
-- zero em dashes, zero buzzwords from the ban list
+## 4. Independent verification
+
+When an Info-stories brief or acceptance criteria exist, delegate to `story-verifier` with direct artifact paths, render evidence, post-critic findings, and criteria. Do not substitute a worker summary for artifact evidence. Respect the maximum-two-fix-attempt rule.
 
 ## Verdict
 
-End with a single line: `SHIP` or `HOLD: <the one thing to fix first>`.
+End with one line: `SHIP` or `HOLD: <the one thing to fix first>`.
