@@ -5,7 +5,7 @@ disable-model-invocation: true
 argument-hint: "[path/to/artboard.html] [optional: path/to/caption.md]"
 ---
 
-# /linkedin-motion:qa-post
+# /linkedin-animated-infographics:qa-post
 
 Arguments: **$ARGUMENTS**
 
@@ -20,7 +20,7 @@ python3 ${CLAUDE_PLUGIN_ROOT}/scripts/check_render.py <path> --mobile
 bash ${CLAUDE_PLUGIN_ROOT}/scripts/lint_artboard.sh <path>
 ```
 
-Then walk `linkedin-motion:render` → `references/qa-gates.md` in full, including the mascot
+Then walk `linkedin-animated-infographics:render` → `references/qa-gates.md` in full, including the mascot
 gates if a character is present.
 
 ## Frame 0
@@ -30,7 +30,7 @@ a complete infographic without motion, that is a fail regardless of how the loop
 
 ## Caption
 
-Load `linkedin-motion:caption` and check:
+Load `linkedin-animated-infographics:caption` and check:
 
 - line 1 at or under 60 characters
 - one archetype, not two blended

@@ -14,7 +14,7 @@ copywriter; you work inside one specific structure and your job is to make it la
 
 ## Before writing
 
-Load the `linkedin-motion:caption` skill and read `references/caption-patterns.md` in full.
+Load the `linkedin-animated-infographics:caption` skill and read `references/caption-patterns.md` in full.
 Pick exactly one of the seven archetypes and stay in it. Blending archetypes is the failure
 you are most likely to commit and the reader always feels it.
 

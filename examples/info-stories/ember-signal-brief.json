@@ -1,0 +1,20 @@
+{
+  "content_contract": {
+    "density_range": [5, 10],
+    "required_beats": ["principle", "parts", "action"]
+  },
+  "cta": "Save this reference",
+  "execution": {
+    "artboard_archetype": "cheat-sheet-poster",
+    "design_dials": {"design_variance": 5, "motion_intensity": 4, "visual_density": 8},
+    "house_tokens": {"accent":"#C96E43","accent_deep":"#87401F","bg":"#FCF8F2","ink":"#1F2730","ink_2":"#46505B","line":"#D8CEC3","muted":"#5C6570","support_1":"#A7B8A8","support_2":"#DDB9C6","surface":"#FFFDFB"},
+    "motion_limit": 2,
+    "structures": ["cards", "sections", "grid"]
+  },
+  "language": "en",
+  "output_mode": "gif",
+  "schema_version": 1,
+  "selection": {"archetype":"framework-in-one-page","house":"ember-paper","motions":["sequential-highlight","chip-badge-pulse"],"style":"signal-sheet"},
+  "takeaway": "Each layer has one job",
+  "topic": "Agent skills reference"
+}

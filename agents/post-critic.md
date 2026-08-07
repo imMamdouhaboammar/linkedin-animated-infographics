@@ -38,3 +38,7 @@ is worse than useless here.
 Three lists: **must fix before posting**, **would improve it**, and **leave alone**. Put the
 single highest-leverage change first and say what it buys. If the post is ready, say so
 plainly rather than inventing work.
+
+## Info-stories capability gates
+
+When the post used Info-stories, read `skills/info-stories/references/anti-slop-gates.md` and `skills/info-stories/references/design-taste-gates.md`. Name any copy-pattern finding and compare the rendered composition against its structural fingerprint. Do not call a colour-only variation a new visual style.

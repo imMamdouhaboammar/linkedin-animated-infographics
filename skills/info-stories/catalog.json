@@ -1,0 +1,147 @@
+{
+  "version": 1,
+  "houses": [
+    {
+      "slug": "ember-paper",
+      "name": "Ember Paper",
+      "tone": "warm editorial",
+      "tokens": {
+        "bg": "#FCF8F2",
+        "surface": "#FFFDFB",
+        "ink": "#1F2730",
+        "ink_2": "#46505B",
+        "muted": "#5C6570",
+        "line": "#D8CEC3",
+        "accent": "#C96E43",
+        "accent_deep": "#87401F",
+        "support_1": "#A7B8A8",
+        "support_2": "#DDB9C6"
+      },
+      "text_pairs": [
+        ["ink", "bg"],
+        ["ink_2", "bg"],
+        ["muted", "bg"],
+        ["accent_deep", "bg"],
+        ["ink", "surface"],
+        ["ink_2", "surface"],
+        ["muted", "surface"],
+        ["accent_deep", "surface"]
+      ],
+      "state_pairs": [["accent", "bg"], ["accent", "surface"]]
+    },
+    {
+      "slug": "clay-ledger",
+      "name": "Clay Ledger",
+      "tone": "business warm",
+      "tokens": {
+        "bg": "#FAF5EE",
+        "surface": "#FFFFFF",
+        "ink": "#20242B",
+        "ink_2": "#4B5561",
+        "muted": "#5F6670",
+        "line": "#D6CCC1",
+        "accent": "#C86C42",
+        "accent_deep": "#8A3F24",
+        "support_1": "#B29AC7",
+        "support_2": "#B9B087"
+      },
+      "text_pairs": [
+        ["ink", "bg"], ["ink_2", "bg"], ["muted", "bg"], ["accent_deep", "bg"],
+        ["ink", "surface"], ["ink_2", "surface"], ["muted", "surface"], ["accent_deep", "surface"]
+      ],
+      "state_pairs": [["accent", "bg"], ["accent", "surface"]]
+    },
+    {
+      "slug": "sage-ledger",
+      "name": "Sage Ledger",
+      "tone": "calm strategic",
+      "tokens": {
+        "bg": "#F4F7F2", "surface": "#FFFFFF", "ink": "#202A24", "ink_2": "#48554F",
+        "muted": "#59655F", "line": "#D3DDD3", "accent": "#719681", "accent_deep": "#3E644F",
+        "support_1": "#C98D6A", "support_2": "#BFCDBD"
+      },
+      "text_pairs": [["ink","bg"],["ink_2","bg"],["muted","bg"],["accent_deep","bg"],["ink","surface"],["ink_2","surface"],["muted","surface"],["accent_deep","surface"]],
+      "state_pairs": [["accent","bg"],["accent","surface"]]
+    },
+    {
+      "slug": "lilac-brief", "name": "Lilac Brief", "tone": "soft editorial",
+      "tokens": {"bg":"#F8F5FB","surface":"#FFFFFF","ink":"#242336","ink_2":"#545466","muted":"#606072","line":"#DDD5E7","accent":"#8E74B7","accent_deep":"#59427F","support_1":"#D98C74","support_2":"#C8CBD3"},
+      "text_pairs": [["ink","bg"],["ink_2","bg"],["muted","bg"],["accent_deep","bg"],["ink","surface"],["ink_2","surface"],["muted","surface"],["accent_deep","surface"]],
+      "state_pairs": [["accent","bg"],["accent","surface"]]
+    },
+    {
+      "slug": "mist-board", "name": "Mist Board", "tone": "cool technical",
+      "tokens": {"bg":"#F4F7F8","surface":"#FFFFFF","ink":"#1E2933","ink_2":"#4A5965","muted":"#586772","line":"#D2DEE4","accent":"#638B9A","accent_deep":"#3E6676","support_1":"#C97D4F","support_2":"#AFCBC6"},
+      "text_pairs": [["ink","bg"],["ink_2","bg"],["muted","bg"],["accent_deep","bg"],["ink","surface"],["ink_2","surface"],["muted","surface"],["accent_deep","surface"]],
+      "state_pairs": [["accent","bg"],["accent","surface"]]
+    },
+    {
+      "slug": "sand-quartz", "name": "Sand Quartz", "tone": "quiet premium",
+      "tokens": {"bg":"#FBF7F1","surface":"#FFFFFF","ink":"#2E2A27","ink_2":"#5D5751","muted":"#665F59","line":"#E0D6CA","accent":"#A88145","accent_deep":"#765724","support_1":"#9AA0A6","support_2":"#B9BEA2"},
+      "text_pairs": [["ink","bg"],["ink_2","bg"],["muted","bg"],["accent_deep","bg"],["ink","surface"],["ink_2","surface"],["muted","surface"],["accent_deep","surface"]],
+      "state_pairs": [["accent","bg"],["accent","surface"]]
+    },
+    {
+      "slug": "midnight-operator", "name": "Midnight Operator", "tone": "dark technical",
+      "tokens": {"bg":"#081729","surface":"#0F2237","ink":"#F5F7FA","ink_2":"#C8D2DD","muted":"#9EAFBF","line":"#2A4159","accent":"#F08A4A","accent_deep":"#FFB17E","support_1":"#79B59B","support_2":"#F2C66D"},
+      "text_pairs": [["ink","bg"],["ink_2","bg"],["muted","bg"],["accent_deep","bg"],["ink","surface"],["ink_2","surface"],["muted","surface"],["accent_deep","surface"]],
+      "state_pairs": [["accent","bg"],["accent","surface"]]
+    },
+    {
+      "slug": "graphite-glow", "name": "Graphite Glow", "tone": "dark editorial",
+      "tokens": {"bg":"#111417","surface":"#1B2025","ink":"#F6F7F9","ink_2":"#C6CDD4","muted":"#A7B0B9","line":"#343D47","accent":"#E67052","accent_deep":"#FFAA91","support_1":"#84B8AE","support_2":"#D6C4B0"},
+      "text_pairs": [["ink","bg"],["ink_2","bg"],["muted","bg"],["accent_deep","bg"],["ink","surface"],["ink_2","surface"],["muted","surface"],["accent_deep","surface"]],
+      "state_pairs": [["accent","bg"],["accent","surface"]]
+    },
+    {
+      "slug": "coral-terminal", "name": "Coral Terminal", "tone": "light code editorial",
+      "tokens": {"bg":"#F9F5F1","surface":"#FFFDFC","ink":"#20242D","ink_2":"#4E5562","muted":"#5D6570","line":"#DED5CE","accent":"#C96B4F","accent_deep":"#8F432F","support_1":"#2B1F1A","support_2":"#C7DED6"},
+      "text_pairs": [["ink","bg"],["ink_2","bg"],["muted","bg"],["accent_deep","bg"],["ink","surface"],["ink_2","surface"],["muted","surface"],["accent_deep","surface"]],
+      "state_pairs": [["accent","bg"],["accent","surface"]]
+    },
+    {
+      "slug": "navy-grid", "name": "Navy Grid", "tone": "structured dark",
+      "tokens": {"bg":"#041B3A","surface":"#0A2446","ink":"#FFFFFF","ink_2":"#C6D3E4","muted":"#9FB2CB","line":"#244468","accent":"#F1895C","accent_deep":"#FFB08C","support_1":"#8FB7D8","support_2":"#7E8BB6"},
+      "text_pairs": [["ink","bg"],["ink_2","bg"],["muted","bg"],["accent_deep","bg"],["ink","surface"],["ink_2","surface"],["muted","surface"],["accent_deep","surface"]],
+      "state_pairs": [["accent","bg"],["accent","surface"]]
+    }
+  ],
+  "styles": [
+    {"slug":"signal-sheet","name":"Signal Sheet","archetypes":["framework-in-one-page","step-by-step-playbook","what-each-piece-does","decision-cards"],"preferred_artboard":"cheat-sheet-poster","structures":["cards","sections","grid"],"dials":{"design_variance":5,"motion_intensity":4,"visual_density":8}},
+    {"slug":"funnel-board","name":"Funnel Board","archetypes":["raw-input-to-final-output","ecosystem-snapshot","one-prompt-full-workflow"],"preferred_artboard":"flow-map-verdict","structures":["flow","nodes","connectors"],"dials":{"design_variance":7,"motion_intensity":6,"visual_density":7}},
+    {"slug":"stack-ledger","name":"Stack Ledger","archetypes":["inside-the-stack","ecosystem-snapshot","framework-in-one-page"],"preferred_artboard":"pipeline-stages","structures":["layers","cards","sections"],"dials":{"design_variance":6,"motion_intensity":5,"visual_density":8}},
+    {"slug":"command-canvas","name":"Command Canvas","archetypes":["one-prompt-full-workflow","working-screen","build-once-reuse-often"],"preferred_artboard":"terminal-card","structures":["terminal","hero","support-cards"],"dials":{"design_variance":6,"motion_intensity":7,"visual_density":5}},
+    {"slug":"sequence-board","name":"Sequence Board","archetypes":["step-by-step-playbook","thirty-day-breakdown","raw-input-to-final-output"],"preferred_artboard":"annotated-blueprint","structures":["steps","connectors","cards"],"dials":{"design_variance":5,"motion_intensity":6,"visual_density":6}},
+    {"slug":"comparison-grid","name":"Comparison Grid","archetypes":["what-each-piece-does","decision-cards","before-after-workflow"],"preferred_artboard":"trading-card-grid","structures":["columns","rows","cards"],"dials":{"design_variance":4,"motion_intensity":4,"visual_density":7}},
+    {"slug":"proof-mosaic","name":"Proof Mosaic","archetypes":["working-screen","build-once-reuse-often","before-after-workflow"],"preferred_artboard":"specimen-grid","structures":["tiles","gallery","cards"],"dials":{"design_variance":8,"motion_intensity":5,"visual_density":6}},
+    {"slug":"tool-catalog","name":"Tool Catalog","archetypes":["inside-the-stack","ecosystem-snapshot","framework-in-one-page"],"preferred_artboard":"logo-grid","structures":["logos","categories","grid"],"dials":{"design_variance":5,"motion_intensity":3,"visual_density":9}},
+    {"slug":"story-strip","name":"Story Strip","archetypes":["one-prompt-full-workflow","raw-input-to-final-output","before-after-workflow"],"preferred_artboard":"pipeline-stages","structures":["sequence","sections","proof"],"dials":{"design_variance":7,"motion_intensity":6,"visual_density":5}},
+    {"slug":"field-guide","name":"Field Guide","archetypes":["framework-in-one-page","decision-cards","what-each-piece-does"],"preferred_artboard":"cheat-sheet-poster","structures":["reference","rules","cards"],"dials":{"design_variance":4,"motion_intensity":2,"visual_density":9}}
+  ],
+  "archetypes": [
+    {"slug":"one-prompt-full-workflow","name":"One Prompt, Full Workflow","required_beats":["input","orchestration","output"],"density_range":[3,7]},
+    {"slug":"raw-input-to-final-output","name":"From Raw Input to Final Output","required_beats":["raw-input","stages","final-output"],"density_range":[4,8]},
+    {"slug":"thirty-day-breakdown","name":"The 30-Day Breakdown","required_beats":["timeframe","phases","milestones"],"density_range":[4,8]},
+    {"slug":"inside-the-stack","name":"Inside the Stack","required_beats":["layers","roles","connections"],"density_range":[5,9]},
+    {"slug":"what-each-piece-does","name":"What Each Piece Actually Does","required_beats":["items","plain-role","example"],"density_range":[4,8]},
+    {"slug":"build-once-reuse-often","name":"Build It Once, Reuse It Often","required_beats":["asset","reuse-loop","benefit"],"density_range":[3,7]},
+    {"slug":"working-screen","name":"The Working Screen","required_beats":["hero-screen","annotations","proof"],"density_range":[2,6]},
+    {"slug":"step-by-step-playbook","name":"Step-by-Step Playbook","required_beats":["steps","checks","result"],"density_range":[4,8]},
+    {"slug":"decision-cards","name":"Decision Cards","required_beats":["choices","criteria","recommendation"],"density_range":[4,8]},
+    {"slug":"ecosystem-snapshot","name":"Ecosystem Snapshot","required_beats":["categories","relationships","summary"],"density_range":[6,10]},
+    {"slug":"before-after-workflow","name":"Before / After Workflow","required_beats":["before","change","after"],"density_range":[3,7]},
+    {"slug":"framework-in-one-page","name":"Framework in One Page","required_beats":["principle","parts","action"],"density_range":[5,10]}
+  ],
+  "motions": [
+    {"slug":"sequential-highlight","name":"Sequential Highlight","structures":["cards","steps","sections","layers"],"roles":["primary","secondary"]},
+    {"slug":"connector-draw","name":"Connector Draw","structures":["flow","nodes","connectors","steps"],"roles":["primary"]},
+    {"slug":"node-pulse","name":"Node Pulse","structures":["nodes","flow","logos"],"roles":["secondary"]},
+    {"slug":"active-route-swap","name":"Active Route Swap","structures":["flow","connectors","sequence"],"roles":["primary"]},
+    {"slug":"card-reveal","name":"Card Reveal","structures":["cards","tiles","grid","sections"],"roles":["primary","secondary"]},
+    {"slug":"type-on-terminal","name":"Type-On Terminal","structures":["terminal","hero"],"roles":["primary"]},
+    {"slug":"soft-zoom-focus","name":"Soft Zoom Focus","structures":["hero","gallery","tiles"],"roles":["secondary"]},
+    {"slug":"spotlight-sweep","name":"Spotlight Sweep","structures":["gallery","tiles","cards","logos"],"roles":["secondary"]},
+    {"slug":"chip-badge-pulse","name":"Chip / Badge Pulse","structures":["cards","sections","reference"],"roles":["secondary"]},
+    {"slug":"float-micro-motion","name":"Float Micro-Motion","structures":["hero","gallery","tiles"],"roles":["secondary"]}
+  ]
+}

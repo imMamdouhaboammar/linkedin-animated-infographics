@@ -35,15 +35,15 @@ Each stage has its own skill. Load the one you are in, not all of them.
 
 | Stage | Skill | Load it when |
 |---|---|---|
-| Caption | `linkedin-motion:caption` | writing or editing any caption. Seven archetypes, the truncation cut, the ban list |
-| Layout | `linkedin-motion:artboard` | choosing a visual archetype, picking colours, building the still |
-| Motion | `linkedin-motion:motion` | writing any animation CSS. Ten seekable primitives and the loop rules |
-| Mascots | `linkedin-motion:mascots` | putting a character on the artboard. Three roles, seek-safety, budget |
-| Render | `linkedin-motion:render` | capturing frames, assembling the GIF, running the gates, publishing |
-| Arabic | `linkedin-motion:arabic` | any Arabic or bilingual output. It is not a translation job |
+| Caption | `linkedin-animated-infographics:caption` | writing or editing any caption. Seven archetypes, the truncation cut, the ban list |
+| Layout | `linkedin-animated-infographics:artboard` | choosing a visual archetype, picking colours, building the still |
+| Motion | `linkedin-animated-infographics:motion` | writing any animation CSS. Ten seekable primitives and the loop rules |
+| Mascots | `linkedin-animated-infographics:mascots` | putting a character on the artboard. Three roles, seek-safety, budget |
+| Render | `linkedin-animated-infographics:render` | capturing frames, assembling the GIF, running the gates, publishing |
+| Arabic | `linkedin-animated-infographics:arabic` | any Arabic or bilingual output. It is not a translation job |
 
-Three workflow skills run the whole thing end to end: `linkedin-motion:new-post`,
-`linkedin-motion:render-gif`, `linkedin-motion:qa-post`.
+Three workflow skills run the whole thing end to end: `linkedin-animated-infographics:new-post`,
+`linkedin-animated-infographics:render-gif`, `linkedin-animated-infographics:qa-post`.
 
 ## Agents
 
