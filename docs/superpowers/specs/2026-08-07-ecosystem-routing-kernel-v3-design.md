@@ -1,0 +1,189 @@
+# Ecosystem Routing Kernel v3 Design
+
+## Goal
+
+Turn the repository from a collection of strong skills and agents into one coherent, self-describing creative-production ecosystem with a central LLM routing helper, enforceable contracts, consistent worker interfaces, durable documentation, and a Claude Marketplace package that remains installable from the same repository.
+
+## Design principles
+
+1. One routing authority. `helper/` becomes the canonical guide for deciding what workflow, skills, agents, asset gates, and artifacts a request needs.
+2. One execution path. `new-post` remains the parent production orchestrator; workers never rely on hidden peer-to-peer delegation.
+3. Machine-readable contracts first. Human docs explain contracts but do not redefine them.
+4. Evidence before generation. Claims, product UI, brand assets, and official mascots are gated before visual production.
+5. Exact assets stay exact. Named official mascots require the exact user-supplied/task-attached SVG and may not be substituted.
+6. Extend, do not fork. Info-stories extensions merge deterministically through `load_catalog()`.
+7. All public surfaces are testable. Router, skills, agents, docs, marketplace, hooks, and registries get structural validation.
+8. Preserve the existing install identity unless a concrete incompatibility requires change.
+
+## Architecture
+
+### 1. Top-level helper
+
+Create `helper/` beside `skills/` and `agents/`.
+
+It contains:
+
+- `helper/README.md`: concise explanation for humans and coding agents
+- `helper/GUIDE.md`: LLM-facing routing and decision protocol
+- `helper/router.json`: intent-to-workflow routing rules and conditional gates
+- `helper/capabilities.json`: capability ownership and prerequisites
+- `helper/artifacts.json`: artifact names, producers, consumers, and required fields
+
+The helper does not render or generate content itself. It decides which existing capability should act, what it must receive, and what evidence it must return.
+
+### 2. Router implementation
+
+Add `scripts/ecosystem_router.py` as a deterministic validator/router over the helper registries. It exposes:
+
+- `load_ecosystem(root)`
+- `validate_ecosystem(root) -> list[str]`
+- `route_request(request: dict, root) -> dict`
+- CLI commands `check`, `route`, and `explain`
+
+A thin public CLI `tools/route_request.py` calls the shared implementation.
+
+Routing is explicit for these intents:
+
+- full post creation
+- QA/review
+- GIF rendering
+- focused design study
+- focused mascot animation
+- focused Info-stories composition
+
+Conditional gates include Arabic/RTL, official mascot SVG, UI mockup evidence fidelity, reference-study input, and static versus animated output.
+
+### 3. Artifact contracts
+
+Every important handoff gets a named artifact contract. Minimum production artifacts:
+
+- `build/design-study.json`
+- `build/evidence.json`
+- `build/story-brief.json`
+- `build/palette-check.json`
+- `build/artboard-copy.json`
+- `build/layout-spec.json`
+- `build/caption.md`
+- `build/first-comment.md`
+- `build/post.html`
+- `build/still.png`
+- `build/motion-direction.json`
+- `build/mascot-request.json`
+- `build/mascot/motion-contract.json`
+- `build/render-report.json`
+- `build/critic-report.json`
+- `build/verification-report.json`
+
+`helper/artifacts.json` records producer, consumers, required inputs, and blocking semantics.
+
+### 4. Skill contracts v3
+
+All user-facing skills adopt a consistent structure:
+
+- Purpose
+- Use when
+- Inputs
+- Outputs
+- Procedure
+- Stop/HOLD conditions
+- Related agents/tools/references
+
+`post` becomes a lightweight entry router that points to the helper and canonical workflows. `new-post`, `qa-post`, and `render-gif` remain explicit workflow skills. Domain skills stay focused and stop duplicating orchestration prose.
+
+### 5. Agent contracts v3
+
+Every agent adopts a consistent worker contract:
+
+- Role
+- Inputs
+- Method
+- HOLD conditions
+- Quality gates
+- Outputs / return contract
+
+Required skills are preloaded through `skills:` frontmatter. Worker output always returns to the parent workflow. No agent is allowed to assume it can coordinate peer agents directly.
+
+The existing 14 agents remain, including `mascot-animator`. Capability ownership is synchronized between `helper/capabilities.json` and `architecture/plugin-graph.json`.
+
+### 6. Info-stories and UI Mockup Stories
+
+The merged registry produced by `scripts/info_stories.py::load_catalog()` remains authoritative. UI Mockup Stories remain a first-party extension.
+
+The helper adds routing knowledge for UI stories:
+
+- documented product UI must be evidence-backed
+- concept UI must be labeled when it could be mistaken for real product evidence
+- unsupported metrics/features/integrations remain blocked
+- feed-width legibility is a production gate
+
+### 7. Mascot Animator v3 integration
+
+The existing exact-SVG identity gate remains mandatory.
+
+The helper adds a routing rule: a named/official mascot without an exact SVG results in `HOLD: exact SVG required`. The main model asks the user for the SVG; a subagent returns the HOLD to its parent.
+
+Creative directions remain adaptable starting points, not fixed templates. Identity-critical geometry, proportions, brand colors, marks, and distinctive face details cannot be silently redrawn.
+
+### 8. Documentation model
+
+README becomes a concise product and quick-start document. Detailed material moves to focused docs:
+
+- `docs/ecosystem.md`: architecture and capability overview
+- `docs/routing.md`: helper routing protocol and examples
+- `docs/agents.md`: complete agent catalog and handoff contracts
+- `docs/skills.md`: complete skill catalog and selection guidance
+- `docs/marketplace.md`: install, validate, release, and versioning
+- `docs/development.md`: tests, validators, contribution workflow, browser-render caveats
+
+Repository-specific coding-agent guidance in `.agents/`, `.claude/`, and `.codex/` must point to the same helper authority rather than inventing parallel rules.
+
+### 9. Claude Marketplace
+
+Keep the same-repository marketplace and stable install identity:
+
+- marketplace: `mamdouh-creative-tools`
+- plugin: `linkedin-animated-infographics`
+- source: `./`
+- strict mode: true
+
+Bump the plugin release to `3.0.0` because the internal routing/contracts architecture changes materially. Marketplace and plugin versions must match.
+
+CI continues to install the current Claude Code release and must run:
+
+- full Python unit suite
+- Python compilation
+- Info-stories validation
+- plugin graph validation
+- ecosystem helper validation
+- marketplace validation
+- hook/shell syntax
+- whitespace integrity
+- `claude plugin validate .`
+- local marketplace add/list/install smoke
+
+### 10. Branch and PR policy
+
+Historical branches already represented in `main` are not re-merged. New work starts from current `main` on `feat/ecosystem-routing-kernel-v3`.
+
+The feature is merged only when:
+
+- all deterministic tests pass
+- Claude plugin validation/install smoke pass
+- no unresolved review thread remains
+- Qlty or equivalent repository checks do not report a blocking failure
+- the PR head SHA verified is the SHA merged
+
+## Non-goals
+
+- no new rendering engine
+- no framework migration
+- no replacement of the deterministic HTML/SVG/GIF pipeline
+- no duplication of Info-stories registries
+- no automatic mascot generation when an official mascot was requested
+- no requirement to use every agent for every focused request
+
+## Success criteria
+
+A fresh LLM or coding agent can enter the repository, read `helper/GUIDE.md`, route a request to the correct workflow, identify required assets and HOLD states, know the exact artifacts each worker exchanges, and discover the authoritative docs without reading the entire repository.
+
+A clean Claude Code environment can add the same-repository marketplace, install version 3.0.0, discover the skills and agents, and pass the repository validation workflow.
