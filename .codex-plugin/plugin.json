@@ -1,0 +1,42 @@
+{
+  "name": "linkedin-animated-infographics",
+  "version": "3.2.0",
+  "description": "Create animated LinkedIn visual stories with sharp hooks, useful reveals, deterministic motion, strict QA, and opt-in community publishing.",
+  "author": {
+    "name": "Mamdouh Aboammar",
+    "url": "https://github.com/imMamdouhaboammar"
+  },
+  "homepage": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics",
+  "repository": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics",
+  "license": "MIT",
+  "keywords": [
+    "linkedin",
+    "infographic",
+    "animation",
+    "visual-storytelling",
+    "info-stories",
+    "creative-direction",
+    "community-demos",
+    "arabic",
+    "rtl"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "LinkedIn Animated Infographics",
+    "shortDescription": "Turn ideas into animated LinkedIn visual stories",
+    "longDescription": "Build feed-ready animated infographics with concept exploration, hook-driven copy, Info-stories, evidence checks, deterministic motion, QA, exact-SVG mascot handling, Arabic/RTL support, and optional community demo publishing.",
+    "developerName": "Mamdouh Aboammar",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"],
+    "websiteURL": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics",
+    "privacyPolicyURL": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics/blob/main/TERMS.md",
+    "defaultPrompt": [
+      "Turn this idea into an animated LinkedIn infographic with a strong visual hook and a useful aha moment.",
+      "Create an Info-story from this material and choose the best story shape before designing it.",
+      "Review this finished LinkedIn infographic and tell me what must be fixed before publishing.",
+      "Prepare this verified demo for the community gallery and ask before publishing anything."
+    ],
+    "screenshots": ["./assets/demo_artboard_v4.gif"]
+  }
+}
