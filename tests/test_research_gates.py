@@ -1,5 +1,7 @@
 import importlib.util
 import json
+import shutil
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -29,6 +31,13 @@ def load_module(path: Path, name: str):
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+
+def copy_research_fixture(root: Path):
+    for relative in ("research", "helper", "architecture", "agents", "skills", "tools"):
+        source = ROOT / relative
+        if source.exists():
+            shutil.copytree(source, root / relative)
 
 
 class ResearchGateTests(unittest.TestCase):
@@ -115,6 +124,36 @@ class ResearchGateTests(unittest.TestCase):
         module = load_module(SCRIPT, "research_gates")
         self.assertIsNotNone(module, "research gate validator missing")
         self.assertEqual([], module.validate_research_gates(ROOT))
+
+    def test_validator_rejects_implementation_ref_that_escapes_repository(self):
+        module = load_module(SCRIPT, "research_gates")
+        self.assertIsNotNone(module)
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            root.mkdir()
+            copy_research_fixture(root)
+            outside = root.parent / "outside.md"
+            outside.write_text("outside implementation reference")
+            gates_path = root / "research" / "capability-notes" / "gates.json"
+            gates = json.loads(gates_path.read_text())
+            gates["gates"]["reference-dna"]["implementation_refs"] = ["../outside.md"]
+            gates_path.write_text(json.dumps(gates))
+            errors = module.validate_research_gates(root)
+            self.assertTrue(any("unsafe implementation ref" in error.lower() and "reference-dna" in error for error in errors), errors)
+
+    def test_validator_rejects_absolute_implementation_ref(self):
+        module = load_module(SCRIPT, "research_gates")
+        self.assertIsNotNone(module)
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            root.mkdir()
+            copy_research_fixture(root)
+            gates_path = root / "research" / "capability-notes" / "gates.json"
+            gates = json.loads(gates_path.read_text())
+            gates["gates"]["reference-dna"]["implementation_refs"] = ["/etc/passwd"]
+            gates_path.write_text(json.dumps(gates))
+            errors = module.validate_research_gates(root)
+            self.assertTrue(any("unsafe implementation ref" in error.lower() and "reference-dna" in error for error in errors), errors)
 
     def test_router_returns_research_gates_for_create_route(self):
         module = load_module(ROUTER_SCRIPT, "ecosystem_router")
