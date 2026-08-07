@@ -1,7 +1,7 @@
 # Community Demo Publisher Design
 
 Date: 2026-08-08
-Status: approved architecture, implementation pending
+Status: design complete, awaiting spec review
 
 ## Goal
 
@@ -17,7 +17,7 @@ After a complete infographic has passed render QA, adversarial review, and final
 
 The offer is opt-in. Declining it ends the workflow with no GitHub write. Accepting it activates the `share-demo` workflow and `community-publisher` agent.
 
-The publisher packages exactly three public files for each submission:
+Each demo directory contains exactly three public files:
 
 - `demo.gif`
 - `index.html`
@@ -58,7 +58,7 @@ scripts/
 └── demo_submit.py
 ```
 
-`demos/catalog.json` is generated deterministically from `demo.json` files and must not be hand-edited.
+`demos/catalog.json` is generated deterministically from `demo.json` files and must not be hand-edited. It is repository-level metadata and is not part of the three-file demo package.
 
 ## Demo contract
 
@@ -130,9 +130,9 @@ python3 scripts/demo_submit.py prepare --build-dir build --author <github-user> 
 python3 scripts/demo_submit.py check <demo-dir>
 ```
 
-`prepare` copies only the approved final HTML and GIF into a staging contribution directory and creates `demo.json` from explicit metadata. It must fail if the final verification verdict is not PASS, the GIF/HTML are missing, rights confirmation is absent, or the destination would overwrite an existing demo.
+`prepare` writes the candidate package into its final repository-relative contribution path under `demos/community/<github-user>/<slug>/` inside the contributor working tree. It copies only the approved final HTML and GIF and creates `demo.json` from explicit metadata. It must fail if the final verification verdict is not PASS, the GIF/HTML are missing, rights confirmation is absent, or the destination would overwrite an existing demo.
 
-`check` validates the staged package before any GitHub operation.
+`check` validates the prepared package before any GitHub operation. The complete repository check then runs `python3 scripts/demo_gallery.py build` followed by `python3 scripts/demo_gallery.py check`, which validates the new package and catalog together.
 
 ## LLM routing
 
@@ -150,7 +150,8 @@ story-verifier PASS
       -> yes: collect publication metadata + rights confirmation
           -> demo_submit.py prepare
           -> demo_submit.py check
-          -> demo_gallery.py check against staged contribution
+          -> demo_gallery.py build
+          -> demo_gallery.py check
           -> community-publisher
           -> fork/branch/commit/push/PR
           -> stop and return PR URL
@@ -185,7 +186,7 @@ It must:
 3. ensure the target repository is `imMamdouhaboammar/linkedin-animated-infographics`
 4. create or reuse the contributor's fork when needed
 5. create a fresh contribution branch such as `community/<user>/<slug>`
-6. add only the three demo files plus the regenerated `demos/catalog.json` when required by the contribution contract
+6. add only the three files in the demo directory plus the repository-level regenerated `demos/catalog.json`
 7. commit with a scoped message
 8. push to the contributor fork
 9. open a pull request against upstream `main`
@@ -265,7 +266,7 @@ The agent must never infer rights ownership. `rights_confirmed` is an explicit u
 
 Maintainer-created demos use the same schema and validation contract under `demos/owned/<slug>/`.
 
-The existing `assets/demo_artboard_v4.gif` should remain available for README compatibility during migration. A first owned demo may reference or copy that artifact into the new demo package only when the matching HTML is available and the package passes the same validator as community submissions.
+The existing `assets/demo_artboard_v4.gif` should remain available for README compatibility during migration. A first owned demo may copy that GIF into its own `demo.gif` only when the matching HTML is available and the resulting three-file package passes the same validator as community submissions.
 
 No special validation bypass exists for owned demos.
 
@@ -299,7 +300,7 @@ The repository itself is the gallery source of truth.
 The feature is complete when:
 
 - owned and community demo namespaces exist
-- every demo package is exactly GIF + HTML + `demo.json`
+- every demo directory contains exactly GIF + HTML + `demo.json`
 - `demo.json` has a strict schema and safe-path validator
 - gallery catalog generation is deterministic
 - helper routing exposes `share-demo`
