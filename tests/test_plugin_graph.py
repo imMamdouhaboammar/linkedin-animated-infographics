@@ -1,5 +1,7 @@
 import importlib.util
 import json
+import shutil
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -15,6 +17,11 @@ def load_module():
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+
+def copy_graph_fixture(destination: Path):
+    for relative in ("architecture", "agents", "skills", "helper"):
+        shutil.copytree(ROOT / relative, destination / relative)
 
 
 class PluginGraphTests(unittest.TestCase):
@@ -78,6 +85,31 @@ class PluginGraphTests(unittest.TestCase):
         text = (ROOT / "skills" / "qa-post" / "SKILL.md").read_text()
         self.assertIn("post-critic", text)
         self.assertIn("story-verifier", text)
+
+    def test_validator_detects_helper_capability_owner_drift(self):
+        module = load_module()
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            copy_graph_fixture(root)
+            capabilities_path = root / "helper" / "capabilities.json"
+            capabilities = json.loads(capabilities_path.read_text())
+            capabilities["capabilities"]["anti-slop"]["owners"] = ["story-verifier"]
+            capabilities_path.write_text(json.dumps(capabilities))
+            errors = module.validate_component_graph(root)
+            self.assertTrue(any("helper capability anti-slop" in error.lower() for error in errors), errors)
+
+    def test_validator_detects_helper_workflow_order_drift(self):
+        module = load_module()
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            copy_graph_fixture(root)
+            router_path = root / "helper" / "router.json"
+            router = json.loads(router_path.read_text())
+            agents = router["routes"]["create-post"]["agents"]
+            router["routes"]["create-post"]["agents"] = list(reversed(agents))
+            router_path.write_text(json.dumps(router))
+            errors = module.validate_component_graph(root)
+            self.assertTrue(any("helper create-post agent order" in error.lower() for error in errors), errors)
 
 
 class WorkerCoordinationTests(unittest.TestCase):
