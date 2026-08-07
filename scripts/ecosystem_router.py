@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-HELPER_FILES = ("router.json", "capabilities.json", "artifacts.json")
+HELPER_FILES = ("router.json", "capabilities.json", "artifacts.json", "quality-gates.json")
 
 
 def _load_json(path: Path, errors=None):
@@ -13,7 +13,11 @@ def _load_json(path: Path, errors=None):
         return json.loads(path.read_text())
     except FileNotFoundError:
         if errors is not None:
-            errors.append(f"missing {path.relative_to(ROOT) if path.is_relative_to(ROOT) else path}")
+            try:
+                display = path.relative_to(ROOT)
+            except ValueError:
+                display = path
+            errors.append(f"missing {display}")
     except json.JSONDecodeError as exc:
         if errors is not None:
             errors.append(f"invalid JSON in {path}: {exc}")
@@ -27,6 +31,7 @@ def load_ecosystem(root: Path = ROOT) -> dict:
         "router": json.loads((helper / "router.json").read_text()),
         "capabilities": json.loads((helper / "capabilities.json").read_text()),
         "artifacts": json.loads((helper / "artifacts.json").read_text()),
+        "quality_gates": json.loads((helper / "quality-gates.json").read_text()),
         "research_gates": json.loads((research / "gates.json").read_text()),
     }
 
@@ -51,13 +56,15 @@ def validate_ecosystem(root: Path = ROOT) -> list[str]:
     router = _load_json(helper / "router.json", errors)
     capabilities_doc = _load_json(helper / "capabilities.json", errors)
     artifacts_doc = _load_json(helper / "artifacts.json", errors)
+    quality_gates_doc = _load_json(helper / "quality-gates.json", errors)
     research_gates_doc = _load_json(root / "research" / "capability-notes" / "gates.json", errors)
-    if not router or not capabilities_doc or not artifacts_doc or not research_gates_doc:
+    if not router or not capabilities_doc or not artifacts_doc or not quality_gates_doc or not research_gates_doc:
         return errors
 
     skills = {path.parent.name for path in (root / "skills").glob("*/SKILL.md")}
     agents = {path.stem for path in (root / "agents").glob("*.md")}
     capabilities = capabilities_doc.get("capabilities", {})
+    quality_gates = quality_gates_doc.get("gates", {})
     research_gates = research_gates_doc.get("gates", {})
 
     routes = router.get("routes", {})
@@ -111,6 +118,23 @@ def validate_ecosystem(root: Path = ROOT) -> list[str]:
     unreferenced = sorted(set(research_gates) - referenced_research_gates)
     if unreferenced:
         errors.append(f"research gates not connected to helper capabilities: {', '.join(unreferenced)}")
+
+    for gate_id, gate in quality_gates.items():
+        if gate.get("severity") not in {"blocking", "advisory"}:
+            errors.append(f"quality gate {gate_id} has invalid severity")
+        owners = set(gate.get("owners", []))
+        if not owners:
+            errors.append(f"quality gate {gate_id} has no owners")
+        unknown = sorted(owners - agents)
+        if unknown:
+            errors.append(f"quality gate {gate_id} has unknown owners: {', '.join(unknown)}")
+        if not gate.get("applies_to_intents"):
+            errors.append(f"quality gate {gate_id} has no applies_to_intents")
+        unknown_intents = sorted(set(gate.get("applies_to_intents", [])) - set(routes))
+        if unknown_intents:
+            errors.append(f"quality gate {gate_id} references unknown intents: {', '.join(unknown_intents)}")
+        if not gate.get("behavior"):
+            errors.append(f"quality gate {gate_id} has no behavior")
 
     allowed_participants = agents | {"parent:new-post"}
     for artifact, contract in artifacts_doc.get("artifacts", {}).items():
@@ -189,10 +213,16 @@ def _research_gates_for(capability_ids, intent: str, request: dict, ecosystem: d
     return result
 
 
+def _quality_gates_for(intent: str, ecosystem: dict) -> list[str]:
+    gates = ecosystem["quality_gates"].get("gates", {})
+    return [gate_id for gate_id, gate in gates.items() if intent in gate.get("applies_to_intents", [])]
+
+
 def _finalize_route(result: dict, request: dict, ecosystem: dict) -> dict:
     for key in ("skills", "agents", "conditional_agents", "capabilities", "asset_gates"):
         result[key] = _dedupe(result[key])
     result["research_gates"] = _research_gates_for(result["capabilities"], result["intent"], request, ecosystem)
+    result["quality_gates"] = _quality_gates_for(result["intent"], ecosystem)
     return result
 
 
@@ -215,6 +245,7 @@ def route_request(request: dict, root: Path = ROOT) -> dict:
         "capabilities": list(base.get("capabilities", [])),
         "asset_gates": [],
         "research_gates": [],
+        "quality_gates": [],
     }
 
     language = (request.get("language") or "").lower()
@@ -268,6 +299,7 @@ def explain_route(route: dict) -> str:
         f"conditional agents: {', '.join(route['conditional_agents']) or 'none'}",
         f"capabilities: {', '.join(route['capabilities']) or 'none'}",
         f"research gates: {', '.join(route['research_gates']) or 'none'}",
+        f"quality gates: {', '.join(route['quality_gates']) or 'none'}",
         f"asset gates: {', '.join(route['asset_gates']) or 'none'}",
     ]
     if route.get("reason"):
