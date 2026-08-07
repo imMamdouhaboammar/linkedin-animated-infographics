@@ -66,9 +66,15 @@ Performs adversarial review before independent verification. It explicitly check
 
 Read-only independent acceptance worker. It inspects artifact evidence directly, records one evidence row per criterion, enforces `evidence-traceability` and `bounded-verification`, and returns `build/verification-report.json` with `PASS`, `FAIL:fixable`, or `FAIL:escalate`.
 
+## Focused publication agent
+
+### `community-publisher`
+
+Runs only after the `share-demo` parent workflow has explicit consent, final verification PASS, rights confirmation, and a validated three-file export. It handles the contributor fork, fresh `community/<user>/<slug>` branch, scoped commit, push, and pull request against upstream `main`. It never merges, enables auto-merge, pushes to upstream `main`, or claims success without a real PR URL. Every contribution remains pending maintainer manual review and merge.
+
 ## Coordination contract
 
-The canonical complete sequence is declared in `architecture/plugin-graph.json` and mirrored by the `create-post` route. The parent workflow owns sequencing, user approvals, HOLD resolution, and the maximum-two targeted repair loop.
+The canonical complete sequence is declared in `architecture/plugin-graph.json` and mirrored by the `create-post` route. The `community-publisher` is intentionally outside that critical sequence and is reachable only through the optional `share-demo` route. Parent workflows own sequencing, user approvals, HOLD resolution, and their bounded repair/export rules.
 
 Validate all worker contracts with:
 
