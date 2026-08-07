@@ -49,6 +49,9 @@ jobs:
       - name: Run strict ecosystem doctor
         run: python3 scripts/ecosystem_doctor.py check
 
+      - name: Validate demo gallery
+        run: python3 scripts/demo_gallery.py check
+
       - name: Validate marketplace contract
         run: python3 scripts/validate_marketplace.py
 
@@ -61,6 +64,7 @@ jobs:
           python3 -m json.tool helper/quality-gates.json >/dev/null
           python3 -m json.tool helper/modules.json >/dev/null
           python3 -m json.tool research/capability-notes/gates.json >/dev/null
+          python3 -m json.tool schemas/demo.schema.json >/dev/null
           bash -n scripts/lint_artboard.sh
           bash -n scripts/setup.sh
 
