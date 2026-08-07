@@ -17,6 +17,8 @@ Approved story brief, brand colours if supplied, target Story House or candidate
 
 Use `catalog.json` and `scripts/info_stories.py check`. Keep semantic roles stable: background, surface, ink, body ink, muted, line, accent, and accent-deep. Verify actual foreground/background contrast. Never make a weak text pair acceptable by calling it decorative when it carries meaning.
 
+Apply the plugin-local palette default `creative-attractive-restrained`: prefer memorable, harmonious combinations with one clear accent and enough personality to feel deliberately designed. Avoid exaggerated saturation, unnecessary neon, or several equally loud accents unless the approved brief explicitly calls for them. Brand colours may lead the palette, but supporting tokens still need restraint and readable contrast.
+
 ## Outputs
 
 Return the selected house, complete token block, contrast observations, any brand overrides that need a new named token, and a pass/fail verdict to the parent workflow. Do not invent a freehand palette inside the artboard.
