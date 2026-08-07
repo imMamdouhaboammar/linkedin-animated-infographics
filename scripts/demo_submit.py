@@ -12,7 +12,6 @@ from pathlib import Path
 from typing import Any
 
 PUBLIC_FILES = {"demo.gif", "index.html", "demo.json"}
-CONTROL_FIELDS = {"slug", "publish_source_prompt", "html_path", "gif_path"}
 REQUIRED_METADATA = {
     "id",
     "title",
@@ -42,7 +41,7 @@ SECRET_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("Windows local absolute path", re.compile(r"[A-Za-z]:\\Users\\[^\\\s]+\\", re.IGNORECASE)),
 )
 REMOTE_EXECUTABLE = re.compile(
-    r"<script\b[^>]*\bsrc\s*=\s*['\"]https?://[^'\"]+['\"][^>]*>",
+    r"<script\b[^>]*\bsrc\s*=\s*['\"](?:https?:)?//[^'\"]+['\"][^>]*>",
     re.IGNORECASE,
 )
 
@@ -107,12 +106,25 @@ def _validate_author(value: Any) -> str:
     return author
 
 
+def _require_matching_author_url(author: str, value: Any) -> str:
+    author_url = str(value or "")
+    match = re.fullmatch(r"https://github\.com/([A-Za-z0-9-]+)/?", author_url)
+    if not match:
+        raise ValueError("author_url must be an https://github.com/<user> URL")
+    if match.group(1).casefold() != author.casefold():
+        raise ValueError("author_url must match author")
+    return author_url
+
+
 def _public_manifest(metadata: dict[str, Any]) -> dict[str, Any]:
     missing = sorted(field for field in REQUIRED_METADATA if field not in metadata)
     if missing:
         raise ValueError("missing publication metadata: " + ", ".join(missing))
     if metadata.get("rights_confirmed") is not True:
         raise ValueError("explicit rights confirmation is required before community publishing")
+
+    author = _validate_author(metadata.get("author"))
+    _require_matching_author_url(author, metadata.get("author_url"))
 
     manifest = {"schema_version": 1}
     for field in REQUIRED_METADATA:
@@ -156,6 +168,12 @@ def check_submission(demo_dir: Path, repo_root: Path | None = None) -> list[str]
     for field in REQUIRED_METADATA:
         if field not in manifest:
             errors.append(f"missing required public metadata field: {field}")
+    author = manifest.get("author")
+    if isinstance(author, str):
+        try:
+            _require_matching_author_url(author, manifest.get("author_url"))
+        except ValueError as exc:
+            errors.append(str(exc))
     for filename in ("demo.gif", "index.html"):
         path = demo_dir / filename
         if not path.is_file() or path.stat().st_size == 0:
@@ -177,6 +195,7 @@ def prepare_submission(build_dir: Path, stage_root: Path, metadata: dict[str, An
         raise ValueError("explicit rights confirmation is required before community publishing")
     slug = _validate_slug(metadata.get("slug"))
     author = _validate_author(metadata.get("author"))
+    _require_matching_author_url(author, metadata.get("author_url"))
 
     html_source = _resolve_build_file(build_dir, str(metadata.get("html_path", "post.html")), ".html")
     gif_source = _resolve_build_file(build_dir, str(metadata.get("gif_path", "post.gif")), ".gif")
