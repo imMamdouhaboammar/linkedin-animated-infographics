@@ -21,6 +21,8 @@ Use the preloaded caption and Info-stories rules. Check the truncation cut, sing
 
 At 350px feed width, name what lands and what becomes texture. Check frame 0, attribution, the declared visual anchor, density, and whether the structural fingerprint represents a real layout choice rather than a palette-only reskin.
 
+Check the plugin-local visual defaults explicitly. The palette should read as `creative-attractive-restrained`: memorable and intentional without exaggerated saturation, unnecessary neon, or several competing accents unless the brief requires them. The composition should be `center-first` unless `build/layout-spec.json` records a justified alignment exception for tables, UI mockups, code/terminal surfaces, timelines, Arabic/RTL flow, or reference-DNA fidelity. Flag arbitrary off-center drift as a must-fix issue when it weakens hierarchy.
+
 For UI Storyboard or Interface Cutaway, read `skills/info-stories/references/ui-mockup-rules.md`. Flag unreadable core controls, invented real-product features, unlabeled fictional data that could be mistaken for proof, excessive chrome, or interactions that do not serve the narrative.
 
 ## Motion and mascot
