@@ -1,8 +1,14 @@
 {
   "schema_version": 1,
   "artifacts": {
-    "build/design-study.json": {"producer": "design-study", "consumers": ["story-architect", "layout-composer"], "blocking": false},
-    "build/evidence.json": {"producer": "evidence-checker", "consumers": ["story-architect", "copy-compressor", "post-critic", "story-verifier"], "blocking": true},
+    "build/design-study.json": {"producer": "design-study", "consumers": ["creative-director", "story-architect", "layout-composer"], "blocking": false},
+    "build/evidence.json": {"producer": "evidence-checker", "consumers": ["creative-director", "story-architect", "copy-compressor", "post-critic", "story-verifier"], "blocking": true},
+    "build/creative-concepts.json": {
+      "producer": "creative-director",
+      "consumers": ["story-architect", "copy-compressor", "layout-composer", "motion-director"],
+      "blocking": true,
+      "required_fields": ["concept_name", "visual_hook", "copy_hook", "aha_mechanic", "story_shape", "recommended_visual_style", "recommended_story_archetype", "recommended_motion_behavior", "evidence_dependencies", "risk_notes", "why_it_earns_attention"]
+    },
     "build/story-brief.json": {"producer": "story-architect", "consumers": ["palette-curator", "copy-compressor", "layout-composer", "artboard-builder", "motion-director", "motion-engineer", "story-verifier"], "blocking": true},
     "build/palette-check.json": {"producer": "palette-curator", "consumers": ["layout-composer", "artboard-builder"], "blocking": true},
     "build/artboard-copy.json": {"producer": "copy-compressor", "consumers": ["layout-composer", "artboard-builder"], "blocking": true},
