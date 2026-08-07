@@ -2,6 +2,7 @@ import importlib.util
 import json
 import shutil
 import tempfile
+import tomllib
 import unittest
 from pathlib import Path
 
@@ -11,6 +12,13 @@ CODEX_MARKETPLACE = ROOT / ".agents" / "plugins" / "marketplace.json"
 CLAUDE_PLUGIN = ROOT / ".claude-plugin" / "plugin.json"
 COMPATIBILITY = ROOT / "compatibility" / "codex.json"
 VALIDATOR = ROOT / "scripts" / "validate_codex_plugin.py"
+CODEX_CONFIG = ROOT / ".codex" / "config.toml"
+CODEX_AGENT_DIR = ROOT / ".codex" / "agents"
+EXPECTED_CODEX_AGENTS = {
+    "explorer": "read-only",
+    "reviewer": "read-only",
+    "docs_researcher": "read-only",
+}
 
 
 def load_validator():
@@ -31,6 +39,7 @@ def copy_fixture(root: Path):
         "skills",
         "helper",
         "architecture",
+        "research",
         "compatibility",
         "submission",
     ):
@@ -162,6 +171,50 @@ class CodexPluginParityTests(unittest.TestCase):
             path.write_text(json.dumps(data))
             errors = module.validate_codex_plugin(root)
             self.assertTrue(any("compatibility" in error.lower() and "router" in error.lower() for error in errors), errors)
+
+
+class CodexRepositoryAgentTests(unittest.TestCase):
+    def require_validator(self):
+        module = load_validator()
+        self.assertIsNotNone(module, "missing scripts/validate_codex_plugin.py")
+        return module
+
+    def test_codex_config_uses_current_subagent_controls(self):
+        data = tomllib.loads(CODEX_CONFIG.read_text())
+        agents = data.get("agents", {})
+        self.assertIs(True, agents.get("enabled"))
+        self.assertEqual(6, agents.get("max_concurrent_threads_per_session"))
+        self.assertNotIn("max_threads", agents)
+
+    def test_project_scoped_codex_agents_are_real_and_narrow(self):
+        self.assertTrue(CODEX_AGENT_DIR.is_dir(), "missing .codex/agents")
+        for filename, expected_sandbox in EXPECTED_CODEX_AGENTS.items():
+            path = CODEX_AGENT_DIR / f"{filename}.toml"
+            self.assertTrue(path.is_file(), f"missing {path.relative_to(ROOT)}")
+            data = tomllib.loads(path.read_text())
+            self.assertEqual(filename, data.get("name"))
+            self.assertTrue(data.get("description"))
+            self.assertTrue(data.get("developer_instructions"))
+            self.assertEqual(expected_sandbox, data.get("sandbox_mode"))
+
+    def test_installed_plugin_does_not_depend_on_repo_codex_config(self):
+        manifest = json.loads(CODEX_PLUGIN.read_text())
+        text = json.dumps(manifest)
+        self.assertNotIn(".codex/config.toml", text)
+        self.assertNotIn(".codex/agents", text)
+
+    def test_validator_rejects_explicit_dead_agent_config_reference(self):
+        module = self.require_validator()
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            copy_fixture(root)
+            config_path = root / ".codex" / "config.toml"
+            config_path.write_text(
+                config_path.read_text()
+                + '\n[agents.broken]\ndescription = "broken fixture"\nconfig_file = "agents/not-real.toml"\n'
+            )
+            errors = module.validate_codex_plugin(root)
+            self.assertTrue(any("agent config" in error.lower() and "not-real.toml" in error for error in errors), errors)
 
 
 if __name__ == "__main__":
