@@ -1,4 +1,7 @@
+import importlib.util
 import json
+import shutil
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -7,6 +10,36 @@ SUBMISSION = ROOT / "submission" / "openai-plugin.json"
 CASES = ROOT / "submission" / "test-cases.json"
 README = ROOT / "submission" / "README.md"
 LEGAL = (ROOT / "PRIVACY.md", ROOT / "TERMS.md", ROOT / "SUPPORT.md")
+VALIDATOR = ROOT / "scripts" / "validate_codex_plugin.py"
+
+
+def load_validator():
+    spec = importlib.util.spec_from_file_location("validate_codex_plugin_submission", VALIDATOR)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def copy_fixture(root: Path):
+    for relative in (
+        ".claude-plugin",
+        ".codex-plugin",
+        ".agents",
+        ".codex",
+        "skills",
+        "agents",
+        "assets",
+        "helper",
+        "architecture",
+        "research",
+        "compatibility",
+        "submission",
+    ):
+        source = ROOT / relative
+        if source.exists():
+            shutil.copytree(source, root / relative)
+    for relative in ("PRIVACY.md", "TERMS.md", "SUPPORT.md"):
+        shutil.copy2(ROOT / relative, root / relative)
 
 
 class OpenAISubmissionContractTests(unittest.TestCase):
@@ -69,6 +102,27 @@ class OpenAISubmissionContractTests(unittest.TestCase):
         self.assertIn("five positive", text)
         self.assertIn("three negative", text)
         self.assertNotIn("already published", text)
+
+    def test_validator_rejects_wrong_reviewer_case_count(self):
+        module = load_validator()
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            copy_fixture(root)
+            path = root / "submission" / "test-cases.json"
+            data = json.loads(path.read_text())
+            data["positive"].pop()
+            path.write_text(json.dumps(data))
+            errors = module.validate_codex_plugin(root)
+            self.assertTrue(any("five positive" in error.lower() for error in errors), errors)
+
+    def test_validator_rejects_missing_public_policy_document(self):
+        module = load_validator()
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            copy_fixture(root)
+            (root / "PRIVACY.md").unlink()
+            errors = module.validate_codex_plugin(root)
+            self.assertTrue(any("privacy.md" in error.lower() for error in errors), errors)
 
 
 if __name__ == "__main__":
