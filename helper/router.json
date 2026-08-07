@@ -37,6 +37,12 @@
       "skills": ["info-stories", "caption", "artboard", "motion"],
       "agents": ["creative-director", "story-architect", "palette-curator", "copy-compressor", "layout-composer", "motion-director"],
       "capabilities": ["anti-slop", "creative-direction", "design-taste", "hook-design-copy", "structural-fingerprint"]
+    },
+    "share-demo": {
+      "workflow": "share-demo",
+      "skills": ["share-demo"],
+      "agents": ["community-publisher"],
+      "capabilities": ["verification-loop"]
     }
   },
   "conditions": {
