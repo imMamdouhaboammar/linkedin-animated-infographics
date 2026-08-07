@@ -19,6 +19,21 @@ def _load_json(path: Path, errors: list[str], label: str):
         return None
 
 
+def _safe_repo_path(root: Path, relative: str):
+    if not isinstance(relative, str) or not relative:
+        return None
+    supplied = Path(relative)
+    if supplied.is_absolute():
+        return None
+    root_resolved = root.resolve()
+    resolved = (root_resolved / supplied).resolve()
+    try:
+        resolved.relative_to(root_resolved)
+    except ValueError:
+        return None
+    return resolved
+
+
 def _inventory(root: Path) -> dict[str, set[str]]:
     return {
         "skills": {path.parent.name for path in (root / "skills").glob("*/SKILL.md")},
@@ -64,7 +79,10 @@ def _validate_tool_references(root: Path, tool: str, contract: dict, errors: lis
         if relative == "helper/modules.json":
             errors.append(f"active tool {tool} cannot use helper/modules.json as executable guidance")
             continue
-        target = root / relative
+        target = _safe_repo_path(root, relative)
+        if target is None:
+            errors.append(f"active tool {tool} has unsafe executable guidance path: {relative}")
+            continue
         if not target.is_file():
             errors.append(f"active tool {tool} has invalid executable guidance target: {relative}")
             continue
@@ -116,10 +134,12 @@ def validate_ecosystem_doctor(root: Path = ROOT) -> list[str]:
                 if contract.get(field) in (None, "", []):
                     errors.append(f"{module_type}:{name} missing {field}")
             relative = contract.get("path", "")
-            path = root / relative
-            if relative and not path.exists():
+            path = _safe_repo_path(root, relative)
+            if relative and path is None:
+                errors.append(f"unsafe module path for {module_type}:{name}: {relative}")
+            elif path is not None and not path.exists():
                 errors.append(f"{module_type}:{name} path does not exist: {relative}")
-            if path.exists():
+            if path is not None and path.exists():
                 text = path.read_text()
                 if len(text.strip()) < 80:
                     errors.append(f"{module_type}:{name} is too small to be a real active module")
@@ -127,7 +147,10 @@ def validate_ecosystem_doctor(root: Path = ROOT) -> list[str]:
                 if "todo: implement" in lowered or "placeholder module" in lowered:
                     errors.append(f"{module_type}:{name} is a placeholder module")
             for test_path in contract.get("tests", []):
-                if not (root / test_path).exists():
+                test = _safe_repo_path(root, test_path)
+                if test is None:
+                    errors.append(f"unsafe test path for {module_type}:{name}: {test_path}")
+                elif not test.exists():
                     errors.append(f"{module_type}:{name} test contract missing: {test_path}")
 
     routes = router_doc.get("routes", {})
@@ -226,7 +249,10 @@ def validate_ecosystem_doctor(root: Path = ROOT) -> list[str]:
         if undeclared:
             errors.append(f"research gate {gate_id} has undeclared owners: {', '.join(undeclared)}")
         for relative in gate.get("implementation_refs", []):
-            if not (root / relative).exists():
+            implementation = _safe_repo_path(root, relative)
+            if implementation is None:
+                errors.append(f"research gate {gate_id} has unsafe implementation ref: {relative}")
+            elif not implementation.exists():
                 errors.append(f"research gate {gate_id} has dead implementation reference: {relative}")
 
     helper_create_agents = routes.get("create-post", {}).get("agents", [])
