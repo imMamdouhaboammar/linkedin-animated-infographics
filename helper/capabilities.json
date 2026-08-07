@@ -9,7 +9,12 @@
     "design-taste": {
       "purpose": "Translate references and briefs into deliberate visual decisions instead of template copying.",
       "owners": ["design-study", "layout-composer", "artboard-builder", "post-critic"],
-      "research_gates": ["design-dials", "structural-originality", "reference-dna", "contrast-discipline"]
+      "research_gates": ["design-dials", "structural-originality", "reference-dna", "contrast-discipline"],
+      "local_defaults": {
+        "palette_character": "creative-attractive-restrained",
+        "composition_alignment": "center-first",
+        "alignment_exceptions": ["tables", "ui-mockups", "code-or-terminal", "timelines", "arabic-rtl", "reference-dna"]
+      }
     },
     "structural-fingerprint": {
       "purpose": "Require meaningful structural variation and reject palette-only reskins.",
