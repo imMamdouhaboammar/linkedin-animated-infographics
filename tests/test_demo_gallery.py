@@ -88,6 +88,23 @@ class DemoGalleryContractTests(unittest.TestCase):
         errors = validate_demo_dir(demo, self.root)
         self.assertTrue(any("unknown demo.json field" in error for error in errors), errors)
 
+    def test_directly_committed_demo_runs_export_safety_scan(self):
+        self.require_module()
+        demo = self.make_demo()
+        (demo / "index.html").write_text(
+            '<script src="//cdn.example.com/runtime.js"></script>'
+            '<img src="https://example.com/frame.png?X-Amz-Signature=placeholder">'
+        )
+        errors = validate_demo_dir(demo, self.root)
+        self.assertTrue(any("remote executable resource" in error for error in errors), errors)
+        self.assertTrue(any("signed URL" in error or "AWS signed URL" in error for error in errors), errors)
+
+    def test_manifest_text_runs_export_safety_scan(self):
+        self.require_module()
+        demo = self.make_demo(notes="Authorization: Bearer placeholder-credential-value")
+        errors = validate_demo_dir(demo, self.root)
+        self.assertTrue(any("bearer credential" in error for error in errors), errors)
+
     def test_catalog_order_is_deterministic(self):
         self.require_module()
         self.make_demo("demos/community/zeta/z-demo", id="zeta-z-demo", author="zeta", author_url="https://github.com/zeta")
