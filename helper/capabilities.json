@@ -6,6 +6,12 @@
       "owners": ["copy-compressor", "caption-writer", "post-critic"],
       "research_gates": ["prose-specificity", "voice-preservation"]
     },
+    "creative-direction": {
+      "purpose": "Generate evidence-safe concept directions with visual hooks, copy hooks, and useful aha mechanics before story architecture hardens.",
+      "owners": ["creative-director", "story-architect", "layout-composer", "post-critic"],
+      "local_native": true,
+      "research_gates": []
+    },
     "design-taste": {
       "purpose": "Translate references and briefs into deliberate visual decisions instead of template copying.",
       "owners": ["design-study", "layout-composer", "artboard-builder", "post-critic"],
@@ -16,20 +22,16 @@
         "alignment_exceptions": ["tables", "ui-mockups", "code-or-terminal", "timelines", "arabic-rtl", "reference-dna"]
       }
     },
-    "structural-fingerprint": {
-      "purpose": "Require meaningful structural variation and reject palette-only reskins.",
-      "owners": ["layout-composer", "artboard-builder", "post-critic"],
-      "research_gates": ["structural-originality", "reference-dna"]
-    },
     "evidence": {
       "purpose": "Keep factual claims, proof, logos, UI states, and product behavior tied to supplied evidence.",
       "owners": ["evidence-checker", "copy-compressor", "story-verifier"],
       "research_gates": ["evidence-traceability", "voice-preservation"]
     },
-    "verification-loop": {
-      "purpose": "Produce deterministic render evidence, adversarial review, and bounded independent verification before delivery.",
-      "owners": ["render-qa", "post-critic", "story-verifier"],
-      "research_gates": ["bounded-verification", "evidence-traceability"]
+    "hook-design-copy": {
+      "purpose": "Make attention-bearing infographic copy hook-led while keeping literal labels literal and preserving evidence safety.",
+      "owners": ["creative-director", "copy-compressor", "caption-writer", "post-critic"],
+      "local_native": true,
+      "research_gates": []
     },
     "mascot-identity": {
       "purpose": "Preserve the exact supplied official mascot identity through inspection, animation, and verification.",
@@ -37,10 +39,20 @@
       "local_native": true,
       "research_gates": []
     },
+    "structural-fingerprint": {
+      "purpose": "Require meaningful structural variation and reject palette-only reskins.",
+      "owners": ["layout-composer", "artboard-builder", "post-critic"],
+      "research_gates": ["structural-originality", "reference-dna"]
+    },
     "ui-mockup-fidelity": {
       "purpose": "Keep product UI mockups legible and evidence-backed, and distinguish documented UI from concept UI.",
       "owners": ["evidence-checker", "layout-composer", "artboard-builder", "post-critic"],
       "research_gates": ["structural-originality", "contrast-discipline", "evidence-traceability"]
+    },
+    "verification-loop": {
+      "purpose": "Produce deterministic render evidence, adversarial review, and bounded independent verification before delivery.",
+      "owners": ["render-qa", "post-critic", "story-verifier"],
+      "research_gates": ["bounded-verification", "evidence-traceability"]
     }
   }
 }
