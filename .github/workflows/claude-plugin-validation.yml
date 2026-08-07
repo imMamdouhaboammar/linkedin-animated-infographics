@@ -36,15 +36,30 @@ jobs:
       - name: Validate Info-stories registry
         run: python3 scripts/info_stories.py check
 
+      - name: Validate ecosystem router
+        run: python3 scripts/ecosystem_router.py check
+
+      - name: Validate research gates
+        run: python3 scripts/research_gates.py check
+
       - name: Validate executable plugin graph
         run: python3 scripts/plugin_graph.py check
+
+      - name: Run strict ecosystem doctor
+        run: python3 scripts/ecosystem_doctor.py check
 
       - name: Validate marketplace contract
         run: python3 scripts/validate_marketplace.py
 
-      - name: Validate hook and shell syntax
+      - name: Validate hook, JSON, and shell syntax
         run: |
           python3 -m json.tool hooks/hooks.json >/dev/null
+          python3 -m json.tool helper/router.json >/dev/null
+          python3 -m json.tool helper/capabilities.json >/dev/null
+          python3 -m json.tool helper/artifacts.json >/dev/null
+          python3 -m json.tool helper/quality-gates.json >/dev/null
+          python3 -m json.tool helper/modules.json >/dev/null
+          python3 -m json.tool research/capability-notes/gates.json >/dev/null
           bash -n scripts/lint_artboard.sh
           bash -n scripts/setup.sh
 
