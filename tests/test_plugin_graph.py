@@ -36,6 +36,13 @@ class PluginGraphTests(unittest.TestCase):
         }
         self.assertTrue(required.issubset(sequence))
 
+    def test_conditional_mascot_edge_is_explicit(self):
+        edge = json.loads(GRAPH.read_text())["workflows"]["new-post"]["conditional"]["mascot"]
+        self.assertEqual("mascot-animator", edge["agent"])
+        self.assertEqual("exact-svg", edge["asset_gate"])
+        self.assertEqual("artboard-builder", edge["after"])
+        self.assertEqual("motion-engineer", edge["before"])
+
     def test_knowledge_workers_preload_required_skills(self):
         graph = json.loads(GRAPH.read_text())
         for agent, contract in graph["agents"].items():
@@ -48,9 +55,13 @@ class PluginGraphTests(unittest.TestCase):
 
     def test_capability_families_have_shipping_owners(self):
         graph = json.loads(GRAPH.read_text())
-        expected = {"anti-slop", "design-taste", "structural-fingerprint", "evidence", "verification-loop"}
+        expected = {
+            "anti-slop", "design-taste", "structural-fingerprint", "evidence",
+            "verification-loop", "mascot-identity", "ui-mockup-fidelity",
+        }
         self.assertEqual(expected, set(graph["capabilities"]))
-        shipping = set(graph["workflows"]["new-post"]["sequence"])
+        workflow = graph["workflows"]["new-post"]
+        shipping = set(workflow["sequence"]) | {edge["agent"] for edge in workflow.get("conditional", {}).values()}
         for capability, owners in graph["capabilities"].items():
             self.assertTrue(shipping.intersection(owners), f"{capability} has no shipping owner")
 
