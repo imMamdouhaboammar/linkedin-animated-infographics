@@ -62,6 +62,10 @@ being pointed at".
    stripped of the caption, and the footer is the only thing that survives.
 5. Anything load-bearing stays at or above 22px in artboard units, which is about 7px at
    LinkedIn's 350px feed width.
+6. Text must reach **4.5:1 contrast** and use **500 weight or heavier**. Use each house's
+   `--accent-deep` for accent-coloured text, never the raw accent token. See
+   `references/design-systems.md#contrast-floor-every-house` for the calculation and token
+   rules.
 
 ## Templates
 
