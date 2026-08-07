@@ -20,6 +20,21 @@ def _load(path: Path, errors: list[str], label: str):
         return None
 
 
+def _safe_repo_path(root: Path, relative: str):
+    if not isinstance(relative, str) or not relative:
+        return None
+    supplied = Path(relative)
+    if supplied.is_absolute():
+        return None
+    root_resolved = root.resolve()
+    resolved = (root_resolved / supplied).resolve()
+    try:
+        resolved.relative_to(root_resolved)
+    except ValueError:
+        return None
+    return resolved
+
+
 def load_research_gates(root: Path = ROOT) -> dict:
     base = root / "research" / "capability-notes"
     return {
@@ -78,7 +93,10 @@ def validate_research_gates(root: Path = ROOT) -> list[str]:
         if owners and not owners.intersection(shipping_agents):
             errors.append(f"research gate {gate_id} has no owner on the shipping path")
         for relative in gate.get("implementation_refs", []):
-            if not (root / relative).exists():
+            implementation = _safe_repo_path(root, relative)
+            if implementation is None:
+                errors.append(f"research gate {gate_id} has unsafe implementation ref: {relative}")
+            elif not implementation.exists():
                 errors.append(f"research gate {gate_id} implementation ref missing: {relative}")
         intents = gate.get("applies_to_intents", [])
         if not intents:
