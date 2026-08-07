@@ -91,7 +91,7 @@ class ResearchGateTests(unittest.TestCase):
                 failures.append(f"{gate_id}: no shipping owner")
         self.assertEqual([], failures)
 
-    def test_helper_capabilities_reference_known_research_gates(self):
+    def test_helper_capabilities_reference_known_research_gates_or_are_local_native(self):
         self.assertTrue(GATES.exists())
         known = set(json.loads(GATES.read_text())["gates"])
         capabilities = json.loads(CAPABILITIES.read_text())["capabilities"]
@@ -99,8 +99,11 @@ class ResearchGateTests(unittest.TestCase):
         referenced = set()
         for capability, contract in capabilities.items():
             gates = contract.get("research_gates", [])
-            if not gates:
-                failures.append(f"{capability}: no research_gates")
+            local_native = contract.get("local_native") is True
+            if not gates and not local_native:
+                failures.append(f"{capability}: neither research_gates nor local_native")
+            if gates and local_native:
+                failures.append(f"{capability}: cannot be both research-derived and local_native")
             unknown = sorted(set(gates) - known)
             if unknown:
                 failures.append(f"{capability}: unknown gates {unknown}")
