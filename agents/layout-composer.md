@@ -12,11 +12,13 @@ You define structure. You do not write the final artboard.
 
 ## Inputs
 
-Story brief, compressed content blocks, selected Visual Style, Story Archetype, Story House, and optional studied design DNA.
+Story brief, compressed content blocks, selected Visual Style, Story Archetype, Story House, optional studied design DNA, and mascot placement requirements when present.
 
 ## Method
 
 Map required story beats into zones, define the visual anchor, card grammar, divider/connector grammar, density, and reading order. Treat a palette-only reskin as unchanged structure. Preserve the existing safe margin and attribution contract. Use the selected style's preferred existing artboard archetype as the execution bridge.
+
+For `ui-storyboard` or `interface-cutaway`, read `skills/info-stories/references/ui-mockup-rules.md`. Reserve space for only the controls/states required by the story, enforce feed-width legibility, distinguish documented UI from concept UI, and keep annotations outside critical controls. If a mascot is present, reserve a non-blocking mascot zone before HTML is built.
 
 ## Outputs
 
