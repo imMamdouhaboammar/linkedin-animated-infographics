@@ -6,6 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MODULE_TYPES = ("skills", "agents", "tools")
 CRITICAL_SHIPPING = ("creative-director", "post-critic", "story-verifier")
+PUBLIC_SCRIPT_TOOLS = ("demo_gallery", "demo_submit")
 
 
 def _load_json(path: Path, errors: list[str], label: str):
@@ -35,10 +36,14 @@ def _safe_repo_path(root: Path, relative: str):
 
 
 def _inventory(root: Path) -> dict[str, set[str]]:
+    tools = {path.stem for path in (root / "tools").glob("*.py")}
+    for name in PUBLIC_SCRIPT_TOOLS:
+        if (root / "scripts" / f"{name}.py").is_file():
+            tools.add(name)
     return {
         "skills": {path.parent.name for path in (root / "skills").glob("*/SKILL.md")},
         "agents": {path.stem for path in (root / "agents").glob("*.md")},
-        "tools": {path.stem for path in (root / "tools").glob("*.py")},
+        "tools": tools,
     }
 
 
@@ -97,6 +102,15 @@ def _validate_tool_references(root: Path, tool: str, contract: dict, errors: lis
             errors.append(f"active tool {tool} is not referenced by declared executable guidance: {relative}")
     if not evidence_found:
         errors.append(f"active tool {tool} is not referenced by executable guidance")
+
+
+def _parent_participants(routes: dict) -> set[str]:
+    return {
+        f"parent:{workflow}"
+        for route in routes.values()
+        for workflow in [route.get("workflow")]
+        if workflow not in (None, "focused")
+    }
 
 
 def validate_ecosystem_doctor(root: Path = ROOT) -> list[str]:
@@ -223,7 +237,7 @@ def validate_ecosystem_doctor(root: Path = ROOT) -> list[str]:
         if owners != graph_owners:
             errors.append(f"capability {capability} owner drift between helper and plugin graph")
 
-    participants = manifest_agent_names | {"parent:new-post"}
+    participants = manifest_agent_names | _parent_participants(routes)
     for artifact, contract in artifacts_doc.get("artifacts", {}).items():
         producer = contract.get("producer")
         if producer not in participants:
