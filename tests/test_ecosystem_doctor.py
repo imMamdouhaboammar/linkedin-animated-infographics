@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "helper" / "modules.json"
 SCRIPT = ROOT / "scripts" / "ecosystem_doctor.py"
+PUBLIC_SCRIPT_TOOLS = {"demo_gallery", "demo_submit"}
 
 
 def load_module():
@@ -34,10 +35,13 @@ class EcosystemDoctorTests(unittest.TestCase):
     def test_manifest_matches_public_filesystem_inventory(self):
         self.assertTrue(MANIFEST.exists())
         modules = json.loads(MANIFEST.read_text())["modules"]
+        public_scripts = {
+            name for name in PUBLIC_SCRIPT_TOOLS if (ROOT / "scripts" / f"{name}.py").is_file()
+        }
         expected = {
             "skills": {path.parent.name for path in (ROOT / "skills").glob("*/SKILL.md")},
             "agents": {path.stem for path in (ROOT / "agents").glob("*.md")},
-            "tools": {path.stem for path in (ROOT / "tools").glob("*.py")},
+            "tools": {path.stem for path in (ROOT / "tools").glob("*.py")} | public_scripts,
         }
         self.assertEqual(expected["skills"], set(modules["skills"]))
         self.assertEqual(expected["agents"], set(modules["agents"]))
