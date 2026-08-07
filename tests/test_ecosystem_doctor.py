@@ -98,6 +98,54 @@ class EcosystemDoctorTests(unittest.TestCase):
                 errors,
             )
 
+    def test_doctor_rejects_module_path_that_escapes_repository(self):
+        module = load_module()
+        self.assertIsNotNone(module)
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            root.mkdir()
+            copy_repo_fixture(root)
+            outside = root.parent / "outside.md"
+            outside.write_text("outside repository file that must never satisfy a module contract")
+            manifest_path = root / "helper" / "modules.json"
+            manifest = json.loads(manifest_path.read_text())
+            manifest["modules"]["skills"]["post"]["path"] = "../outside.md"
+            manifest_path.write_text(json.dumps(manifest))
+            errors = module.validate_ecosystem_doctor(root)
+            self.assertTrue(any("unsafe module path" in error.lower() and "post" in error for error in errors), errors)
+
+    def test_doctor_rejects_test_path_that_escapes_repository(self):
+        module = load_module()
+        self.assertIsNotNone(module)
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            root.mkdir()
+            copy_repo_fixture(root)
+            outside = root.parent / "outside_test.py"
+            outside.write_text("# outside test")
+            manifest_path = root / "helper" / "modules.json"
+            manifest = json.loads(manifest_path.read_text())
+            manifest["modules"]["agents"]["creative-director"]["tests"] = ["../outside_test.py"]
+            manifest_path.write_text(json.dumps(manifest))
+            errors = module.validate_ecosystem_doctor(root)
+            self.assertTrue(any("unsafe test path" in error.lower() and "creative-director" in error for error in errors), errors)
+
+    def test_doctor_rejects_tool_guidance_path_that_escapes_repository(self):
+        module = load_module()
+        self.assertIsNotNone(module)
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            root.mkdir()
+            copy_repo_fixture(root)
+            outside = root.parent / "outside-guide.md"
+            outside.write_text("route_request.py is mentioned outside the repository")
+            manifest_path = root / "helper" / "modules.json"
+            manifest = json.loads(manifest_path.read_text())
+            manifest["modules"]["tools"]["route_request"]["reachable_from"] = ["../outside-guide.md"]
+            manifest_path.write_text(json.dumps(manifest))
+            errors = module.validate_ecosystem_doctor(root)
+            self.assertTrue(any("unsafe executable guidance path" in error.lower() and "route_request" in error for error in errors), errors)
+
     def test_doctor_rejects_unreachable_agent(self):
         module = load_module()
         self.assertIsNotNone(module)
