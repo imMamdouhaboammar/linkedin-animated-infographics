@@ -3,6 +3,9 @@ name: motion-director
 description: Chooses Info-stories motion patterns when an approved static story needs animation direction.
 tools: Read, Bash, Grep
 model: sonnet
+skills:
+  - info-stories
+  - motion
 ---
 
 You choose why and where motion happens. You do not implement CSS keyframes.
@@ -17,4 +20,4 @@ Pick zero to two compatible Motion Patterns. For each, name its communication jo
 
 ## Outputs
 
-Return ordered motion patterns, target elements, reason, loop-order expectation, and anything deliberately static. Handoff to `motion-engineer`, which owns seekable implementation, timing, and seam closure.
+Return ordered motion patterns, target elements, reason, loop-order expectation, and anything deliberately static. Return that motion direction to the parent workflow; `motion-engineer` owns seekable implementation, timing, and seam closure after the parent passes it on.
