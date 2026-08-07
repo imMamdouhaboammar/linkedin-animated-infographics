@@ -22,10 +22,12 @@ def _load_json(path: Path, errors=None):
 
 def load_ecosystem(root: Path = ROOT) -> dict:
     helper = root / "helper"
+    research = root / "research" / "capability-notes"
     return {
         "router": json.loads((helper / "router.json").read_text()),
         "capabilities": json.loads((helper / "capabilities.json").read_text()),
         "artifacts": json.loads((helper / "artifacts.json").read_text()),
+        "research_gates": json.loads((research / "gates.json").read_text()),
     }
 
 
@@ -49,12 +51,14 @@ def validate_ecosystem(root: Path = ROOT) -> list[str]:
     router = _load_json(helper / "router.json", errors)
     capabilities_doc = _load_json(helper / "capabilities.json", errors)
     artifacts_doc = _load_json(helper / "artifacts.json", errors)
-    if not router or not capabilities_doc or not artifacts_doc:
+    research_gates_doc = _load_json(root / "research" / "capability-notes" / "gates.json", errors)
+    if not router or not capabilities_doc or not artifacts_doc or not research_gates_doc:
         return errors
 
     skills = {path.parent.name for path in (root / "skills").glob("*/SKILL.md")}
     agents = {path.stem for path in (root / "agents").glob("*.md")}
     capabilities = capabilities_doc.get("capabilities", {})
+    research_gates = research_gates_doc.get("gates", {})
 
     routes = router.get("routes", {})
     if router.get("default_intent") not in routes:
@@ -85,6 +89,7 @@ def validate_ecosystem(root: Path = ROOT) -> list[str]:
             if capability not in capabilities:
                 errors.append(f"condition {condition} references missing capability {capability}")
 
+    referenced_research_gates = set()
     for capability, contract in capabilities.items():
         owners = contract.get("owners", [])
         if not owners:
@@ -92,6 +97,20 @@ def validate_ecosystem(root: Path = ROOT) -> list[str]:
         unknown = sorted(set(owners) - agents)
         if unknown:
             errors.append(f"capability {capability} has unknown owners: {', '.join(unknown)}")
+        gate_ids = contract.get("research_gates", [])
+        local_native = contract.get("local_native") is True
+        if not gate_ids and not local_native:
+            errors.append(f"capability {capability} has neither research_gates nor local_native")
+        if gate_ids and local_native:
+            errors.append(f"capability {capability} cannot be both research-derived and local_native")
+        unknown_gates = sorted(set(gate_ids) - set(research_gates))
+        if unknown_gates:
+            errors.append(f"capability {capability} references unknown research gates: {', '.join(unknown_gates)}")
+        referenced_research_gates.update(gate_ids)
+
+    unreferenced = sorted(set(research_gates) - referenced_research_gates)
+    if unreferenced:
+        errors.append(f"research gates not connected to helper capabilities: {', '.join(unreferenced)}")
 
     allowed_participants = agents | {"parent:new-post"}
     for artifact, contract in artifacts_doc.get("artifacts", {}).items():
@@ -151,6 +170,32 @@ def _infer_intent(request: dict, router: dict) -> str:
     return router.get("default_intent", "create-post")
 
 
+def _research_gates_for(capability_ids, intent: str, request: dict, ecosystem: dict) -> list[str]:
+    capabilities = ecosystem["capabilities"].get("capabilities", {})
+    gates = ecosystem["research_gates"].get("gates", {})
+    candidates = []
+    for capability_id in capability_ids:
+        candidates.extend(capabilities.get(capability_id, {}).get("research_gates", []))
+    result = []
+    for gate_id in _dedupe(candidates):
+        gate = gates.get(gate_id, {})
+        intents = gate.get("applies_to_intents", [])
+        if intents and intent not in intents:
+            continue
+        requirement = gate.get("requires")
+        if requirement and not request.get(requirement):
+            continue
+        result.append(gate_id)
+    return result
+
+
+def _finalize_route(result: dict, request: dict, ecosystem: dict) -> dict:
+    for key in ("skills", "agents", "conditional_agents", "capabilities", "asset_gates"):
+        result[key] = _dedupe(result[key])
+    result["research_gates"] = _research_gates_for(result["capabilities"], result["intent"], request, ecosystem)
+    return result
+
+
 def route_request(request: dict, root: Path = ROOT) -> dict:
     ecosystem = load_ecosystem(root)
     router = ecosystem["router"]
@@ -169,6 +214,7 @@ def route_request(request: dict, root: Path = ROOT) -> dict:
         "conditional_agents": [],
         "capabilities": list(base.get("capabilities", [])),
         "asset_gates": [],
+        "research_gates": [],
     }
 
     language = (request.get("language") or "").lower()
@@ -190,31 +236,26 @@ def route_request(request: dict, root: Path = ROOT) -> dict:
     if official_mascot:
         condition = router["conditions"]["official_mascot"]
         result["asset_gates"].append(condition["asset_gate"])
+        result["capabilities"].extend(condition.get("adds_capabilities", []))
         svg_path = mascot.get("svg_path")
         if not svg_path or not Path(svg_path).exists():
             result["status"] = "HOLD"
             result["reason"] = "exact SVG required for named or official mascot"
-            return result
+            return _finalize_route(result, request, ecosystem)
         result["skills"].extend(condition.get("adds_skills", []))
         result["conditional_agents"].extend(condition.get("adds_agents", []))
-        result["capabilities"].extend(condition.get("adds_capabilities", []))
 
     if intent == "mascot-animation" and not mascot.get("svg_path"):
         result["status"] = "HOLD"
         result["reason"] = "exact SVG required for mascot animation"
         result["asset_gates"].append("exact-svg")
-        return result
+        return _finalize_route(result, request, ecosystem)
 
     if (request.get("output") or "").lower() in ("static", "png", "still"):
         result["agents"] = [agent for agent in result["agents"] if agent not in ("motion-director", "motion-engineer")]
         result["skills"] = [skill for skill in result["skills"] if skill != "motion"]
 
-    result["skills"] = _dedupe(result["skills"])
-    result["agents"] = _dedupe(result["agents"])
-    result["conditional_agents"] = _dedupe(result["conditional_agents"])
-    result["capabilities"] = _dedupe(result["capabilities"])
-    result["asset_gates"] = _dedupe(result["asset_gates"])
-    return result
+    return _finalize_route(result, request, ecosystem)
 
 
 def explain_route(route: dict) -> str:
@@ -226,6 +267,7 @@ def explain_route(route: dict) -> str:
         f"agents: {', '.join(route['agents']) or 'none'}",
         f"conditional agents: {', '.join(route['conditional_agents']) or 'none'}",
         f"capabilities: {', '.join(route['capabilities']) or 'none'}",
+        f"research gates: {', '.join(route['research_gates']) or 'none'}",
         f"asset gates: {', '.join(route['asset_gates']) or 'none'}",
     ]
     if route.get("reason"):
