@@ -69,6 +69,13 @@ python3 tools/composition_check.py --style signal-sheet \
 
 # Detect named copy-pattern failures without guessing authorship
 python3 tools/copy_slop_check.py "copy to inspect"
+
+# Check one semantic colour pair against a contrast floor
+python3 tools/contrast_check.py --house ember-paper --fg accent_deep --bg bg --minimum 4.5
+
+# Reject a palette-only reskin when a previous structural fingerprint exists
+python3 tools/fingerprint_check.py --current build/fingerprint.json \
+  --previous build/previous-fingerprint.json --min-changes 2
 ```
 
 Tracked chooser: `assets/info-stories-palettes.html`. Acceptance examples: `examples/info-stories/`.
