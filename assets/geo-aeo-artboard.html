@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>GEO / AEO — answer-ready pages</title>
+<style>
+:root{
+  --loop: 6400ms;
+
+  --bg:#FFFFFF;
+  --ink:#1F2430;
+  --ink2:#4A5361;
+  --muted:#5E6773;
+  --line:#E6EAF0;
+  --line2:#EFF2F6;
+  --skel:#E9ECF2;
+  --shell:#F7F8FB;
+
+  --coral:#F26A5B;      --coral-deep:#B8402F;  --coral-tint:#FFF2EE;
+  --cobalt:#4E6BFF;     --cobalt-deep:#3550E0; --cobalt-tint:#EEF2FF;
+  --mint:#37B88A;       --mint-deep:#14795A;   --mint-tint:#ECFAF5;
+
+  --display:"Lora","Iowan Old Style",Georgia,serif;
+  --sans:"Poppins","Segoe UI",-apple-system,"Helvetica Neue",Arial,sans-serif;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:#DDE1E7}
+body{display:flex;align-items:flex-start;justify-content:center}
+
+#artboard{
+  position:relative;
+  width:1080px;height:1350px;
+  background:var(--bg);
+  font-family:var(--sans);
+  color:var(--ink);
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ─────────────── 1. header ─────────────── */
+.head{position:absolute;top:56px;left:72px;width:936px;text-align:center}
+
+.eyebrow{
+  font-size:17px;font-weight:600;letter-spacing:.19em;
+  color:var(--coral-deep);text-transform:uppercase;
+  display:flex;align-items:center;justify-content:center;gap:14px;
+}
+.eyebrow i{display:block;width:6px;height:6px;border-radius:50%;background:var(--coral);}
+
+.h1{
+  margin-top:24px;
+  font-family:var(--display);font-weight:700;
+  font-size:75px;line-height:1.07;letter-spacing:-.018em;
+  color:var(--ink);
+}
+.h1 .em{color:var(--coral-deep);}
+
+.sub{
+  margin-top:22px;
+  font-size:28px;font-weight:400;line-height:1.35;color:var(--muted);
+  display:flex;align-items:center;justify-content:center;gap:16px;
+}
+.sub b{font-weight:500;color:var(--ink);}
+.sub s{display:block;width:5px;height:5px;border-radius:50%;background:var(--line);text-decoration:none}
+
+.rule{position:absolute;top:344px;left:72px;width:936px;height:1px;background:var(--line)}
+
+.seclabel{
+  position:absolute;top:372px;left:72px;width:936px;text-align:center;
+  font-size:17px;font-weight:600;letter-spacing:.17em;text-transform:uppercase;color:var(--muted);
+}
+
+/* ─────────────── 2. hero panel ─────────────── */
+.panel{
+  position:absolute;left:72px;top:424px;width:936px;height:700px;
+  background:#fff;border:1px solid var(--line);border-radius:20px;
+  padding:26px 30px 22px;
+  display:flex;flex-direction:column;
+}
+
+/* query row */
+.query{
+  height:62px;flex:none;
+  background:var(--shell);border:1px solid var(--line);border-radius:13px;
+  display:flex;align-items:center;gap:14px;padding:0 16px 0 18px;
+}
+.query .glyph{width:24px;height:24px;flex:none;color:var(--muted)}
+.query .qtxt{font-size:24px;font-weight:500;color:var(--ink);letter-spacing:-.005em}
+.query .tag{
+  margin-left:auto;flex:none;
+  font-size:13px;font-weight:600;letter-spacing:.13em;color:#8A929E;
+  background:#EDEFF4;border-radius:6px;padding:6px 10px;
+}
+
+/* zone rows */
+.zones{margin-top:15px;display:flex;flex-direction:column;gap:9px}
+
+.zone{
+  position:relative;
+  display:flex;gap:22px;
+  padding:12px 16px 12px 18px;
+  border-radius:14px;
+  background:#fff;
+}
+.zbg{position:absolute;inset:0;border-radius:14px;background:var(--zt);opacity:0}
+.zbar{position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:3px;background:var(--line)}
+
+.zmain{position:relative;width:592px;flex:none}
+.znote::before{content:"";position:absolute;left:-15px;top:50%;width:15px;height:1px;background:var(--line)}
+.znote{position:relative;width:252px;flex:none;
+  border-radius:12px;background:var(--shell);border:1px solid var(--line);
+  padding:13px 14px;
+  display:flex;flex-direction:column;justify-content:center;
+}
+
+.kick{display:flex;align-items:center;gap:9px;height:22px}
+.kick .num{
+  font-size:12px;font-weight:700;letter-spacing:.06em;color:#fff;background:var(--zd);
+  border-radius:5px;padding:4px 7px;line-height:1;
+}
+.kick .lbl{font-size:16px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--zd)}
+
+.zh{margin-top:11px;font-family:var(--display);font-weight:600;font-size:24px;line-height:1.32;color:var(--ink);letter-spacing:-.005em}
+.zp{margin-top:8px;font-size:18px;line-height:1.52;color:var(--ink2)}
+
+/* structure mini-rows (zone 2) */
+.srows{margin-top:10px;display:flex;flex-direction:column;gap:7px}
+.srow{display:flex;align-items:center;gap:12px;height:35px;
+  border:1px solid var(--line);border-radius:9px;padding:0 12px;background:#fff}
+.srow .k{font-size:15px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--zd);width:104px;flex:none}
+.srow .v{font-size:17px;color:var(--ink2)}
+.srow .v em{font-style:normal;color:#AAB2BE;padding:0 6px}
+
+/* proof chips (zone 3) */
+.proof{margin-top:11px;display:flex;flex-wrap:wrap;gap:8px}
+.pchip{display:flex;align-items:center;gap:8px;height:36px;padding:0 13px;
+  border:1px solid var(--mint);border-radius:9px;background:var(--mint-tint);
+  font-size:16px;font-weight:500;color:#125E47}
+.pchip .dot{width:7px;height:7px;border-radius:50%;background:var(--mint-deep);flex:none}
+
+/* reviewer note */
+.nhead{display:flex;align-items:center;gap:10px}
+.tile{width:48px;height:48px;flex:none;border-radius:11px;background:#fff;border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center}
+.tile svg{width:32px;height:32px;display:block}
+.nname{font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--zd);line-height:1.25}
+.nq{margin-top:10px;font-size:17px;line-height:1.4;color:var(--ink2)}
+
+/* skeleton (weak state) */
+.skel{position:absolute;left:-6px;right:-6px;top:34px;bottom:-2px;background:#fff;border-radius:10px;
+  display:flex;flex-direction:column;gap:11px;padding:8px 6px 6px;
+  clip-path:inset(0 0 0 100%)}
+.skel b{display:block;height:15px;border-radius:5px;background:var(--skel)}
+.skel b.t{height:13px;width:32%;background:#DFE3EA}
+.skel b.w1{width:96%} .skel b.w2{width:88%} .skel b.w3{width:63%} .skel b.w4{width:78%}
+
+/* verdict row */
+.verdict{margin-top:auto;padding-top:16px;border-top:1px solid var(--line2);
+  display:flex;align-items:center;justify-content:center;gap:10px}
+.vlead{font-size:14px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#9AA3AF;margin-right:6px}
+.vchip{display:flex;align-items:center;gap:8px;height:37px;padding:0 15px;border-radius:9px;
+  font-size:17px;font-weight:500;
+  border:1px solid var(--line);background:var(--shell);color:#98A0AC}
+.vchip svg{width:15px;height:15px;display:block}
+
+/* ─────────────── 3. bottom ─────────────── */
+.take{
+  position:absolute;top:1162px;left:72px;width:936px;text-align:center;
+  font-family:var(--display);font-weight:700;font-size:37px;line-height:1.2;letter-spacing:-.012em;color:var(--ink);
+}
+.take u{text-decoration:none;color:var(--coral-deep)}
+.foot{
+  position:absolute;top:1230px;left:72px;width:936px;text-align:center;
+  font-size:18px;line-height:1.5;color:var(--muted);
+}
+.sig{
+  position:absolute;top:1278px;left:72px;width:936px;text-align:center;
+  font-size:14px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:#A3AAB5;
+}
+
+/* ══════════════ MOTION ══════════════
+   one clock: var(--loop) = 6400ms, captured at 12.5 fps = 80 frames
+     0  – 15%   answer-ready state. the GIF poster frame sits here
+    15  – 22%   the page drops to a vague, hard-to-quote state
+    22  – 38%   zone 1 rebuilt   (Claude Code reacts, Quotable lights)
+    38  – 54%   zone 2 rebuilt   (Codex reacts, Scannable lights)
+    54  – 70%   zone 3 rebuilt   (GitHub Copilot reacts, Citable lights)
+    70  –100%   answer-ready state holds. loop closes on itself
+   ═════════════════════════════════════ */
+
+.skel{animation-duration:var(--loop);animation-iteration-count:infinite;animation-timing-function:ease-in-out}
+#s1{animation-name:skel1} #s2{animation-name:skel2} #s3{animation-name:skel3}
+
+@keyframes skel1{
+  0%    {clip-path:inset(0 0 0 100%)}
+  14.9% {clip-path:inset(0 0 0 100%)}
+  15%   {clip-path:inset(0 0 0 0%)}
+  22%   {clip-path:inset(0 0 0 0%)}
+  27.5% {clip-path:inset(0 0 0 100%)}
+  100%  {clip-path:inset(0 0 0 100%)}
+}
+@keyframes skel2{
+  0%    {clip-path:inset(0 0 0 100%)}
+  14.9% {clip-path:inset(0 0 0 100%)}
+  15%   {clip-path:inset(0 0 0 0%)}
+  38%   {clip-path:inset(0 0 0 0%)}
+  43.5% {clip-path:inset(0 0 0 100%)}
+  100%  {clip-path:inset(0 0 0 100%)}
+}
+@keyframes skel3{
+  0%    {clip-path:inset(0 0 0 100%)}
+  14.9% {clip-path:inset(0 0 0 100%)}
+  15%   {clip-path:inset(0 0 0 0%)}
+  54%   {clip-path:inset(0 0 0 0%)}
+  59.5% {clip-path:inset(0 0 0 100%)}
+  100%  {clip-path:inset(0 0 0 100%)}
+}
+
+/* active band + left rule: the reading pointer */
+.zbg,.zbar,.znote{animation-duration:var(--loop);animation-iteration-count:infinite;animation-timing-function:linear}
+#b1{animation-name:bg1} #b2{animation-name:bg2} #b3{animation-name:bg3}
+#r1{animation-name:bar1} #r2{animation-name:bar2} #r3{animation-name:bar3}
+#n1{animation-name:note1} #n2{animation-name:note2} #n3{animation-name:note3}
+
+@keyframes bg1{0%,20.5%{opacity:0} 21.8%{opacity:1} 37%{opacity:1} 38.3%{opacity:0} 100%{opacity:0}}
+@keyframes bg2{0%,36.5%{opacity:0} 37.8%{opacity:1} 53%{opacity:1} 54.3%{opacity:0} 100%{opacity:0}}
+@keyframes bg3{0%,52.5%{opacity:0} 53.8%{opacity:1} 69%{opacity:1} 70.3%{opacity:0} 100%{opacity:0}}
+
+@keyframes bar1{0%,20.5%{background:var(--line)} 21.8%,37%{background:var(--zd)} 38.3%,100%{background:var(--line)}}
+@keyframes bar2{0%,36.5%{background:var(--line)} 37.8%,53%{background:var(--zd)} 54.3%,100%{background:var(--line)}}
+@keyframes bar3{0%,52.5%{background:var(--line)} 53.8%,69%{background:var(--zd)} 70.3%,100%{background:var(--line)}}
+
+@keyframes note1{0%,20.5%{background:var(--shell);border-color:var(--line)} 21.8%,37%{background:#fff;border-color:var(--zc)} 38.3%,100%{background:var(--shell);border-color:var(--line)}}
+@keyframes note2{0%,36.5%{background:var(--shell);border-color:var(--line)} 37.8%,53%{background:#fff;border-color:var(--zc)} 54.3%,100%{background:var(--shell);border-color:var(--line)}}
+@keyframes note3{0%,52.5%{background:var(--shell);border-color:var(--line)} 53.8%,69%{background:#fff;border-color:var(--zc)} 70.3%,100%{background:var(--shell);border-color:var(--line)}}
+
+/* mascot micro-reaction: one small lift and settle when its zone is rebuilt */
+.tile{animation-duration:var(--loop);animation-iteration-count:infinite;animation-timing-function:cubic-bezier(.25,.9,.3,1);transform-origin:50% 100%}
+#t1{animation-name:pop1} #t2{animation-name:pop2} #t3{animation-name:pop3}
+@keyframes pop1{0%,21%{transform:translateY(0) scale(1)} 24%{transform:translateY(-6px) scale(1.1)} 28.5%{transform:translateY(0) scale(1)} 100%{transform:translateY(0) scale(1)}}
+@keyframes pop2{0%,37%{transform:translateY(0) scale(1)} 40%{transform:translateY(-6px) scale(1.1)} 44.5%{transform:translateY(0) scale(1)} 100%{transform:translateY(0) scale(1)}}
+@keyframes pop3{0%,53%{transform:translateY(0) scale(1)} 56%{transform:translateY(-6px) scale(1.1)} 60.5%{transform:translateY(0) scale(1)} 100%{transform:translateY(0) scale(1)}}
+
+/* verdict chips light as each zone lands */
+.vchip{animation-duration:var(--loop);animation-iteration-count:infinite;animation-timing-function:linear}
+#v1{animation-name:vc1} #v2{animation-name:vc2} #v3{animation-name:vc3}
+@keyframes vc1{0%,13.5%{background:var(--vt);border-color:var(--vc);color:var(--vd)} 15.5%,26.5%{background:var(--shell);border-color:var(--line);color:#98A0AC} 28.5%,100%{background:var(--vt);border-color:var(--vc);color:var(--vd)}}
+@keyframes vc2{0%,13.5%{background:var(--vt);border-color:var(--vc);color:var(--vd)} 15.5%,42.5%{background:var(--shell);border-color:var(--line);color:#98A0AC} 44.5%,100%{background:var(--vt);border-color:var(--vc);color:var(--vd)}}
+@keyframes vc3{0%,13.5%{background:var(--vt);border-color:var(--vc);color:var(--vd)} 15.5%,58.5%{background:var(--shell);border-color:var(--line);color:#98A0AC} 60.5%,100%{background:var(--vt);border-color:var(--vc);color:var(--vd)}}
+
+@media (prefers-reduced-motion: reduce){
+  .skel{display:none}
+  *{animation:none !important}
+}
+</style>
+</head>
+<body>
+<div id="artboard">
+
+  <!-- ── header ── -->
+  <div class="head">
+    <div class="eyebrow"><i></i>GEO + AEO for modern marketing<i></i></div>
+    <h1 class="h1">If AI can&rsquo;t <span class="em">quote</span> you,<br>buyers won&rsquo;t find you</h1>
+    <div class="sub"><span>Ranking gets you seen</span><s></s><b>Answers get you cited</b></div>
+  </div>
+
+  <div class="rule"></div>
+  <div class="seclabel">What agents actually look for</div>
+
+  <!-- ── hero panel ── -->
+  <div class="panel">
+
+    <div class="query">
+      <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 L20.5 20.5"/>
+      </svg>
+      <span class="qtxt">Best CRM for small agencies?</span>
+      <span class="tag">EXAMPLE PAGE</span>
+    </div>
+
+    <div class="zones">
+
+      <!-- ZONE 1 — clear answer -->
+      <div class="zone" style="--zc:var(--coral);--zd:var(--coral-deep);--zt:var(--coral-tint)">
+        <div class="zbg" id="b1"></div><div class="zbar" id="r1"></div>
+        <div class="zmain">
+          <div class="kick"><span class="num">01</span><span class="lbl">Clear answer</span></div>
+          <div class="zh">Pick the CRM your team will actually use</div>
+          <div class="zp">The best CRM for a small agency is the one your team adopts fast, tracks deals in clearly, and reports from without extra admin work.</div>
+          <div class="skel" id="s1">
+            <b class="w1"></b><b class="w2"></b><b class="w1"></b><b class="w4"></b><b class="w3"></b>
+          </div>
+        </div>
+        <aside class="znote" id="n1">
+          <div class="nhead">
+            <span class="tile" id="t1">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Claude Code"><title>Claude Code</title><path clip-rule="evenodd" d="M20.998 10.949H24v3.102h-3v3.028h-1.487V20H18v-2.921h-1.487V20H15v-2.921H9V20H7.488v-2.921H6V20H4.487v-2.921H3V14.05H0V10.95h3V5h17.998v5.949zM6 10.949h1.488V8.102H6v2.847zm10.51 0H18V8.102h-1.49v2.847z" fill="#D97757" fill-rule="evenodd"/></svg>
+            </span>
+            <span class="nname">Claude&nbsp;Code<br>reviewing</span>
+          </div>
+          <div class="nq">Can I extract the answer fast?</div>
+        </aside>
+      </div>
+
+      <!-- ZONE 2 — clean structure -->
+      <div class="zone" style="--zc:var(--cobalt);--zd:var(--cobalt-deep);--zt:var(--cobalt-tint)">
+        <div class="zbg" id="b2"></div><div class="zbar" id="r2"></div>
+        <div class="zmain">
+          <div class="kick"><span class="num">02</span><span class="lbl">Clean structure</span></div>
+          <div class="srows">
+            <div class="srow"><span class="k">Best for</span><span class="v">Agency teams of 3 to 20</span></div>
+            <div class="srow"><span class="k">Compare</span><span class="v">Adoption speed<em>/</em>Pipeline clarity<em>/</em>Reporting</span></div>
+            <div class="srow"><span class="k">Skip if</span><span class="v">You need heavy custom objects</span></div>
+          </div>
+          <div class="skel" id="s2">
+            <b class="w2"></b><b class="w1"></b><b class="w4"></b><b class="w3"></b>
+          </div>
+        </div>
+        <aside class="znote" id="n2">
+          <div class="nhead">
+            <span class="tile" id="t2">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Codex"><title>Codex</title><path d="M19.503 0H4.496A4.496 4.496 0 000 4.496v15.007A4.496 4.496 0 004.496 24h15.007A4.496 4.496 0 0024 19.503V4.496A4.496 4.496 0 0019.503 0z" fill="#fff"/><path d="M9.064 3.344a4.578 4.578 0 012.285-.312c1 .115 1.891.54 2.673 1.275.01.01.024.017.037.021a.09.09 0 00.043 0 4.55 4.55 0 013.046.275l.047.022.116.057a4.581 4.581 0 012.188 2.399c.209.51.313 1.041.315 1.595a4.24 4.24 0 01-.134 1.223.123.123 0 00.03.115c.594.607.988 1.33 1.183 2.17.289 1.425-.007 2.71-.887 3.854l-.136.166a4.548 4.548 0 01-2.201 1.388.123.123 0 00-.081.076c-.191.551-.383 1.023-.74 1.494-.9 1.187-2.222 1.846-3.711 1.838-1.187-.006-2.239-.44-3.157-1.302a.107.107 0 00-.105-.024c-.388.125-.78.143-1.204.138a4.441 4.441 0 01-1.945-.466 4.544 4.544 0 01-1.61-1.335c-.152-.202-.303-.392-.414-.617a5.81 5.81 0 01-.37-.961 4.582 4.582 0 01-.014-2.298.124.124 0 00.006-.056.085.085 0 00-.027-.048 4.467 4.467 0 01-1.034-1.651 3.896 3.896 0 01-.251-1.192 5.189 5.189 0 01.141-1.6c.337-1.112.982-1.985 1.933-2.618.212-.141.413-.251.601-.33.215-.089.43-.164.646-.227a.098.098 0 00.065-.066 4.51 4.51 0 01.829-1.615 4.535 4.535 0 011.837-1.388zm3.482 10.565a.637.637 0 000 1.272h3.636a.637.637 0 100-1.272h-3.636zM8.462 9.23a.637.637 0 00-1.106.631l1.272 2.224-1.266 2.136a.636.636 0 101.095.649l1.454-2.455a.636.636 0 00.005-.64L8.462 9.23z" fill="url(#codexGrad)"/><defs><linearGradient gradientUnits="userSpaceOnUse" id="codexGrad" x1="12" x2="12" y1="3" y2="21"><stop stop-color="#B1A7FF"/><stop offset=".5" stop-color="#7A9DFF"/><stop offset="1" stop-color="#3941FF"/></linearGradient></defs></svg>
+            </span>
+            <span class="nname">Codex<br>reviewing</span>
+          </div>
+          <div class="nq">Can I follow this without guessing?</div>
+        </aside>
+      </div>
+
+      <!-- ZONE 3 — useful proof -->
+      <div class="zone" style="--zc:var(--mint);--zd:var(--mint-deep);--zt:var(--mint-tint)">
+        <div class="zbg" id="b3"></div><div class="zbar" id="r3"></div>
+        <div class="zmain">
+          <div class="kick"><span class="num">03</span><span class="lbl">Useful proof</span></div>
+          <div class="proof">
+            <span class="pchip"><i class="dot"></i>Setup: under 2 weeks</span>
+            <span class="pchip"><i class="dot"></i>Team size: 3 to 20</span>
+            <span class="pchip"><i class="dot"></i>Priced per seat</span>
+          </div>
+          <div class="skel" id="s3">
+            <b class="w2"></b><b class="w3"></b>
+          </div>
+        </div>
+        <aside class="znote" id="n3">
+          <div class="nhead">
+            <span class="tile" id="t3">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#1F2430" fill-rule="evenodd" role="img" aria-label="GitHub Copilot"><title>GitHub Copilot</title><path d="M19.245 5.364c1.322 1.36 1.877 3.216 2.11 5.817.622 0 1.2.135 1.592.654l.73.964c.21.278.323.61.323.955v2.62c0 .339-.173.669-.453.868C20.239 19.602 16.157 21.5 12 21.5c-4.6 0-9.205-2.583-11.547-4.258-.28-.2-.452-.53-.453-.868v-2.62c0-.345.113-.679.321-.956l.73-.963c.392-.517.974-.654 1.593-.654l.029-.297c.25-2.446.81-4.213 2.082-5.52 2.461-2.54 5.71-2.851 7.146-2.864h.198c1.436.013 4.685.323 7.146 2.864zm-7.244 4.328c-.284 0-.613.016-.962.05-.123.447-.305.85-.57 1.108-1.05 1.023-2.316 1.18-2.994 1.18-.638 0-1.306-.13-1.851-.464-.516.165-1.012.403-1.044.996a65.882 65.882 0 00-.063 2.884l-.002.48c-.002.563-.005 1.126-.013 1.69.002.326.204.63.51.765 2.482 1.102 4.83 1.657 6.99 1.657 2.156 0 4.504-.555 6.985-1.657a.854.854 0 00.51-.766c.03-1.682.006-3.372-.076-5.053-.031-.596-.528-.83-1.046-.996-.546.333-1.212.464-1.85.464-.677 0-1.942-.157-2.993-1.18-.266-.258-.447-.661-.57-1.108-.32-.032-.64-.049-.96-.05zm-2.525 4.013c.539 0 .976.426.976.95v1.753c0 .525-.437.95-.976.95a.964.964 0 01-.976-.95v-1.752c0-.525.437-.951.976-.951zm5 0c.539 0 .976.426.976.95v1.753c0 .525-.437.95-.976.95a.964.964 0 01-.976-.95v-1.752c0-.525.437-.951.976-.951zM7.635 5.087c-1.05.102-1.935.438-2.385.906-.975 1.037-.765 3.668-.21 4.224.405.394 1.17.657 1.995.657h.09c.649-.013 1.785-.176 2.73-1.11.435-.41.705-1.433.675-2.47-.03-.834-.27-1.52-.63-1.813-.39-.336-1.275-.482-2.265-.394zm6.465.394c-.36.292-.6.98-.63 1.813-.03 1.037.24 2.06.675 2.47.968.957 2.136 1.104 2.776 1.11h.044c.825 0 1.59-.263 1.995-.657.555-.556.765-3.187-.21-4.224-.45-.468-1.335-.804-2.385-.906-.99-.088-1.875.058-2.265.394zM12 7.615c-.24 0-.525.015-.84.044.03.16.045.336.06.526l-.001.159a2.94 2.94 0 01-.014.25c.225-.022.425-.027.612-.028h.366c.187 0 .387.006.612.028-.015-.146-.015-.277-.015-.409.015-.19.03-.365.06-.526a9.29 9.29 0 00-.84-.044z"/></svg>
+            </span>
+            <span class="nname">GitHub&nbsp;Copilot<br>reviewing</span>
+          </div>
+          <div class="nq">Can I trust what I&rsquo;m pulling?</div>
+        </aside>
+      </div>
+
+    </div>
+
+    <!-- verdict -->
+    <div class="verdict">
+      <span class="vlead">Agent verdict</span>
+      <span class="vchip" id="v1" style="--vc:var(--coral);--vd:var(--coral-deep);--vt:var(--coral-tint)">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.6 L6.2 12 L13.5 4"/></svg>Quotable</span>
+      <span class="vchip" id="v2" style="--vc:var(--cobalt);--vd:var(--cobalt-deep);--vt:var(--cobalt-tint)">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.6 L6.2 12 L13.5 4"/></svg>Scannable</span>
+      <span class="vchip" id="v3" style="--vc:var(--mint);--vd:var(--mint-deep);--vt:var(--mint-tint)">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.6 L6.2 12 L13.5 4"/></svg>Citable</span>
+    </div>
+
+  </div>
+
+  <!-- ── bottom ── -->
+  <div class="take">Write the page an agent can <u>quote</u></div>
+  <div class="foot">Quick GEO / AEO check: can an agent lift your answer in one scan?</div>
+  <div class="sig">Mamdouh Aboammar &nbsp;·&nbsp; PrePilot.cloud</div>
+
+</div>
+</body>
+</html>
