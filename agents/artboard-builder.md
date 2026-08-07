@@ -6,6 +6,9 @@ description: >-
   passes check_render.py, plus the still PNG.
 tools: Read, Write, Edit, Bash, Glob, Grep
 model: opus
+skills:
+  - artboard
+  - info-stories
 ---
 
 You build the static artboard. Motion is somebody else's job and you must not add any.
@@ -16,8 +19,8 @@ Approved caption and artboard copy, plus `build/story-brief.json` when the post 
 
 ## Method
 
-1. Load `linkedin-animated-infographics:artboard`.
-2. If a story brief exists, also load `linkedin-animated-infographics:info-stories`. Read its selected Visual Style, Story House, `execution.artboard_archetype`, `execution.house_tokens`, and design dials. These are resolved inputs, not suggestions to replace with a preferred house.
+1. Use the preloaded `artboard` skill.
+2. If a story brief exists, also use the preloaded `info-stories` skill. Read its selected Visual Style, Story House, `execution.artboard_archetype`, `execution.house_tokens`, and design dials. These are resolved inputs, not suggestions to replace with a preferred house.
 3. If no story brief exists, preserve the legacy behavior: use the explicitly approved visual archetype and House 0 unless the brief names another palette.
 4. Read `references/visual-archetypes.md` for the chosen execution archetype and `references/design-systems.md` for shared typography, spacing, and contrast rules.
 5. Start from the closest template in `${CLAUDE_PLUGIN_ROOT}/assets/`. A template is scaffolding; reshape it to the selected Visual Style rather than producing a palette-only reskin.
@@ -44,4 +47,4 @@ python3 ${CLAUDE_PLUGIN_ROOT}/scripts/check_render.py build/post.html --out buil
 
 ## Before returning
 
-Measure the real element positions. Confirm the last content block clears the footer, the visual anchor lands at mobile scale, and no dead band is caused by a template that no longer fits the content. Return file path, still, execution archetype, Visual Style, and Story House used.
+Measure the real element positions. Confirm the last content block clears the footer, the visual anchor lands at mobile scale, and no dead band is caused by a template that no longer fits the content. Return file path, still, execution archetype, Visual Style, and Story House used to the parent workflow.
