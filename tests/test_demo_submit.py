@@ -116,6 +116,12 @@ class DemoSubmitTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "remote executable resource"):
             prepare_submission(self.build, self.stage, self.metadata())
 
+    def test_protocol_relative_remote_script_requires_maintainer_review(self):
+        self.require_module()
+        (self.build / "post.html").write_text('<script src="//cdn.example.com/lib.js"></script>')
+        with self.assertRaisesRegex(ValueError, "remote executable resource"):
+            prepare_submission(self.build, self.stage, self.metadata())
+
     def test_scan_public_text_returns_named_findings(self):
         self.require_module()
         findings = scan_public_text("demo", "Authorization: Bearer abcdefghijklmnopqrstuvwxyz")
