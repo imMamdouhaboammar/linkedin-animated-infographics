@@ -24,10 +24,16 @@ Open `build/still_mobile350.png` and look at it honestly, at 100%.
 - [ ] The headline is readable
 - [ ] Section headers are readable
 - [ ] Card titles are readable
+- [ ] Nothing looks pale, thin, or washed out
 - [ ] The single takeaway lands without zooming
 
 Everything below 22px in the artboard is texture at this size. That is acceptable for
 micro labels and card body copy. It is not acceptable for anything the post depends on.
+
+If text is large enough but still looks pale, thin, or washed out, diagnose **contrast and
+weight before size**. Verify a minimum 4.5:1 text contrast ratio and use 500 weight or
+heavier for body-role text. Increasing font size is not the default fix for a weak colour
+pair or a weight that disappears after downscaling.
 
 If the takeaway does not land, the artboard has too much content. Cut, do not shrink.
 
