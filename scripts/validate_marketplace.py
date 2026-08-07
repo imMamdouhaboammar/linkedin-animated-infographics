@@ -9,10 +9,16 @@ def _load_json(path: Path, errors: list[str]):
     try:
         return json.loads(path.read_text())
     except FileNotFoundError:
-        errors.append(f"missing {path.relative_to(path.parents[1]) if len(path.parents) > 1 else path}")
+        errors.append(f"missing {path}")
     except json.JSONDecodeError as exc:
         errors.append(f"invalid JSON in {path}: {exc}")
     return None
+
+
+def _require_frontmatter(paths, root: Path, errors: list[str]):
+    for path in paths:
+        if not path.read_text().startswith("---\n"):
+            errors.append(f"missing YAML frontmatter: {path.relative_to(root)}")
 
 
 def validate_marketplace(root: Path = ROOT) -> list[str]:
@@ -51,10 +57,10 @@ def validate_marketplace(root: Path = ROOT) -> list[str]:
     hooks = _load_json(root / "hooks" / "hooks.json", errors)
     if hooks is not None and "hooks" not in hooks:
         errors.append("hooks/hooks.json is missing top-level hooks")
-    for directory in (root / "skills", root / "agents"):
-        for path in directory.rglob("*.md"):
-            if not path.read_text().startswith("---\n"):
-                errors.append(f"missing YAML frontmatter: {path.relative_to(root)}")
+
+    # Claude component entrypoints require frontmatter. Supporting references do not.
+    _require_frontmatter((root / "skills").glob("*/SKILL.md"), root, errors)
+    _require_frontmatter((root / "agents").glob("*.md"), root, errors)
     return errors
 
 
