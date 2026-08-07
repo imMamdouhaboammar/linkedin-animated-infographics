@@ -117,6 +117,6 @@ A new public module is incomplete until it is declared in `helper/modules.json` 
 
 ## Release work
 
-A plugin release requires matching version values in `.claude-plugin/plugin.json` and the plugin entry in `.claude-plugin/marketplace.json`. The current v3 release is `3.0.0`; the community demo publisher feature is planned for `3.1.0` once the full gate and PR review are clean.
+A plugin release requires matching version values in `.claude-plugin/plugin.json` and the plugin entry in `.claude-plugin/marketplace.json`. The current release is `3.1.0`.
 
 Before merge, require unit/validator success, official Claude validation, marketplace install smoke, no blocking external check, and no unresolved review thread.
