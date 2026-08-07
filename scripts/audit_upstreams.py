@@ -38,6 +38,8 @@ def _license_name(repo):
 
 def build_inventory(upstreams=DEFAULT_UPSTREAMS):
     upstreams = Path(upstreams)
+    if not upstreams.exists():
+        return []
     items = []
     for repo in sorted((p for p in upstreams.iterdir() if p.is_dir()), key=lambda p: p.name):
         if not (repo / ".git").exists():
@@ -68,8 +70,10 @@ def main(argv=None):
     parser.add_argument("--upstreams", type=Path, default=DEFAULT_UPSTREAMS)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     args = parser.parse_args(argv)
-    live = build_inventory(args.upstreams)
     if args.command == "inventory":
+        if not args.upstreams.exists():
+            print(f"local upstream corpus not found: {args.upstreams}")
+            return 2
         payload = write_inventory(args.upstreams, args.output)
         print(json.dumps(payload, indent=2, sort_keys=True))
         return 0
@@ -77,6 +81,13 @@ def main(argv=None):
         print(f"missing snapshot: {args.output}")
         return 1
     snapshot = json.loads(args.output.read_text()).get("sources", [])
+    if not isinstance(snapshot, list) or not snapshot:
+        print("tracked snapshot is empty or invalid")
+        return 1
+    if not args.upstreams.exists():
+        print("Local upstream corpus not present; tracked snapshot: OK")
+        return 0
+    live = build_inventory(args.upstreams)
     if snapshot != live:
         print("upstream snapshot differs from local working copies")
         return 1

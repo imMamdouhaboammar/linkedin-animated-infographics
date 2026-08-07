@@ -1,126 +1,65 @@
 ---
 name: linkedin-animated-infographics-conventions
-description: Development conventions and patterns for linkedin-animated-infographics. TypeScript project with conventional commits.
+description: Development conventions for a Python, Markdown, HTML, CSS, SVG, and shell based LinkedIn infographic plugin with Info-stories composition.
 ---
 
 # Linkedin Animated Infographics Conventions
 
-> Generated from [imMamdouhaboammar/linkedin-animated-infographics](https://github.com/imMamdouhaboammar/linkedin-animated-infographics) on 2026-08-07
-
-## Overview
-
-This skill teaches Claude the development patterns and conventions used in linkedin-animated-infographics.
+Use this skill when changing this repository, adding a skill or agent, modifying the render pipeline, or writing regression tests.
 
 ## Tech Stack
 
-- **Primary Language**: TypeScript
-- **Architecture**: hybrid module organization
-- **Test Location**: separate
+- **Python 3**: registries, validators, frame capture, GIF assembly, and utility tools
+- **Markdown**: skills, agents, references, plans, and research notes
+- **HTML / CSS / SVG**: 1080x1350 artboards and deterministic animation
+- **Shell**: setup, lint, and render wrappers
+- **JSON**: plugin metadata, hooks, Story House / style registry data, and structured briefs
+- **unittest**: regression and acceptance tests
 
-## When to Use This Skill
-
-Activate this skill when:
-- Making changes to this repository
-- Adding new features following established patterns
-- Writing tests that match project conventions
-- Creating commits with proper message format
-
-## Commit Conventions
-
-Follow these commit message conventions based on 3 analyzed commits.
-
-### Commit Style: Conventional Commits
-
-### Prefixes Used
-
-- `fix`
-
-### Message Guidelines
-
-- Average message length: ~46 characters
-- Keep first line concise and descriptive
-- Use imperative mood ("Add feature" not "Added feature")
-
-
-*Commit message example*
-
-```text
-fix: enforce readable artboard contrast tokens
-```
-
-*Commit message example*
-
-```text
-fix: add artboard contrast hard constraint
-```
-
-*Commit message example*
-
-```text
-fix: make mobile contrast failures explicit in QA
-```
+There is no TypeScript application layer in the current repository. Do not introduce frontend framework conventions unless a task explicitly adds one.
 
 ## Architecture
 
-### Project Structure: Single Package
+- `skills/`: user-facing capabilities and their references
+- `agents/`: focused worker contracts with narrow inputs and outputs
+- `scripts/`: implementation and validation logic shared by skills and tools
+- `tools/`: thin public CLIs over shared Python logic
+- `assets/`: templates and generated-but-tracked visual reference assets
+- `tests/`: unit, contract, portability, and acceptance tests
+- `research/`: tracked provenance and design/capability studies; ignored upstream clones never ship
 
-This project uses **hybrid** module organization.
+## Info-stories
 
-### Guidelines
+Info-stories is the composition layer. Keep its four axes independent:
 
-- This project uses a hybrid organization
-- Follow existing patterns when adding new code
+1. Story House
+2. Visual Style
+3. Story Archetype
+4. Motion Pattern
 
-## Code Style
+`skills/info-stories/catalog.json` is the machine-readable source of truth. Human references explain the registry but must not contradict it. Existing artboard, motion, render, Arabic, and mascot skills remain the execution layer.
 
-### Language: TypeScript
+When adding a registry item, add or update tests before implementation. Preserve 4.5:1 text contrast, 3:1 state-pair contrast, deterministic briefs, and explicit compatibility failures.
 
-### Naming Conventions
+## Development Method
 
-| Element | Convention |
-|---------|------------|
-| Files | kebab-case |
-| Functions | camelCase |
-| Classes | PascalCase |
-| Constants | SCREAMING_SNAKE_CASE |
+- Follow existing architecture before adding a parallel implementation
+- Prefer one shared implementation with thin CLIs rather than duplicated logic
+- Write a failing regression test for behavior changes, then implement the minimum fix
+- Run the focused test first, then the complete test suite
+- Run `python3 -m compileall -q scripts tools`
+- Run `python3 scripts/info_stories.py check` when the registry changes
+- Run `git diff --check` before committing
+- Treat browser render verification separately from non-browser tests and report environment blockers precisely
 
-### Import Style: Relative Imports
+## Commit Conventions
 
-### Export Style: Named Exports
+Use conventional commits such as `feat:`, `fix:`, `test:`, `docs:`, and `chore:`. Keep one coherent concern per commit when practical.
 
+## Safety and Provenance
 
-*Preferred import style*
-
-```typescript
-// Use relative imports
-import { Button } from '../components/Button'
-import { useAuth } from './hooks/useAuth'
-```
-
-*Preferred export style*
-
-```typescript
-// Use named exports
-export function calculateTotal() { ... }
-export const TAX_RATE = 0.1
-export interface Order { ... }
-```
-
-## Best Practices
-
-Based on analysis of the codebase, follow these practices:
-
-### Do
-
-- Use conventional commit format (feat:, fix:, etc.)
-- Use kebab-case for file names
-- Prefer named exports
-
-### Don't
-
-- Don't write vague commit messages
-- Don't deviate from established patterns without discussion
-
----
-
-*This skill was auto-generated by [ECC Tools](https://ecc.tools). Review and customize as needed for your team.*
+- Never commit credentials, private MCP configuration, or user secrets
+- Never ship `research/upstreams/`
+- Track source URL, inspected SHA, license, adopted ideas, and rejected ideas for capability research
+- Prefer independently worded local rules over wholesale copying
+- Do not fabricate visual proof or factual content to satisfy a template slot
