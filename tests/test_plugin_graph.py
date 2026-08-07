@@ -38,10 +38,16 @@ class PluginGraphTests(unittest.TestCase):
         graph = json.loads(GRAPH.read_text())
         sequence = graph["workflows"]["new-post"]["sequence"]
         required = {
-            "story-architect", "palette-curator", "copy-compressor", "layout-composer",
-            "caption-writer", "artboard-builder", "render-qa", "post-critic", "story-verifier",
+            "creative-director", "story-architect", "palette-curator", "copy-compressor",
+            "layout-composer", "caption-writer", "artboard-builder", "render-qa",
+            "post-critic", "story-verifier",
         }
         self.assertTrue(required.issubset(sequence))
+
+    def test_creative_director_runs_between_evidence_and_story(self):
+        sequence = json.loads(GRAPH.read_text())["workflows"]["new-post"]["sequence"]
+        self.assertLess(sequence.index("evidence-checker"), sequence.index("creative-director"))
+        self.assertLess(sequence.index("creative-director"), sequence.index("story-architect"))
 
     def test_conditional_mascot_edge_is_explicit(self):
         edge = json.loads(GRAPH.read_text())["workflows"]["new-post"]["conditional"]["mascot"]
@@ -63,8 +69,8 @@ class PluginGraphTests(unittest.TestCase):
     def test_capability_families_have_shipping_owners(self):
         graph = json.loads(GRAPH.read_text())
         expected = {
-            "anti-slop", "design-taste", "structural-fingerprint", "evidence",
-            "verification-loop", "mascot-identity", "ui-mockup-fidelity",
+            "anti-slop", "creative-direction", "design-taste", "evidence", "hook-design-copy",
+            "mascot-identity", "structural-fingerprint", "ui-mockup-fidelity", "verification-loop",
         }
         self.assertEqual(expected, set(graph["capabilities"]))
         workflow = graph["workflows"]["new-post"]
@@ -114,7 +120,7 @@ class PluginGraphTests(unittest.TestCase):
 
 class WorkerCoordinationTests(unittest.TestCase):
     def test_planning_workers_return_to_parent_orchestrator(self):
-        for name in ("story-architect", "layout-composer", "motion-director"):
+        for name in ("creative-director", "story-architect", "layout-composer", "motion-director"):
             text = (ROOT / "agents" / f"{name}.md").read_text()
             self.assertIn("parent workflow", text.lower(), name)
             self.assertNotIn("Handoff the approved brief to", text, name)
