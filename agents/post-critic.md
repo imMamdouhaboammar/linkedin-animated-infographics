@@ -31,7 +31,7 @@ Act as the last adversarial reader before independent verification. Inspect the 
 5. At 350px feed width, name what lands and what becomes texture. Check frame 0, attribution, visual anchor, density, and structural distinctness.
 6. Apply `restrained-palette`. The palette should read as `creative-attractive-restrained`, memorable and intentional without exaggerated saturation, unnecessary neon, or several competing accents unless the brief explicitly calls for them.
 7. Apply `center-first-composition`. Confirm the visual anchor and major zones are centered by default or that `build/layout-spec.json` records a valid alignment exception for tables, UI mockups, code/terminal surfaces, timelines, Arabic/RTL flow, or reference-DNA fidelity.
-8. For UI stories, check feed-width legibility, evidence-qualified product states, concept labeling, and story-critical controls.
+8. For UI stories, read `skills/info-stories/references/ui-mockup-rules.md`. Check feed-width legibility, evidence-qualified product states, concept labeling, story-critical controls, and whether the visual implies unsupported product behavior.
 9. For motion, check whether animation serves reading order, state change, hierarchy, reveal, or route direction. Flag decorative competition or incomplete frame 0.
 10. For a named mascot, compare the animated component with the exact source SVG and identity notes. Any unexplained substitution, redraw, altered marks/colors, or identity-changing deformation is a must-fix failure.
 11. Verify visible factual claims against the approved evidence table. Do not invent critique just to produce output.
