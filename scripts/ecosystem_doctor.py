@@ -27,18 +27,58 @@ def _inventory(root: Path) -> dict[str, set[str]]:
     }
 
 
-def _text_reference_corpus(root: Path) -> str:
-    parts = []
-    for base in (root / "skills", root / "agents", root / "helper"):
-        if not base.exists():
+def _skill_reachable_from(claim: str, skill: str, routes: dict, conditions: dict, graph_agents: dict) -> bool:
+    kind, sep, name = claim.partition(":")
+    if not sep:
+        return False
+    if kind == "route":
+        route = routes.get(name, {})
+        return skill in route.get("skills", []) or route.get("workflow") == skill
+    if kind == "condition":
+        return skill in conditions.get(name, {}).get("adds_skills", [])
+    if kind == "agent":
+        return skill in graph_agents.get(name, {}).get("required_skills", [])
+    return False
+
+
+def _agent_reachable_from(claim: str, agent: str, routes: dict, conditions: dict, sequence: list, conditional_edges: dict) -> bool:
+    kind, sep, name = claim.partition(":")
+    if not sep:
+        return False
+    if kind == "workflow" and name == "new-post":
+        return agent in sequence
+    if kind == "route":
+        return agent in routes.get(name, {}).get("agents", [])
+    if kind == "condition":
+        return agent in conditions.get(name, {}).get("adds_agents", [])
+    if kind == "conditional":
+        return conditional_edges.get(name, {}).get("agent") == agent
+    return False
+
+
+def _validate_tool_references(root: Path, tool: str, contract: dict, errors: list[str]):
+    filename = Path(contract.get("path", "")).name
+    references = contract.get("reachable_from", [])
+    evidence_found = False
+    for relative in references:
+        if relative == "helper/modules.json":
+            errors.append(f"active tool {tool} cannot use helper/modules.json as executable guidance")
             continue
-        for path in sorted(base.rglob("*")):
-            if path.is_file() and path.suffix in {".md", ".json"}:
-                try:
-                    parts.append(path.read_text())
-                except UnicodeDecodeError:
-                    pass
-    return "\n".join(parts)
+        target = root / relative
+        if not target.is_file():
+            errors.append(f"active tool {tool} has invalid executable guidance target: {relative}")
+            continue
+        try:
+            text = target.read_text()
+        except UnicodeDecodeError:
+            errors.append(f"active tool {tool} guidance target is not readable text: {relative}")
+            continue
+        if filename and filename in text:
+            evidence_found = True
+        else:
+            errors.append(f"active tool {tool} is not referenced by declared executable guidance: {relative}")
+    if not evidence_found:
+        errors.append(f"active tool {tool} is not referenced by executable guidance")
 
 
 def validate_ecosystem_doctor(root: Path = ROOT) -> list[str]:
@@ -118,11 +158,24 @@ def validate_ecosystem_doctor(root: Path = ROOT) -> list[str]:
     for agent in sorted(set(manifest.get("agents", {})) - reachable_agents):
         errors.append(f"unreachable active agent {agent}")
 
-    reference_corpus = _text_reference_corpus(root)
+    for skill, contract in manifest.get("skills", {}).items():
+        claims = contract.get("reachable_from", [])
+        if not any(_skill_reachable_from(claim, skill, routes, conditions, graph_agents) for claim in claims):
+            errors.append(f"active skill {skill} has no truthful reachable_from claim")
+        for claim in claims:
+            if not _skill_reachable_from(claim, skill, routes, conditions, graph_agents):
+                errors.append(f"active skill {skill} has false reachable_from claim: {claim}")
+
+    for agent, contract in manifest.get("agents", {}).items():
+        claims = contract.get("reachable_from", [])
+        if not any(_agent_reachable_from(claim, agent, routes, conditions, sequence, conditional_edges) for claim in claims):
+            errors.append(f"active agent {agent} has no truthful reachable_from claim")
+        for claim in claims:
+            if not _agent_reachable_from(claim, agent, routes, conditions, sequence, conditional_edges):
+                errors.append(f"active agent {agent} has false reachable_from claim: {claim}")
+
     for tool, contract in manifest.get("tools", {}).items():
-        filename = Path(contract.get("path", "")).name
-        if filename and filename not in reference_corpus:
-            errors.append(f"active tool {tool} is not referenced by executable guidance")
+        _validate_tool_references(root, tool, contract, errors)
 
     graph_agent_names = set(graph_agents)
     manifest_agent_names = set(manifest.get("agents", {}))
@@ -195,7 +248,7 @@ def validate_ecosystem_doctor(root: Path = ROOT) -> list[str]:
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description="Strictly validate that every public ecosystem module is real, reachable, and cross-linked")
+    parser = argparse.ArgumentParser(description="Strictly validate that every public ecosystem module is real, reachable, tested, and cross-linked")
     parser.add_argument("command", nargs="?", default="check", choices=("check",))
     parser.parse_args(argv)
     errors = validate_ecosystem_doctor(ROOT)
