@@ -19,6 +19,13 @@ def load_module():
     return module
 
 
+def copy_repo_fixture(root: Path):
+    for relative in ("helper", "skills", "agents", "tools", "architecture", "research", "scripts", "tests"):
+        source = ROOT / relative
+        if source.exists():
+            shutil.copytree(source, root / relative)
+
+
 class EcosystemDoctorTests(unittest.TestCase):
     def test_manifest_and_strict_doctor_exist(self):
         self.assertTrue(MANIFEST.exists(), "missing helper/modules.json")
@@ -63,23 +70,40 @@ class EcosystemDoctorTests(unittest.TestCase):
         self.assertIsNotNone(module)
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            for relative in ("helper", "skills", "agents", "tools", "architecture", "research", "scripts", "tests"):
-                source = ROOT / relative
-                if source.exists():
-                    shutil.copytree(source, root / relative)
+            copy_repo_fixture(root)
             (root / "tools" / "fake_public_tool.py").write_text("def main():\n    return 0\n")
             errors = module.validate_ecosystem_doctor(root)
             self.assertTrue(any("undeclared public tool" in error.lower() for error in errors), errors)
+
+    def test_doctor_rejects_declared_tool_referenced_only_by_manifest(self):
+        module = load_module()
+        self.assertIsNotNone(module)
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            copy_repo_fixture(root)
+            tool_path = root / "tools" / "fake_declared_tool.py"
+            tool_path.write_text("#!/usr/bin/env python3\n\ndef main():\n    print('real enough for the fixture')\n    return 0\n")
+            manifest_path = root / "helper" / "modules.json"
+            manifest = json.loads(manifest_path.read_text())
+            manifest["modules"]["tools"]["fake_declared_tool"] = {
+                "path": "tools/fake_declared_tool.py",
+                "role": "Fixture tool that is deliberately unused",
+                "tests": ["tests/test_ecosystem_doctor.py"],
+                "reachable_from": ["helper/modules.json"],
+            }
+            manifest_path.write_text(json.dumps(manifest))
+            errors = module.validate_ecosystem_doctor(root)
+            self.assertTrue(
+                any("fake_declared_tool" in error and "executable guidance" in error.lower() for error in errors),
+                errors,
+            )
 
     def test_doctor_rejects_unreachable_agent(self):
         module = load_module()
         self.assertIsNotNone(module)
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            for relative in ("helper", "skills", "agents", "tools", "architecture", "research", "scripts", "tests"):
-                source = ROOT / relative
-                if source.exists():
-                    shutil.copytree(source, root / relative)
+            copy_repo_fixture(root)
             graph_path = root / "architecture" / "plugin-graph.json"
             graph = json.loads(graph_path.read_text())
             graph["workflows"]["new-post"]["sequence"].remove("creative-director")
