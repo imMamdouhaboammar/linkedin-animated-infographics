@@ -1,65 +1,67 @@
 ---
 name: motion
-description: >-
-  Write the animation for a 1080x1350 artboard so it loops seamlessly and captures
-  deterministically. Use when adding motion to an infographic, writing keyframes, staggering a
-  sequence, animating a path, diagnosing a visible loop point, or fixing a GIF that came back
-  oversized, blank, or jittery. Covers ten seekable motion primitives, the one-loop-clock rule,
-  the reverse-delay trap, motion budgeting by changed pixels, and a symptom-to-cause debugging
-  table.
+description: Design and implement deterministic seekable infographic motion that communicates reading order, state, reveal, hierarchy, or route direction while preserving a complete first frame and clean loop.
 ---
 
 # Motion
 
-Animations are **seeked**, not recorded. `capture_frames.py` pauses
-`document.getAnimations()`, sets `currentTime` per frame, and calls `svg.setCurrentTime()` for
-SMIL. That gives pixel-identical frames and a mathematically exact loop close. Real-time screen
-recording produces the wobble that reads as amateur.
+## Purpose
 
-## Three rules that decide whether it works
+Add meaning-driven motion to an already approved still. Motion should clarify sequence, hierarchy, route, state change, reveal, or the selected creative payoff. It is not a substitute for weak structure.
 
-**One loop clock.** Define `--loop` once and derive everything from it. A sub-animation that
-genuinely needs to be faster gets an integer division: `calc(var(--loop) / 4)`. Never `1.3s`
-next to `4.8s`. Legal divisors: 1, 2, 3, 4, 5, 6, 8, 10, 12.
+Read `helper/GUIDE.md` first. Rendered infographic animation is seeked frame-by-frame, not screen-recorded in real time.
 
-**Frame 0 equals frame N.** The value at `0%` and `100%` must be identical.
-`build_gif.py` prints the seam delta; anything larger than the biggest normal frame-to-frame
-change means something does not close.
+## Use when
 
-**Motion budget is changed pixels, not area.** A dense dark grid animating 85% of its canvas
-can encode cheaper than four boxes and four dots on a light textured ground. Judge on
-`build_gif.py`'s `motion:` line. Under 2% is healthy. Never animate `filter: blur()`, large
-`box-shadow` spread, or `backdrop-filter`: they rewrite every pixel underneath and defeat
-rectangle diffing.
+Use when choosing or implementing Motion Patterns, writing keyframes, animating routes or state changes, integrating mascot motion, debugging a loop, or diagnosing an oversized/jittery GIF caused by animation behavior.
 
-## The primitives
+## Inputs
 
-Sequential Highlight, Path Particles, Path Draw-On, Orbit, Staggered Reveal, Bar Growth,
-Typewriter, Glow Pulse, Ambient Micro-Loops, and Mascot Pointer.
+- approved `build/still.png` and `build/post.html`
+- selected creative concept and aha mechanic when present
+- `build/story-brief.json`
+- `build/layout-spec.json`
+- `build/motion-direction.json` when produced by the motion director
+- optional mascot motion contract
+- target duration/fps from verified timing options
 
-**Use exactly two per artboard.** That is what the reference set does and it is the right
-number. A mascot does not add a third: Mascot Pointer replaces Path Particles, and the
-highlight it drives is still Sequential Highlight.
+## Outputs
 
-`references/animation-recipes.md` has the code for each, the composition table pairing
-primitives to archetypes, the timing table of loop/fps combinations verified to close, and the
-symptom-to-cause debugging table. Read it before writing any animation CSS.
+Return or support the animated `build/post.html`, resolved Motion Patterns, timing rationale, loop/motion-budget notes, and any HOLD that prevents deterministic capture.
 
-## The trap that costs the most renders
+## Procedure
 
-A negative `animation-delay` pushes an animation **forward** in its cycle. To have element `i`
-of `N` active at `t = (i-1) x loop / N`, the delays run in **reverse**:
-`0, -loop x 3/4, -loop x 2/4, -loop x 1/4` for four elements. Writing the intuitive
-`0, -1/4, -2/4, -3/4` produces the order 1 → 4 → 3 → 2, which looks almost right in a thumbnail
-and is obviously wrong once anyone watches it.
-
-Verify by capturing four frames at `t = 0, loop/4, loop/2, 3xloop/4` and checking the order.
-
-## Render
+1. Read `references/animation-recipes.md` and active helper gates.
+2. Use one loop clock. Define `--loop` once and derive sub-animation durations with integer divisions. Do not mix arbitrary unrelated durations.
+3. Frame 0 must be a complete readable still and the animation state at 0% and 100% must close.
+4. Use at most two meaning-driven motion patterns for the infographic. A Mascot Pointer replaces another pointer primitive rather than adding a third competing route.
+5. Available primitives include Sequential Highlight, Path Particles, Path Draw-On, Orbit, Staggered Reveal, Bar Growth, Typewriter, Glow Pulse, Ambient Micro-Loops, and Mascot Pointer.
+6. Tie motion to the selected concept's useful payoff. A reveal, state transition, route, or comparison can support `creative-payoff`; decorative movement that does not change understanding should stay static.
+7. Keep changed pixels under control. Large blur, backdrop-filter, large shadow spread, and full-canvas decorative motion are poor choices for GIF encoding.
+8. Respect the reverse-delay rule for sequential animation. Verify order by capturing quarter-cycle frames instead of trusting intuition.
+9. Keep the outer 48px safe zone static and preserve reduced-motion behavior where the delivery context supports it.
+10. Render with verified timing rows:
 
 ```bash
 bash ${CLAUDE_PLUGIN_ROOT}/scripts/render.sh build/post.html build/post.gif --duration 6.0 --fps 12.5
 ```
 
-Pick duration and fps from the timing table rather than inventing numbers. Each verified row
-divides cleanly and closes.
+11. Read seam and changed-pixel evidence before approving the motion.
+
+## HOLD conditions
+
+Return a HOLD when the still is not approved, frame 0 is incomplete, the loop cannot close deterministically, motion contradicts the approved reading order, the requested effect exceeds the motion budget, or a mascot path lacks a validated exact-SVG component.
+
+## Related components
+
+- routing authority: `helper/GUIDE.md`
+- local quality gates: `helper/quality-gates.json`
+- motion recipes: `references/animation-recipes.md`
+- motion planner: `agents/motion-director.md`
+- implementation worker: `agents/motion-engineer.md`
+- mascot skill: `skills/mascots/SKILL.md`
+- render skill: `skills/render/SKILL.md`
+
+## Research gates
+
+Apply `design-dials` when resolving motion intensity and `bounded-verification` when the animated result reaches render/acceptance. `structural-originality` remains relevant when motion behavior is part of the story fingerprint.
