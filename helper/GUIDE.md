@@ -7,7 +7,7 @@ Read this file before choosing a production skill or worker.
 The machine-readable routing authority is split across:
 
 - `helper/router.json` for intent and conditional routing
-- `helper/capabilities.json` for capability ownership and research-gate linkage
+- `helper/capabilities.json` for capability ownership, research-gate linkage, and plugin-local defaults
 - `helper/artifacts.json` for handoff artifacts
 - `research/capability-notes/sources.json` for inspected upstream provenance
 - `research/capability-notes/gates.json` for adopted runtime research gates
@@ -26,13 +26,22 @@ If prose conflicts with one of those contracts, stop and repair the drift instea
    - animate an SVG mascot as a focused task: `mascot-animation`
    - compose an Info-story without running the whole post pipeline: `info-story`
 2. Load the route from `router.json`.
-3. Resolve capability owners from `capabilities.json`.
+3. Resolve capability owners and plugin-local defaults from `capabilities.json`.
 4. Apply the route's research gates from `research/capability-notes/gates.json`.
 5. Apply conditional asset/language/UI/reference gates before generation.
 6. Confirm required assets and evidence.
 7. Invoke the selected workflow or focused skill.
 8. Workers return artifacts to the parent workflow. They do not coordinate peers through hidden handoffs.
 9. Stop on a blocking `HOLD`; do not improvise around it.
+
+## Plugin-local visual defaults
+
+These are repository product defaults, not research-source claims.
+
+- Palette character is `creative-attractive-restrained`. Prefer color combinations that are distinctive, harmonious, and visually engaging without exaggerated saturation, unnecessary neon, or multiple competing accents unless the approved brief explicitly calls for them.
+- Infographic composition is `center-first`. Center the primary visual anchor and major story zones by default so the fixed 1080x1350 page reads as one intentional composition.
+- Use an alignment exception only when it improves comprehension or fidelity. Accepted categories include tables, UI mockups, code/terminal surfaces, timelines, Arabic/RTL reading flow, and documented reference-DNA decisions.
+- Record the alignment exception in the layout artifact. Do not introduce off-center composition only for decorative asymmetry.
 
 ## Research gates
 
@@ -59,7 +68,7 @@ python3 scripts/research_gates.py check
 
 ### Arabic or RTL
 
-Add the `arabic` skill before copy and layout work. Preserve bidi isolation, RTL ordering, Arabic typography, and the existing render constraints.
+Add the `arabic` skill before copy and layout work. Preserve bidi isolation, RTL ordering, Arabic typography, and the existing render constraints. RTL reading flow is an explicit alignment exception when center-first would reduce comprehension.
 
 ### Named or official mascot
 
@@ -69,11 +78,11 @@ The main model asks the user to attach the exact SVG. A subagent returns the HOL
 
 ### UI mockup story
 
-Enable the `ui-mockup-fidelity` capability. Product states, features, metrics, integrations, logos, and proof that appear real must be evidence-backed. Clearly label concept UI or fictional data when it could be mistaken for documented product behavior. The route applies `structural-originality`, `contrast-discipline`, and `evidence-traceability` where applicable.
+Enable the `ui-mockup-fidelity` capability. Product states, features, metrics, integrations, logos, and proof that appear real must be evidence-backed. Clearly label concept UI or fictional data when it could be mistaken for documented product behavior. The route applies `structural-originality`, `contrast-discipline`, and `evidence-traceability` where applicable. UI control alignment may override center-first when product fidelity or reading order requires it.
 
 ### Visual references
 
-Use `design-study` to extract reusable design DNA. Do not copy a reference pixel-for-pixel or treat its palette as the only source of variation. When a reference is present, activate `reference-dna` before layout production.
+Use `design-study` to extract reusable design DNA. Do not copy a reference pixel-for-pixel or treat its palette as the only source of variation. When a reference is present, activate `reference-dna` before layout production. A studied alignment pattern may override center-first only when it materially serves the content and is recorded as a reference-DNA decision.
 
 ### Static versus animated output
 
