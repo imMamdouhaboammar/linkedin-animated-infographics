@@ -1,26 +1,56 @@
-# ECC for Codex CLI
+# Codex Repository Guide
 
-This supplements the root `AGENTS.md` with a repo-local ECC baseline.
+This supplements the root `AGENTS.md`. The repository-specific operating authority is `helper/GUIDE.md`.
 
-## Repo Skill
+## Required authority
 
-- Repo-generated Codex skill: `.agents/skills/linkedin-animated-infographics/SKILL.md`
-- Claude-facing companion skill: `.claude/skills/linkedin-animated-infographics/SKILL.md`
-- Keep user-specific credentials and private MCPs in `~/.codex/config.toml`, not in this repo.
+Before changing routing, skills, agents, tools, research, or marketplace packaging, read:
 
-## MCP Baseline
+- `helper/GUIDE.md`
+- `helper/router.json`
+- `helper/capabilities.json`
+- `helper/quality-gates.json`
+- `helper/artifacts.json`
+- `helper/modules.json`
+- `research/capability-notes/gates.json`
+- `architecture/plugin-graph.json`
 
-Treat `.codex/config.toml` as the default ECC-safe baseline for work in this repository.
-The generated baseline enables GitHub, Context7, Exa, Memory, Playwright, and Sequential Thinking.
+Use the merged Info-stories registry from `scripts/info_stories.py::load_catalog()` rather than treating `catalog.json` alone as the source of truth.
 
-## Multi-Agent Support
+## Execution model
 
-- Explorer: read-only evidence gathering
-- Reviewer: correctness, security, and regression review
-- Docs researcher: API and release-note verification
+`new-post` is the parent workflow. Subtasks return bounded artifacts to it; no worker coordinates peer workers through hidden delegation.
 
-## Workflow Files
+The complete path includes `creative-director` after evidence gathering and before story architecture. The creative worker supplies evidence-safe concepts, copy/visual hooks, and a useful aha mechanic before downstream story/layout/motion decisions.
 
-- No dedicated workflow command files were generated for this repo.
+Plugin-local defaults:
 
-Use these workflow files as reusable task scaffolds when the detected repository workflows recur.
+- `hooked-design-copy`
+- `creative-payoff`
+- `creative-attractive-restrained`
+- `center-first`
+- exact SVG required for a named/official mascot
+
+Research-derived gates remain active through `research/capability-notes/gates.json`.
+
+## Strict validation
+
+Run:
+
+```bash
+python3 -m unittest discover -s tests -v
+python3 scripts/ecosystem_router.py check
+python3 scripts/research_gates.py check
+python3 scripts/plugin_graph.py check
+python3 scripts/ecosystem_doctor.py check
+python3 scripts/validate_marketplace.py
+```
+
+`scripts/ecosystem_doctor.py` is the strict reality gate for module existence, reachability, ownership, artifacts, tests, and cross-registry drift.
+
+## Repo skills
+
+- Generic/coding-agent conventions: `.agents/skills/linkedin-animated-infographics/SKILL.md`
+- Claude-facing companion: `.claude/skills/linkedin-animated-infographics/SKILL.md`
+
+Keep user credentials and private MCP configuration outside the repository. Do not fabricate claims, UI behavior, proof, or mascot assets to satisfy a build.
