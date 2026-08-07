@@ -5,12 +5,14 @@ from __future__ import annotations
 
 import argparse
 import json
+import tomllib
 from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_NAME = "linkedin-animated-infographics"
 EXPECTED_VERSION = "3.2.0"
+EXPECTED_CODEX_AGENTS = {"explorer", "reviewer", "docs_researcher"}
 EXPECTED_CANONICAL = {
     "skills_root": "skills",
     "agents_root": "agents",
@@ -47,6 +49,21 @@ def _load_json(path: Path, errors: list[str], label: str) -> dict[str, Any] | No
         return None
     if not isinstance(data, dict):
         errors.append(f"{label} root must be an object")
+        return None
+    return data
+
+
+def _load_toml(path: Path, errors: list[str], label: str) -> dict[str, Any] | None:
+    if not path.is_file():
+        errors.append(f"missing {label}: {path}")
+        return None
+    try:
+        data = tomllib.loads(path.read_text(encoding="utf-8"))
+    except tomllib.TOMLDecodeError as exc:
+        errors.append(f"invalid TOML in {label}: {exc}")
+        return None
+    if not isinstance(data, dict):
+        errors.append(f"{label} root must be a table")
         return None
     return data
 
@@ -195,6 +212,62 @@ def _validate_compatibility(root: Path, registry: dict[str, Any], errors: list[s
         errors.append("compatibility public submission type must be skills-only")
 
 
+def _validate_codex_config(root: Path, errors: list[str]) -> None:
+    config_path = root / ".codex" / "config.toml"
+    config = _load_toml(config_path, errors, "Codex repository config")
+    if config is None:
+        return
+    agents = config.get("agents", {})
+    if not isinstance(agents, dict):
+        errors.append("Codex repository config agents must be a table")
+        return
+    if agents.get("enabled") is not True:
+        errors.append("Codex repository config must explicitly enable agents")
+    if agents.get("max_concurrent_threads_per_session") != 6:
+        errors.append("Codex repository config max_concurrent_threads_per_session must be 6")
+    if "max_threads" in agents:
+        errors.append("Codex repository config must not use legacy agents.max_threads")
+
+    for key, contract in agents.items():
+        if not isinstance(contract, dict):
+            continue
+        config_file = contract.get("config_file")
+        if config_file is None:
+            continue
+        if not isinstance(config_file, str):
+            errors.append(f"Codex agent config reference for {key} must be a string")
+            continue
+        target = _safe_repo_path(root / ".codex", config_file)
+        if target is None:
+            errors.append(f"unsafe Codex agent config reference for {key}: {config_file}")
+        elif not target.is_file():
+            errors.append(f"Codex agent config reference does not exist for {key}: {config_file}")
+
+    agent_dir = root / ".codex" / "agents"
+    if not agent_dir.is_dir():
+        errors.append("missing .codex/agents directory")
+        return
+    found: set[str] = set()
+    for path in sorted(agent_dir.glob("*.toml")):
+        data = _load_toml(path, errors, f"Codex agent {path.name}")
+        if data is None:
+            continue
+        name = data.get("name")
+        if not isinstance(name, str) or not name.strip():
+            errors.append(f"Codex agent {path.name} missing required name")
+            continue
+        found.add(name)
+        if path.stem != name:
+            errors.append(f"Codex agent filename/name drift: {path.name} != {name}")
+        if not isinstance(data.get("description"), str) or not data["description"].strip():
+            errors.append(f"Codex agent {path.name} missing required description")
+        if not isinstance(data.get("developer_instructions"), str) or not data["developer_instructions"].strip():
+            errors.append(f"Codex agent {path.name} missing required developer_instructions")
+    missing = sorted(EXPECTED_CODEX_AGENTS - found)
+    if missing:
+        errors.append(f"missing required project-scoped Codex agents: {', '.join(missing)}")
+
+
 def validate_codex_plugin(root: Path = ROOT) -> list[str]:
     errors: list[str] = []
     manifest = _load_json(root / ".codex-plugin" / "plugin.json", errors, "OpenAI plugin manifest")
@@ -210,6 +283,7 @@ def validate_codex_plugin(root: Path = ROOT) -> list[str]:
         _validate_compatibility(root, registry, errors)
     if manifest and claude and manifest.get("name") != claude.get("name"):
         errors.append("Claude/OpenAI plugin name drift")
+    _validate_codex_config(root, errors)
 
     return errors
 
