@@ -7,8 +7,10 @@ Read this file before choosing a production skill or worker.
 The machine-readable routing authority is split across:
 
 - `helper/router.json` for intent and conditional routing
-- `helper/capabilities.json` for capability ownership
+- `helper/capabilities.json` for capability ownership and research-gate linkage
 - `helper/artifacts.json` for handoff artifacts
+- `research/capability-notes/sources.json` for inspected upstream provenance
+- `research/capability-notes/gates.json` for adopted runtime research gates
 - `architecture/plugin-graph.json` for executable worker order and required skill preloads
 - `scripts/info_stories.py::load_catalog()` for the merged Info-stories registry
 
@@ -24,11 +26,34 @@ If prose conflicts with one of those contracts, stop and repair the drift instea
    - animate an SVG mascot as a focused task: `mascot-animation`
    - compose an Info-story without running the whole post pipeline: `info-story`
 2. Load the route from `router.json`.
-3. Apply conditional gates before generation.
-4. Confirm required assets and evidence.
-5. Invoke the selected workflow or focused skill.
-6. Workers return artifacts to the parent workflow. They do not coordinate peers through hidden handoffs.
-7. Stop on a blocking `HOLD`; do not improvise around it.
+3. Resolve capability owners from `capabilities.json`.
+4. Apply the route's research gates from `research/capability-notes/gates.json`.
+5. Apply conditional asset/language/UI/reference gates before generation.
+6. Confirm required assets and evidence.
+7. Invoke the selected workflow or focused skill.
+8. Workers return artifacts to the parent workflow. They do not coordinate peers through hidden handoffs.
+9. Stop on a blocking `HOLD`; do not improvise around it.
+
+## Research gates
+
+Research is active production guidance, not background reading. The current adopted gate IDs are:
+
+- `prose-specificity`: reject named filler and low-information copy patterns per slot
+- `voice-preservation`: protect facts, mechanisms, names, numbers, and deliberate voice while editing
+- `design-dials`: require explicit design variance, visual density, and motion intensity decisions
+- `structural-originality`: reject palette-only reskins and require meaningful structural variation
+- `reference-dna`: when a reference exists, diagnose reusable structure without cloning distinctive work
+- `contrast-discipline`: enforce the established semantic-token and contrast floors
+- `evidence-traceability`: tie factual claims, product states, metrics, logos, and acceptance rows to evidence
+- `bounded-verification`: keep verification independent and allow at most two targeted repair attempts
+
+The gate registry records source provenance, stage, severity, owners, local behavior, and implementation references. Upstream repositories are research inputs only; their working copies are not runtime dependencies and are not packaged with the plugin.
+
+Validate this layer with:
+
+```bash
+python3 scripts/research_gates.py check
+```
 
 ## Conditional gates
 
@@ -44,11 +69,11 @@ The main model asks the user to attach the exact SVG. A subagent returns the HOL
 
 ### UI mockup story
 
-Enable the `ui-mockup-fidelity` capability. Product states, features, metrics, integrations, logos, and proof that appear real must be evidence-backed. Clearly label concept UI or fictional data when it could be mistaken for documented product behavior.
+Enable the `ui-mockup-fidelity` capability. Product states, features, metrics, integrations, logos, and proof that appear real must be evidence-backed. Clearly label concept UI or fictional data when it could be mistaken for documented product behavior. The route applies `structural-originality`, `contrast-discipline`, and `evidence-traceability` where applicable.
 
 ### Visual references
 
-Use `design-study` to extract reusable design DNA. Do not copy a reference pixel-for-pixel or treat its palette as the only source of variation.
+Use `design-study` to extract reusable design DNA. Do not copy a reference pixel-for-pixel or treat its palette as the only source of variation. When a reference is present, activate `reference-dna` before layout production.
 
 ### Static versus animated output
 
@@ -60,12 +85,13 @@ Static work stops after still QA and final verification. Animated work adds moti
 
 ## HOLD semantics
 
-A HOLD means a required input or quality gate is missing. Common cases:
+A HOLD means a required input or blocking quality gate is missing. Common cases:
 
 - exact official mascot SVG missing
 - unsupported factual proof
 - unreadable contrast
 - incompatible Info-stories composition
+- unresolved blocking research-gate finding
 - required render evidence unavailable
 
 Do not convert a HOLD into invented content. State the missing requirement and wait for the parent workflow or user to resolve it.
