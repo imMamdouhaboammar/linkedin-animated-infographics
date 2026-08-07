@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate native OpenAI/Codex plugin packaging and shared-core parity."""
+"""Validate native OpenAI/Codex packaging, submission readiness, and host parity."""
 
 from __future__ import annotations
 
@@ -85,11 +85,11 @@ def _load_toml(path: Path, errors: list[str], label: str) -> dict[str, Any] | No
 def _safe_repo_path(root: Path, relative: str) -> Path | None:
     if not isinstance(relative, str) or not relative.strip():
         return None
-    candidate = Path(relative)
-    if candidate.is_absolute():
+    supplied = Path(relative)
+    if supplied.is_absolute():
         return None
     root_resolved = root.resolve()
-    resolved = (root_resolved / candidate).resolve()
+    resolved = (root_resolved / supplied).resolve()
     try:
         resolved.relative_to(root_resolved)
     except ValueError:
@@ -117,13 +117,15 @@ def _validate_openai_manifest(root: Path, manifest: dict[str, Any], errors: list
         errors.append("OpenAI plugin interface must be an object")
         return
     for field in sorted(REQUIRED_INTERFACE):
-        value = interface.get(field)
-        if value in (None, "", []):
+        if interface.get(field) in (None, "", []):
             errors.append(f"OpenAI plugin interface missing {field}")
     if interface.get("category") != "Productivity":
         errors.append("OpenAI plugin interface category must be Productivity")
-    prompts = interface.get("defaultPrompt", [])
-    if not isinstance(prompts, list) or len(prompts) < 3 or any(not isinstance(item, str) or not item.strip() for item in prompts):
+
+    prompts = interface.get("defaultPrompt")
+    if not isinstance(prompts, list) or len(prompts) < 3 or any(
+        not isinstance(item, str) or not item.strip() for item in prompts
+    ):
         errors.append("OpenAI plugin defaultPrompt must contain at least three non-empty prompts")
 
     for field in ("composerIcon", "logo"):
@@ -135,25 +137,26 @@ def _validate_openai_manifest(root: Path, manifest: dict[str, Any], errors: list
             errors.append(f"unsafe OpenAI plugin {field} path")
         elif not target.is_file():
             errors.append(f"OpenAI plugin {field} path does not exist")
+
     screenshots = interface.get("screenshots", [])
-    if screenshots is not None:
-        if not isinstance(screenshots, list):
-            errors.append("OpenAI plugin screenshots must be a list")
-        else:
-            for value in screenshots:
-                target = _safe_repo_path(root, value) if isinstance(value, str) else None
-                if target is None:
-                    errors.append("unsafe OpenAI plugin screenshot path")
-                elif not target.is_file():
-                    errors.append(f"OpenAI plugin screenshot path does not exist: {value}")
+    if not isinstance(screenshots, list):
+        errors.append("OpenAI plugin screenshots must be a list")
+    else:
+        for value in screenshots:
+            target = _safe_repo_path(root, value) if isinstance(value, str) else None
+            if target is None:
+                errors.append("unsafe OpenAI plugin screenshot path")
+            elif not target.is_file():
+                errors.append(f"OpenAI plugin screenshot path does not exist: {value}")
 
 
-def _validate_marketplace(root: Path, marketplace: dict[str, Any], errors: list[str]) -> None:
+def _validate_codex_marketplace(root: Path, marketplace: dict[str, Any], errors: list[str]) -> None:
     if marketplace.get("name") != "mamdouh-creative-tools":
         errors.append("Codex marketplace name drift")
     interface = marketplace.get("interface")
     if not isinstance(interface, dict) or not interface.get("displayName"):
         errors.append("Codex marketplace missing interface.displayName")
+
     plugins = marketplace.get("plugins")
     if not isinstance(plugins, list) or len(plugins) != 1:
         errors.append("Codex marketplace must expose exactly one plugin")
@@ -164,6 +167,7 @@ def _validate_marketplace(root: Path, marketplace: dict[str, Any], errors: list[
         return
     if entry.get("name") != EXPECTED_NAME:
         errors.append("Codex marketplace plugin name drift")
+
     source = entry.get("source")
     if source != {"source": "local", "path": "./"}:
         errors.append("Codex marketplace source must resolve to local plugin root ./")
@@ -171,6 +175,7 @@ def _validate_marketplace(root: Path, marketplace: dict[str, Any], errors: list[
         target = _safe_repo_path(root, source["path"])
         if target is None or target != root.resolve():
             errors.append("Codex marketplace source path is unsafe or does not resolve to plugin root")
+
     policy = entry.get("policy")
     if not isinstance(policy, dict):
         errors.append("Codex marketplace policy must be an object")
@@ -183,22 +188,56 @@ def _validate_marketplace(root: Path, marketplace: dict[str, Any], errors: list[
         errors.append("Codex marketplace category must be Productivity")
 
 
+def _validate_claude_release(
+    claude: dict[str, Any] | None,
+    claude_marketplace: dict[str, Any] | None,
+    openai_manifest: dict[str, Any] | None,
+    errors: list[str],
+) -> None:
+    if claude:
+        if claude.get("name") != EXPECTED_NAME:
+            errors.append("Claude plugin name drift")
+        if claude.get("version") != EXPECTED_VERSION:
+            errors.append("Claude plugin version drift")
+        if openai_manifest and claude.get("name") != openai_manifest.get("name"):
+            errors.append("Claude/OpenAI plugin name drift")
+        if openai_manifest and claude.get("version") != openai_manifest.get("version"):
+            errors.append("Claude/OpenAI plugin version drift")
+
+    if not claude_marketplace:
+        return
+    entries = claude_marketplace.get("plugins")
+    if not isinstance(entries, list):
+        errors.append("Claude marketplace plugins must be a list")
+        return
+    matching = [entry for entry in entries if isinstance(entry, dict) and entry.get("name") == EXPECTED_NAME]
+    if len(matching) != 1:
+        errors.append("Claude marketplace must contain exactly one matching plugin entry")
+        return
+    entry = matching[0]
+    if entry.get("version") != EXPECTED_VERSION:
+        errors.append("Claude marketplace version drift")
+    if claude and entry.get("version") != claude.get("version"):
+        errors.append("Claude marketplace/plugin version drift")
+
+
 def _validate_compatibility(root: Path, registry: dict[str, Any], errors: list[str]) -> None:
     if registry.get("plugin_name") != EXPECTED_NAME:
         errors.append("compatibility plugin name drift")
     if registry.get("plugin_version") != EXPECTED_VERSION:
         errors.append("compatibility plugin version drift")
+
     surfaces = registry.get("surfaces")
     if not isinstance(surfaces, list) or not {"codex", "chatgpt"}.issubset(set(surfaces)):
         errors.append("compatibility surfaces must include codex and chatgpt")
 
-    manifests = registry.get("manifests")
     expected_manifests = {
         "openai": ".codex-plugin/plugin.json",
         "claude": ".claude-plugin/plugin.json",
         "openai_marketplace": ".agents/plugins/marketplace.json",
         "claude_marketplace": ".claude-plugin/marketplace.json",
     }
+    manifests = registry.get("manifests")
     if not isinstance(manifests, dict):
         errors.append("compatibility manifests must be an object")
     else:
@@ -227,8 +266,7 @@ def _validate_compatibility(root: Path, registry: dict[str, Any], errors: list[s
 
 
 def _validate_codex_config(root: Path, errors: list[str]) -> None:
-    config_path = root / ".codex" / "config.toml"
-    config = _load_toml(config_path, errors, "Codex repository config")
+    config = _load_toml(root / ".codex" / "config.toml", errors, "Codex repository config")
     if config is None:
         return
     agents = config.get("agents", {})
@@ -261,6 +299,7 @@ def _validate_codex_config(root: Path, errors: list[str]) -> None:
     if not agent_dir.is_dir():
         errors.append("missing .codex/agents directory")
         return
+
     found: set[str] = set()
     for path in sorted(agent_dir.glob("*.toml")):
         data = _load_toml(path, errors, f"Codex agent {path.name}")
@@ -277,6 +316,7 @@ def _validate_codex_config(root: Path, errors: list[str]) -> None:
             errors.append(f"Codex agent {path.name} missing required description")
         if not isinstance(data.get("developer_instructions"), str) or not data["developer_instructions"].strip():
             errors.append(f"Codex agent {path.name} missing required developer_instructions")
+
     missing = sorted(EXPECTED_CODEX_AGENTS - found)
     if missing:
         errors.append(f"missing required project-scoped Codex agents: {', '.join(missing)}")
@@ -292,8 +332,7 @@ def _validate_submission(root: Path, errors: list[str]) -> None:
 
     metadata = _load_json(root / "submission" / "openai-plugin.json", errors, "OpenAI submission metadata")
     cases = _load_json(root / "submission" / "test-cases.json", errors, "OpenAI submission test cases")
-    readme = root / "submission" / "README.md"
-    if not readme.is_file():
+    if not (root / "submission" / "README.md").is_file():
         errors.append("missing OpenAI submission README")
 
     if metadata:
@@ -307,16 +346,28 @@ def _validate_submission(root: Path, errors: list[str]) -> None:
             errors.append("OpenAI submission category must be Productivity")
         if metadata.get("submission_status") != "prepared-not-submitted":
             errors.append("OpenAI submission status must remain prepared-not-submitted until external publication completes")
+
         prompts = metadata.get("starter_prompts")
-        if not isinstance(prompts, list) or len(prompts) < 4 or any(not isinstance(item, str) or not item.strip() for item in prompts):
+        if not isinstance(prompts, list) or len(prompts) < 4 or any(
+            not isinstance(item, str) or not item.strip() for item in prompts
+        ):
             errors.append("OpenAI submission must include at least four starter prompts")
         if not isinstance(metadata.get("release_notes"), str) or not metadata["release_notes"].strip():
             errors.append("OpenAI submission release notes are required")
+
         urls = metadata.get("urls")
-        if not isinstance(urls, dict) or any(not isinstance(urls.get(key), str) or not urls[key].startswith("https://") for key in ("website", "support", "privacy", "terms")):
+        if not isinstance(urls, dict) or any(
+            not isinstance(urls.get(key), str) or not urls[key].startswith("https://")
+            for key in ("website", "support", "privacy", "terms")
+        ):
             errors.append("OpenAI submission requires public HTTPS website/support/privacy/terms URLs")
+
         prerequisites = metadata.get("external_prerequisites")
-        prerequisite_text = " ".join(prerequisites).lower() if isinstance(prerequisites, list) and all(isinstance(item, str) for item in prerequisites) else ""
+        prerequisite_text = (
+            " ".join(prerequisites).lower()
+            if isinstance(prerequisites, list) and all(isinstance(item, str) for item in prerequisites)
+            else ""
+        )
         for marker in ("apps management", "verified", "manual", "review"):
             if marker not in prerequisite_text:
                 errors.append(f"OpenAI submission external prerequisites missing marker: {marker}")
@@ -328,6 +379,7 @@ def _validate_submission(root: Path, errors: list[str]) -> None:
             errors.append("OpenAI submission requires exactly five positive reviewer test cases")
         if not isinstance(negative, list) or len(negative) != 3:
             errors.append("OpenAI submission requires exactly three negative reviewer test cases")
+
         if isinstance(positive, list):
             for index, case in enumerate(positive, start=1):
                 if not isinstance(case, dict):
@@ -336,6 +388,7 @@ def _validate_submission(root: Path, errors: list[str]) -> None:
                 missing = sorted(field for field in REQUIRED_POSITIVE_CASE_FIELDS if not case.get(field))
                 if missing:
                     errors.append(f"OpenAI positive reviewer case {index} missing: {', '.join(missing)}")
+
         if isinstance(negative, list):
             for index, case in enumerate(negative, start=1):
                 if not isinstance(case, dict):
@@ -348,22 +401,21 @@ def _validate_submission(root: Path, errors: list[str]) -> None:
 
 def validate_codex_plugin(root: Path = ROOT) -> list[str]:
     errors: list[str] = []
-    manifest = _load_json(root / ".codex-plugin" / "plugin.json", errors, "OpenAI plugin manifest")
-    marketplace = _load_json(root / ".agents" / "plugins" / "marketplace.json", errors, "Codex marketplace")
+    openai_manifest = _load_json(root / ".codex-plugin" / "plugin.json", errors, "OpenAI plugin manifest")
+    codex_marketplace = _load_json(root / ".agents" / "plugins" / "marketplace.json", errors, "Codex marketplace")
     registry = _load_json(root / "compatibility" / "codex.json", errors, "Codex compatibility registry")
     claude = _load_json(root / ".claude-plugin" / "plugin.json", errors, "Claude plugin manifest")
+    claude_marketplace = _load_json(root / ".claude-plugin" / "marketplace.json", errors, "Claude marketplace")
 
-    if manifest:
-        _validate_openai_manifest(root, manifest, errors)
-    if marketplace:
-        _validate_marketplace(root, marketplace, errors)
+    if openai_manifest:
+        _validate_openai_manifest(root, openai_manifest, errors)
+    if codex_marketplace:
+        _validate_codex_marketplace(root, codex_marketplace, errors)
     if registry:
         _validate_compatibility(root, registry, errors)
-    if manifest and claude and manifest.get("name") != claude.get("name"):
-        errors.append("Claude/OpenAI plugin name drift")
+    _validate_claude_release(claude, claude_marketplace, openai_manifest, errors)
     _validate_codex_config(root, errors)
     _validate_submission(root, errors)
-
     return errors
 
 
