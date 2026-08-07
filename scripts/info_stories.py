@@ -8,13 +8,25 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CATALOG = ROOT / "skills" / "info-stories" / "catalog.json"
+DEFAULT_EXTENSIONS = ROOT / "skills" / "info-stories" / "extensions"
 AXIS_ALIASES = {"house": "houses", "style": "styles", "archetype": "archetypes", "motion": "motions"}
 HEX_RE = re.compile(r"^#[0-9A-Fa-f]{6}$")
 SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 
 
-def load_catalog(path=DEFAULT_CATALOG):
-    return json.loads(Path(path).read_text())
+def load_catalog(path=DEFAULT_CATALOG, extensions_dir=None):
+    path = Path(path)
+    catalog = json.loads(path.read_text())
+    if extensions_dir is None and path.resolve() == DEFAULT_CATALOG.resolve():
+        extensions_dir = DEFAULT_EXTENSIONS
+    if extensions_dir:
+        extension_root = Path(extensions_dir)
+        if extension_root.exists():
+            for extension in sorted(extension_root.glob("*.json")):
+                payload = json.loads(extension.read_text())
+                for axis in ("houses", "styles", "archetypes", "motions"):
+                    catalog.setdefault(axis, []).extend(payload.get(axis, []))
+    return catalog
 
 
 def _linear(channel):
@@ -51,7 +63,8 @@ def validate_catalog(catalog):
                 errors.append(f"{axis}: duplicate slug {slug}")
             if name in names:
                 errors.append(f"{axis}: duplicate name {name}")
-            slugs.add(slug); names.add(name)
+            slugs.add(slug)
+            names.add(name)
     required_dials = {"design_variance", "motion_intensity", "visual_density"}
     for style in catalog.get("styles", []):
         dials = style.get("dials", {})
@@ -211,7 +224,7 @@ def validate_verification_report(report):
 
 def check_composition(catalog, style, archetype, motions):
     style_item = _find(catalog, "style", style)
-    archetype_item = _find(catalog, "archetype", archetype)
+    _find(catalog, "archetype", archetype)
     errors = []
     if archetype not in style_item.get("archetypes", []):
         errors.append(f"{style} is not compatible with {archetype}")
