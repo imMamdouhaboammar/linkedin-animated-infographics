@@ -4,7 +4,7 @@
 
 **Turn imagination into visual stories that stop the scroll and make the idea click**
 
-`Claude Code Plugin 3.0.0` · `1080×1350` · `Info-stories` · `UI stories` · `Exact-SVG mascots` · `Arabic / RTL`
+`Claude Code Plugin 3.1.0` · `1080×1350` · `Info-stories` · `UI stories` · `Exact-SVG mascots` · `Arabic / RTL`
 
 <br>
 
