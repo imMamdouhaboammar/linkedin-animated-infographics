@@ -16,9 +16,9 @@ Use this skill when modifying this repository. Start with `helper/GUIDE.md`; do 
 - `helper/modules.json`: active skills, agents, and public tools
 - `research/capability-notes/gates.json`: adopted research-derived runtime gates
 - `architecture/plugin-graph.json`: shipping sequence and required skill preloads
-- `scripts/info_stories.py::load_catalog()`: merged Info-stories registry
+- the merged registry returned by `scripts/info_stories.py::load_catalog()`: complete Info-stories authority
 
-The merged registry combines `skills/info-stories/catalog.json` with `skills/info-stories/extensions/*.json`. `catalog.json` alone is not the complete authority.
+The merged registry returned by `scripts/info_stories.py::load_catalog()` combines `skills/info-stories/catalog.json` with `skills/info-stories/extensions/*.json`. `catalog.json` alone is not the complete authority.
 
 ## Actual stack
 
