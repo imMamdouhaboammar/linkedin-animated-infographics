@@ -46,6 +46,16 @@ class UIMockupStoryTests(unittest.TestCase):
             text = (ROOT / "agents" / f"{name}.md").read_text().lower()
             self.assertIn("ui-mockup-rules", text, name)
 
+    def test_repo_conventions_define_merged_registry_as_authority(self):
+        for path in (
+            ROOT / ".agents/skills/linkedin-animated-infographics/SKILL.md",
+            ROOT / ".claude/skills/linkedin-animated-infographics/SKILL.md",
+        ):
+            text = path.read_text()
+            self.assertIn("merged registry returned by `scripts/info_stories.py::load_catalog()`", text)
+            self.assertIn("skills/info-stories/extensions/*.json", text)
+            self.assertNotIn("`skills/info-stories/catalog.json` is the machine-readable source of truth", text)
+
     def test_tracked_ui_examples_match_scaffold(self):
         examples = [
             ("ui-storyboard-brief.json", dict(topic="From prompt to approved campaign screen", takeaway="Each screen shows one decision in the workflow", cta="Save the flow", house="mist-board", style="ui-storyboard", archetype="screen-to-outcome", motions=["cursor-focus", "state-transition"], language="en", output_mode="gif")),
