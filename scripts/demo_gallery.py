@@ -16,6 +16,11 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.demo_submit import scan_public_text
+except ModuleNotFoundError:  # direct `python3 scripts/demo_gallery.py ...`
+    from demo_submit import scan_public_text
+
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_FILES = {"demo.gif", "index.html", "demo.json"}
 DEMO_ID = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
@@ -211,11 +216,26 @@ def validate_demo_dir(path: Path, root: Path = ROOT) -> list[str]:
         errors.append("repo_url must use https://")
 
     errors.extend(_scan_metadata_for_local_paths(data))
+    errors.extend(
+        scan_public_text(
+            "demo.json",
+            json.dumps(data, ensure_ascii=False, sort_keys=True),
+        )
+    )
 
     for filename in ("demo.gif", "index.html"):
         file_path = path / filename
         if not file_path.is_file() or file_path.stat().st_size == 0:
             errors.append(f"{filename} must exist and be non-empty")
+
+    html_path = path / "index.html"
+    if html_path.is_file():
+        errors.extend(
+            scan_public_text(
+                "index.html",
+                html_path.read_text(encoding="utf-8", errors="replace"),
+            )
+        )
 
     return errors
 
