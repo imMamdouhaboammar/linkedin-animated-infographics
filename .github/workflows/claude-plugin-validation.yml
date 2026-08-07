@@ -1,4 +1,4 @@
-name: Claude Plugin Validation
+name: Plugin Validation
 
 on:
   pull_request:
@@ -23,7 +23,7 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Set up Node for Claude Code validator
+      - name: Set up Node for host validators
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: "22"
@@ -52,8 +52,11 @@ jobs:
       - name: Validate demo gallery
         run: python3 scripts/demo_gallery.py check
 
-      - name: Validate marketplace contract
+      - name: Validate Claude marketplace contract
         run: python3 scripts/validate_marketplace.py
+
+      - name: Validate Codex and OpenAI plugin contract
+        run: python3 scripts/validate_codex_plugin.py
 
       - name: Validate hook, JSON, and shell syntax
         run: |
@@ -65,6 +68,11 @@ jobs:
           python3 -m json.tool helper/modules.json >/dev/null
           python3 -m json.tool research/capability-notes/gates.json >/dev/null
           python3 -m json.tool schemas/demo.schema.json >/dev/null
+          python3 -m json.tool .codex-plugin/plugin.json >/dev/null
+          python3 -m json.tool .agents/plugins/marketplace.json >/dev/null
+          python3 -m json.tool compatibility/codex.json >/dev/null
+          python3 -m json.tool submission/openai-plugin.json >/dev/null
+          python3 -m json.tool submission/test-cases.json >/dev/null
           bash -n scripts/lint_artboard.sh
           bash -n scripts/setup.sh
 
@@ -77,7 +85,7 @@ jobs:
       - name: Run official Claude plugin validator
         run: claude plugin validate .
 
-      - name: Smoke-test marketplace registration and install
+      - name: Smoke-test Claude marketplace registration and install
         run: |
           export HOME="${RUNNER_TEMP}/claude-marketplace-smoke"
           mkdir -p "$HOME"
