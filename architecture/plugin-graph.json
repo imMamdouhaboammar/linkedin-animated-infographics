@@ -5,6 +5,7 @@
       "sequence": [
         "design-study",
         "evidence-checker",
+        "creative-director",
         "story-architect",
         "palette-curator",
         "copy-compressor",
@@ -32,6 +33,7 @@
     "artboard-builder": {"required_skills": ["artboard", "info-stories"]},
     "caption-writer": {"required_skills": ["caption"]},
     "copy-compressor": {"required_skills": ["info-stories", "caption"]},
+    "creative-director": {"required_skills": ["info-stories", "caption", "artboard"]},
     "design-study": {"required_skills": ["info-stories"]},
     "evidence-checker": {"required_skills": ["info-stories"]},
     "layout-composer": {"required_skills": ["info-stories", "artboard"]},
@@ -46,11 +48,13 @@
   },
   "capabilities": {
     "anti-slop": ["copy-compressor", "caption-writer", "post-critic"],
+    "creative-direction": ["creative-director", "story-architect", "layout-composer", "post-critic"],
     "design-taste": ["design-study", "layout-composer", "artboard-builder", "post-critic"],
-    "structural-fingerprint": ["layout-composer", "artboard-builder", "post-critic"],
     "evidence": ["evidence-checker", "copy-compressor", "story-verifier"],
-    "verification-loop": ["render-qa", "post-critic", "story-verifier"],
+    "hook-design-copy": ["creative-director", "copy-compressor", "caption-writer", "post-critic"],
     "mascot-identity": ["mascot-animator", "post-critic", "story-verifier"],
-    "ui-mockup-fidelity": ["evidence-checker", "layout-composer", "artboard-builder", "post-critic"]
+    "structural-fingerprint": ["layout-composer", "artboard-builder", "post-critic"],
+    "ui-mockup-fidelity": ["evidence-checker", "layout-composer", "artboard-builder", "post-critic"],
+    "verification-loop": ["render-qa", "post-critic", "story-verifier"]
   }
 }
