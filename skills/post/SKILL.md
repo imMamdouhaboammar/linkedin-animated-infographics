@@ -1,77 +1,66 @@
 ---
 name: post
-description: >-
-  Router for building a LinkedIn post as a caption plus a 1080x1350 static or looping
-  infographic. Use when the user wants a LinkedIn post, animated infographic, GIF, system map,
-  stack map, workflow diagram, cheat sheet, or wants source material turned into a LinkedIn
-  visual. Start here even when the immediate ask is only a hook, visual direction, or motion.
+description: Route LinkedIn infographic requests to the correct complete or focused workflow using the repository helper, capability gates, creative defaults, and artifact contracts.
 ---
 
 # LinkedIn Animated Infographics
 
-The core format is a complete static infographic with a small, deliberate motion footprint when animation adds meaning. Motion acts as a reading, route, hierarchy, or state signal. It does not compensate for weak information architecture.
+## Purpose
 
-## Pipeline
+Act as the lightweight **routing entrypoint** for the plugin. Do not duplicate the complete workflow here. Read `helper/GUIDE.md`, classify the request, inspect the route, then invoke the correct workflow or focused skill.
 
-```text
-topic -> Info-stories brief -> caption -> still -> motion -> render -> independent QA -> publish
-```
+## Use when
 
-Load only the skill needed for the current stage.
+Start here for a LinkedIn infographic, post, GIF, cheat sheet, workflow visual, stack map, UI story, design direction, hook, mascot request, render request, or QA request when the correct specialist path is not already explicit.
 
-| Stage | Skill | Job |
-|---|---|---|
-| Composition | `linkedin-animated-infographics:info-stories` | resolve Story Archetype, Visual Style, Story House, Motion Patterns, and design dials |
-| Caption | `linkedin-animated-infographics:caption` | write or edit the caption and enforce copy rules |
-| Layout | `linkedin-animated-infographics:artboard` | execute the approved static composition |
-| Motion | `linkedin-animated-infographics:motion` | implement seekable animation and loop rules |
-| Mascots | `linkedin-animated-infographics:mascots` | add an optional character within the motion budget |
-| Render | `linkedin-animated-infographics:render` | capture frames, assemble the GIF, and run render gates |
-| Arabic | `linkedin-animated-infographics:arabic` | apply Arabic and bilingual layout behavior |
+## Inputs
 
-Three workflow skills run common end-to-end tasks: `linkedin-animated-infographics:new-post`, `linkedin-animated-infographics:render-gif`, and `linkedin-animated-infographics:qa-post`.
+- user request and source material
+- optional intent override
+- language/output mode
+- optional visual references, UI mockup flag, brand assets, or mascot requirement
 
-## Agents
+## Outputs
 
-| Agent | Give it |
-|---|---|
-| `design-study` | supplied visual references when their design DNA should inform a new direction |
-| `story-architect` | topic, takeaway, CTA, explicit choices, and optional study report |
-| `copy-compressor` | source material and target story slots when the artboard copy is too dense |
-| `evidence-checker` | claims, names, metrics, and proof that must survive into the visual |
-| `layout-composer` | approved story brief and compressed content blocks |
-| `artboard-builder` | approved static layout spec and story brief |
-| `motion-director` | approved still and story brief when output is animated |
-| `motion-engineer` | approved still plus resolved Motion Patterns |
-| `render-qa` | built artboard for render diagnostics |
-| `story-verifier` | final artifact plus acceptance criteria and direct evidence |
+Return a resolved route containing workflow, skills, agents, capabilities, asset gates, research gates, and local quality gates. For creation requests, hand control to the `new-post` parent workflow.
 
-## Non-negotiables
+## Procedure
 
-1. Exactly one `#artboard` element at `width:1080px; height:1350px`.
-2. All animation is seekable CSS, WAAPI, or SMIL, shares one `--loop` or an integer division, and keeps frame 0 complete.
-3. Fonts are system-safe or base64-embedded. Never `@import` a network font.
-4. When Info-stories is active, colour comes from the resolved **Story House** token block. Do not silently replace it with House 0 or invent one-off colours. Legacy posts without a story brief may keep the existing House 0 default.
-5. Declared text pairs meet 4.5:1 contrast and declared state pairs meet 3:1.
-6. Nothing moves in the outer 48px margin.
-7. A mascot replaces another pointer primitive rather than becoming a third competing motion.
-8. No fabricated metrics, proof, testimonials, product facts, or source claims.
-
-## Working method
-
-1. Ask only what cannot be inferred: the one takeaway and CTA.
-2. If references are supplied, study them before choosing a direction.
-3. Resolve and approve the Info-stories brief before production.
-4. Write the caption and compress artboard copy without weakening facts.
-5. Build and approve the still before motion.
-6. Add zero to two meaning-driven Motion Patterns.
-7. Render, run existing QA, then run independent story verification.
-8. Deliver the artifact, caption, first comment, resolved four-axis selection, and render numbers when applicable.
-
-## Setup
+1. Read `helper/GUIDE.md`.
+2. Resolve the request through the deterministic helper when structured routing is useful:
 
 ```bash
-bash ${CLAUDE_PLUGIN_ROOT}/scripts/setup.sh
+python3 ${CLAUDE_PLUGIN_ROOT}/tools/route_request.py --request "<request>"
 ```
 
-The registry and validation tools run on plain Python 3. Browser rendering additionally needs the Playwright browser and its operating-system libraries.
+3. Use the route intent:
+   - `create-post` → `new-post`
+   - `qa` → `qa-post`
+   - `render` → `render-gif`
+   - `design-study` → focused `design-study` worker/Info-stories references
+   - `mascot-animation` → `mascots` + `svg-mascot-animator`
+   - `info-story` → focused Info-stories composition path
+4. Apply conditional gates before production: Arabic/RTL, UI fidelity, visual-reference diagnosis, and exact official mascot SVG.
+5. For complete creation, require the `creative-director` concept stage before `story-architect`. The concept should provide evidence-safe visual/copy hooks and a useful aha mechanic rather than a generic topic restatement.
+6. Keep plugin-local defaults active: `creative-attractive-restrained` palettes and `center-first` composition with documented exceptions.
+7. Do not silently bypass `post-critic` or `story-verifier` on complete shipping paths.
+
+## HOLD conditions
+
+Return a HOLD when the helper reports a blocking asset or gate, especially a missing exact mascot SVG, unsupported evidence, incompatible Story House/Style choice, or a render/verification blocker. Do not invent a route around a blocking gate.
+
+## Related components
+
+- routing authority: `helper/GUIDE.md`
+- router registry: `helper/router.json`
+- capability registry: `helper/capabilities.json`
+- local quality gates: `helper/quality-gates.json`
+- artifact contracts: `helper/artifacts.json`
+- research gates: `research/capability-notes/gates.json`
+- complete workflow: `skills/new-post/SKILL.md`
+- focused QA: `skills/qa-post/SKILL.md`
+- focused render: `skills/render-gif/SKILL.md`
+
+## Research gates
+
+The post router does not reinterpret research rules. It passes through the gate IDs returned by the helper, including `prose-specificity`, `voice-preservation`, `design-dials`, `structural-originality`, `reference-dna`, `contrast-discipline`, `evidence-traceability`, and `bounded-verification` where applicable.
