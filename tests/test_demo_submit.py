@@ -99,7 +99,8 @@ class DemoSubmitTests(unittest.TestCase):
 
     def test_secret_markers_are_rejected(self):
         self.require_module()
-        (self.build / "post.html").write_text("<script>const token='ghp_abcdefghijklmnopqrstuvwxyz123456'</script>")
+        token_like = "gh" + "p_" + "abcdefghijklmnopqrstuvwxyz123456"
+        (self.build / "post.html").write_text(f"<script>const token='{token_like}'</script>")
         with self.assertRaisesRegex(ValueError, "public export scan"):
             prepare_submission(self.build, self.stage, self.metadata())
 
