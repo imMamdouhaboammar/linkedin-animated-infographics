@@ -26,6 +26,13 @@ def copy_router_fixture(root: Path):
         shutil.copytree(ROOT / relative, root / relative)
 
 
+def mutate_router_fixture(root: Path, mutator):
+    router_path = root / "helper" / "router.json"
+    router = json.loads(router_path.read_text())
+    mutator(router)
+    router_path.write_text(json.dumps(router))
+
+
 class EcosystemRouterTests(unittest.TestCase):
     def test_helper_contract_files_exist(self):
         for relative in ("README.md", "GUIDE.md", "router.json", "capabilities.json", "artifacts.json", "quality-gates.json"):
@@ -46,15 +53,52 @@ class EcosystemRouterTests(unittest.TestCase):
                 root = Path(tmp) / "repo"
                 root.mkdir()
                 copy_router_fixture(root)
-                router_path = root / "helper" / "router.json"
-                router = json.loads(router_path.read_text())
-                router["conditions"].pop(condition_id)
-                router_path.write_text(json.dumps(router))
+                mutate_router_fixture(root, lambda router, key=condition_id: router["conditions"].pop(key))
                 errors = module.validate_ecosystem(root)
                 self.assertTrue(
                     any("required condition" in error.lower() and condition_id in error for error in errors),
                     errors,
                 )
+
+    def test_validator_requires_runtime_condition_schema(self):
+        module = load_module()
+        self.assertIsNotNone(module)
+        cases = (
+            ("arabic", "adds_skills", None),
+            ("ui_mockup", "adds_agents", "not-a-list"),
+            ("visual_reference", "adds_capabilities", None),
+            ("official_mascot", "asset_gate", 42),
+            ("official_mascot", "adds_skills", None),
+        )
+        for condition_id, field, bad_value in cases:
+            with self.subTest(condition=condition_id, field=field), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp) / "repo"
+                root.mkdir()
+                copy_router_fixture(root)
+
+                def break_field(router, key=condition_id, field_name=field, value=bad_value):
+                    if value is None:
+                        router["conditions"][key].pop(field_name, None)
+                    else:
+                        router["conditions"][key][field_name] = value
+
+                mutate_router_fixture(root, break_field)
+                errors = module.validate_ecosystem(root)
+                self.assertTrue(
+                    any(condition_id in error and field in error and "required field" in error.lower() for error in errors),
+                    errors,
+                )
+
+    def test_route_request_fails_fast_with_value_error_for_malformed_required_condition(self):
+        module = load_module()
+        self.assertIsNotNone(module)
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            root.mkdir()
+            copy_router_fixture(root)
+            mutate_router_fixture(root, lambda router: router["conditions"]["arabic"].pop("adds_skills"))
+            with self.assertRaisesRegex(ValueError, "arabic.*adds_skills"):
+                module.route_request({"request": "اعمل انفوجرافيك عربي", "language": "ar"}, root)
 
     def test_full_post_route_uses_canonical_workflow(self):
         module = load_module()
