@@ -54,6 +54,7 @@ def validate_component_graph(root: Path = ROOT) -> list[str]:
             errors.append(f"agents missing from graph: {', '.join(missing)}")
         if extra:
             errors.append(f"graph references missing agents: {', '.join(extra)}")
+
     actual_skills = {p.parent.name for p in skill_dir.glob("*/SKILL.md")}
     for agent, contract in graph.get("agents", {}).items():
         path = agent_dir / f"{agent}.md"
@@ -66,11 +67,29 @@ def validate_component_graph(root: Path = ROOT) -> list[str]:
                 errors.append(f"{agent} requires missing skill {skill}")
             if skill not in declared:
                 errors.append(f"{agent} does not preload required skill {skill}")
-    sequence = graph.get("workflows", {}).get("new-post", {}).get("sequence", [])
+
+    workflow = graph.get("workflows", {}).get("new-post", {})
+    sequence = workflow.get("sequence", [])
     for agent in sequence:
         if agent not in graph_agents:
             errors.append(f"new-post references unknown agent {agent}")
-    shipping = set(sequence)
+
+    conditional_agents = set()
+    for name, edge in workflow.get("conditional", {}).items():
+        agent = edge.get("agent")
+        if not agent or agent not in graph_agents:
+            errors.append(f"conditional edge {name} references unknown agent {agent!r}")
+            continue
+        conditional_agents.add(agent)
+        after, before = edge.get("after"), edge.get("before")
+        if after not in sequence or before not in sequence:
+            errors.append(f"conditional edge {name} has invalid anchors {after!r}/{before!r}")
+        elif sequence.index(after) >= sequence.index(before):
+            errors.append(f"conditional edge {name} anchors are out of order")
+        if not edge.get("asset_gate"):
+            errors.append(f"conditional edge {name} is missing asset_gate")
+
+    shipping = set(sequence) | conditional_agents
     for capability, owners in graph.get("capabilities", {}).items():
         unknown = sorted(set(owners) - graph_agents)
         if unknown:
@@ -83,7 +102,7 @@ def validate_component_graph(root: Path = ROOT) -> list[str]:
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Validate plugin agent/skill/capability graph")
     parser.add_argument("command", nargs="?", default="check", choices=("check",))
-    args = parser.parse_args(argv)
+    parser.parse_args(argv)
     errors = validate_component_graph(ROOT)
     if errors:
         for error in errors:
