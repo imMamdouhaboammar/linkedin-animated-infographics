@@ -31,7 +31,7 @@ Return animated asset/component, inspection report, chosen creative direction, p
 ## Procedure
 
 1. For a named or official mascot, require the **exact SVG** before animation begins. Keep an untouched copy of the source.
-2. If the exact SVG is missing in the main conversational context, ask the user to upload it and stop. Inside a worker, return `HOLD: exact SVG required` to the parent workflow.
+2. If the exact SVG is missing in the main conversational context, **ask the user to upload the exact SVG** and stop. Inside a worker, return `HOLD: exact SVG required` to the parent workflow.
 3. Validate the request contract:
 
 ```bash
