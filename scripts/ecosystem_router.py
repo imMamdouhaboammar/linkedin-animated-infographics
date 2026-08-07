@@ -7,6 +7,17 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 HELPER_FILES = ("router.json", "capabilities.json", "artifacts.json", "quality-gates.json")
 REQUIRED_CONDITIONS = frozenset({"arabic", "ui_mockup", "visual_reference", "official_mascot"})
+CONDITION_SCHEMA = {
+    "arabic": {"adds_skills": list},
+    "ui_mockup": {"adds_capabilities": list, "adds_agents": list},
+    "visual_reference": {"adds_agents": list, "adds_capabilities": list},
+    "official_mascot": {
+        "asset_gate": str,
+        "adds_skills": list,
+        "adds_agents": list,
+        "adds_capabilities": list,
+    },
+}
 
 
 def _load_json(path: Path, errors=None):
@@ -36,6 +47,34 @@ def _resolve_asset_path(root: Path, value):
 
 def _is_svg_file(path: Path | None) -> bool:
     return bool(path and path.is_file() and path.suffix.lower() == ".svg")
+
+
+def _validate_required_conditions(router: dict) -> list[str]:
+    errors = []
+    conditions = router.get("conditions", {})
+    if not isinstance(conditions, dict):
+        return ["router conditions must be an object"]
+
+    for condition_id in sorted(REQUIRED_CONDITIONS - set(conditions)):
+        errors.append(f"router missing required condition {condition_id}")
+
+    for condition_id, required_fields in CONDITION_SCHEMA.items():
+        if condition_id not in conditions:
+            continue
+        contract = conditions[condition_id]
+        if not isinstance(contract, dict):
+            errors.append(f"condition {condition_id} must be an object")
+            continue
+        for field, expected_type in required_fields.items():
+            value = contract.get(field)
+            invalid = not isinstance(value, expected_type)
+            if expected_type is str and isinstance(value, str) and not value.strip():
+                invalid = True
+            if invalid:
+                errors.append(
+                    f"condition {condition_id} required field {field} must be {expected_type.__name__}"
+                )
+    return errors
 
 
 def load_ecosystem(root: Path = ROOT) -> dict:
@@ -75,6 +114,8 @@ def validate_ecosystem(root: Path = ROOT) -> list[str]:
     if not router or not capabilities_doc or not artifacts_doc or not quality_gates_doc or not research_gates_doc:
         return errors
 
+    errors.extend(_validate_required_conditions(router))
+
     skills = {path.parent.name for path in (root / "skills").glob("*/SKILL.md")}
     agents = {path.stem for path in (root / "agents").glob("*.md")}
     capabilities = capabilities_doc.get("capabilities", {})
@@ -87,10 +128,7 @@ def validate_ecosystem(root: Path = ROOT) -> list[str]:
 
     conditions = router.get("conditions", {})
     if not isinstance(conditions, dict):
-        errors.append("router conditions must be an object")
         conditions = {}
-    for condition_id in sorted(REQUIRED_CONDITIONS - set(conditions)):
-        errors.append(f"router missing required condition {condition_id}")
 
     for intent, route in routes.items():
         workflow = route.get("workflow")
@@ -108,7 +146,6 @@ def validate_ecosystem(root: Path = ROOT) -> list[str]:
 
     for condition, contract in conditions.items():
         if not isinstance(contract, dict):
-            errors.append(f"condition {condition} must be an object")
             continue
         for skill in contract.get("adds_skills", []):
             if skill not in skills:
@@ -257,10 +294,10 @@ def route_request(request: dict, root: Path = ROOT) -> dict:
     if intent not in router["routes"]:
         raise ValueError(f"unknown routing intent: {intent}")
 
-    conditions = router.get("conditions", {})
-    missing_conditions = sorted(REQUIRED_CONDITIONS - set(conditions) if isinstance(conditions, dict) else REQUIRED_CONDITIONS)
-    if missing_conditions:
-        raise ValueError(f"router missing required conditions: {', '.join(missing_conditions)}")
+    condition_errors = _validate_required_conditions(router)
+    if condition_errors:
+        raise ValueError("invalid router conditions: " + "; ".join(condition_errors))
+    conditions = router["conditions"]
 
     base = copy.deepcopy(router["routes"][intent])
     result = {
