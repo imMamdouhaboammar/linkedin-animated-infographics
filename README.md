@@ -1,120 +1,112 @@
 # linkedin-animated-infographics
 
-A Claude Code plugin for designing, rendering, and animating deterministic 1080x1350 GIF infographics, Info-stories, UI mockup stories, and exact-SVG mascots for LinkedIn (Arabic & RTL supported).
+A Claude Code plugin for designing, validating, rendering, and animating evidence-safe LinkedIn infographics with structured Info-stories, creative concept development, UI mockup stories, exact-SVG mascots, Arabic/RTL support, deterministic GIF rendering, and strict repository validation.
 
-## Install from the Claude Marketplace
+Current plugin release: **3.0.0**
 
-Add the marketplace hosted by this repository, then install the plugin:
+## Install from Claude Marketplace
 
 ```text
 /plugin marketplace add imMamdouhaboammar/linkedin-animated-infographics
 /plugin install linkedin-animated-infographics@mamdouh-creative-tools
 ```
 
-The marketplace catalog is `.claude-plugin/marketplace.json`. It exposes the plugin at the repository root with strict manifest mode.
-
-For local development, Claude Code can validate the same repository with:
+The marketplace and plugin live in this same repository. Validate a local checkout with:
 
 ```bash
 claude plugin validate .
 ```
 
-Then, once per machine for browser rendering:
+## What v3 adds
 
-```bash
-bash scripts/setup.sh
+The repository is now one connected production ecosystem instead of a loose collection of prompts and workers.
+
+- `helper/` is the LLM routing and guidance authority
+- `creative-director` develops multiple evidence-safe concepts before story architecture
+- attention-bearing design copy uses `hooked-design-copy`
+- complete concepts require a useful `creative-payoff`, not decorative spectacle
+- palette default is `creative-attractive-restrained`
+- composition default is `center-first`, with documented comprehension/fidelity exceptions
+- `research/` ships as active runtime capability gates with provenance and real owners
+- named or official mascots require the exact user-supplied/task-attached SVG
+- UI Mockup Stories are first-class Info-stories with evidence and feed-width fidelity rules
+- `scripts/ecosystem_doctor.py` rejects dead, undeclared, unreachable, untested, or disconnected public modules
+
+## Quick architecture
+
+Read [`helper/GUIDE.md`](helper/GUIDE.md) before choosing a workflow or worker.
+
+The complete production path is:
+
+```text
+design-study
+  -> evidence-checker
+  -> creative-director
+  -> story-architect
+  -> palette-curator
+  -> copy-compressor
+  -> layout-composer
+  -> caption-writer
+  -> artboard-builder
+  -> motion-director
+  -> optional mascot-animator
+  -> motion-engineer
+  -> render-qa
+  -> post-critic
+  -> story-verifier
 ```
 
-That installs Playwright and a Chrome binary and checks for `ffmpeg`. Registry, graph, and marketplace validation run on plain Python 3.
+`new-post` is the parent workflow. Agents return bounded artifacts to it; they do not secretly orchestrate peer agents.
 
-## Features & Skills
+## Creative runtime
 
-| Skill | Covers |
-|---|---|
-| `post` | The main router. Pipeline, non-negotiables, working method |
-| `caption` | Caption archetypes, truncation cut, hook and CTA libraries, ban list |
-| `info-stories` | Story Houses, Visual Styles, Story Archetypes, Motion Patterns, study, and verification |
-| `artboard` | Execution archetypes, type scale, offline fonts, and still construction |
-| `motion` | Seekable primitives, one-loop-clock rule, reverse-delay trap |
-| `mascots` | Exact mascot identity, roles, motion budget, and infographic fit |
-| `render` | Frame capture, GIF assembly with size budgeting, QA gates, publishing |
-| `arabic` | RTL mirroring, Arabic type scale, bidi isolation, caption rhythm |
-| `svg-mascot-animator` | Exact-SVG inspection, rigging, physics, creative directions, and deterministic animation |
+Before layout starts, `creative-director` produces at least three genuinely different directions in `build/creative-concepts.json`. Every direction includes a visual hook, copy hook, aha mechanic, story shape, recommended visual style/archetype/motion, evidence dependencies, risks, and a reason it earns attention.
+
+A useful wow/aha moment can be a reveal, relationship, comparison, transformation, state change, or interaction that makes the idea easier to understand or remember. It is not a license for random 3D, glow, extreme saturation, arbitrary asymmetry, or excessive motion.
+
+Design copy follows one strong-hook principle: hero/opening copy should earn attention through specificity, supported tension, concrete outcome, recognizable problem, useful surprise, or strong framing. Literal labels, commands, table headers, and UI controls stay literal when clarity is the job.
+
+## Visual defaults
+
+- Palette character: `creative-attractive-restrained`
+- Composition: `center-first`
+- Text contrast: 4.5:1 floor for meaningful text
+- State-defining contrast: 3:1 floor
+- One clear visual anchor at feed scale
+
+Alignment can move away from center-first when the content genuinely benefits, including tables, UI mockups, code/terminal surfaces, timelines, Arabic/RTL flow, or documented reference-DNA decisions.
 
 ## Info-stories
 
-Info-stories separates a visual direction into four choices:
+Info-stories resolves four independent choices:
 
-1. **Story House**: semantic colour palette and contrast roles
-2. **Visual Style**: structural grammar such as Signal Sheet, Command Canvas, UI Storyboard, or Interface Cutaway
-3. **Story Archetype**: narrative job such as Framework in One Page, Screen to Outcome, or State Change Story
-4. **Motion Pattern**: zero to two meaning-driven motions
+1. Story House
+2. Visual Style
+3. Story Archetype
+4. Motion Pattern
 
-Each Visual Style also carries three 1-10 design dials: design variance, motion intensity, and visual density. Reference images or GIFs can be diagnosed first by `design-study`; the diagnosis maps design DNA into ranked local choices rather than copying the source.
+The source of truth is the merged registry returned by `scripts/info_stories.py::load_catalog()`, combining the stable base with first-party extensions.
 
-The stable base lives in `skills/info-stories/catalog.json`. First-party story families can extend it through `skills/info-stories/extensions/*.json`. `scripts/info_stories.py::load_catalog()` merges the registry deterministically and is the machine-readable source used by agents and tools.
+UI Mockup Stories include UI Storyboard, Interface Cutaway, Screen to Outcome, Inside the Interface, State Change Story, Cursor Focus, and State Transition. Real-looking product behavior must be evidence-backed; conceptual UI must be identifiable when readers could mistake it for product proof.
 
-### UI Mockup Stories
+## Exact-SVG mascots
 
-UI Mockup Stories make interface states part of the infographic narrative rather than decorative screenshots.
+If the user names a specific or official mascot, the plugin requires the **exact SVG** supplied by the user or attached to the task. It does not redraw, approximate, substitute, or generate a lookalike automatically.
 
-- **UI Storyboard**: two to four screens or interface states in a clear sequence
-- **Interface Cutaway**: one dominant interface with annotated internal zones
-- **Screen to Outcome**: starting screen, interaction, visible result
-- **Inside the Interface**: hero interface, internal zones, why they matter
-- **State Change Story**: before state, trigger, after state
-- **Cursor Focus**: restrained secondary cue for one control or region
-- **State Transition**: one primary interface state change
-
-The UI rules preserve feed-width legibility, distinguish documented product UI from concept UI, label fictional data when it could be mistaken for real evidence, and block unsupported features, metrics, integrations, or customer proof.
-
-### Mascot Animator 2
-
-When the user names a specific official mascot, the plugin requires the exact user-supplied or task-attached SVG before mascot animation starts. It never redraws, approximates, substitutes, or generates a lookalike automatically.
-
-The mascot path is:
-
-`exact SVG -> identity contract -> SVG inspection -> rig plan -> creative direction -> mascot-animator -> motion integration -> render QA -> adversarial review -> independent verification`
-
-Creative starting directions include Guide the Eye, Curious Peek, Inspect and React, Carry and Place, Reveal Assistant, Status Confirmation, Route Follow, Card-to-Card Handoff, Calm Idle Breathing, and Contextual Micro-Reaction. Each direction must state its communication job, movable SVG parts, reset behavior, and motion budget.
-
-Inspect the available directions or validate a request:
+The mascot path inspects the real SVG, identifies addressable geometry, selects a communication-led creative direction, preserves identity, integrates motion, and verifies the result against the untouched source.
 
 ```bash
 python3 scripts/mascot_contract.py directions
 python3 scripts/mascot_contract.py check build/mascot-request.json
 ```
 
-## Validation and tools
+## Research gates
 
-Inspect and validate the registry, executable graph, and marketplace:
+Tracked research is active production guidance. The current runtime gates are:
 
-```bash
-python3 scripts/info_stories.py check
-python3 scripts/plugin_graph.py check
-python3 scripts/validate_marketplace.py
-python3 scripts/info_stories.py list house
-python3 scripts/info_stories.py list style
-```
+`prose-specificity`, `voice-preservation`, `design-dials`, `structural-originality`, `reference-dna`, `contrast-discipline`, `evidence-traceability`, and `bounded-verification`.
 
-External capability research lives under `research/capability-notes/`; cloned upstream working copies are ignored and are not shipped with the plugin.
-
-### Info-stories tools
-
-```bash
-python3 tools/palette_preview.py --out assets/info-stories-palettes.html
-python3 tools/story_scaffold.py --topic "..." --takeaway "..." --cta "..." \
-  --house ember-paper --style signal-sheet --archetype framework-in-one-page \
-  --motion sequential-highlight --out build/story-brief.json
-python3 tools/composition_check.py --style signal-sheet \
-  --archetype framework-in-one-page --motion sequential-highlight
-python3 tools/copy_slop_check.py "copy to inspect"
-python3 tools/contrast_check.py --house ember-paper --fg accent_deep --bg bg --minimum 4.5
-python3 tools/fingerprint_check.py --current build/fingerprint.json \
-  --previous build/previous-fingerprint.json --min-changes 2
-```
-
-Tracked palette chooser: `assets/info-stories-palettes.html`. Acceptance examples: `examples/info-stories/`.
+Each gate has source provenance, a local independently-worded behavior, stage, severity, real shipping owners, implementation references, and tests. Ignored upstream working copies are never packaged with the plugin.
 
 ## Workflows
 
@@ -124,48 +116,54 @@ Tracked palette chooser: `assets/info-stories-palettes.html`. Acceptance example
 /linkedin-animated-infographics:qa-post     [path.html] [caption.md]
 ```
 
-`new-post` is the parent orchestrator. Worker agents return explicit artifacts to it instead of coordinating hidden peer calls. The executable route, conditional mascot path, skill preloads, and capability ownership are tracked in `architecture/plugin-graph.json`.
+For programmatic routing:
 
-## Agents
+```bash
+python3 tools/route_request.py --request "Create an animated LinkedIn infographic"
+```
 
-| Agent | Does |
-|---|---|
-| `design-study` | Extracts reusable design DNA from references without pixel cloning |
-| `evidence-checker` | Blocks unsupported claims and fabricated proof |
-| `story-architect` | Resolves the four-axis Info-stories brief |
-| `palette-curator` | Verifies Story House tokens and contrast |
-| `copy-compressor` | Compresses artboard copy while preserving facts and voice |
-| `layout-composer` | Produces the structural fingerprint and layout specification |
-| `caption-writer` | Writes the caption under caption-specific rules |
-| `artboard-builder` | Builds and checks the still |
-| `motion-director` | Defines the communication job of motion |
-| `mascot-animator` | Inspects and animates the exact supplied mascot SVG under an identity contract |
-| `motion-engineer` | Integrates seekable motion and closes the loop |
-| `render-qa` | Produces deterministic render evidence |
-| `post-critic` | Red-teams copy, UI fidelity, mascot identity, visual structure, and motion |
-| `story-verifier` | Independently verifies acceptance criteria against artifact evidence |
-
-## Hooks
-
-A `PostToolUse` lint runs on HTML files containing an `#artboard`. It catches non-seekable `requestAnimationFrame` motion, network fonts, and missing or wrongly sized artboards before a full render.
-
-## Development & Validation
+## Strict validation
 
 ```bash
 python3 -m unittest discover -s tests -v
 python3 -m compileall -q scripts tools skills/svg-mascot-animator/scripts
 python3 scripts/info_stories.py check
+python3 scripts/ecosystem_router.py check
+python3 scripts/research_gates.py check
 python3 scripts/plugin_graph.py check
+python3 scripts/ecosystem_doctor.py check
 python3 scripts/validate_marketplace.py
 claude plugin validate .
 ```
 
-The GitHub validation workflow also registers the marketplace from a clean checkout and installs `linkedin-animated-infographics@mamdouh-creative-tools` as an end-to-end marketplace smoke test.
+The CI also registers the checked-out repository as marketplace `mamdouh-creative-tools` and installs `linkedin-animated-infographics@mamdouh-creative-tools` in a clean Claude home.
 
-## Credits
+Useful public tools include:
 
-Built by **Mamdouh Aboammar**, Managing Partner at Momint, founder of PrePilot.cloud and OpenOps Studio.
+```text
+tools/story_scaffold.py
+tools/composition_check.py
+tools/palette_preview.py
+tools/copy_slop_check.py
+tools/contrast_check.py
+tools/fingerprint_check.py
+tools/route_request.py
+```
 
-The mascot layer takes its physics and rig from [vibe-svgs](https://github.com/imMamdouhaboammar/vibe-svgs).
+## Documentation
 
-MIT licensed.
+- [Ecosystem architecture](docs/ecosystem.md)
+- [Routing protocol](docs/routing.md)
+- [Agents](docs/agents.md)
+- [Skills](docs/skills.md)
+- [Research gates and provenance](docs/research.md)
+- [Claude Marketplace](docs/marketplace.md)
+- [Development and validation](docs/development.md)
+
+## Development entrypoints
+
+Coding agents should also read [`AGENTS.md`](AGENTS.md) or [`CLAUDE.md`](CLAUDE.md). Both point back to the same helper, research, module, and validation authority.
+
+## License
+
+MIT
