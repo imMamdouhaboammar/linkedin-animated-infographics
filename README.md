@@ -18,8 +18,7 @@
 
 ## The idea
 
-**WOW gets the scroll to stop  
-AHA makes the idea click**
+<strong>WOW gets the scroll to stop<br>AHA makes the idea click</strong>
 
 This plugin is built to earn both
 
