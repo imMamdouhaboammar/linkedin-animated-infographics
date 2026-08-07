@@ -1,0 +1,20 @@
+{
+  "name": "mamdouh-creative-tools",
+  "interface": {
+    "displayName": "Mamdouh Creative Tools"
+  },
+  "plugins": [
+    {
+      "name": "linkedin-animated-infographics",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
