@@ -1,5 +1,4 @@
 import json
-import subprocess
 import sys
 import unittest
 from pathlib import Path
@@ -42,18 +41,20 @@ class UIMockupStoryTests(unittest.TestCase):
         for needle in ("fictional data", "unsupported product claim", "feed width", "frame 0"):
             self.assertIn(needle, rules.lower())
 
+    def test_ui_rules_are_wired_into_shipping_workers(self):
+        for name in ("evidence-checker", "layout-composer", "artboard-builder", "motion-director", "post-critic"):
+            text = (ROOT / "agents" / f"{name}.md").read_text().lower()
+            self.assertIn("ui-mockup-rules", text, name)
+
     def test_tracked_ui_examples_match_scaffold(self):
         examples = [
-            ("ui-storyboard-brief.json", "ui-storyboard", "screen-to-outcome", ["cursor-focus", "state-transition"]),
-            ("interface-cutaway-brief.json", "interface-cutaway", "inside-the-interface", ["cursor-focus"]),
+            ("ui-storyboard-brief.json", dict(topic="From prompt to approved campaign screen", takeaway="Each screen shows one decision in the workflow", cta="Save the flow", house="mist-board", style="ui-storyboard", archetype="screen-to-outcome", motions=["cursor-focus", "state-transition"], language="en", output_mode="gif")),
+            ("interface-cutaway-brief.json", dict(topic="Inside an agent review screen", takeaway="The interface exposes the checks that produce the final decision", cta="Use the structure", house="ember-paper", style="interface-cutaway", archetype="inside-the-interface", motions=["cursor-focus"], language="en", output_mode="gif")),
         ]
-        for filename, style, archetype, motions in examples:
+        for filename, case in examples:
             path = ROOT / "examples/info-stories" / filename
             self.assertTrue(path.exists(), filename)
-            payload = json.loads(path.read_text())
-            self.assertEqual(style, payload["selection"]["style"])
-            self.assertEqual(archetype, payload["selection"]["archetype"])
-            self.assertEqual(motions, payload["selection"]["motions"])
+            self.assertEqual(info_stories.build_brief(self.catalog, **case), json.loads(path.read_text()))
 
 
 if __name__ == "__main__":
