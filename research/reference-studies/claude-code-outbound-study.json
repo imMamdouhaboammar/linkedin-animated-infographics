@@ -1,0 +1,13 @@
+{
+  "source": "user-attached Claude Code for Outbound reference",
+  "source_kind": "gif",
+  "provenance": "public reference supplied by user for design study",
+  "surface": {"paper":"warm near-white with fine texture","accent":"dusty coral and terracotta","terminal_surface":"near-black brown","accent_footprint":"small-to-medium, concentrated in headers and stack zones"},
+  "type_roles": {"display":"bold neutral grotesque with one accent phrase","body":"compact neutral sans","labels":"small uppercase sans","code":"monospace inside terminal zones"},
+  "structure": {"topology":"asymmetric dense board","card_grammar":"process strip plus terminal anchor plus layered stack plus setup rail","divider":"rounded panels and tonal fields","attribution":"author pill at top"},
+  "rhythm": {"density":"dense","asymmetry":"three-column board with unequal zone sizes","reset":"larger terminal and stack surfaces interrupt small-card repetition"},
+  "motion": {"visible":true,"grammar":["restrained local state change"],"uploaded_frames":100,"uploaded_duration_seconds":10.0,"first_frame":"complete"},
+  "visual_anchor": "terminal window paired with the central API stack",
+  "recommendations": {"house":["coral-terminal","ember-paper"],"style":["command-canvas","stack-ledger"],"archetype":["one-prompt-full-workflow","inside-the-stack"],"motion":["type-on-terminal","sequential-highlight"]},
+  "copy_boundaries": ["do not copy source headline or campaign text","do not reuse source author identity, logos, provider claims, or metrics","do not infer additional motion from still-looking frames"]
+}

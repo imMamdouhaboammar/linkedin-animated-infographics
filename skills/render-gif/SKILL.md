@@ -5,7 +5,7 @@ disable-model-invocation: true
 argument-hint: "[path/to/artboard.html] [--duration 6.0] [--fps 12.5]"
 ---
 
-# /linkedin-motion:render-gif
+# /linkedin-animated-infographics:render-gif
 
 Arguments: **$ARGUMENTS**
 
@@ -16,7 +16,7 @@ Arguments: **$ARGUMENTS**
 bash ${CLAUDE_PLUGIN_ROOT}/scripts/lint_artboard.sh <path>
 ```
 
-3. Pick duration and fps from the timing table in `linkedin-motion:motion` if they were not
+3. Pick duration and fps from the timing table in `linkedin-animated-infographics:motion` if they were not
    given. Do not invent numbers; each verified row divides cleanly and closes.
 
 4. Render:

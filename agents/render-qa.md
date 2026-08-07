@@ -20,7 +20,7 @@ python3 ${CLAUDE_PLUGIN_ROOT}/scripts/check_render.py <path> --mobile
 bash ${CLAUDE_PLUGIN_ROOT}/scripts/render.sh <path> <out.gif> --duration <d> --fps <f>
 ```
 
-Then load `linkedin-motion:render` and walk `references/qa-gates.md` in full, including the
+Then load `linkedin-animated-infographics:render` and walk `references/qa-gates.md` in full, including the
 mascot gates when a character is present.
 
 ## Judge

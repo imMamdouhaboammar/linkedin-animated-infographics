@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {"commit":"19471473a34a29a042c0d7738ce573cc2dcee119","license":"MIT","name":"COG-second-brain","readme_present":true,"repository":"https://github.com/huytieu/COG-second-brain"},
+    {"commit":"13ac0ec7e148655948100b6396439e481361d690","license":"MIT","name":"hallmark","readme_present":true,"repository":"https://github.com/Nutlope/hallmark"},
+    {"commit":"d30eddb9e04562234f2070b5ee63ca4649d9a05e","license":"MIT","name":"no-ai-slop","readme_present":true,"repository":"https://github.com/petergyang/no-ai-slop"},
+    {"commit":"8da1f030185bdfe8471220585162991eaeb970e9","license":"MIT","name":"stop-slop","readme_present":true,"repository":"https://github.com/hardikpandya/stop-slop"},
+    {"commit":"e988add20dab0fa97d7a76781c48961c8184288e","license":"MIT","name":"taste-skill","readme_present":true,"repository":"https://github.com/Leonxlnx/taste-skill"}
+  ]
+}

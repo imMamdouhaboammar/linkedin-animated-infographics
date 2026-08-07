@@ -1,0 +1,17 @@
+{
+  "content_contract": {"density_range":[3,7],"required_beats":["input","orchestration","output"]},
+  "cta": "See the workflow",
+  "execution": {
+    "artboard_archetype": "terminal-card",
+    "design_dials": {"design_variance":6,"motion_intensity":7,"visual_density":5},
+    "house_tokens": {"accent":"#F08A4A","accent_deep":"#FFB17E","bg":"#081729","ink":"#F5F7FA","ink_2":"#C8D2DD","line":"#2A4159","muted":"#9EAFBF","support_1":"#79B59B","support_2":"#F2C66D","surface":"#0F2237"},
+    "motion_limit": 2,
+    "structures": ["terminal","hero","support-cards"]
+  },
+  "language":"en",
+  "output_mode":"gif",
+  "schema_version":1,
+  "selection":{"archetype":"one-prompt-full-workflow","house":"midnight-operator","motions":["type-on-terminal","soft-zoom-focus"],"style":"command-canvas"},
+  "takeaway":"The terminal coordinates the workflow",
+  "topic":"One prompt runs outbound"
+}
