@@ -64,6 +64,12 @@ class DemoGalleryContractTests(unittest.TestCase):
         errors = validate_demo_dir(demo, self.root)
         self.assertTrue(any("author namespace" in error for error in errors), errors)
 
+    def test_community_author_url_must_match_namespace(self):
+        self.require_module()
+        demo = self.make_demo(author_url="https://github.com/bob")
+        errors = validate_demo_dir(demo, self.root)
+        self.assertTrue(any("author_url must match community author namespace" in error for error in errors), errors)
+
     def test_paths_cannot_escape_demo_directory(self):
         self.require_module()
         demo = self.make_demo(gif="../secret.gif")
