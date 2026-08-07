@@ -13,6 +13,7 @@ DOCS = {
     "marketplace": ROOT / "docs" / "marketplace.md",
     "development": ROOT / "docs" / "development.md",
     "community_demos": ROOT / "docs" / "community-demos.md",
+    "codex": ROOT / "docs" / "codex.md",
 }
 README = ROOT / "README.md"
 DEMOS_README = ROOT / "demos" / "README.md"
@@ -30,12 +31,26 @@ class DocsContractTests(unittest.TestCase):
         for relative in (
             "docs/ecosystem.md", "docs/routing.md", "docs/agents.md", "docs/skills.md",
             "docs/research.md", "docs/marketplace.md", "docs/development.md",
-            "docs/community-demos.md", "demos/README.md",
+            "docs/community-demos.md", "docs/codex.md", "demos/README.md",
         ):
             self.assertIn(relative, text)
         self.assertIn("helper/GUIDE.md", text)
         self.assertIn("creative-director", text)
         self.assertIn("ecosystem_doctor.py", text)
+
+    def test_codex_doc_names_native_packaging_and_real_marketplace_commands(self):
+        self.assertTrue(DOCS["codex"].exists())
+        text = DOCS["codex"].read_text()
+        for needle in (
+            ".codex-plugin/plugin.json",
+            ".agents/plugins/marketplace.json",
+            "codex plugin marketplace add imMamdouhaboammar/linkedin-animated-infographics --ref main",
+            "codex plugin marketplace list",
+            "python3 scripts/validate_codex_plugin.py",
+            "skills-only",
+            "submission-ready",
+        ):
+            self.assertIn(needle, text)
 
     def test_demo_gallery_readme_names_both_sections_and_contract(self):
         self.assertTrue(DEMOS_README.exists())
@@ -93,8 +108,11 @@ class DocsContractTests(unittest.TestCase):
         for needle in (
             "/plugin marketplace add imMamdouhaboammar/linkedin-animated-infographics",
             "/plugin install linkedin-animated-infographics@mamdouh-creative-tools",
+            "codex plugin marketplace add imMamdouhaboammar/linkedin-animated-infographics --ref main",
+            "codex plugin marketplace list",
             "claude plugin validate .",
             "python3 scripts/validate_marketplace.py",
+            "python3 scripts/validate_codex_plugin.py",
         ):
             self.assertIn(needle, text)
 
@@ -108,6 +126,7 @@ class DocsContractTests(unittest.TestCase):
             "python3 scripts/ecosystem_doctor.py check",
             "python3 scripts/demo_gallery.py check",
             "python3 scripts/validate_marketplace.py",
+            "python3 scripts/validate_codex_plugin.py",
         ):
             self.assertIn(command, text)
 

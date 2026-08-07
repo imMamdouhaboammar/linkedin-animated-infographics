@@ -1,56 +1,75 @@
-# Claude Marketplace
+# Marketplace Packaging
 
-The plugin and marketplace live in the same repository.
+Version 3.2.0 ships two host adapters over one canonical product core.
 
-- marketplace: `mamdouh-creative-tools`
-- plugin: `linkedin-animated-infographics`
-- plugin release: `3.1.0`
-- marketplace source: `./`
-- strict mode: `true`
+- Claude marketplace: `.claude-plugin/marketplace.json`
+- Claude plugin manifest: `.claude-plugin/plugin.json`
+- OpenAI repo marketplace: `.agents/plugins/marketplace.json`
+- OpenAI plugin manifest: `.codex-plugin/plugin.json`
+- canonical Skills for both hosts: `skills/`
 
-## Install
+The plugin name is `linkedin-animated-infographics`. The marketplace source name is `mamdouh-creative-tools`.
 
-In Claude Code:
+## Claude Code
+
+Install from Claude Code:
 
 ```text
 /plugin marketplace add imMamdouhaboammar/linkedin-animated-infographics
 /plugin install linkedin-animated-infographics@mamdouh-creative-tools
 ```
 
-The marketplace catalog is `.claude-plugin/marketplace.json`; the plugin manifest is `.claude-plugin/plugin.json`.
-
-## Validate locally
+Validate locally:
 
 ```bash
 python3 scripts/validate_marketplace.py
 claude plugin validate .
 ```
 
-The local validator checks the same-repository source, strict mode, plugin identity, version agreement, required component directories, demo/schema components, and manifest fields.
+CI also registers the checked-out repository as a clean Claude marketplace source and installs `linkedin-animated-infographics@mamdouh-creative-tools`.
 
-## CI install smoke
+## Codex and ChatGPT
 
-The GitHub validation workflow creates a clean temporary Claude home, registers the checked-out repository as a local marketplace, verifies that `mamdouh-creative-tools` appears in the marketplace list, and installs:
+Add the repository marketplace with a current Codex CLI:
 
-```text
-linkedin-animated-infographics@mamdouh-creative-tools
+```bash
+codex plugin marketplace add imMamdouhaboammar/linkedin-animated-infographics --ref main
+codex plugin marketplace list
 ```
 
-That smoke test proves the marketplace entry is not only schema-valid but installable from the repository layout used by CI.
+The OpenAI marketplace entry points at the repository root using a local `./` source. The root `.codex-plugin/plugin.json` points at the canonical `./skills/` tree.
+
+Use a supported Plugins Directory surface to install and test the plugin. Do not substitute undocumented `codex plugin install` syntax for the current marketplace/Plugins Directory flow.
+
+Validate the OpenAI package and cross-host parity with:
+
+```bash
+python3 scripts/validate_codex_plugin.py
+```
+
+See [`codex.md`](codex.md) for the full Codex/ChatGPT contract.
+
+## Public OpenAI directory
+
+The 3.2.0 OpenAI package is prepared as a skills-only public submission. Tracked reviewer materials live in `submission/`.
+
+The repository status is `prepared-not-submitted`. OpenAI Platform permissions, verified publisher identity, availability selection, submission, review, and final publication remain external steps.
 
 ## Versioning
 
-The plugin manifest version and marketplace plugin-entry version must match.
+The 3.2.0 release must agree across:
 
-Version `3.1.0` adds the owned/community demo gallery and opt-in publisher flow on top of the v3 routing-kernel architecture. It includes `share-demo`, `community-publisher`, the strict three-file demo schema, deterministic gallery catalog, export/privacy preflight, and manual-review PR policy.
+- `.claude-plugin/plugin.json`
+- the plugin entry inside `.claude-plugin/marketplace.json`
+- `.codex-plugin/plugin.json`
+- `compatibility/codex.json`
+- `submission/openai-plugin.json`
 
-The top-level marketplace catalog has its own catalog version. It does not need to match the plugin version.
-
-Any future public plugin release should update both the plugin manifest and its marketplace entry and rerun the official Claude validator plus marketplace add/install smoke.
+The top-level Claude marketplace catalog has its own catalog version and does not need to equal the plugin version.
 
 ## Release gate
 
-Before merging a marketplace release:
+Before merging a packaging release:
 
 ```bash
 python3 -m unittest discover -s tests -v
@@ -60,7 +79,8 @@ python3 scripts/plugin_graph.py check
 python3 scripts/ecosystem_doctor.py check
 python3 scripts/demo_gallery.py check
 python3 scripts/validate_marketplace.py
+python3 scripts/validate_codex_plugin.py
 claude plugin validate .
 ```
 
-Do not treat a version bump as complete until CI installs that exact checked-out plugin from the same-repository marketplace.
+Do not treat a release as complete until the exact PR head passes the shared validators, both packaging validators, the official Claude validator, the available install smoke checks, and review closure.

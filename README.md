@@ -4,7 +4,7 @@
 
 **Turn imagination into visual stories that stop the scroll and make the idea click**
 
-`Claude Code Plugin 3.1.0` · `1080×1350` · `Info-stories` · `UI stories` · `Exact-SVG mascots` · `Arabic / RTL`
+`Claude Code + Codex + ChatGPT · 3.2.0` · `1080×1350` · `Info-stories` · `Exact-SVG mascots` · `Arabic / RTL`
 
 <br>
 
@@ -28,11 +28,39 @@ The plugin aims for both
 
 If the effect looks good but adds no meaning, it is decoration
 
-`creative-director` develops the concept before layout starts, then the rest of the workflow tests whether the idea still works through copy, layout, motion, QA, and final verification
+`creative-director` develops the concept before layout starts, then the workflow tests whether the idea survives copy, layout, motion, QA, and final verification
+
+## Install
+
+The same canonical `skills/` power every supported host
+
+### Claude Code
+
+```text
+/plugin marketplace add imMamdouhaboammar/linkedin-animated-infographics
+/plugin install linkedin-animated-infographics@mamdouh-creative-tools
+```
+
+Validate a checkout with:
+
+```bash
+claude plugin validate .
+```
+
+### Codex + ChatGPT
+
+Add the repository marketplace:
+
+```bash
+codex plugin marketplace add imMamdouhaboammar/linkedin-animated-infographics --ref main
+codex plugin marketplace list
+```
+
+The OpenAI package is `.codex-plugin/plugin.json`; the repo marketplace is `.agents/plugins/marketplace.json`. Installation and testing use a supported Plugins Directory surface
+
+[Codex / ChatGPT guide](docs/codex.md) · [Marketplace details](docs/marketplace.md)
 
 ## Demos
-
-Good outputs can live in the repo as working examples, not screenshots buried in a README
 
 There are two shelves:
 
@@ -41,26 +69,11 @@ There are two shelves:
 
 Every accepted demo is the same portable package: **GIF + HTML + demo.json**
 
-After a finished post reaches final verification `PASS`, the plugin can ask `Share this demo with the community?` If the user says yes, `share-demo` validates the public package and `community-publisher` can prepare a contributor fork, branch, commit, push, and pull request. It stops at the PR. Every contribution still needs maintainer manual review and merge
+After final verification `PASS`, the plugin can ask `Share this demo with the community?` If the user says yes, `share-demo` validates the public package and `community-publisher` can prepare a contributor fork, branch, commit, push, and pull request. It stops at the PR. Every contribution still needs maintainer manual review and merge
 
 [Browse the demo gallery](demos/README.md) · [Read the contribution contract](docs/community-demos.md)
 
-## Install from Claude Marketplace
-
-```text
-/plugin marketplace add imMamdouhaboammar/linkedin-animated-infographics
-/plugin install linkedin-animated-infographics@mamdouh-creative-tools
-```
-
-Validate a local checkout with
-
-```bash
-claude plugin validate .
-```
-
 ## What it makes
-
-Not a generic stack of cards with movement added at the end
 
 A strong output should have
 
@@ -81,18 +94,7 @@ A strong output should have
 
 Before story architecture starts, `creative-director` creates at least three genuinely different directions in `build/creative-concepts.json`
 
-Each direction defines
-
-- visual hook
-- copy hook
-- aha mechanic
-- story shape
-- Visual Style
-- Story Archetype
-- motion behavior
-- evidence dependencies
-- risks
-- why the idea deserves attention
+Each direction defines a visual hook, copy hook, aha mechanic, story shape, Visual Style, Story Archetype, motion behavior, evidence dependencies, risks, and why the idea deserves attention
 
 At least one direction must contain a real visual payoff, not a palette swap or a new card arrangement
 
@@ -100,7 +102,7 @@ The local gates are `hooked-design-copy`, `creative-payoff`, `restrained-palette
 
 ## Info-stories
 
-Info-stories separates four decisions
+Info-stories separates four decisions:
 
 1. **Story House** for visual character and palette
 2. **Visual Style** for composition grammar
@@ -109,19 +111,7 @@ Info-stories separates four decisions
 
 The source of truth is the merged registry returned by `scripts/info_stories.py::load_catalog()`
 
-UI Mockup Stories are first-class options
-
-- UI Storyboard
-- Interface Cutaway
-- Screen to Outcome
-- Inside the Interface
-- State Change Story
-- Cursor Focus
-- State Transition
-
-Real-looking product behavior must be supported by evidence
-
-Concept UI stays clearly identifiable when it could be mistaken for real product proof
+UI Mockup Stories are first-class options. Real-looking product behavior must be supported by evidence. Concept UI stays clearly identifiable when it could be mistaken for real product proof
 
 ## Exact-SVG mascots
 
@@ -169,13 +159,11 @@ Workers return artifacts to their parent instead of coordinating peers through h
 
 `research/` is part of production logic, not a reading folder
 
-Current gates
+Current gates:
 
 `prose-specificity` · `voice-preservation` · `design-dials` · `structural-originality` · `reference-dna` · `contrast-discipline` · `evidence-traceability` · `bounded-verification`
 
 Each adopted gate keeps source provenance, inspected commit SHA, local behavior, stage, severity, owners, implementation references, and tests
-
-Upstream working copies are research inputs only and are not packaged as runtime dependencies
 
 ## Visual defaults
 
@@ -197,7 +185,7 @@ Center-first can be overridden when comprehension or fidelity improves, includin
 /linkedin-animated-infographics:share-demo  [build directory]
 ```
 
-Programmatic routing
+Programmatic routing:
 
 ```bash
 python3 tools/route_request.py --request "Create an animated LinkedIn infographic"
@@ -217,12 +205,19 @@ python3 scripts/plugin_graph.py check
 python3 scripts/ecosystem_doctor.py check
 python3 scripts/demo_gallery.py check
 python3 scripts/validate_marketplace.py
+python3 scripts/validate_codex_plugin.py
 claude plugin validate .
 ```
 
 `scripts/ecosystem_doctor.py` rejects dead, undeclared, unreachable, untested, disconnected, or unsafe public modules and manifest references
 
-CI also registers the checkout as marketplace `mamdouh-creative-tools` and installs `linkedin-animated-infographics@mamdouh-creative-tools` into a clean Claude home
+`scripts/validate_codex_plugin.py` rejects OpenAI packaging, marketplace, Codex configuration, submission-readiness, or cross-host parity drift
+
+## Public Plugins Directory
+
+The 3.2.0 OpenAI package is **submission-ready**, not claimed as published
+
+`submission/` tracks listing metadata, five positive reviewer cases, three negative cases, and the manual OpenAI Platform handoff. Public availability still requires external publisher verification/permissions, OpenAI review, and publication after approval
 
 ## Public tools
 
@@ -244,10 +239,11 @@ scripts/demo_submit.py
 - [Routing protocol](docs/routing.md)
 - [Agents](docs/agents.md)
 - [Skills](docs/skills.md)
+- [Codex + ChatGPT](docs/codex.md)
 - [Community demos](docs/community-demos.md)
 - [Demo gallery](demos/README.md)
 - [Research gates and provenance](docs/research.md)
-- [Claude Marketplace](docs/marketplace.md)
+- [Marketplace packaging](docs/marketplace.md)
 - [Development and validation](docs/development.md)
 
 Coding agents should also read [`AGENTS.md`](AGENTS.md) or [`CLAUDE.md`](CLAUDE.md)

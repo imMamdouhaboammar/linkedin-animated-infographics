@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "plugin_name": "linkedin-animated-infographics",
+  "plugin_version": "3.2.0",
+  "surfaces": ["codex", "chatgpt"],
+  "manifests": {
+    "openai": ".codex-plugin/plugin.json",
+    "claude": ".claude-plugin/plugin.json",
+    "openai_marketplace": ".agents/plugins/marketplace.json",
+    "claude_marketplace": ".claude-plugin/marketplace.json"
+  },
+  "canonical": {
+    "skills_root": "skills",
+    "agents_root": "agents",
+    "router": "helper/router.json",
+    "capabilities": "helper/capabilities.json",
+    "quality_gates": "helper/quality-gates.json",
+    "artifacts": "helper/artifacts.json",
+    "modules": "helper/modules.json",
+    "research_gates": "research/capability-notes/gates.json",
+    "worker_graph": "architecture/plugin-graph.json"
+  },
+  "repo_development": {
+    "codex_guide": ".codex/AGENTS.md",
+    "codex_config": ".codex/config.toml"
+  },
+  "public_submission": {
+    "type": "skills-only",
+    "metadata": "submission/openai-plugin.json",
+    "test_cases": "submission/test-cases.json"
+  },
+  "parity_invariants": [
+    "same-plugin-name",
+    "same-release-version",
+    "same-canonical-skills",
+    "same-router",
+    "same-quality-gates",
+    "same-research-gates",
+    "exact-svg-mascot-rule",
+    "evidence-and-ui-fidelity",
+    "community-publishing-opt-in",
+    "community-pr-requires-manual-review"
+  ]
+}

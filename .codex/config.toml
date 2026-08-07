@@ -1,6 +1,6 @@
 #:schema https://developers.openai.com/codex/config-schema.json
 
-# ECC Tools generated Codex baseline
+# Repository-development Codex baseline. This file is not required by the installed plugin.
 approval_policy = "on-request"
 sandbox_mode = "workspace-write"
 web_search = "live"
@@ -28,21 +28,6 @@ args = ["-y", "@playwright/mcp@latest", "--extension"]
 command = "npx"
 args = ["-y", "@modelcontextprotocol/server-sequential-thinking"]
 
-[features]
-multi_agent = true
-
 [agents]
-max_threads = 6
-max_depth = 1
-
-[agents.explorer]
-description = "Read-only codebase explorer for gathering evidence before changes are proposed."
-config_file = "agents/explorer.toml"
-
-[agents.reviewer]
-description = "PR reviewer focused on correctness, security, and missing tests."
-config_file = "agents/reviewer.toml"
-
-[agents.docs_researcher]
-description = "Documentation specialist that verifies APIs, framework behavior, and release notes."
-config_file = "agents/docs-researcher.toml"
+enabled = true
+max_concurrent_threads_per_session = 6

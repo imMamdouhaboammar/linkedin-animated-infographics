@@ -1,6 +1,6 @@
 # Development and Validation
 
-The repository uses contract-first development. Public behavior is represented in machine-readable helper/graph/gate/module files and protected by regression tests.
+The repository uses contract-first development. Public behavior is represented in machine-readable helper, graph, gate, module, demo, and host-packaging files and protected by regression tests.
 
 ## Core development loop
 
@@ -24,6 +24,7 @@ python3 scripts/plugin_graph.py check
 python3 scripts/ecosystem_doctor.py check
 python3 scripts/demo_gallery.py check
 python3 scripts/validate_marketplace.py
+python3 scripts/validate_codex_plugin.py
 python3 -m json.tool hooks/hooks.json >/dev/null
 python3 -m json.tool schemas/demo.schema.json >/dev/null
 bash -n scripts/lint_artboard.sh
@@ -37,7 +38,7 @@ For Claude packaging:
 claude plugin validate .
 ```
 
-CI also performs a same-repository marketplace add/list/install smoke test.
+CI also performs the same-repository Claude Marketplace add/list/install smoke. OpenAI packaging is validated structurally and for cross-host parity by `scripts/validate_codex_plugin.py`; any Codex CLI marketplace smoke must use documented non-interactive behavior rather than a fabricated install command.
 
 ## Validator responsibilities
 
@@ -63,7 +64,7 @@ Strict repository reality gate. It validates active module inventory, paths, tes
 
 ### `scripts/demo_gallery.py check`
 
-Validates every owned/community demo package, author namespace, metadata contract, safe local paths, duplicate IDs, exact three-file package shape, and deterministic `demos/catalog.json` drift.
+Validates every owned/community demo package, author namespace, metadata contract, public-export scanning, safe local paths, duplicate IDs, exact three-file package shape, and deterministic `demos/catalog.json` drift.
 
 ### `scripts/demo_submit.py check`
 
@@ -72,6 +73,10 @@ Validates one staged public contribution before GitHub publication. Preparation 
 ### `scripts/validate_marketplace.py`
 
 Validates the Claude Marketplace/plugin manifests, same-repository source, strict mode, version agreement, and required component structure.
+
+### `scripts/validate_codex_plugin.py`
+
+Validates `.codex-plugin/plugin.json`, `.agents/plugins/marketplace.json`, canonical Skills linkage, OpenAI/Claude identity and version parity, `compatibility/codex.json`, current repository Codex subagent configuration, public policy files, and the tracked OpenAI submission package including exactly five positive and three negative reviewer cases.
 
 ## Community demo changes
 
@@ -113,10 +118,12 @@ Ignored upstream clones under `research/upstreams/` never ship.
 
 ## Adding a skill, agent, or public tool
 
-A new public module is incomplete until it is declared in `helper/modules.json` with a real path, role, tests, and reachability links. Update routes/graph/preloads/artifacts/gates as appropriate. `scripts/ecosystem_doctor.py check` must remain clean.
+A new public module is incomplete until it is declared in `helper/modules.json` with a real path, role, tests, and reachability links. Update routes, graph, preloads, artifacts, and gates as appropriate. `scripts/ecosystem_doctor.py check` must remain clean.
 
 ## Release work
 
-A plugin release requires matching version values in `.claude-plugin/plugin.json` and the plugin entry in `.claude-plugin/marketplace.json`. The current release is `3.1.0`.
+The current release is `3.2.0`.
 
-Before merge, require unit/validator success, official Claude validation, marketplace install smoke, no blocking external check, and no unresolved review thread.
+A public release requires the same plugin version across the Claude plugin manifest, Claude marketplace plugin entry, OpenAI plugin manifest, Codex compatibility registry, and OpenAI submission metadata.
+
+Before merge, require unit/validator success, official Claude validation, the available marketplace smoke, no blocking external check, and no unresolved review thread. Public OpenAI directory publication remains a separate external submission/review step and must not be claimed from repository CI alone.
