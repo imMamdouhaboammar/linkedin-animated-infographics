@@ -63,8 +63,9 @@ LOGICAL_ARTIFACTS = (
     "final/delivery.json",
 )
 
+EVIDENCE_JOBS = ("evidence-research",)
+
 DISCOVERY_JOBS = (
-    "evidence-research",
     "creative-direction-exploration",
     "visual-archetype-exploration",
     "copy-compression-critique",
@@ -94,10 +95,12 @@ def select_execution_path(capabilities: Mapping[str, bool]) -> str:
 
 
 def build_dispatch_plan(capabilities: Mapping[str, bool]) -> dict[str, Any]:
-    """Build a bounded side-job plan without pretending delegation exists."""
+    """Build an evidence-first bounded side-job plan without fake delegation."""
     real_delegation = capabilities.get("subagents") is True
     return {
         "execution_path": select_execution_path(capabilities),
+        "evidence_jobs": list(EVIDENCE_JOBS),
+        "must_finish_evidence_before_discovery": True,
         "discovery_mode": "parallel" if real_delegation else "sequential",
         "real_delegation": real_delegation,
         "discovery_jobs": list(DISCOVERY_JOBS),
