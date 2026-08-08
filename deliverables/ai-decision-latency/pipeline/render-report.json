@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "artifact": "build/post.gif",
+  "toolchain": {
+    "browser": "Chromium 141.0.7390.37 (/opt/pw-browsers)",
+    "ffmpeg": "6.1.1 (system)",
+    "note": "The Playwright-bundled ffmpeg was installed but ships without the image2 demuxer, so numbered-frame input failed at palettegen. Resolved by installing the full system ffmpeg. No repository script was changed."
+  },
+  "gates": [
+    {"gate": "1 artboard integrity", "status": "PASS", "evidence": "check_render.py reports 1080x1350, nothing clipped, footer present with name and URL"},
+    {"gate": "2 mobile legibility", "status": "PASS", "evidence": "still_mobile350.png: hero, secondary line, decision chips, six node questions and SHORTER TIME-TO-DECISION all land at 350px. Sub-12px items are the four rail tick labels, the platform monograms and the two panel caveats, which are micro annotation, not load-bearing."},
+    {"gate": "3 motion budget", "status": "PASS", "evidence": "0.14% mean changed pixels per frame against a 2% ceiling. check_render bounding-box smell test 13.8%. Safe margin clean at 48px. Nothing full bleed animates."},
+    {"gate": "4 loop close", "status": "PASS", "evidence": "seam 0.78% against an 8% ceiling; largest frame-to-frame change 1.08%"},
+    {"gate": "5 animation order", "status": "PASS", "evidence": "frames 0/20/44/68/90 light nodes 01, 02, 03, 05, 06 in order. Rail tokens travel toward DECISION. Insight marker steps 1 to 3. No reverse-delay trap."},
+    {"gate": "6 first-frame integrity", "status": "PASS", "evidence": "frame 0 is a complete infographic: manual chain undimmed, node 01 lit, MOVE BUDGET selected with its check badge, both rail tokens mid-journey with the gap open. Nothing at opacity 0 or mid-scale."},
+    {"gate": "7 file", "status": "PASS", "evidence": "ffprobe 1080x1350, 96 frames, 7.68s, 0.39 MB, -loop 0"},
+    {"gate": "8 content", "status": "PASS", "evidence": "no placeholder strings; product names spelled as their owners spell them; no numeric claim anywhere on the artboard; attribution footer correct"},
+    {"gate": "9 caption", "status": "PASS", "evidence": "line 1 is 25 characters and stands alone; copy_slop_check clean; no em dashes; one CTA at the end; the link lives in the first comment"},
+    {"gate": "10 RTL", "status": "NA", "evidence": "English output"}
+  ],
+  "encode": {"colors": 128, "fps": 12.5, "frames": 96, "duration_s": 7.68, "size_mb": 0.39, "dither": "bayer:bayer_scale=4", "diff_mode": "rectangle"},
+  "mascot_gates": [
+    {"check": "one pointer", "status": "PASS", "note": "Neither mascot travels. The reading pointer is the signal token set; the cursor is a single selection gesture owned by the human mascot."},
+    {"check": "frame 0 shows both mascots", "status": "PASS"},
+    {"check": "every sub-loop is an integer division", "status": "PASS", "note": "every animation runs at exactly var(--loop)"},
+    {"check": "idle amplitude at or under 4px", "status": "PASS", "note": "assistant floats 3px; the buyer does not move"},
+    {"check": "no rAF, no runtime library", "status": "PASS", "note": "capture_frames.py reported 41 animations, 41 infinite, and raised no rAF warning"},
+    {"check": "rotate=0 on every animateMotion", "status": "PASS"},
+    {"check": "flat fills only on the characters", "status": "PASS", "note": "no gradient, blur or shadow spread on either mascot"}
+  ],
+  "verdict": "PASS"
+}

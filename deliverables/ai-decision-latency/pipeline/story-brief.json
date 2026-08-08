@@ -1,0 +1,107 @@
+{
+  "blocked_by_evidence": [
+    "performance numbers",
+    "case study",
+    "official logo artwork",
+    "platform integrations"
+  ],
+  "content_contract": {
+    "density_range": [
+      4,
+      8
+    ],
+    "required_beats": [
+      "raw-input",
+      "stages",
+      "final-output"
+    ]
+  },
+  "cta": "Save this if you brief AI inside a media buying workflow",
+  "design_dials_applied": {
+    "design_variance": 7,
+    "motion_intensity": 6,
+    "notes": "Variance 7 comes from four structurally different zones on one page (rail, three-lane flow, node band, collapse strip) rather than a repeated card template. Motion 6 is parallel zone choreography on one clock, not a scene-by-scene video. Density 7 sits inside the archetype range 4-8 and is earned through hierarchy: one 68px hero, one 400px centre anchor, six 20px node labels.",
+    "visual_density": 7
+  },
+  "execution": {
+    "artboard_archetype": "flow-map-verdict",
+    "design_dials": {
+      "design_variance": 7,
+      "motion_intensity": 6,
+      "visual_density": 7
+    },
+    "house_tokens": {
+      "accent": "#246BFD",
+      "accent_deep": "#1A4FBF",
+      "bg": "#FFFFFF",
+      "ink": "#101828",
+      "ink_2": "#344054",
+      "line": "#E4E7EC",
+      "muted": "#59616E",
+      "support_1": "#FF6B24",
+      "support_1_deep": "#B23C00",
+      "support_2": "#14B8A6",
+      "support_2_deep": "#0B6E63",
+      "support_3": "#8B5CF6",
+      "support_3_deep": "#6134D6",
+      "support_4": "#22A866",
+      "support_4_deep": "#116B41",
+      "support_5": "#F8C94A",
+      "support_5_deep": "#8A6100",
+      "surface": "#F6F7F9"
+    },
+    "motion_limit": 2,
+    "structures": [
+      "flow",
+      "nodes",
+      "connectors"
+    ]
+  },
+  "execution_bridge": {
+    "final-output": "Right lane: three decision chips where the buyer selects one, then the collapse strip resolving to SHORTER TIME-TO-DECISION.",
+    "raw-input": "Left lane: six named signal chips carrying a platform token and a metric direction.",
+    "stages": "Centre lane: the AI-assisted interpretation panel where signals group into three example insights, then the six-decision node band beneath it."
+  },
+  "language": "en",
+  "mascots": {
+    "ai-assistant": {
+      "constraint": "never performs the final selection",
+      "job": "groups signals and offers the insight card",
+      "role": "idle-plus-gesture"
+    },
+    "media-buyer": {
+      "identity": "original 2D, authored for this post",
+      "job": "performs the final selection",
+      "role": "payoff"
+    }
+  },
+  "output_mode": "gif",
+  "schema_version": 1,
+  "selected_concept": {
+    "aha_mechanic": "Manual stages collapse into signal, interpretation, decision",
+    "copy_hook": "AI doesn't buy the media. It shortens the time between signal and decision.",
+    "id": "A",
+    "name": "The Latency Gap",
+    "visual_hook": "A signal-to-decision rail whose gap physically shortens on the loop"
+  },
+  "selection": {
+    "archetype": "raw-input-to-final-output",
+    "house": "signal-desk",
+    "motions": [
+      "connector-draw",
+      "node-pulse"
+    ],
+    "style": "funnel-board"
+  },
+  "story_house_rationale": "Signal Desk is the only house with a white ground and an encoding set of support accents. The brief needs colour to carry meaning (signal class, stage, decision state), which a single-accent house cannot express without decorative recolouring.",
+  "structural_fingerprint": {
+    "card_grammar": "mixed-span: narrow signal chips, one large centre panel, small decision chips, numbered node band",
+    "density": "dense",
+    "divider": "connector",
+    "motion_grammar": "connector draw with travelling signal tokens plus node state pulse",
+    "visual_anchor": "the centre interpretation panel carrying both mascots",
+    "zone_topology": "banded flow with a lateral three-lane centre and a closed return loop"
+  },
+  "takeaway": "AI's real advantage in media buying is a shorter distance between signal and decision, and the buyer still owns the decision",
+  "topic": "How AI actually helps a modern media buyer"
+}

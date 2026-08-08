@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "clock": {"loop_ms": 7680, "fps": 12.5, "frames": 96, "source": "timing table row 7680ms, verified to close"},
+  "declared_patterns": ["connector-draw", "node-pulse"],
+  "choreography_model": "parallel zone loops on one clock, not a linear storyboard",
+  "storyboard_reconciliation": "The brief describes six sequential scenes over 8-10s. Six sequential node states alone need 5.4s at a readable 900ms dwell, which would leave no time for the rest, and a scene-by-scene build would leave frame 0 mostly empty and fail the first-frame gate. Every scene is therefore kept but run as a concurrent zone pass on the shared clock, so the whole composition is present at every instant and motion carries state rather than construction.",
+  "tracks": [
+    {
+      "id": "latency-rail",
+      "scene": "01 hook",
+      "pattern": "connector-draw",
+      "mechanic": "Two tokens leave SIGNAL together. The manual token dwells at COLLECT, COMPARE, INTERPRET and SUMMARISE and reaches DECISION at 80% of the loop. The AI-assisted token stops once and reaches DECISION at 22%. The visible gap between them is the argument.",
+      "implementation": "SMIL animateMotion, keyTimes/keyPoints with dwell windows, rotate=0, shared -0.5 loop phase so the seam falls mid-loop",
+      "answers": "where did this item travel"
+    },
+    {
+      "id": "signal-intake",
+      "scene": "02 signals arrive",
+      "pattern": "connector-draw",
+      "mechanic": "One token per wire travels from its platform chip to the interpretation panel. Token colour matches the signal class the wire encodes. Six wires, staggered 6% apart, directional not bouncing.",
+      "implementation": "CSS offset-path with offset-distance keyframes, ends held invisible so the loop closes",
+      "answers": "where did this item travel"
+    },
+    {
+      "id": "interpretation",
+      "scene": "03 AI interprets",
+      "pattern": "node-pulse",
+      "mechanic": "The assistant releases its insight card down into the example-output block, then a marker steps through the three lines in order.",
+      "implementation": "CSS transform + a stepped top marker",
+      "answers": "what should I read next"
+    },
+    {
+      "id": "decision",
+      "scene": "04 the buyer decides",
+      "pattern": "node-pulse",
+      "mechanic": "A cobalt evidence outline touches TEST, then WAIT, then MOVE BUDGET. The cursor then leaves the buyer's raised hand, travels to MOVE BUDGET, and the green selected state plus check badge holds to the end of the loop.",
+      "implementation": "stepped border-color per chip with reverse-ordered delays, cursor on offset-path",
+      "answers": "which state is active",
+      "message_constraint": "The cursor originates at the human mascot. The AI mascot has no track that reaches a decision chip. This is the one motion rule that may not be relaxed for pacing."
+    },
+    {
+      "id": "six-decisions",
+      "scene": "05 the six questions",
+      "pattern": "node-pulse",
+      "mechanic": "Six nodes light one at a time for 1280ms each, filling the whole loop. Reverse-ordered negative delays so the order is 01 to 06 and node 01 is already lit on frame 0.",
+      "implementation": "steps(1,end) with delays 0, -5/6, -4/6, -3/6, -2/6, -1/6",
+      "answers": "what should I read next"
+    },
+    {
+      "id": "the-collapse",
+      "scene": "06 the aha",
+      "pattern": "connector-draw",
+      "mechanic": "From 54% the five middle stages of the manual chain fade to 20% and scale to 0.84, so the chain visibly compresses. At 72% the DECISION pill on the assisted row fills solid green. Restored by 98%.",
+      "implementation": "opacity plus scale transform, which does not reflow the flex row",
+      "answers": "what changed"
+    },
+    {
+      "id": "presence",
+      "scene": "final loop",
+      "pattern": "node-pulse",
+      "mechanic": "The AI assistant floats 3px on a four-phase cycle. The buyer stays still: the character who makes the decision does not fidget.",
+      "answers": "which state is active"
+    }
+  ],
+  "frame_zero_contract": "Every zone resolves at t=0: the manual chain is complete and undimmed, node 01 is lit, MOVE BUDGET is selected with its check badge, both rail tokens are mid-journey with the gap open, and no element is at opacity 0 or mid-scale.",
+  "budget_plan": {
+    "ground": "light with a 54px grid, so motion must stay tight and local",
+    "excluded": ["filter", "blur", "box-shadow spread", "backdrop-filter", "anything full bleed"],
+    "static_by_rule": ["footer", "hero headline", "all body copy", "platform tokens", "the buyer mascot"]
+  },
+  "seekability": "CSS keyframes and SMIL only. No requestAnimationFrame, no transitions, no canvas, no runtime library."
+}

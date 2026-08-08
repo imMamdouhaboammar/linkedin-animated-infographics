@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "role": "adversarial review",
+  "artifacts_reviewed": ["build/post.html", "build/post.gif", "build/still.png", "build/still_mobile350.png", "build/caption.md", "build/first-comment.md", "build/evidence.json", "build/layout-spec.json"],
+  "local_quality_gates": [
+    {
+      "gate": "hooked-design-copy",
+      "status": "PASS",
+      "reasoning": "The hero states a position and names its mechanism in the same breath. It fails the portability test in the right direction: 'AI doesn't buy the media' is meaningless outside media buying, which is what a non-portable hook looks like. The zone heads carry progression ('SIGNALS ARRIVE ALL DAY', 'THE BUYER DECIDES') while node labels, chain steps and platform names stay literal.",
+      "residual_risk": "'IT SHORTENS THE TIME BETWEEN SIGNAL AND DECISION' is a claim about workflow, not a measured result. The artboard never attaches a number to it, so it stays an opinion the author is entitled to hold."
+    },
+    {
+      "gate": "creative-payoff",
+      "status": "PASS",
+      "reasoning": "Two payoffs, and they are the same mechanic at two scales. The rail shows one token arriving while the other is still at COMPARE. The lower strip compresses the manual chain and fills DECISION solid green. Neither is spectacle: both encode the thesis as distance."
+    },
+    {
+      "gate": "restrained-palette",
+      "status": "PASS",
+      "reasoning": "Six accents is a lot, and the brief explicitly asked for it. Restraint is enforced by rule instead of count: cobalt is the only structural accent, and each support colour is bound to one meaning across the whole page. A wire, a chip edge and a state pill in orange all mean the same thing. Nothing is coloured for decoration and both mascots are deliberately outside the encoding set, ink for the human and purple for the AI.",
+      "residual_risk": "The platform monogram tokens use vendor brand colours, which sit outside the encoding contract. Justified: they identify a source rather than encode a state, and they are the smallest colour objects on the page."
+    },
+    {
+      "gate": "center-first-composition",
+      "status": "PASS",
+      "reasoning": "Hook, rail, node band, collapse strip, payoff and footer are all centred on x=540, and the visual anchor is the interpretation panel sitting on that axis. The one exception is the hero band's lateral three-lane reading order, which is recorded in layout-spec.json: signals enter left, interpretation happens centre, decisions leave right. Centring that band's content would destroy the flow claim."
+    }
+  ],
+  "research_gates": [
+    {"gate": "prose-specificity", "status": "PASS", "note": "Every signal chip names a real source and a real metric direction. No chip says 'data' or 'insights'."},
+    {"gate": "voice-preservation", "status": "PASS", "note": "The brief's own phrasing survives where it carries the idea: shortens the time between signal and decision, what changed / what should I do next, STRONG SIGNAL / NEEDS MORE DATA / LOSING MOMENTUM."},
+    {"gate": "design-dials", "status": "PASS", "note": "variance 7, motion 6, density 7 declared and met. Density is earned by hierarchy: one 74px hero against 16px node questions."},
+    {"gate": "structural-originality", "status": "PASS", "note": "fingerprint_check reports all six axes changed against the previous published post. Not a reskin."},
+    {"gate": "reference-dna", "status": "NA", "note": "The brief named reference infographics as inspiration but attached none, so no reference was studied and none could be cloned."},
+    {"gate": "contrast-discipline", "status": "PASS", "note": "26 measured pairs in palette-check.json, all passing. One repair: white text on raw purple measured 4.23, so text-bearing purple moved to #6134D6."},
+    {"gate": "evidence-traceability", "status": "PASS", "note": "Four slots blocked in evidence.json and all four held in the build."}
+  ],
+  "findings": [
+    {
+      "severity": "resolved",
+      "finding": "Frame 0 originally showed the manual chain mid-dim, which reads as a broken render in a screenshot rather than as compression.",
+      "fix": "Inverted the phase so the poster frame is the complete chain and the collapse happens at 54-90%."
+    },
+    {
+      "severity": "resolved",
+      "finding": "The six signal wires crossed each other between the chips and the panel, producing a tangle at the intake.",
+      "fix": "Renested the curves onto a 20px spread intake so they converge without crossing."
+    },
+    {
+      "severity": "resolved",
+      "finding": "The return-loop connector ran straight through the decision-rule paragraph.",
+      "fix": "Rerouted the vertical to x=1004 and narrowed the paragraph to 198px."
+    },
+    {
+      "severity": "accepted",
+      "finding": "Platform and AI vendor marks are name tokens in brand colours rather than official logo artwork.",
+      "reasoning": "No official SVG was supplied or attached. The repository's exact-SVG rule for named marks is applied to vendor trademarks too, so nothing was traced from memory. Recognition comes from the correctly spelled name, the brand colour and the role in the story, and the token slots accept real SVGs without any layout change.",
+      "owner_decision_required": true
+    },
+    {
+      "severity": "accepted",
+      "finding": "The brief's six-scene storyboard is realised as concurrent zone passes rather than a linear sequence.",
+      "reasoning": "Six sequential node states at a readable 900ms dwell consume 5.4s on their own, and a scene-by-scene build would leave frame 0 mostly empty, failing the first-frame gate. Every scene survives; they run in parallel on one clock. Recorded in motion-direction.json."
+    }
+  ],
+  "message_integrity_check": {
+    "claim": "AI recommends, the human decides",
+    "enforced_how": "The cursor track originates at the buyer mascot's raised hand and is the only element that reaches a decision chip. The AI assistant has no track that touches the decision column; its only outbound motion is the insight card moving down into the example-output block.",
+    "status": "PASS"
+  },
+  "verdict": "PASS"
+}

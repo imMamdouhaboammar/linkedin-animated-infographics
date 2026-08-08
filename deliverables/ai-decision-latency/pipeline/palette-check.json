@@ -1,0 +1,232 @@
+{
+  "schema_version": 1,
+  "house": "signal-desk",
+  "palette_character": "creative-attractive-restrained, multi-accent exception",
+  "exception_justification": "The approved brief explicitly requires a colourful encoding system on a white ground, and restrained-palette permits a louder treatment when the brief requires it. Restraint is preserved by rule rather than by count: cobalt is the only structural accent and each support colour is bound to exactly one meaning for the whole page.",
+  "colour_contract": {
+    "#246BFD cobalt": "structure: decision loop, connectors, active state, the interpretation panel",
+    "#FF6B24 orange": "a signal that is rising or heating up",
+    "#14B8A6 teal": "a demand or audience signal",
+    "#8B5CF6 purple": "AI-assisted interpretation output",
+    "#22A866 green": "a confirmed decision or strong signal",
+    "#F8C94A yellow": "needs more data, hold",
+    "#101828 ink": "type and the footer"
+  },
+  "decorative_colour_use": "none permitted",
+  "checks": [
+    {
+      "pair": "hero headline",
+      "fg": "#101828",
+      "bg": "#FFFFFF",
+      "ratio": 17.75,
+      "minimum": 4.5,
+      "status": "PASS"
+    },
+    {
+      "pair": "secondary line",
+      "fg": "#344054",
+      "bg": "#FFFFFF",
+      "ratio": 10.46,
+      "minimum": 4.5,
+      "status": "PASS"
+    },
+    {
+      "pair": "micro label",
+      "fg": "#59616E",
+      "bg": "#FFFFFF",
+      "ratio": 6.25,
+      "minimum": 4.5,
+      "status": "PASS"
+    },
+    {
+      "pair": "eyebrow",
+      "fg": "#1A4FBF",
+      "bg": "#FFFFFF",
+      "ratio": 7.21,
+      "minimum": 4.5,
+      "status": "PASS"
+    },
+    {
+      "pair": "panel body on surface",
+      "fg": "#344054",
+      "bg": "#F6F7F9",
+      "ratio": 9.76,
+      "minimum": 4.5,
+      "status": "PASS"
+    },
+    {
+      "pair": "panel micro on surface",
+      "fg": "#59616E",
+      "bg": "#F6F7F9",
+      "ratio": 5.83,
+      "minimum": 4.5,
+      "status": "PASS"
+    },
+    {
+      "pair": "signal label orange",
+      "fg": "#B23C00",
+      "bg": "#FFFFFF",
+      "ratio": 5.93,
+      "minimum": 4.5,
+      "status": "PASS"
+    },
+    {
+      "pair": "signal label teal",
+      "fg": "#0B6E63",
+      "bg": "#FFFFFF",
+      "ratio": 6.13,
+      "minimum": 4.5,
+      "status": "PASS"
+    },
+    {
+      "pair": "signal label purple",
+      "fg": "#6134D6",
+      "bg": "#FFFFFF",
+      "ratio": 7.07,
+      "minimum": 4.5,
+      "status": "PASS"
+    },
+    {
+      "pair": "signal label green",
+      "fg": "#116B41",
+      "bg": "#FFFFFF",
+      "ratio": 6.56,
+      "minimum": 4.5,
+      "status": "PASS"
+    },
+    {
+      "pair": "signal label yellow",
+      "fg": "#8A6100",
+      "bg": "#FFFFFF",
+      "ratio": 5.54,
+      "minimum": 4.5,
+      "status": "PASS"
+    },
+    {
+      "pair": "cobalt label",
+      "fg": "#1A4FBF",
+      "bg": "#F6F7F9",
+      "ratio": 6.72,
+      "minimum": 4.5,
+      "status": "PASS"
+    },
+    {
+      "pair": "active node border",
+      "fg": "#246BFD",
+      "bg": "#FFFFFF",
+      "ratio": 4.57,
+      "minimum": 3.0,
+      "status": "PASS"
+    },
+    {
+      "pair": "orange encode",
+      "fg": "#B23C00",
+      "bg": "#FFFFFF",
+      "ratio": 5.93,
+      "minimum": 3.0,
+      "status": "PASS"
+    },
+    {
+      "pair": "teal encode",
+      "fg": "#0B6E63",
+      "bg": "#FFFFFF",
+      "ratio": 6.13,
+      "minimum": 3.0,
+      "status": "PASS"
+    },
+    {
+      "pair": "purple encode",
+      "fg": "#8B5CF6",
+      "bg": "#FFFFFF",
+      "ratio": 4.23,
+      "minimum": 3.0,
+      "status": "PASS"
+    },
+    {
+      "pair": "green encode",
+      "fg": "#116B41",
+      "bg": "#FFFFFF",
+      "ratio": 6.56,
+      "minimum": 3.0,
+      "status": "PASS"
+    },
+    {
+      "pair": "yellow encode",
+      "fg": "#8A6100",
+      "bg": "#FFFFFF",
+      "ratio": 5.54,
+      "minimum": 3.0,
+      "status": "PASS"
+    },
+    {
+      "pair": "white on cobalt fill",
+      "fg": "#FFFFFF",
+      "bg": "#246BFD",
+      "ratio": 4.57,
+      "minimum": 4.5,
+      "status": "PASS"
+    },
+    {
+      "pair": "white on purple fill",
+      "fg": "#FFFFFF",
+      "bg": "#6134D6",
+      "ratio": 7.07,
+      "minimum": 4.5,
+      "status": "PASS",
+      "note": "Repaired: raw #8B5CF6 reached only 4.23 under white text, so text-bearing purple surfaces use support_3_deep. Raw #8B5CF6 remains legal as a mark or a state outline at the 3:1 floor."
+    },
+    {
+      "pair": "ink on orange fill",
+      "fg": "#101828",
+      "bg": "#FF6B24",
+      "ratio": 6.24,
+      "minimum": 4.5,
+      "status": "PASS"
+    },
+    {
+      "pair": "ink on teal fill",
+      "fg": "#101828",
+      "bg": "#14B8A6",
+      "ratio": 7.13,
+      "minimum": 4.5,
+      "status": "PASS"
+    },
+    {
+      "pair": "ink on green fill",
+      "fg": "#101828",
+      "bg": "#22A866",
+      "ratio": 5.8,
+      "minimum": 4.5,
+      "status": "PASS"
+    },
+    {
+      "pair": "ink on yellow fill",
+      "fg": "#101828",
+      "bg": "#F8C94A",
+      "ratio": 11.36,
+      "minimum": 4.5,
+      "status": "PASS"
+    },
+    {
+      "pair": "white on ink footer",
+      "fg": "#FFFFFF",
+      "bg": "#101828",
+      "ratio": 17.75,
+      "minimum": 4.5,
+      "status": "PASS"
+    },
+    {
+      "pair": "footer url on ink",
+      "fg": "#B7C0CC",
+      "bg": "#101828",
+      "ratio": 9.66,
+      "minimum": 4.5,
+      "status": "PASS"
+    }
+  ],
+  "failures": [],
+  "verdict": "PASS",
+  "repairs": [
+    "White text on raw purple #8B5CF6 measured 4.23. Text-bearing purple fills switched to #6134D6 at 7.07."
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "canvas": {"w": 1080, "h": 1350, "safe_margin": 48, "side_gutter": 60},
+  "alignment_mode": "center-first",
+  "alignment_exception": {
+    "applies_to": "the hero band only",
+    "kind": "flow / lateral reading order",
+    "reason": "The centre band is a left-to-right argument: signals enter on the left, interpretation happens in the middle, decisions leave on the right. Centring the three lanes as a block preserves center-first at the page level; the lanes themselves must read laterally or the flow claim is lost. Every other zone is centred on the page axis.",
+    "recorded_by": "layout-composer"
+  },
+  "visual_anchor": "the centre interpretation panel with both mascots, sitting on the page centre axis at x=540",
+  "zones": [
+    {"id": "hook", "y": [48, 300], "share": 0.187, "job": "state the position", "align": "centre", "contents": ["eyebrow", "hero 3 lines", "secondary line"]},
+    {"id": "rail", "y": [300, 406], "share": 0.079, "job": "prove the position geometrically", "align": "centre", "contents": ["SIGNAL dot", "four manual ticks", "DECISION dot", "compressible bracket"]},
+    {"id": "hero", "y": [406, 886], "share": 0.356, "job": "show the mechanism", "align": "three lanes, centred as a block", "contents": ["6 signal chips", "interpretation panel + 2 mascots", "3 decision chips", "return loop"]},
+    {"id": "nodes", "y": [886, 1092], "share": 0.153, "job": "make it usable", "align": "centre", "contents": ["band head", "6 numbered decision nodes"]},
+    {"id": "aha", "y": [1092, 1240], "share": 0.110, "job": "land the payoff", "align": "centre", "contents": ["before chain", "after chain", "SHORTER TIME-TO-DECISION"]},
+    {"id": "closer", "y": [1240, 1272], "share": 0.024, "job": "hand over the rule", "align": "centre", "contents": ["closer line"]},
+    {"id": "foot", "y": [1272, 1350], "share": 0.058, "job": "attribution", "align": "centre", "contents": ["name", "url"]}
+  ],
+  "vertical_utilisation": 0.906,
+  "component_counts": {"signal_chips": 6, "decision_chips": 3, "nodes": 6, "mascots": 2, "chain_pills": 10, "platform_tokens": 10},
+  "structural_fingerprint": {
+    "zone_topology": "banded flow with a lateral three-lane centre and a closed return loop",
+    "card_grammar": "mixed-span: narrow signal chips, one large centre panel, small decision chips, numbered node band",
+    "divider": "connector",
+    "visual_anchor": "the centre interpretation panel carrying both mascots",
+    "density": "dense",
+    "motion_grammar": "connector draw with travelling signal tokens plus node state pulse"
+  },
+  "previous_fingerprint": {
+    "zone_topology": "grid",
+    "card_grammar": "equal cards",
+    "divider": "rule",
+    "visual_anchor": "headline",
+    "density": "medium",
+    "motion_grammar": "sequential highlight"
+  },
+  "previous_fingerprint_source": "demos/community/imMamdouhaboammar/claude-code-marketing-review — the prior published infographic in this repository, recorded so structural-originality can be measured rather than asserted.",
+  "type_scale": {
+    "hero": "68px / 800",
+    "hero_line_3": "30px / 800",
+    "secondary": "21px / 500",
+    "zone_head": "13px / 800 tracked",
+    "chip_title": "17px / 700",
+    "chip_body": "14px / 500",
+    "node_q": "18px / 700",
+    "node_sub": "12px / 500",
+    "payoff": "38px / 800",
+    "closer": "19px / 600"
+  },
+  "feed_scale_floor": "Everything the post depends on is 18px or larger in artboard units. 12-14px is used only for micro annotations that are texture at feed scale.",
+  "footer_clearance": "The closer line ends at y=1272 and the footer bar occupies 1272-1350. No animated element enters the outer 48px safe margin.",
+  "handoff": "artboard-builder"
+}
