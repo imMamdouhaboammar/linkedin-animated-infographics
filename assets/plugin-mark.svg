@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">LinkedIn Animated Infographics</title>
+  <desc id="desc">Square plugin mark with animated infographic bars and a play indicator.</desc>
+  <rect width="512" height="512" rx="112" fill="#111111"/>
+  <rect x="112" y="120" width="72" height="272" rx="24" fill="#F5F1E8"/>
+  <rect x="220" y="184" width="72" height="208" rx="24" fill="#F5F1E8"/>
+  <rect x="328" y="248" width="72" height="144" rx="24" fill="#F5F1E8"/>
+  <path d="M226 98c0-16 18-25 31-16l78 54c12 8 12 25 0 33l-78 54c-13 9-31 0-31-16V98z" fill="#FF6B4A"/>
+</svg>
