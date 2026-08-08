@@ -38,13 +38,14 @@ class MarketplaceTests(unittest.TestCase):
         market = json.loads(MARKETPLACE.read_text())["plugins"][0]
         claude = json.loads(PLUGIN.read_text())
         codex = json.loads(CODEX_PLUGIN.read_text())
-        self.assertEqual("3.2.0", claude["version"])
+        self.assertEqual("3.2.1", claude["version"])
         self.assertEqual(claude["version"], market["version"])
         self.assertEqual(claude["version"], codex["version"])
 
     def test_standard_component_directories_exist(self):
         for relative in (
             "skills",
+            "openai-skills",
             "agents",
             "hooks/hooks.json",
             "helper",
@@ -61,7 +62,7 @@ class MarketplaceTests(unittest.TestCase):
         self.assertIn("/plugin install linkedin-animated-infographics@mamdouh-creative-tools", text)
         self.assertIn("codex plugin marketplace add imMamdouhaboammar/linkedin-animated-infographics --ref main", text)
         self.assertIn("codex plugin marketplace list", text)
-        self.assertIn("3.2.0", text)
+        self.assertIn("3.2.1", text)
         self.assertIn("docs/codex.md", text)
 
     def test_codex_marketplace_is_repo_scoped(self):
