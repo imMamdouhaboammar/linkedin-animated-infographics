@@ -58,6 +58,7 @@ REQUIRED_AUTOPILOT_FILES = (
 )
 FORBIDDEN_OPENAI_RUNTIME_REFERENCES = (
     ".claude-plugin/",
+    "agents/",
     "${CLAUDE_PLUGIN_ROOT}",
     "helper/",
     "architecture/",
@@ -238,7 +239,7 @@ def _validate_openai_skill_bundle(root: Path, errors: list[str]) -> None:
             errors.append(f"OpenAI autopilot missing capability contract: {capability}")
     if "Unknown capabilities are unavailable" not in combined:
         errors.append("OpenAI autopilot must fail closed on unknown capabilities")
-    if "does not automatically register Workspace Agents" not in combined:
+    if "not automatically registered" not in combined and "does not automatically register Workspace Agents" not in combined:
         errors.append("OpenAI autopilot must state that Workspace Agents are not automatically registered")
     if "Never claim" not in combined:
         errors.append("OpenAI autopilot must forbid fabricated tool or agent execution claims")
