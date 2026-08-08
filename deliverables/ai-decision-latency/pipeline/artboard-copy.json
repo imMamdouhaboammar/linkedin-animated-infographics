@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "language": "en",
+  "slots": {
+    "eyebrow": "MEDIA BUYING · SIGNAL TO DECISION",
+    "hero_line_1": "AI DOESN'T BUY",
+    "hero_line_2": "THE MEDIA.",
+    "hero_line_3": "IT SHORTENS THE TIME BETWEEN SIGNAL AND DECISION",
+    "secondary": "The best AI use cases in media buying happen between “what changed?” and “what should I do next?”",
+    "rail_left": "SIGNAL",
+    "rail_right": "DECISION",
+    "rail_ticks": [
+      "COLLECT",
+      "COMPARE",
+      "INTERPRET",
+      "SUMMARISE"
+    ],
+    "zone_left_head": "SIGNALS ARRIVE ALL DAY",
+    "signals": [
+      {
+        "platform": "Google",
+        "line": "Search demand shifts",
+        "encode": "teal"
+      },
+      {
+        "platform": "Meta",
+        "line": "Frequency rises",
+        "encode": "orange"
+      },
+      {
+        "platform": "TikTok",
+        "line": "CTR drops",
+        "encode": "orange"
+      },
+      {
+        "platform": "LinkedIn",
+        "line": "An audience fatigues",
+        "encode": "yellow"
+      },
+      {
+        "platform": "Google Analytics",
+        "line": "Conversion quality changes",
+        "encode": "teal"
+      },
+      {
+        "platform": "Reddit",
+        "line": "Competitor messaging moves",
+        "encode": "yellow"
+      }
+    ],
+    "zone_centre_head": "AI-ASSISTED INTERPRETATION",
+    "centre_sub": "Hundreds of weak signals compressed into a few readable patterns",
+    "ai_tools_label": "AI-ASSISTED THINKING",
+    "ai_tools": [
+      "ChatGPT",
+      "Claude",
+      "Gemini"
+    ],
+    "ai_tools_caveat": "Interpretation and angle work. These tools do not run the buy.",
+    "insight_label": "EXAMPLE OUTPUT · 3 THINGS THAT MATTER TODAY",
+    "insights": [
+      "Creative fatigue is increasing",
+      "Brand search demand is rising",
+      "Campaign B deserves another test"
+    ],
+    "insight_caveat": "Illustrative examples, not reported results",
+    "zone_right_head": "THE BUYER DECIDES",
+    "decisions": [
+      {
+        "label": "TEST",
+        "state": "NEEDS MORE DATA",
+        "encode": "yellow"
+      },
+      {
+        "label": "WAIT",
+        "state": "LOSING MOMENTUM",
+        "encode": "orange"
+      },
+      {
+        "label": "MOVE BUDGET",
+        "state": "STRONG SIGNAL",
+        "encode": "green"
+      }
+    ],
+    "decision_rule": "AI recommends. The buyer selects. Nothing moves until a human moves it.",
+    "loop_return": "EVERY ACTION CREATES THE NEXT SIGNAL",
+    "node_band_head": "SIX DECISIONS AI SHOULD HELP YOU REACH FASTER",
+    "nodes": [
+      {
+        "n": "01",
+        "q": "Where is demand moving?",
+        "sub": "Search, social, competitors, site behaviour"
+      },
+      {
+        "n": "02",
+        "q": "Who should we test next?",
+        "sub": "Audience response, CRM, intent, lookalikes"
+      },
+      {
+        "n": "03",
+        "q": "What angle should we launch?",
+        "sub": "Comments, search terms, customer language"
+      },
+      {
+        "n": "04",
+        "q": "What should we pause?",
+        "sub": "CTR down, CPA up, frequency up, CVR down"
+      },
+      {
+        "n": "05",
+        "q": "Where should budget move?",
+        "sub": "Recommendation, decision, execution"
+      },
+      {
+        "n": "06",
+        "q": "What changed and why?",
+        "sub": "Analytics and Looker Studio into three things"
+      }
+    ],
+    "aha_head": "THE REAL ADVANTAGE",
+    "before_label": "WITHOUT AI",
+    "before_chain": [
+      "SIGNAL",
+      "EXPORT",
+      "SPREADSHEET",
+      "COMPARE",
+      "ANALYSE",
+      "WRITE",
+      "DECIDE"
+    ],
+    "after_label": "WITH AI ASSISTANCE",
+    "after_chain": [
+      "SIGNAL",
+      "INTERPRETATION",
+      "DECISION"
+    ],
+    "aha_payoff": "SHORTER TIME-TO-DECISION",
+    "closer": "Let AI carry the information density. Keep the judgment with the buyer.",
+    "foot_name": "MAMDOUH ABOAMMAR",
+    "foot_url": "· github.com/imMamdouhaboammar",
+    "rail_note": "THE SAME SIGNAL · TWO ROUTES TO THE SAME DECISION",
+    "rail_ai_tick": "AI-ASSISTED INTERPRETATION"
+  },
+  "gate_notes": {
+    "hooked-design-copy": "Hero states a position and names the mechanism. It fails the portability test in the right direction: 'AI doesn't buy the media' only makes sense to someone who buys media.",
+    "prose-specificity": "Every signal chip names a real metric direction and a real source. No chip says 'data' or 'insights'.",
+    "voice-preservation": "The brief's own phrases are kept verbatim where they carry the idea: 'shortens the time between signal and decision', 'what changed / what should I do next', 'STRONG SIGNAL / NEEDS MORE DATA / LOSING MOMENTUM', 'Recommendation first, decision second, execution third' (compressed to the decision rule line).",
+    "dash-crutch": "No em or en dashes in any visible slot.",
+    "literal_labels_kept_literal": "Platform names, chain steps, decision labels and node numbers stay literal. Only the hero, the zone heads and the closer carry hooks."
+  },
+  "sync_note": "Every string here was re-read from the rendered post.html after the final repair pass. Looker Studio appears in node 06 and is recorded as a named product in evidence.json."
+}

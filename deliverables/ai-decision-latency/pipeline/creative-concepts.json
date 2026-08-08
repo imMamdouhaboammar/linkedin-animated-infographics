@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "brief": "How AI actually helps a modern media buyer, for a marketing thought-leadership audience",
+  "constraints": ["1080x1350", "English", "animated GIF", "white editorial ground", "two original 2D mascots", "no invented metrics"],
+  "directions": [
+    {
+      "id": "A",
+      "name": "The Latency Gap",
+      "visual_hook": "One horizontal rail runs the width of the page from a SIGNAL dot to a DECISION dot. The manual stages sit on the rail as ticks. On the loop the ticks collapse inward and the DECISION dot slides toward SIGNAL, so the gap the reader is looking at physically shortens.",
+      "copy_hook": "AI DOESN'T BUY THE MEDIA. IT SHORTENS THE TIME BETWEEN SIGNAL AND DECISION.",
+      "aha_mechanic": "Distance is the argument. The reader watches the gap close instead of reading that it closes.",
+      "story_shape": "raw input to final output, run as one continuous decision loop",
+      "recommended": {"style": "funnel-board", "archetype": "raw-input-to-final-output", "house": "signal-desk", "motions": ["connector-draw", "node-pulse"]},
+      "evidence_dependencies": ["c1", "c2", "c4"],
+      "payoff": "The before/after stack collapse in the lower third repeats the rail mechanic at full scale and lands on SHORTER TIME-TO-DECISION.",
+      "risk": "The rail can read as a generic timeline if the ticks are not named with real media-buying work.",
+      "why_it_earns_attention": "The headline makes a claim that sounds contrarian for a marketing feed, and the visual immediately proves the claim geometrically rather than restating it."
+    },
+    {
+      "id": "B",
+      "name": "The Interpretation Desk",
+      "visual_hook": "A three-lane desk: raw signal cards pile up on the left, a sorting surface in the centre, three decision cards on the right. The AI mascot physically sorts the pile into three groups while the buyer mascot watches, then hands one card across.",
+      "copy_hook": "THE PILE ISN'T THE PROBLEM. THE TIME IT TAKES TO READ IT IS.",
+      "aha_mechanic": "Volume becomes order. The mess-to-groups transition is the whole idea.",
+      "story_shape": "ecosystem snapshot narrowing into a decision",
+      "recommended": {"style": "funnel-board", "archetype": "ecosystem-snapshot", "house": "signal-desk", "motions": ["node-pulse", "connector-draw"]},
+      "evidence_dependencies": ["c3", "c4", "c5"],
+      "payoff": "The handoff gesture: AI moves cards, the buyer moves the budget token.",
+      "risk": "Sorting animation reads as decorative shuffling unless the groups are labelled with real decisions, and a card pile is hard to keep legible at feed scale.",
+      "why_it_earns_attention": "Strong mascot moment, but the hook is softer and the geometry does not prove the latency claim."
+    },
+    {
+      "id": "C",
+      "name": "Six Questions, One Loop",
+      "visual_hook": "Six numbered decision stations arranged around a closed loop track. A signal token travels the track continuously; each station lights as the token arrives and shows the signals feeding that decision.",
+      "copy_hook": "SIX DECISIONS AI SHOULD HELP YOU MAKE FASTER",
+      "aha_mechanic": "The loop never ends: action creates the next signal.",
+      "story_shape": "framework in one page",
+      "recommended": {"style": "signal-sheet", "archetype": "framework-in-one-page", "house": "signal-desk", "motions": ["sequential-highlight", "chip-badge-pulse"]},
+      "evidence_dependencies": ["c3", "c5"],
+      "payoff": "Loop closure, which is true but quiet.",
+      "risk": "Six equal stations is a reference card, not an argument. It flattens the latency thesis into a list and the hook becomes a title rather than a claim.",
+      "why_it_earns_attention": "Highly saveable, but it is the beginner-explainer shape the brief explicitly rejected."
+    }
+  ],
+  "selected": "A",
+  "selection_rationale": "Direction A is the only one whose geometry carries the thesis: the argument is about distance, so the visual argument is distance. B contributes its handoff gesture and C contributes its six stations, both folded into A as supporting zones rather than competing structures. A also keeps the hero claim non-portable, since the sentence only works for a media buyer looking at continuous signals.",
+  "absorbed_from_rejected": [
+    "From B: the AI mascot sorts and hands over, the buyer performs the final selection.",
+    "From C: the six decisions become a node band on the loop, not the page structure."
+  ],
+  "gates": {
+    "hooked-design-copy": "PASS - hero carries a real position plus a mechanism, and is not portable to another category.",
+    "creative-payoff": "PASS - the collapse of the manual stages into signal, interpretation, decision is a transformation with a story job."
+  }
+}

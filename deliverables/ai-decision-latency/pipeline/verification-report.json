@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "verdict": "PASS",
+  "attempt": 1,
+  "verifier_note": "Artifacts read directly rather than trusting upstream worker claims.",
+  "criteria": [
+    {
+      "id": "canvas",
+      "status": "PASS",
+      "artifact": "build/post.gif",
+      "observation": "1080x1350, 96 frames, 7.68s, loops infinitely",
+      "evidence": "ffprobe width=1080 height=1350 nb_frames=96 duration=7.680000"
+    },
+    {
+      "id": "file-budget",
+      "status": "PASS",
+      "artifact": "build/post.gif",
+      "observation": "0.39 MB against the 5 MB LinkedIn budget",
+      "evidence": "build_gif.py: encode 128 colours 0.39 MB FITS"
+    },
+    {
+      "id": "still-works-alone",
+      "status": "PASS",
+      "artifact": "build/still.png",
+      "observation": "Frame 0 carries the whole argument with no motion: hook, two-route rail, signal to interpretation to decision, six decisions, the before/after comparison and the payoff",
+      "evidence": "check_render.py size 1080x1350 ok, nothing clipped, footer present"
+    },
+    {
+      "id": "frame-zero-integrity",
+      "status": "PASS",
+      "artifact": "build/.frames/f0000.png",
+      "observation": "No meaning-bearing element is mid-fade or half-drawn. Travelling tokens and the cursor are held at opacity 0 at their seam, which is the documented exception rather than an unstated one.",
+      "evidence": "frame 0 inspected directly against the post-repair build"
+    },
+    {
+      "id": "loop-seam",
+      "status": "PASS",
+      "artifact": "build/post.gif",
+      "observation": "Seam closes; no jump at the loop point",
+      "evidence": "build_gif.py loop: seam 0.78% (x0.72), ceiling 8%"
+    },
+    {
+      "id": "motion-budget",
+      "status": "PASS",
+      "artifact": "build/post.gif",
+      "observation": "Motion is cheap enough to have headroom on a light textured ground",
+      "evidence": "build_gif.py motion: 0.14% of pixels change per frame, ceiling 2%"
+    },
+    {
+      "id": "reading-order",
+      "status": "PASS",
+      "artifact": "build/_order_nodes.png",
+      "observation": "Decision evidence runs TEST 38.5-46.9%, WAIT 46.9-54.2%, MOVE BUDGET 54.2-62.5%, exclusively and in the declared order. Node band lights 01 through 06.",
+      "evidence": "probed from captured frames on chip top borders, clear of every wire endpoint"
+    },
+    {
+      "id": "human-owns-the-decision",
+      "status": "PASS",
+      "artifact": "build/post.html",
+      "observation": "Recommendation tokens reach all three chips from the interpretation panel, which is the recommendation. Only the cursor triggers the selected state, and it originates at the buyer mascot's hand. No track begins at the AI mascot.",
+      "evidence": "cursor route #cur M662 590 C706 592 748 640 794 682 driven by mpath from the buyer's hand; frame 63 shows it mid-travel"
+    },
+    {
+      "id": "no-invented-evidence",
+      "status": "PASS",
+      "artifact": "build/evidence.json",
+      "observation": "No metric value, case study, result or fabricated integration appears. The three example insights sit under an EXAMPLE OUTPUT label and an explicit not-reported-results caveat",
+      "evidence": "four blocked slots recorded in evidence.json, all four held in the rendered artboard"
+    },
+    {
+      "id": "contrast",
+      "status": "PASS",
+      "artifact": "build/palette-check.json",
+      "observation": "32 foreground/background pairs measured, including the six vendor monograms omitted in the first pass",
+      "evidence": "palette-check.json verdict PASS, coverage 32/32, after two repairs"
+    },
+    {
+      "id": "structural-originality",
+      "status": "PASS",
+      "artifact": "build/layout-spec.json",
+      "observation": "All six fingerprint axes differ from the previously published post in this repository",
+      "evidence": "fingerprint_check.py ok:true, changed_axes lists all six"
+    },
+    {
+      "id": "copy-slop",
+      "status": "PASS",
+      "artifact": "build/caption.md",
+      "observation": "No throat-clearing, binary contrast, faux insight, puffery, recap ending, rhetorical setup or dash crutch in the caption or the artboard copy",
+      "evidence": "copy_slop_check.py exit 0 with an empty findings array on both"
+    },
+    {
+      "id": "registry-integrity",
+      "status": "PASS",
+      "artifact": "skills/info-stories/extensions/signal-desk.json",
+      "observation": "The new Story House validates against the catalog contract and the reference doc and preview asset were regenerated to match",
+      "evidence": "info_stories.py check OK; tests.test_info_stories 31 tests OK"
+    },
+    {
+      "id": "official-logo-artwork",
+      "status": "NA",
+      "artifact": "build/evidence.json",
+      "observation": "No official SVG was supplied, so no vendor mark was traced or approximated. Platforms appear as correctly spelled name tokens in brand colours",
+      "evidence": "evidence.json unsupported_slots, entry 'official platform logo artwork'"
+    },
+    {
+      "id": "spec-matches-build",
+      "status": "PASS",
+      "artifact": "build/layout-spec.json",
+      "observation": "Zone bands, type scale and copy strings are re-read from the shipped post.html rather than carried over from the plan",
+      "evidence": "bands and font sizes measured in the browser; every copy slot compared against the rendered markup"
+    },
+    {
+      "id": "release-version",
+      "status": "PASS",
+      "artifact": ".claude-plugin/plugin.json",
+      "observation": "Adding a public Story House is a public behaviour change, so the release moved 3.2.2 to 3.3.0 across every manifest, validator, compatibility record and test that pins it",
+      "evidence": "273 tests OK; validate_marketplace and validate_codex_plugin both OK at 3.3.0"
+    }
+  ],
+  "repair_note": "One targeted repair round, driven by external review on the pull request. Two motion bugs (an inverted evidence order and an animation shorthand that deleted a documented state), one unmeasured contrast set, one duplicated geometry, two off-contract colour uses, and a set of specification statements that had drifted from the shipped file."
+}

@@ -81,3 +81,15 @@ Tone: structured dark
 `bg #041B3A` | `surface #0A2446` | `ink #FFFFFF` | `ink_2 #C6D3E4` | `muted #9FB2CB` | `accent #F1895C` | `accent_deep #FFB08C`
 
 Text pairs must meet 4.5:1. State-defining accent pairs must meet 3:1.
+
+## Signal Desk
+
+Tone: bright editorial signal
+
+`bg #FFFFFF` | `surface #F6F7F9` | `ink #101828` | `ink_2 #344054` | `muted #59616E` | `accent #246BFD` | `accent_deep #1A4FBF`
+
+Encoding accents: `support_1 #FF6B24` orange | `support_2 #14B8A6` teal | `support_3 #8B5CF6` purple | `support_4 #22A866` green | `support_5 #F8C94A` yellow.
+
+Signal Desk is the multi-accent exception house. Every support accent carries a `_deep` sibling and support colour is only legal when it encodes a stage, a signal class, or a state. A support accent used decoratively fails `restrained-palette`. Raw support values are fills and marks; support-coloured text uses the `_deep` sibling.
+
+Text pairs must meet 4.5:1. State-defining accent pairs must meet 3:1.

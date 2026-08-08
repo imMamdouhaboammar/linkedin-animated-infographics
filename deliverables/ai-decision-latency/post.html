@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>AI doesn't buy the media — Signal to Decision</title>
+<!--
+  Info-story:  house signal-desk / style funnel-board / archetype raw-input-to-final-output
+  Motions:     connector-draw (primary) + node-pulse (secondary)
+  Loop:        7680ms @ 12.5fps = 96 frames
+  Render:      bash scripts/render.sh build/post.html build/post.gif --duration 7.68 --fps 12.5
+-->
+<style>
+:root{
+  --loop: 7680ms;
+
+  /* Story House: Signal Desk */
+  --bg:#FFFFFF; --surface:#F6F7F9; --ink:#101828; --ink-2:#344054; --muted:#59616E;
+  --line:#E4E7EC; --accent:#246BFD; --accent-deep:#1A4FBF;
+  --s1:#FF6B24; --s1d:#B23C00;   /* rising / heating */
+  --s2:#14B8A6; --s2d:#0B6E63;   /* demand + audience */
+  --s3:#8B5CF6; --s3d:#6134D6;   /* AI interpretation */
+  --s4:#22A866; --s4d:#116B41;   /* confirmed / strong */
+  --s5:#F8C94A; --s5d:#8A6100;   /* hold / needs data */
+  --accent-wash:#EDF3FF; --s4-wash:#E7F6EE; --s5-wash:#FDF4DC; --s1-wash:#FFEEE4; --s3-wash:#F1EBFE;
+
+  /* Vendor brand colours. Deliberately outside the encoding contract: they identify a
+     source, they do not encode a stage or state. Each carries the glyph colour that
+     clears 4.5:1 on it, so no monogram is unreadable and no brand colour is altered. */
+  --b-google:#4285F4;    --b-google-ink:#101828;
+  --b-meta:#0866FF;      --b-meta-ink:#FFFFFF;
+  --b-tiktok:#FE2C55;    --b-tiktok-ink:#101828;
+  --b-linkedin:#0A66C2;  --b-linkedin-ink:#FFFFFF;
+  --b-ga:#E8710A;        --b-ga-ink:#101828;
+  --b-reddit:#FF4500;    --b-reddit-ink:#101828;
+  --b-chatgpt:#10A37F;   --b-claude:#D97757;  --b-gemini:#4285F4;
+
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#8A8F98;display:flex;justify-content:center}
+
+#artboard{
+  width:1080px;height:1350px;flex:none;position:relative;overflow:hidden;
+  background:var(--bg);color:var(--ink);font-family:var(--sans);
+  background-image:
+    linear-gradient(rgba(16,24,40,.022) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(16,24,40,.022) 1px,transparent 1px);
+  background-size:54px 54px;
+}
+.abs{position:absolute}
+.ctr{left:0;right:0;text-align:center}
+
+/* registration marks — static editorial texture */
+.reg{position:absolute;width:14px;height:14px;opacity:.5}
+.reg::before,.reg::after{content:"";position:absolute;background:var(--line)}
+.reg::before{left:6px;top:0;width:2px;height:14px}
+.reg::after{top:6px;left:0;height:2px;width:14px}
+
+/* ══════════ HOOK ══════════════════════════════════════════ */
+.eyebrow{top:52px;font-size:12px;font-weight:800;letter-spacing:.18em;color:var(--accent-deep)}
+.h1{font-size:74px;font-weight:800;letter-spacing:-.022em;line-height:1}
+.h1a{top:80px}
+.h1b{top:154px;color:var(--accent-deep)}
+.h2{top:240px;font-size:29px;font-weight:800;letter-spacing:-.005em;color:var(--ink-2)}
+.sub{top:284px;font-size:19px;font-weight:500;color:var(--ink-2);line-height:1.4}
+.sub span{display:inline-block;max-width:760px}
+
+/* ══════════ RAIL (the hook visual) ════════════════════════ */
+.railcap{font-size:12px;font-weight:800;letter-spacing:.1em;color:var(--ink)}
+.tickl{font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--muted);text-align:center}
+.railnote{top:336px;font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--muted)}
+
+/* ══════════ LANE HEADS ════════════════════════════════════ */
+.lhead{top:432px;font-size:12px;font-weight:800;letter-spacing:.13em;color:var(--muted)}
+
+/* ══════════ SIGNAL CHIPS ══════════════════════════════════ */
+.chip{
+  position:absolute;left:60px;width:230px;height:64px;
+  border:1px solid var(--line);border-left:4px solid var(--c);border-radius:12px;
+  background:#fff;padding:9px 12px 0 13px;
+}
+.chip .row{display:flex;align-items:center;gap:8px}
+.chip .pname{font-size:12px;font-weight:800;letter-spacing:.03em;color:var(--ink-2)}
+.chip .sig{margin-top:5px;font-size:14px;font-weight:600;color:var(--ink);line-height:1.15}
+.tok{width:24px;height:24px;border-radius:7px;flex:none;display:grid;place-items:center;
+     font-size:11px;font-weight:800;color:var(--tk);letter-spacing:.01em}
+
+/* ══════════ CENTRE PANEL ══════════════════════════════════ */
+.panel{left:352px;top:458px;width:376px;height:424px;border:2px solid var(--accent);
+       border-radius:18px;background:#fff}
+.phead{position:absolute;left:0;top:0;width:100%;height:36px;background:var(--accent);
+       border-radius:16px 16px 0 0;display:grid;place-items:center;
+       font-size:12px;font-weight:800;letter-spacing:.13em;color:#fff}
+.psub{position:absolute;left:16px;right:16px;top:44px;text-align:center;
+      font-size:12px;font-weight:500;color:var(--muted);line-height:1.3}
+.stage{position:absolute;left:0;top:62px;width:376px;height:150px}
+
+.ilabel{position:absolute;left:0;width:100%;text-align:center;top:218px;
+        font-size:9.5px;font-weight:800;letter-spacing:.1em;color:var(--s3d)}
+.irow{position:absolute;left:26px;width:324px;height:22px;display:flex;align-items:center;gap:9px}
+.irow i{width:7px;height:7px;border-radius:2px;background:var(--s3);flex:none;display:block}
+.irow span{font-size:13px;font-weight:600;color:var(--ink)}
+.imark{position:absolute;left:14px;width:4px;height:16px;border-radius:2px;background:var(--s3d)}
+.icav{position:absolute;left:0;width:100%;text-align:center;top:306px;
+      font-size:9.5px;font-weight:500;color:var(--muted);font-style:italic}
+
+.tlabel{position:absolute;left:0;width:100%;text-align:center;top:326px;
+        font-size:9.5px;font-weight:800;letter-spacing:.12em;color:var(--muted)}
+.tools{position:absolute;left:16px;top:342px;width:344px;display:flex;gap:8px;justify-content:center}
+.tool{border:1.5px solid var(--tc);border-radius:999px;padding:5px 11px;display:flex;
+      align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--ink);background:#fff}
+.tool b{width:7px;height:7px;border-radius:50%;background:var(--tc);display:block}
+.tcav{position:absolute;left:20px;right:20px;top:380px;text-align:center;
+      font-size:9.5px;font-weight:500;color:var(--muted);line-height:1.35}
+
+/* ══════════ DECISION CHIPS ════════════════════════════════ */
+.dec{position:absolute;left:790px;width:230px;height:80px;background:#fff;
+     border:2px solid var(--line);border-radius:14px;padding:11px 14px}
+.dec .dl{font-size:20px;font-weight:800;letter-spacing:-.01em;color:var(--ink)}
+.dec .ds{margin-top:7px;display:inline-block;padding:3px 8px;border-radius:6px;
+         font-size:9.5px;font-weight:800;letter-spacing:.08em;background:var(--w);color:var(--cd)}
+.decrule{left:790px;top:748px;width:198px;font-size:11px;font-weight:600;color:var(--muted);line-height:1.45}
+.decrule b{color:var(--ink-2);font-weight:800}
+
+/* ══════════ NODE BAND ═════════════════════════════════════ */
+.nhead{top:944px;font-size:13px;font-weight:800;letter-spacing:.13em;color:var(--ink)}
+.node{position:absolute;width:306px;height:66px;background:#fff;border:2px solid var(--line);
+      border-radius:12px;padding:9px 12px 0 11px;display:flex;gap:10px}
+.node .num{width:26px;height:26px;border-radius:8px;flex:none;display:grid;place-items:center;
+           background:var(--surface);color:var(--muted);font-size:12px;font-weight:800}
+.node .q{font-size:17px;font-weight:700;color:var(--ink);line-height:1.15}
+.node .qs{margin-top:3px;font-size:11px;font-weight:500;color:var(--muted);line-height:1.2}
+
+/* ══════════ AHA STRIP ═════════════════════════════════════ */
+.aband{position:absolute;left:48px;top:1118px;width:984px;height:72px;border-radius:16px;
+       background:var(--surface);border:1px solid var(--line)}
+.arow{position:absolute;left:60px;width:960px;height:26px;display:flex;align-items:center;gap:9px}
+.alab{width:134px;flex:none;font-size:10px;font-weight:800;letter-spacing:.11em;text-align:right}
+.pill{border-radius:7px;padding:5px 10px;font-size:11px;font-weight:800;letter-spacing:.05em;
+      background:#fff;color:var(--ink-2);border:1px solid #D9DEE5;white-space:nowrap}
+.arrw{font-size:11px;color:#C3CAD3;font-weight:800}
+.pill.on{background:var(--accent-wash);color:var(--accent-deep);border-color:#C5D8FF}
+.pill.go{background:var(--s4-wash);color:var(--s4d);border-color:#B9E4CD}
+
+.payoff{top:1198px;font-size:36px;line-height:1.05;font-weight:800;letter-spacing:-.018em;color:var(--ink)}
+.uline{position:absolute;left:50%;top:1242px;width:512px;height:6px;margin-left:-256px;
+       border-radius:3px;background:var(--s4);transform-origin:center;}
+.closer{top:1251px;font-size:15.5px;font-weight:600;color:var(--muted)}
+
+/* ══════════ FOOTER — never animates ═══════════════════════ */
+.foot{position:absolute;left:0;right:0;bottom:0;height:78px;background:var(--ink);
+      display:flex;align-items:center;justify-content:center;gap:12px;color:#fff}
+.foot .av{width:32px;height:32px;border-radius:9px;background:var(--accent);flex:none;
+          display:grid;place-items:center;font-size:14px;font-weight:800;color:#fff}
+.foot .nm{font-size:15px;font-weight:800;letter-spacing:.09em}
+.foot .url{font-size:14px;color:#B7C0CC}
+
+/* ══════════════════════════════════════════════════════════
+   MOTION — one clock, everything derived from --loop.
+   Frame 0 is the resolved state of every zone.
+   ══════════════════════════════════════════════════════════ */
+
+/* rail tokens: CSS carries only the seam fade, SMIL carries the travel */
+.rtok{animation:tokFade var(--loop) linear infinite;animation-delay:calc(var(--loop) * -0.5)}
+@keyframes tokFade{
+  0%,88%{opacity:1} 91%{opacity:0} 96%{opacity:0} 100%{opacity:1}
+}
+
+/* connector-draw: one signal token per wire. The route lives on the wire path itself
+   (SMIL mpath), so each geometry is defined exactly once. CSS carries only the fade
+   that hides the seam. */
+.flow{animation:flowFade var(--loop) steps(1,end) infinite;animation-delay:var(--d)}
+@keyframes flowFade{
+  0%{opacity:0} 6%{opacity:1} 40%{opacity:1} 46%{opacity:0} 100%{opacity:0}
+}
+
+/* node-pulse: six decision nodes, reverse-ordered delays */
+.node{animation:nodeOn var(--loop) steps(1,end) infinite;animation-delay:var(--d)}
+.node .num{animation:numOn var(--loop) steps(1,end) infinite;animation-delay:var(--d)}
+@keyframes nodeOn{
+  0%{border-color:var(--accent);background:var(--accent-wash)}
+  16.6%{border-color:var(--line);background:#fff}
+  100%{border-color:var(--line);background:#fff}
+}
+@keyframes numOn{
+  0%{background:var(--accent);color:#fff}
+  16.6%{background:var(--surface);color:var(--muted)}
+  100%{background:var(--surface);color:var(--muted)}
+}
+.n1{--d:0ms}
+.n2{--d:calc(var(--loop) * -5 / 6)}
+.n3{--d:calc(var(--loop) * -4 / 6)}
+.n4{--d:calc(var(--loop) * -3 / 6)}
+.n5{--d:calc(var(--loop) * -2 / 6)}
+.n6{--d:calc(var(--loop) * -1 / 6)}
+
+/* insight marker steps down the three example outputs */
+.imark{animation:markStep var(--loop) steps(1,end) infinite}
+@keyframes markStep{
+  0%,29%{top:290px;opacity:0}
+  32%{top:227px;opacity:1}
+  40%{top:251px;opacity:1}
+  48%{top:275px;opacity:1}
+  62%{top:275px;opacity:1}
+  64%{opacity:0}
+  100%{opacity:0}
+}
+
+/* AI hands the insight card down into the example block */
+.card{animation:cardGo var(--loop) cubic-bezier(.4,0,.2,1) infinite}
+@keyframes cardGo{
+  0%,20%{transform:translate(0,0) rotate(-8deg);opacity:1}
+  30%{transform:translate(-104px,74px) rotate(-2deg);opacity:1}
+  36%{transform:translate(-104px,74px) rotate(-2deg);opacity:0}
+  92%{transform:translate(0,0) rotate(-8deg);opacity:0}
+  97%{transform:translate(0,0) rotate(-8deg);opacity:1}
+  100%{transform:translate(0,0) rotate(-8deg);opacity:1}
+}
+
+/* AI assistant idle float */
+.aibot{animation:bob var(--loop) ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}25%{transform:translateY(-3px)}50%{transform:translateY(0)}75%{transform:translateY(3px)}}
+
+/* decision chips: AI marks evidence, then the buyer's selection holds */
+.dec{animation:decEv var(--loop) steps(1,end) infinite;animation-delay:var(--d)}
+@keyframes decEv{
+  0%,30%{border-color:var(--line)}
+  38%{border-color:var(--accent)}
+  46%{border-color:var(--line)}
+  100%{border-color:var(--line)}
+}
+.d1{--d:0ms}
+.d2{--d:calc(var(--loop) * -0.92)}
+.dec.sel{animation:decSel var(--loop) steps(1,end) infinite}
+@keyframes decSel{
+  0%{border-color:var(--s4);background:var(--s4-wash)}
+  8%{border-color:var(--line);background:#fff}
+  54%{border-color:var(--accent);background:#fff}
+  62%{border-color:var(--line);background:#fff}
+  72%{border-color:var(--s4);background:var(--s4-wash)}
+  100%{border-color:var(--s4);background:var(--s4-wash)}
+}
+.selmark{animation:selMark var(--loop) steps(1,end) infinite}
+@keyframes selMark{0%{opacity:1}8%{opacity:0}72%{opacity:0}74%{opacity:1}100%{opacity:1}}
+
+/* the buyer's cursor travels to the decision he selects. Route on #cur via mpath. */
+.cursor{animation:curFade var(--loop) steps(1,end) infinite}
+@keyframes curFade{
+  0%{opacity:0} 56%{opacity:0} 58%{opacity:1} 90%{opacity:1} 94%{opacity:0} 100%{opacity:0}
+}
+
+/* the aha: the middle of the manual chain compresses */
+.dim{animation:dimOut var(--loop) ease-in-out infinite}
+@keyframes dimOut{
+  0%,54%{opacity:1;transform:scale(1)}
+  68%{opacity:.2;transform:scale(.84)}
+  90%{opacity:.2;transform:scale(.84)}
+  98%{opacity:1;transform:scale(1)}
+  100%{opacity:1;transform:scale(1)}
+}
+.pill.go{animation:arrive var(--loop) ease-out infinite}
+@keyframes arrive{
+  0%,66%{background:var(--s4-wash);border-color:#B9E4CD;color:var(--s4d)}
+  72%{background:var(--s4);border-color:var(--s4);color:#fff}
+  86%{background:var(--s4);border-color:var(--s4);color:#fff}
+  94%{background:var(--s4-wash);border-color:#B9E4CD;color:var(--s4d)}
+  100%{background:var(--s4-wash);border-color:#B9E4CD;color:var(--s4d)}
+}
+</style>
+</head>
+<body>
+<div id="artboard">
+
+  <div class="reg" style="left:48px;top:48px"></div>
+  <div class="reg" style="right:48px;top:48px"></div>
+  <div class="reg" style="left:48px;bottom:126px"></div>
+  <div class="reg" style="right:48px;bottom:126px"></div>
+
+  <!-- ═══ HOOK ═══ -->
+  <div class="abs ctr eyebrow">MEDIA BUYING &nbsp;·&nbsp; SIGNAL TO DECISION</div>
+  <div class="abs ctr h1 h1a">AI DOESN'T BUY</div>
+  <div class="abs ctr h1 h1b">THE MEDIA.</div>
+  <div class="abs ctr h2">IT SHORTENS THE TIME BETWEEN SIGNAL AND DECISION</div>
+  <div class="abs ctr sub"><span>The best AI use cases in media buying happen between &ldquo;what changed?&rdquo; and &ldquo;what should I do next?&rdquo;</span></div>
+  <div class="abs ctr railnote">THE SAME SIGNAL &nbsp;·&nbsp; TWO ROUTES TO THE SAME DECISION</div>
+
+  <!-- ═══ RAIL LABELS (HTML for crisp text) ═══ -->
+  <div class="abs railcap" style="left:60px;top:383px;width:128px;text-align:right">SIGNAL</div>
+  <div class="abs railcap" style="left:892px;top:383px;width:128px;text-align:left">DECISION</div>
+  <div class="abs tickl" style="left:288px;top:354px;width:96px">COLLECT</div>
+  <div class="abs tickl" style="left:424px;top:354px;width:96px">COMPARE</div>
+  <div class="abs tickl" style="left:560px;top:354px;width:96px">INTERPRET</div>
+  <div class="abs tickl" style="left:696px;top:354px;width:96px">SUMMARISE</div>
+  <div class="abs tickl" style="left:440px;top:418px;width:200px;color:#1A4FBF;font-weight:800">AI&#8209;ASSISTED INTERPRETATION</div>
+
+  <!-- ═══ LANE HEADS ═══ -->
+  <div class="abs lhead" style="left:60px;width:230px;text-align:center">SIGNALS ARRIVE ALL DAY</div>
+  <div class="abs lhead" style="left:790px;width:230px;text-align:center">THE BUYER DECIDES</div>
+
+  <!-- ═══ SIGNAL CHIPS ═══ -->
+  <div class="chip" style="top:462px;--c:var(--s2)">
+    <div class="row"><span class="tok" style="background:var(--b-google);--tk:var(--b-google-ink)">G</span><span class="pname">GOOGLE</span></div>
+    <div class="sig">Search demand shifts</div></div>
+  <div class="chip" style="top:532px;--c:var(--s1)">
+    <div class="row"><span class="tok" style="background:var(--b-meta);--tk:var(--b-meta-ink)">M</span><span class="pname">META</span></div>
+    <div class="sig">Frequency rises</div></div>
+  <div class="chip" style="top:602px;--c:var(--s1)">
+    <div class="row"><span class="tok" style="background:var(--b-tiktok);--tk:var(--b-tiktok-ink)">T</span><span class="pname">TIKTOK</span></div>
+    <div class="sig">CTR drops</div></div>
+  <div class="chip" style="top:672px;--c:var(--s5)">
+    <div class="row"><span class="tok" style="background:var(--b-linkedin);--tk:var(--b-linkedin-ink);font-size:10px">in</span><span class="pname">LINKEDIN</span></div>
+    <div class="sig">An audience fatigues</div></div>
+  <div class="chip" style="top:742px;--c:var(--s2)">
+    <div class="row"><span class="tok" style="background:var(--b-ga);--tk:var(--b-ga-ink);font-size:9.5px">GA</span><span class="pname">GOOGLE ANALYTICS</span></div>
+    <div class="sig">Conversion quality changes</div></div>
+  <div class="chip" style="top:812px;--c:var(--s5)">
+    <div class="row"><span class="tok" style="background:var(--b-reddit);--tk:var(--b-reddit-ink)">R</span><span class="pname">REDDIT</span></div>
+    <div class="sig">Competitor messaging moves</div></div>
+
+  <!-- ═══ CENTRE PANEL ═══ -->
+  <div class="abs panel">
+    <div class="phead">AI&#8209;ASSISTED INTERPRETATION</div>
+    <div class="psub">Hundreds of weak signals compressed into a few readable patterns</div>
+
+    <div class="stage">
+      <!-- AI assistant -->
+      <svg class="aibot" style="position:absolute;left:73px;top:40px" width="62" height="66" viewBox="0 0 62 66">
+        <ellipse cx="31" cy="62" rx="16" ry="3.4" fill="#101828" opacity=".12"/>
+        <path d="M31 15V7" stroke="#6134D6" stroke-width="3" stroke-linecap="round"/>
+        <path d="M31 0.5 33 4.5 37 6 33 7.5 31 11.5 29 7.5 25 6 29 4.5Z" fill="#8B5CF6"/>
+        <rect x="5" y="14" width="52" height="42" rx="14" fill="#6134D6"/>
+        <circle cx="22" cy="33" r="5" fill="#fff"/><circle cx="40" cy="33" r="5" fill="#fff"/>
+        <circle cx="23" cy="34" r="2.1" fill="#241059"/><circle cx="41" cy="34" r="2.1" fill="#241059"/>
+        <path d="M26 44h10" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".8"/>
+        <path d="M48 42 49.2 45 52 46.2 49.2 47.4 48 50.4 46.8 47.4 44 46.2 46.8 45Z" fill="#fff" opacity=".65"/>
+      </svg>
+      <!-- insight card the assistant hands over -->
+      <svg class="card" style="position:absolute;left:138px;top:56px" width="52" height="36" viewBox="0 0 52 36">
+        <rect x="1" y="1" width="50" height="34" rx="7" fill="#fff" stroke="#C9B5F7" stroke-width="2"/>
+        <circle cx="11" cy="11" r="3.4" fill="#8B5CF6"/>
+        <rect x="18" y="9" width="24" height="3.6" rx="1.8" fill="#D8DDE5"/>
+        <rect x="9" y="20" width="33" height="3.6" rx="1.8" fill="#D8DDE5"/>
+        <rect x="9" y="27" width="21" height="3.6" rx="1.8" fill="#E4E7EC"/>
+      </svg>
+      <!-- media buyer -->
+      <svg style="position:absolute;left:173px;top:14px" width="130" height="134" viewBox="0 0 130 134">
+        <ellipse cx="65" cy="129" rx="37" ry="4.6" fill="#101828" opacity=".12"/>
+        <!-- legs -->
+        <rect x="45" y="98" width="40" height="27" rx="9" fill="#1F2937"/>
+        <!-- torso -->
+        <rect x="35" y="58" width="60" height="48" rx="17" fill="#344054"/>
+        <path d="M55 58h20l-10 13Z" fill="#48566B"/>
+        <!-- left arm + notebook -->
+        <rect x="24" y="66" width="15" height="34" rx="7.5" fill="#344054"/>
+        <rect x="9" y="92" width="34" height="25" rx="5" fill="#fff" stroke="#D3D8E0" stroke-width="2"/>
+        <rect x="9" y="92" width="6" height="25" rx="3" fill="#344054"/>
+        <rect x="20" y="99" width="17" height="2.6" rx="1.3" fill="#D8DDE5"/>
+        <rect x="20" y="106" width="12" height="2.6" rx="1.3" fill="#E4E7EC"/>
+        <!-- right arm, raised: this hand makes the call -->
+        <path d="M92 70 Q106 64 111 50" stroke="#344054" stroke-width="14" stroke-linecap="round" fill="none"/>
+        <circle cx="112" cy="47" r="8.5" fill="#F1C9A5"/>
+        <!-- head -->
+        <rect x="44" y="21" width="42" height="40" rx="14" fill="#F1C9A5"/>
+        <!-- cap -->
+        <path d="M42 33 Q65 8 88 33Z" fill="#246BFD"/>
+        <rect x="39" y="31" width="54" height="7" rx="3.5" fill="#1A4FBF"/>
+        <!-- headphones over the cap -->
+        <path d="M36 38 Q65 4 94 38" stroke="#101828" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <rect x="30" y="36" width="12" height="19" rx="5" fill="#101828"/>
+        <rect x="88" y="36" width="12" height="19" rx="5" fill="#101828"/>
+        <!-- face -->
+        <circle cx="57" cy="46" r="3.1" fill="#101828"/><circle cx="74" cy="46" r="3.1" fill="#101828"/>
+        <path d="M58 54 Q65.5 59 73 54" stroke="#101828" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <div class="ilabel">EXAMPLE OUTPUT &nbsp;·&nbsp; 3 THINGS THAT MATTER TODAY</div>
+    <div class="imark"></div>
+    <div class="irow" style="top:224px"><i></i><span>Creative fatigue is increasing</span></div>
+    <div class="irow" style="top:248px"><i></i><span>Brand search demand is rising</span></div>
+    <div class="irow" style="top:272px"><i></i><span>Campaign B deserves another test</span></div>
+    <div class="icav">Illustrative examples, not reported results</div>
+
+    <div class="tlabel">AI&#8209;ASSISTED THINKING</div>
+    <div class="tools">
+      <span class="tool" style="--tc:var(--b-chatgpt)"><b></b>ChatGPT</span>
+      <span class="tool" style="--tc:var(--b-claude)"><b></b>Claude</span>
+      <span class="tool" style="--tc:var(--b-gemini)"><b></b>Gemini</span>
+    </div>
+    <div class="tcav">Interpretation and angle work. These tools do not run the buy.</div>
+  </div>
+
+  <!-- ═══ DECISION CHIPS ═══ -->
+  <div class="dec d1" style="top:462px;--w:var(--s5-wash);--cd:var(--s5d)">
+    <div class="dl">TEST</div><span class="ds">NEEDS MORE DATA</span></div>
+  <div class="dec d2" style="top:558px;--w:var(--s1-wash);--cd:var(--s1d)">
+    <div class="dl">WAIT</div><span class="ds">LOSING MOMENTUM</span></div>
+  <div class="dec sel" style="top:654px;--w:var(--s4-wash);--cd:var(--s4d)">
+    <div class="dl">MOVE BUDGET</div><span class="ds">STRONG SIGNAL</span>
+    <svg class="selmark" style="position:absolute;right:-11px;top:-11px" width="26" height="26" viewBox="0 0 26 26">
+      <circle cx="13" cy="13" r="12" fill="#22A866"/>
+      <path d="M7.5 13.4 11.2 17 18.5 9.6" stroke="#fff" stroke-width="3" fill="none"
+            stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <div class="abs decrule"><b>AI recommends.</b> The buyer selects. Nothing moves until a human moves it.</div>
+
+  <!-- ═══ WIRES, TOKENS, RETURN LOOP ═══ -->
+  <svg class="abs" style="left:0;top:0" width="1080" height="1350" viewBox="0 0 1080 1350">
+    <defs>
+      <marker id="ar" markerWidth="9" markerHeight="9" refX="5" refY="4.5" orient="auto">
+        <path d="M0 0 9 4.5 0 9Z" fill="#246BFD"/>
+      </marker>
+    </defs>
+
+    <!-- rail: manual track -->
+    <path id="ra" d="M200 372H880" stroke="#DDE1E7" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <g fill="#B6BEC9">
+      <circle cx="336" cy="372" r="4"/><circle cx="472" cy="372" r="4"/>
+      <circle cx="608" cy="372" r="4"/><circle cx="744" cy="372" r="4"/>
+    </g>
+    <!-- rail: AI-assisted track -->
+    <path id="rb" d="M200 406H880" stroke="#C5D8FF" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <circle cx="540" cy="406" r="4" fill="#246BFD"/>
+    <!-- shared caps -->
+    <path d="M200 372V406" stroke="#101828" stroke-width="3" stroke-linecap="round"/>
+    <path d="M880 372V406" stroke="#22A866" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="200" cy="372" r="7" fill="#101828"/><circle cx="200" cy="406" r="7" fill="#101828"/>
+    <circle cx="880" cy="372" r="7" fill="#22A866"/><circle cx="880" cy="406" r="7" fill="#22A866"/>
+
+    <!-- travelling tokens. SMIL cannot read var(--loop), so dur and begin are the
+         literal expansion of it: dur = --loop, begin = --loop * -0.5. If --loop changes,
+         every dur/begin in this file changes with it. -->
+    <g><animateMotion dur="7.68s" begin="-3.84s" repeatCount="indefinite" calcMode="linear" rotate="0"
+        keyTimes="0;0.04;0.12;0.16;0.28;0.34;0.48;0.55;0.72;0.80;0.93;0.94;1"
+        keyPoints="0;0.2;0.2;0.4;0.4;0.6;0.6;0.8;0.8;0.955;0.955;0;0"><mpath href="#ra"/></animateMotion>
+      <circle class="rtok" r="7.5" fill="#101828"/></g>
+    <g><animateMotion dur="7.68s" begin="-3.84s" repeatCount="indefinite" calcMode="linear" rotate="0"
+        keyTimes="0;0.06;0.14;0.22;0.93;0.94;1"
+        keyPoints="0;0.5;0.5;0.955;0.955;0;0"><mpath href="#rb"/></animateMotion>
+      <circle class="rtok" r="7.5" fill="#246BFD"/></g>
+
+    <!-- signal wires: colour encodes the signal class -->
+    <path id="w1" d="M290 494C318 494 330 540 352 592" stroke="#14B8A6" stroke-width="2" fill="none" opacity=".45"/>
+    <path id="w2" d="M290 564C316 564 330 574 352 596" stroke="#FF6B24" stroke-width="2" fill="none" opacity=".45"/>
+    <path id="w3" d="M290 634C316 634 332 618 352 600" stroke="#FF6B24" stroke-width="2" fill="none" opacity=".45"/>
+    <path id="w4" d="M290 704C316 704 334 640 352 604" stroke="#F8C94A" stroke-width="2" fill="none" opacity=".6"/>
+    <path id="w5" d="M290 774C318 774 336 660 352 608" stroke="#14B8A6" stroke-width="2" fill="none" opacity=".45"/>
+    <path id="w6" d="M290 844C320 844 340 680 352 612" stroke="#F8C94A" stroke-width="2" fill="none" opacity=".6"/>
+
+    <!-- decision wires -->
+    <path id="w7" d="M728 620C760 620 762 502 790 502" stroke="#F8C94A" stroke-width="2" fill="none" opacity=".6"/>
+    <path id="w8" d="M728 620C760 620 766 598 790 598" stroke="#FF6B24" stroke-width="2" fill="none" opacity=".45"/>
+    <path id="w9" d="M728 620C760 620 762 694 790 694" stroke="#22A866" stroke-width="2.4" fill="none" opacity=".6"/>
+
+    <!-- return loop: action creates the next signal -->
+    <path d="M1004 738V902Q1004 922 984 922H196Q176 922 176 902V888" stroke="#246BFD" stroke-width="2"
+          fill="none" stroke-dasharray="7 6" opacity=".55" marker-end="url(#ar)"/>
+    <rect x="356" y="908" width="368" height="28" rx="14" fill="#fff"/>
+    <text x="540" y="926" text-anchor="middle" font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif"
+          font-size="11.5" font-weight="800" letter-spacing="1.6" fill="#1A4FBF">EVERY ACTION CREATES THE NEXT SIGNAL</text>
+
+    <!-- signal tokens: motion from the wire paths above, one geometry each -->
+    <g><animateMotion dur="7.68s" begin="-0.0000s" repeatCount="indefinite"
+        calcMode="linear" rotate="0" keyTimes="0;0.4;1" keyPoints="0;1;1"><mpath href="#w1"/></animateMotion>
+      <circle class="flow" style="--d:calc(var(--loop) * -0.0)" r="4.5" fill="#14B8A6"/></g>
+    <g><animateMotion dur="7.68s" begin="-0.4608s" repeatCount="indefinite"
+        calcMode="linear" rotate="0" keyTimes="0;0.4;1" keyPoints="0;1;1"><mpath href="#w2"/></animateMotion>
+      <circle class="flow" style="--d:calc(var(--loop) * -0.06)" r="4.5" fill="#FF6B24"/></g>
+    <g><animateMotion dur="7.68s" begin="-0.9216s" repeatCount="indefinite"
+        calcMode="linear" rotate="0" keyTimes="0;0.4;1" keyPoints="0;1;1"><mpath href="#w3"/></animateMotion>
+      <circle class="flow" style="--d:calc(var(--loop) * -0.12)" r="4.5" fill="#FF6B24"/></g>
+    <g><animateMotion dur="7.68s" begin="-1.3824s" repeatCount="indefinite"
+        calcMode="linear" rotate="0" keyTimes="0;0.4;1" keyPoints="0;1;1"><mpath href="#w4"/></animateMotion>
+      <circle class="flow" style="--d:calc(var(--loop) * -0.18)" r="4.5" fill="#F8C94A"/></g>
+    <g><animateMotion dur="7.68s" begin="-1.8432s" repeatCount="indefinite"
+        calcMode="linear" rotate="0" keyTimes="0;0.4;1" keyPoints="0;1;1"><mpath href="#w5"/></animateMotion>
+      <circle class="flow" style="--d:calc(var(--loop) * -0.24)" r="4.5" fill="#14B8A6"/></g>
+    <g><animateMotion dur="7.68s" begin="-2.3040s" repeatCount="indefinite"
+        calcMode="linear" rotate="0" keyTimes="0;0.4;1" keyPoints="0;1;1"><mpath href="#w6"/></animateMotion>
+      <circle class="flow" style="--d:calc(var(--loop) * -0.3)" r="4.5" fill="#F8C94A"/></g>
+    <g><animateMotion dur="7.68s" begin="-5.0688s" repeatCount="indefinite"
+        calcMode="linear" rotate="0" keyTimes="0;0.4;1" keyPoints="0;1;1"><mpath href="#w7"/></animateMotion>
+      <circle class="flow" style="--d:calc(var(--loop) * -0.66)" r="4.5" fill="#F8C94A"/></g>
+    <g><animateMotion dur="7.68s" begin="-5.5296s" repeatCount="indefinite"
+        calcMode="linear" rotate="0" keyTimes="0;0.4;1" keyPoints="0;1;1"><mpath href="#w8"/></animateMotion>
+      <circle class="flow" style="--d:calc(var(--loop) * -0.72)" r="4.5" fill="#FF6B24"/></g>
+    <g><animateMotion dur="7.68s" begin="-5.9904s" repeatCount="indefinite"
+        calcMode="linear" rotate="0" keyTimes="0;0.4;1" keyPoints="0;1;1"><mpath href="#w9"/></animateMotion>
+      <circle class="flow" style="--d:calc(var(--loop) * -0.78)" r="5" fill="#22A866"/></g>
+
+    <!-- the buyer's cursor route and the cursor that walks it -->
+    <path id="cur" d="M662 590C706 592 748 640 794 682" stroke="none" fill="none"/>
+    <g><animateMotion dur="7.68s" begin="0s" repeatCount="indefinite" calcMode="linear" rotate="0"
+        keyTimes="0;0.52;0.56;0.71;1" keyPoints="1;1;0;1;1"><mpath href="#cur"/></animateMotion>
+      <path class="cursor" d="M0 -2 15 9.5 8 10.6 11.4 18 8.4 19.3 5 12 0 16Z" fill="#101828"
+            stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></g>
+  </svg>
+
+
+
+  <!-- ═══ NODE BAND ═══ -->
+  <div class="abs ctr nhead">SIX DECISIONS AI SHOULD HELP YOU REACH FASTER</div>
+  <div class="node n1" style="left:60px;top:972px">
+    <span class="num">01</span><div><div class="q">Where is demand moving?</div>
+    <div class="qs">Search, social, competitors, site behaviour</div></div></div>
+  <div class="node n2" style="left:387px;top:972px">
+    <span class="num">02</span><div><div class="q">Who should we test next?</div>
+    <div class="qs">Audience response, CRM, intent, lookalikes</div></div></div>
+  <div class="node n3" style="left:714px;top:972px">
+    <span class="num">03</span><div><div class="q">What angle should we launch?</div>
+    <div class="qs">Comments, search terms, customer language</div></div></div>
+  <div class="node n4" style="left:60px;top:1046px">
+    <span class="num">04</span><div><div class="q">What should we pause?</div>
+    <div class="qs">CTR down, CPA up, frequency up, CVR down</div></div></div>
+  <div class="node n5" style="left:387px;top:1046px">
+    <span class="num">05</span><div><div class="q">Where should budget move?</div>
+    <div class="qs">Recommendation, decision, execution</div></div></div>
+  <div class="node n6" style="left:714px;top:1046px">
+    <span class="num">06</span><div><div class="q">What changed and why?</div>
+    <div class="qs">Analytics and Looker Studio into three things</div></div></div>
+
+  <!-- ═══ AHA STRIP ═══ -->
+  <div class="aband"></div>
+  <div class="arow" style="top:1128px">
+    <span class="alab" style="color:var(--muted)">WITHOUT AI</span>
+    <span class="pill">SIGNAL</span><span class="arrw">&#9656;</span>
+    <span class="pill dim">EXPORT</span><span class="arrw dim">&#9656;</span>
+    <span class="pill dim">SPREADSHEET</span><span class="arrw dim">&#9656;</span>
+    <span class="pill dim">COMPARE</span><span class="arrw dim">&#9656;</span>
+    <span class="pill dim">ANALYSE</span><span class="arrw dim">&#9656;</span>
+    <span class="pill dim">WRITE</span><span class="arrw">&#9656;</span>
+    <span class="pill">DECIDE</span>
+  </div>
+  <div class="arow" style="top:1158px">
+    <span class="alab" style="color:var(--accent-deep)">WITH AI ASSISTANCE</span>
+    <span class="pill on">SIGNAL</span><span class="arrw" style="color:#246BFD">&#9656;</span>
+    <span class="pill on">INTERPRETATION</span><span class="arrw" style="color:#246BFD">&#9656;</span>
+    <span class="pill go">DECISION</span>
+  </div>
+
+  <div class="abs ctr payoff">SHORTER TIME&#8209;TO&#8209;DECISION</div>
+  <div class="uline"></div>
+  <div class="abs ctr closer">Let AI carry the information density. Keep the judgment with the buyer.</div>
+
+  <!-- ═══ FOOTER ═══ -->
+  <div class="foot">
+    <div class="av">M</div>
+    <span class="nm">MAMDOUH ABOAMMAR</span>
+    <span class="url">· github.com/imMamdouhaboammar</span>
+  </div>
+
+</div>
+</body>
+</html>

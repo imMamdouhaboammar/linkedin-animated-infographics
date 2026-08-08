@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-EXPECTED_PLUGIN_VERSION = "3.2.2"
+EXPECTED_PLUGIN_VERSION = "3.3.0"
 
 
 def _load_json(path: Path, errors: list[str]):
