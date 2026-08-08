@@ -2,13 +2,15 @@
 
 Last updated: August 8, 2026
 
-LinkedIn Animated Infographics is an open-source, skills-based plugin for ChatGPT, Codex, and Claude Code. Version 3.2.0 does not operate a maintainer-owned backend service and does not require a maintainer-hosted MCP server.
+LinkedIn Animated Infographics is an open-source, skills-based plugin for ChatGPT, Codex, and Claude Code. Version 3.2.1 does not operate a maintainer-owned backend service and does not require a maintainer-hosted MCP server.
 
 ## Data handled by the plugin
 
 The plugin provides instructions, local scripts, validators, templates, and repository assets. Content you give to ChatGPT, Codex, Claude Code, or another compatible host is handled by that host and by any tools or services you explicitly connect to it. Those services have their own privacy terms.
 
 The repository does not contain analytics code that sends prompts, generated content, or usage telemetry to a server operated by the maintainer.
+
+The public OpenAI package uses the self-contained `openai-skills/` distribution. Claude continues to use the repository's existing skills and agent workflow. Neither packaging path adds a maintainer-owned data collection service.
 
 ## Local files
 
