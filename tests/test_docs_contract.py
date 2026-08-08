@@ -44,11 +44,12 @@ class DocsContractTests(unittest.TestCase):
         for needle in (
             ".codex-plugin/plugin.json",
             ".agents/plugins/marketplace.json",
+            "openai-skills/",
             "codex plugin marketplace add imMamdouhaboammar/linkedin-animated-infographics --ref main",
             "codex plugin marketplace list",
             "python3 scripts/validate_codex_plugin.py",
             "skills-only",
-            "submission-ready",
+            "quality and process parity",
         ):
             self.assertIn(needle, text)
 
