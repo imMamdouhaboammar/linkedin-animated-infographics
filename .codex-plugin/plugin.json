@@ -34,9 +34,9 @@
     "defaultPrompt": [
       "Turn this idea into an animated LinkedIn infographic with a strong visual hook and a useful aha moment.",
       "Create an Info-story from this material and choose the best story shape before designing it.",
-      "Review this finished LinkedIn infographic and tell me what must be fixed before publishing.",
-      "Prepare this verified demo for the community gallery and ask before publishing anything."
+      "Review this finished LinkedIn infographic and tell me what must be fixed before publishing."
     ],
-    "screenshots": ["./assets/demo_artboard_v4.gif"]
+    "composerIcon": "./assets/plugin-mark.svg",
+    "logo": "./assets/plugin-mark.svg"
   }
 }
