@@ -1,8 +1,8 @@
 # Codex and ChatGPT
 
-Version 3.2.0 treats Codex and ChatGPT as first-class hosts for the same product core used by the Claude package.
+Version 3.2.1 gives Codex and ChatGPT an OpenAI-specific skills distribution while preserving the existing Claude execution path.
 
-There is one canonical skill tree. OpenAI packaging points directly at `skills/`; it does not maintain a copied Codex-specific version of the workflows.
+The target is quality and process parity, not identical visual output. Claude and OpenAI may choose different creative directions, layouts, palettes, and motion treatments, but both must follow disciplined evidence, concept, layout, still QA, motion, and verification stages.
 
 ## Native OpenAI package
 
@@ -15,16 +15,73 @@ The OpenAI plugin entry point is:
 It declares a skills-only plugin and points to:
 
 ```text
-./skills/
+./openai-skills/
 ```
 
-The repository marketplace is:
+The published OpenAI workflow is self-contained under:
+
+```text
+openai-skills/linkedin-infographic-studio/
+```
+
+It does not depend on Claude worker registration, `.claude-plugin/`, `agents/`, repository helper routing, or Claude-specific environment variables at runtime.
+
+The repository marketplace remains:
 
 ```text
 .agents/plugins/marketplace.json
 ```
 
-The marketplace entry points back to the repository root, where the OpenAI manifest and canonical Skills live.
+## Why OpenAI has a separate distribution
+
+Claude can execute the repository's native worker graph and agent roles directly. A skills-only ChatGPT/Codex installation cannot assume those workers are registered.
+
+Version 3.2.1 therefore compiles the same creative discipline into explicit sequential role passes for OpenAI:
+
+1. evidence inventory
+2. creative directions
+3. story architecture
+4. palette contract
+5. copy compression
+6. macro layout
+7. still construction
+8. still critique and repair
+9. motion direction
+10. motion implementation
+11. render QA
+12. adversarial visual critique
+13. final verification
+
+The still gate is blocking. Motion cannot begin while a severe composition defect remains.
+
+## Visual quality gates
+
+The OpenAI skill explicitly checks problems that can pass ordinary technical QA while still producing weak design:
+
+- top-heavy composition
+- unexplained bottom dead space
+- detached footer
+- weak visual anchor
+- weak macro rhythm
+- excessive nested-card density
+- generic dashboard/card grammar
+- feed-scale legibility
+- motion added to a weak still
+- decorative motion with no explanatory job
+
+The layout contract includes measurable guidance for vertical occupancy, a 120px unexplained dead-zone threshold, a maximum of two bordered containment levels, and a two-attempt targeted repair limit.
+
+## Claude regression boundary
+
+Claude keeps the existing canonical runtime:
+
+- `skills/`
+- `agents/`
+- `helper/`
+- `architecture/plugin-graph.json`
+- `.claude-plugin/`
+
+The 3.2.1 work does not replace Claude agents with OpenAI role passes. Only release version metadata is synchronized where repository parity requires it.
 
 ## Add the repository marketplace
 
@@ -35,33 +92,11 @@ codex plugin marketplace add imMamdouhaboammar/linkedin-animated-infographics --
 codex plugin marketplace list
 ```
 
-Adding the marketplace makes the repository source available to supported OpenAI plugin surfaces. Installation and local testing are completed through a supported Plugins Directory surface rather than by inventing a separate repository-specific skill installation path.
+Use supported Plugins Directory surfaces for installation and testing.
 
-## Same runtime contracts
+## Repository-scoped Codex subagents
 
-Codex and ChatGPT consume the same product authority as Claude:
-
-- `helper/GUIDE.md`
-- `helper/router.json`
-- `helper/capabilities.json`
-- `helper/quality-gates.json`
-- `helper/artifacts.json`
-- `helper/modules.json`
-- `research/capability-notes/gates.json`
-- `architecture/plugin-graph.json`
-- `scripts/info_stories.py::load_catalog()`
-
-Cross-host parity is declared in `compatibility/codex.json` and validated by:
-
-```bash
-python3 scripts/validate_codex_plugin.py
-```
-
-The gate checks OpenAI packaging, the repo marketplace, shared identity/version, canonical paths, Codex repository configuration, submission materials, and public-review test cases.
-
-## Codex subagents
-
-`.codex/config.toml` and `.codex/agents/*.toml` are repository-development helpers. They are not a dependency of the installed plugin.
+`.codex/config.toml` and `.codex/agents/*.toml` remain repository-development helpers. They are not a dependency of the installed public plugin.
 
 The project-scoped maintenance roles are:
 
@@ -69,19 +104,40 @@ The project-scoped maintenance roles are:
 - `reviewer` for read-only correctness, security, regression, and test review
 - `docs_researcher` for read-only primary-documentation verification
 
-Product workers remain canonical in `agents/*.md` and `architecture/plugin-graph.json`. Codex may delegate bounded work to subagents when useful, but the parent workflow still owns orchestration and artifacts. Sequential execution is a valid fallback.
+They are separate from the skills distributed through the public plugin.
 
-## Community publishing
+## Compatibility registry
 
-The Codex/ChatGPT package exposes the same `share-demo` contract as Claude.
+`compatibility/codex.json` records the host split explicitly:
 
-A generated result is not published automatically. The share path starts only after final verification `PASS`, delivery, explicit user consent, and rights confirmation. The publisher prepares the three-file public package, validates it, opens a contributor pull request, and stops. Maintainer review and merge remain manual.
+- Claude skills root: `skills`
+- OpenAI skills root: `openai-skills`
+
+The canonical Claude product core remains tracked for repository development while the OpenAI distribution is checked for self-containment.
+
+Validate with:
+
+```bash
+python3 scripts/validate_codex_plugin.py
+```
+
+The validator checks version parity, OpenAI package isolation, directory metadata, visual-quality markers, submission metadata, and the continued presence of Claude execution contracts.
+
+## Updating the published plugin
+
+A commit to GitHub does not automatically replace the package already published in the OpenAI Plugins Directory.
+
+For a new release:
+
+1. update the repository and version metadata
+2. run the repository validation gates
+3. package the `openai-skills/` distribution with the OpenAI manifest and required assets
+4. submit or publish the new version through the supported OpenAI Platform update flow
+5. verify the published version after directory propagation
 
 ## Public Plugins Directory
 
-Version 3.2.0 is **submission-ready** as a skills-only OpenAI plugin. The tracked handoff lives under `submission/` and includes listing metadata plus exactly five positive and three negative reviewer cases.
-
-The repository status is `prepared-not-submitted`. Public availability still requires external steps in the OpenAI Platform, including publisher permissions/verification, submission, OpenAI review, and publication after approval.
+Version 3.2.1 is prepared as a skills-only OpenAI update. The tracked handoff lives under `submission/` and includes listing metadata plus exactly five positive and three negative reviewer cases.
 
 See [`../submission/README.md`](../submission/README.md) for the tracked handoff.
 
