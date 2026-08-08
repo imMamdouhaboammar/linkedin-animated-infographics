@@ -11,6 +11,7 @@ CASES = ROOT / "submission" / "test-cases.json"
 README = ROOT / "submission" / "README.md"
 LEGAL = (ROOT / "PRIVACY.md", ROOT / "TERMS.md", ROOT / "SUPPORT.md")
 VALIDATOR = ROOT / "scripts" / "validate_codex_plugin.py"
+OPENAI_SKILLS = ROOT / "openai-skills"
 
 
 def load_validator():
@@ -27,6 +28,7 @@ def copy_fixture(root: Path):
         ".agents",
         ".codex",
         "skills",
+        "openai-skills",
         "agents",
         "assets",
         "helper",
@@ -48,13 +50,15 @@ class OpenAISubmissionContractTests(unittest.TestCase):
             self.assertTrue(path.is_file(), f"missing {path.name}")
             self.assertGreater(len(path.read_text().strip()), 200, path.name)
 
-    def test_submission_metadata_is_skills_only_3_2_0(self):
+    def test_submission_metadata_is_skills_only_3_2_1(self):
         self.assertTrue(SUBMISSION.is_file(), "missing submission/openai-plugin.json")
         data = json.loads(SUBMISSION.read_text())
         self.assertEqual("linkedin-animated-infographics", data["name"])
-        self.assertEqual("3.2.0", data["version"])
+        self.assertEqual("3.2.1", data["version"])
         self.assertEqual("skills-only", data["submission_type"])
         self.assertEqual("Productivity", data["category"])
+        self.assertEqual("./openai-skills/", data["skills_bundle"])
+        self.assertTrue(OPENAI_SKILLS.is_dir())
         self.assertGreaterEqual(len(data["starter_prompts"]), 4)
         self.assertTrue(data["release_notes"])
 
@@ -68,6 +72,13 @@ class OpenAISubmissionContractTests(unittest.TestCase):
         self.assertIn("verified", prereqs)
         self.assertIn("manual", prereqs)
         self.assertIn("review", prereqs)
+
+    def test_release_notes_describe_host_isolation(self):
+        data = json.loads(SUBMISSION.read_text())
+        notes = data["release_notes"].lower()
+        self.assertIn("isolates", notes)
+        self.assertIn("claude", notes)
+        self.assertIn("still-before-motion", notes)
 
     def test_exactly_five_positive_and_three_negative_cases(self):
         self.assertTrue(CASES.is_file(), "missing submission/test-cases.json")
