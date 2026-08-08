@@ -32,11 +32,21 @@ Produced end to end through the `new-post` parent workflow.
 ## Rebuild
 
 ```bash
-python3 scripts/check_render.py deliverables/ai-decision-latency/post.html --out /tmp/still.png
-bash scripts/render.sh deliverables/ai-decision-latency/post.html /tmp/post.gif --duration 7.68 --fps 12.5
+D=deliverables/ai-decision-latency
+
+# writes still.png, and alongside it still_mobile350.png
+python3 scripts/check_render.py $D/post.html --out $D/still.png
+mv $D/still_mobile350.png $D/still-feed-350.png
+
+bash scripts/render.sh $D/post.html $D/post.gif --duration 7.68 --fps 12.5
+
+# the two motion QA frames come from the capture, not a second render
+cp $D/.frames/f0048.png $D/motion-qa-mid.png
+cp $D/.frames/f0095.png $D/motion-qa-final.png
 ```
 
 Requires a Chromium-family browser and an ffmpeg build that includes the `image2` demuxer.
+The ffmpeg bundled with Playwright does not have it and fails at `palettegen`.
 
 ## Numbers
 
@@ -44,12 +54,14 @@ Requires a Chromium-family browser and an ffmpeg build that includes the `image2
 |---|---|---|
 | file size | 0.39 MB | 5 MB |
 | motion per frame | 0.14% | 2% |
-| loop seam | 0.78% | 8% |
+| loop seam | 0.79% | 8% |
 | duration | 7.68s | 8s |
-| contrast pairs passing | 26 / 26 | all |
+| contrast pairs passing | 32 / 32 | all |
 
 ## Two things a reader should know
 
 **No numbers.** Nothing on the artboard is measured. States are qualitative on purpose: `STRONG SIGNAL`, `NEEDS MORE DATA`, `LOSING MOMENTUM`. The three example insights sit under an `EXAMPLE OUTPUT` label because they are illustrative, not findings.
 
-**No traced logos.** No official SVG was supplied for any platform or AI vendor, so none was redrawn from memory. Platforms appear as correctly spelled name tokens in each vendor's brand colour. The token slots take real SVGs without any layout change.
+**No traced logos.** No official SVG was supplied for any platform or AI vendor, so none was redrawn from memory. Platforms appear as correctly spelled name tokens in each vendor's brand colour, declared as `--b-*` tokens. Each monogram uses whichever of white or ink clears 4.5:1 on its brand colour, so no brand value is altered and no mark is unreadable. The token slots take real SVGs without any layout change.
+
+This is a recorded production decision rather than an open question: supplying official SVGs later is a drop-in swap.

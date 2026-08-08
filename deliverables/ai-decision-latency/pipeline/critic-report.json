@@ -1,7 +1,16 @@
 {
   "schema_version": 1,
   "role": "adversarial review",
-  "artifacts_reviewed": ["build/post.html", "build/post.gif", "build/still.png", "build/still_mobile350.png", "build/caption.md", "build/first-comment.md", "build/evidence.json", "build/layout-spec.json"],
+  "artifacts_reviewed": [
+    "build/post.html",
+    "build/post.gif",
+    "build/still.png",
+    "build/still_mobile350.png",
+    "build/caption.md",
+    "build/first-comment.md",
+    "build/evidence.json",
+    "build/layout-spec.json"
+  ],
   "local_quality_gates": [
     {
       "gate": "hooked-design-copy",
@@ -27,15 +36,73 @@
     }
   ],
   "research_gates": [
-    {"gate": "prose-specificity", "status": "PASS", "note": "Every signal chip names a real source and a real metric direction. No chip says 'data' or 'insights'."},
-    {"gate": "voice-preservation", "status": "PASS", "note": "The brief's own phrasing survives where it carries the idea: shortens the time between signal and decision, what changed / what should I do next, STRONG SIGNAL / NEEDS MORE DATA / LOSING MOMENTUM."},
-    {"gate": "design-dials", "status": "PASS", "note": "variance 7, motion 6, density 7 declared and met. Density is earned by hierarchy: one 74px hero against 16px node questions."},
-    {"gate": "structural-originality", "status": "PASS", "note": "fingerprint_check reports all six axes changed against the previous published post. Not a reskin."},
-    {"gate": "reference-dna", "status": "NA", "note": "The brief named reference infographics as inspiration but attached none, so no reference was studied and none could be cloned."},
-    {"gate": "contrast-discipline", "status": "PASS", "note": "26 measured pairs in palette-check.json, all passing. One repair: white text on raw purple measured 4.23, so text-bearing purple moved to #6134D6."},
-    {"gate": "evidence-traceability", "status": "PASS", "note": "Four slots blocked in evidence.json and all four held in the build."}
+    {
+      "gate": "prose-specificity",
+      "status": "PASS",
+      "note": "Every signal chip names a real source and a real metric direction. No chip says 'data' or 'insights'."
+    },
+    {
+      "gate": "voice-preservation",
+      "status": "PASS",
+      "note": "The brief's own phrasing survives where it carries the idea: shortens the time between signal and decision, what changed / what should I do next, STRONG SIGNAL / NEEDS MORE DATA / LOSING MOMENTUM."
+    },
+    {
+      "gate": "design-dials",
+      "status": "PASS",
+      "note": "variance 7, motion 6, density 7 declared and met. Density is earned by hierarchy: one 74px hero against 17px node questions."
+    },
+    {
+      "gate": "structural-originality",
+      "status": "PASS",
+      "note": "fingerprint_check reports all six axes changed against the previous published post. Not a reskin."
+    },
+    {
+      "gate": "reference-dna",
+      "status": "NA",
+      "note": "The brief named reference infographics as inspiration but attached none, so no reference was studied and none could be cloned."
+    },
+    {
+      "gate": "contrast-discipline",
+      "status": "PASS",
+      "note": "32 measured pairs in palette-check.json, all passing. Two repairs: white text on raw purple measured 4.23 so text-bearing purple moved to #6134D6, and the six vendor monograms were not measured at all in the first pass, where white failed on four brand colours. Each monogram now takes whichever of white or ink clears 4.5."
+    },
+    {
+      "gate": "evidence-traceability",
+      "status": "PASS",
+      "note": "Four slots blocked in evidence.json and all four held in the build."
+    }
   ],
   "findings": [
+    {
+      "severity": "resolved",
+      "finding": "The decision evidence pass ran WAIT before TEST. A negative animation-delay pushes a clock forward, so -0.08 loop moved WAIT earlier rather than later. This is the reverse-delay trap the repository's own animation-recipes.md warns about.",
+      "fix": "WAIT shifted to -0.92 loop. Order re-probed from captured frames: TEST 38-46%, WAIT 46-54%.",
+      "found_by": "external review on the pull request"
+    },
+    {
+      "severity": "resolved",
+      "finding": "MOVE BUDGET never showed its evidence outline. The animation shorthand on .dec.sel replaced the .dec evidence animation entirely, so the third step of the documented sequence did not exist in the render.",
+      "fix": "The evidence window was folded into decSel so one keyframe set owns both states, then moved to 54-62% to clear WAIT.",
+      "found_by": "external review on the pull request"
+    },
+    {
+      "severity": "resolved",
+      "finding": "Two objects used a support accent decoratively, contradicting this report's own claim that nothing is coloured for decoration: the manual rail token was orange (orange encodes a rising signal, which it is not) and the buyer's notebook spine was orange.",
+      "fix": "The manual rail token is now ink, which reads correctly as the same signal carried without assistance, and the notebook spine is ink_2. Audited by listing every raw support-colour occurrence in the artboard and checking each against the colour contract.",
+      "found_by": "self-audit prompted by an external review pointer"
+    },
+    {
+      "severity": "resolved",
+      "finding": "The six vendor monograms were never contrast-checked. White glyphs measured 3.09 to 3.68 on Google, TikTok, Reddit and Google Analytics, below the 4.5 floor this build applies to text.",
+      "fix": "Vendor colours are now declared --b-* tokens and each monogram takes whichever of white or ink clears 4.5 on its brand colour. No brand value was altered.",
+      "found_by": "external review on the pull request"
+    },
+    {
+      "severity": "resolved",
+      "finding": "Nine wire geometries were written twice, once as an SVG path and once inside a CSS offset-path string, so retuning a wire could silently leave its token off the visible route.",
+      "fix": "Tokens moved into the SVG using animateMotion with mpath, which is also the method the repository's animation-recipes.md prefers. Each route now exists once. The dead #cur path became the cursor's real route.",
+      "found_by": "external review on the pull request"
+    },
     {
       "severity": "resolved",
       "finding": "Frame 0 originally showed the manual chain mid-dim, which reads as a broken render in a screenshot rather than as compression.",
@@ -55,7 +122,8 @@
       "severity": "accepted",
       "finding": "Platform and AI vendor marks are name tokens in brand colours rather than official logo artwork.",
       "reasoning": "No official SVG was supplied or attached. The repository's exact-SVG rule for named marks is applied to vendor trademarks too, so nothing was traced from memory. Recognition comes from the correctly spelled name, the brand colour and the role in the story, and the token slots accept real SVGs without any layout change.",
-      "owner_decision_required": true
+      "blocking": "no",
+      "disclosure": "Disclosed on the artboard by using correctly spelled product names, in the deliverable README, and in the PR description. This is a recorded production decision, not an open question gating the verdict: supplying official SVGs later is a drop-in swap that changes no layout."
     },
     {
       "severity": "accepted",
@@ -65,8 +133,37 @@
   ],
   "message_integrity_check": {
     "claim": "AI recommends, the human decides",
-    "enforced_how": "The cursor track originates at the buyer mascot's raised hand and is the only element that reaches a decision chip. The AI assistant has no track that touches the decision column; its only outbound motion is the insight card moving down into the example-output block.",
+    "enforced_how": "The AI-assisted interpretation panel does emit recommendation tokens along w7, w8 and w9 to all three decision chips: that is the recommendation, and it should reach the buyer. What no AI element does is select. The cursor is the only element that triggers the selected state, it originates at the buyer mascot's raised hand, and no track of any kind begins at the AI mascot. The mascot's only outbound motion is handing an insight card down into the example-output block.",
+    "precision_note": "An earlier draft of this field claimed the cursor was the only element reaching a decision chip. That was wrong: the recommendation tokens reach the chips too. The distinction that carries the thesis is reaching versus selecting, not reaching versus not reaching.",
     "status": "PASS"
   },
-  "verdict": "PASS"
+  "verdict": "PASS",
+  "method_note": "Animation order is verified by probing captured frames, not by reading keyframe percentages. Both motion bugs in this build were invisible in the source and obvious in the frames.",
+  "rejected_findings": [
+    {
+      "finding": "nodeOn keyframes do not close because 0% differs from 100%.",
+      "verdict": "rejected",
+      "reasoning": "This is Primitive 1 from the repository's own animation-recipes.md, which is written exactly this way: 0% lit, an early off keyframe, 100% off, with reverse-ordered negative delays. The loop closes because the delays place each node correctly, not because one element's keyframes are symmetric. Measured seam is 0.79% against an 8% ceiling."
+    },
+    {
+      "finding": "The arrive animation animates a section hue, which is not allowed.",
+      "verdict": "rejected",
+      "reasoning": "The DECISION pill is a state element, not a section hue. Green is bound to 'confirmed decision' for the whole page, and the pill filling solid green is that state being reached. Motion taste requires motion to answer 'what changed' or 'which state is active'; this answers both. Recolouring it to the accent would break the encoding contract to satisfy a rule about decoration."
+    },
+    {
+      "finding": "--accent is used for the panel border and header, exceeding allowed accent usage.",
+      "verdict": "rejected",
+      "reasoning": "palette-check.json declares cobalt for this house as 'structure: the decision loop, connectors, active state, the interpretation panel'. The panel is the declared structural surface, and it is the visual anchor the layout spec names."
+    },
+    {
+      "finding": "Hard-coded hex outside the token block, for example body background.",
+      "verdict": "partially accepted",
+      "reasoning": "The body background is the page chrome outside the 1080x1350 artboard and matches every template in assets/. It is not artboard content. The vendor hexes were a fair hit and are now declared --b-* tokens."
+    },
+    {
+      "finding": "Node questions at 17px are below a 22px load-bearing minimum.",
+      "verdict": "partially accepted",
+      "reasoning": "Raised from 16px to 17px and the claim was corrected rather than defended: layout-spec.json no longer says everything load-bearing is 18px or larger. It now states that the node questions are the smallest load-bearing type on the page and are supporting reference content, not the takeaway. The takeaway lands on the 74px hero and the 36px payoff, both of which clear feed scale comfortably."
+    }
+  ]
 }
