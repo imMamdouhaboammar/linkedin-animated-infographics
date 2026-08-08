@@ -2,11 +2,11 @@
   "schema_version": 1,
   "name": "linkedin-animated-infographics",
   "display_name": "LinkedIn Animated Infographics",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "submission_type": "skills-only",
   "category": "Productivity",
   "developer": "Mamdouh Aboammar",
-  "description": "Create animated LinkedIn visual stories with concept exploration, hook-driven copy, Info-stories, deterministic motion, strict QA, and opt-in community publishing.",
+  "description": "Create LinkedIn visual stories with evidence checks, concept exploration, macro-layout planning, still-first visual critique, disciplined motion, and final verification.",
   "urls": {
     "website": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics",
     "support": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics/blob/main/SUPPORT.md",
@@ -20,10 +20,10 @@
     "Animate this named mascot using the exact SVG I attached.",
     "Prepare this verified demo for the community gallery and ask before publishing anything."
   ],
-  "skills_bundle": "./skills/",
+  "skills_bundle": "./openai-skills/",
   "manifest": ".codex-plugin/plugin.json",
   "test_cases": "submission/test-cases.json",
-  "release_notes": "Version 3.2.0 adds first-class Codex and ChatGPT plugin packaging, a repo-scoped OpenAI marketplace, native Codex maintenance-agent configuration, cross-host parity validation, and public submission materials while keeping the existing Claude plugin and one canonical skill tree.",
+  "release_notes": "Version 3.2.1 isolates the OpenAI skills distribution from the Claude worker runtime and adds a self-contained infographic studio workflow with macro-layout planning, still-before-motion blocking gates, measurable dead-space and containment checks, adversarial visual critique, and bounded repair loops. Claude's existing agent workflow remains behaviorally unchanged.",
   "availability": "select-during-platform-submission",
   "external_prerequisites": [
     "Apps Management write access in the OpenAI organization used for publishing",
