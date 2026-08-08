@@ -4,7 +4,7 @@
 
 **Turn imagination into visual stories that stop the scroll and make the idea click**
 
-`Claude Code + Codex + ChatGPT · 3.2.1` · `1080×1350` · `Info-stories` · `Exact-SVG mascots` · `Arabic / RTL`
+`Claude Code + Codex + ChatGPT · 3.2.2` · `1080×1350` · `Info-stories` · `Exact-SVG mascots` · `Arabic / RTL`
 
 <br>
 
@@ -28,14 +28,16 @@ The plugin aims for both
 
 If the effect looks good but adds no meaning, it is decoration
 
-`creative-director` develops the concept before layout starts in the Claude runtime. The OpenAI package compiles the same discipline into explicit sequential role passes so a skills-only install does not pretend unavailable workers exist
+`creative-director` develops the concept before layout starts in the Claude runtime. The OpenAI package uses capability negotiation: real side jobs and sandbox artifacts when the host exposes them, then truthful sequential or skill-only fallbacks when it does not
 
 ## Install
 
-Version 3.2.1 keeps host execution isolated on purpose
+Version 3.2.2 keeps host execution isolated on purpose
 
-- Claude uses the existing `skills/` + `agents/` runtime
+- Claude uses the existing `skills/` + `agents/` runtime and native worker graph
 - ChatGPT and Codex use the self-contained `openai-skills/` distribution
+- repository-development Codex can use real project-scoped subagents from `.codex/agents/`
+- the public OpenAI skill never assumes those repo agents exist after installation
 - quality parity means equivalent discipline and acceptance criteria, not identical visual output
 
 ### Claude Code
@@ -64,26 +66,51 @@ The OpenAI package is `.codex-plugin/plugin.json`; the repo marketplace is `.age
 
 [Codex / ChatGPT guide](docs/codex.md) · [Marketplace details](docs/marketplace.md)
 
+## OpenAI autopilot
+
+`linkedin-infographic-autopilot` begins by observing the capabilities actually exposed by the current host
+
+It selects exactly one execution path:
+
+```text
+full-autopilot
+  real side jobs + sandbox/tools when observed
+
+tool-rich-sequential
+  sandbox/tools + sequential role contracts
+
+safe-skill-only
+  bounded planning/critique only, with HOLD when execution is required
+```
+
+Unknown capabilities are treated as unavailable. The plugin never claims a subagent, tool call, render, file, connected-app action, or publication action that did not actually happen
+
+When real delegation is available, independent discovery work can fan out across evidence research, creative-direction exploration, visual-archetype exploration, and copy-compression critique. Dependency-bound production still proceeds through explicit gates
+
+When sandbox writes are available, the workflow persists logical artifacts for evidence, concepts, copy, layout, build, still review, motion, render QA, verifier output, and final delivery. This reduces context loss and lets later QA inspect the same production inputs
+
+Workspace Agents are optional external execution capabilities. Installing the skills-only plugin does not automatically register them
+
 ## OpenAI visual discipline
 
 The OpenAI package does not collapse concept, layout, motion, and QA into one pass
 
-Its parent skill runs:
+Its production flow is:
 
 ```text
 evidence inventory
+  -> capability negotiation
+  -> parallel side jobs when real delegation exists
   -> creative directions
   -> story architecture
-  -> palette contract
   -> copy compression
   -> macro layout
   -> still construction
   -> still critique + targeted repair
-  -> motion direction
+  -> motion direction only after still PASS
   -> motion implementation
   -> render QA
-  -> adversarial visual critique
-  -> final verification
+  -> independent final verification
 ```
 
 The still gate is blocking before motion
@@ -124,7 +151,7 @@ A strong output should have
 
 Before story architecture starts, Claude's `creative-director` creates at least three genuinely different directions in `build/creative-concepts.json`
 
-The OpenAI studio applies the same requirement as a sequential creative-direction pass inside its self-contained skill
+The OpenAI autopilot applies the same creative standard. With real delegation observed, independent direction and evidence jobs can run as side jobs. Without delegation, the same contracts run sequentially without pretending agents were spawned
 
 Each direction defines a visual hook, copy hook, aha mechanic, story shape, visual archetype, motion behavior, evidence dependencies, risks, and why the idea deserves attention
 
@@ -141,7 +168,7 @@ Info-stories separates four decisions:
 
 The canonical Claude/repository source of truth is the merged registry returned by `scripts/info_stories.py::load_catalog()`
 
-The OpenAI public package carries the execution rules it needs inside `openai-skills/linkedin-infographic-studio/` instead of depending on unavailable repository worker registration
+The OpenAI public package carries the execution rules it needs inside `openai-skills/` instead of depending on unavailable repository worker registration
 
 UI Mockup Stories are first-class options. Real-looking product behavior must be supported by evidence. Concept UI stays clearly identifiable when it could be mistaken for real product proof
 
@@ -219,10 +246,14 @@ Claude repository workflows:
 /linkedin-animated-infographics:share-demo  [build directory]
 ```
 
-OpenAI public workflow:
+OpenAI public workflows:
 
 ```text
+openai-skills/linkedin-infographic-autopilot/SKILL.md
 openai-skills/linkedin-infographic-studio/SKILL.md
+openai-skills/linkedin-infographic-review/SKILL.md
+openai-skills/exact-svg-mascot/SKILL.md
+openai-skills/share-community-demo/SKILL.md
 ```
 
 Programmatic repository routing:
@@ -251,11 +282,11 @@ claude plugin validate .
 
 `scripts/ecosystem_doctor.py` rejects dead, undeclared, unreachable, untested, disconnected, or unsafe public modules and manifest references
 
-`scripts/validate_codex_plugin.py` rejects OpenAI packaging drift, non-self-contained OpenAI runtime references, directory compliance regressions, missing visual-quality gates, submission-readiness drift, and cross-host version drift
+`scripts/validate_codex_plugin.py` rejects OpenAI packaging drift, non-self-contained OpenAI runtime references, fake capability assumptions, missing autopilot contracts, missing real repo Codex agent registrations, directory compliance regressions, missing visual-quality gates, submission-readiness drift, and cross-host version drift
 
 ## Public Plugins Directory
 
-The 3.2.1 OpenAI package is prepared as a skills-only update using `openai-skills/`
+The 3.2.2 OpenAI package is prepared as a skills-only update using `openai-skills/`
 
 `submission/` tracks listing metadata, five positive reviewer cases, three negative cases, and the manual OpenAI Platform handoff
 
