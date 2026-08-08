@@ -12,10 +12,22 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_NAME = "linkedin-animated-infographics"
-EXPECTED_VERSION = "3.2.1"
+EXPECTED_VERSION = "3.2.2"
 EXPECTED_OPENAI_SKILLS_ROOT = "openai-skills"
 EXPECTED_OPENAI_SKILL = Path("openai-skills/linkedin-infographic-studio")
-EXPECTED_CODEX_AGENTS = {"explorer", "reviewer", "docs_researcher"}
+EXPECTED_OPENAI_AUTOPILOT = Path("openai-skills/linkedin-infographic-autopilot")
+EXPECTED_AUTOPILOT_CODEX_AGENTS = {
+    "creative_director",
+    "evidence_researcher",
+    "copy_director",
+    "layout_composer",
+    "still_critic",
+    "motion_director",
+    "render_qa",
+    "final_verifier",
+    "tool_runner",
+}
+EXPECTED_CODEX_AGENTS = {"explorer", "reviewer", "docs_researcher"} | EXPECTED_AUTOPILOT_CODEX_AGENTS
 EXPECTED_CANONICAL = {
     "skills_root": "skills",
     "agents_root": "agents",
@@ -34,9 +46,18 @@ REQUIRED_OPENAI_SKILL_FILES = (
     "references/visual-quality-contract.md",
     "references/motion-quality-contract.md",
 )
+REQUIRED_AUTOPILOT_FILES = (
+    "SKILL.md",
+    "references/capability-negotiation.md",
+    "references/execution-paths.md",
+    "references/side-jobs.md",
+    "references/artifact-workspace.md",
+    "references/tool-usage-policy.md",
+    "references/autopilot-failure-policy.md",
+    "references/workspace-agents-bridge.md",
+)
 FORBIDDEN_OPENAI_RUNTIME_REFERENCES = (
     ".claude-plugin/",
-    "agents/",
     "${CLAUDE_PLUGIN_ROOT}",
     "helper/",
     "architecture/",
@@ -56,6 +77,21 @@ REQUIRED_VISUAL_MARKERS = (
     "decorative-motion",
     "feed-scale-legibility",
     "Maximum two targeted repair attempts",
+)
+REQUIRED_AUTOPILOT_CAPABILITIES = (
+    "subagents",
+    "sandbox_write",
+    "shell_or_code_execution",
+    "image_inspection",
+    "web_research",
+    "connected_apps",
+    "workspace_agents",
+    "publishing_tools",
+)
+REQUIRED_AUTOPILOT_PATHS = (
+    "full-autopilot",
+    "tool-rich-sequential",
+    "safe-skill-only",
 )
 REQUIRED_INTERFACE = {
     "displayName",
@@ -153,31 +189,59 @@ def _validate_openai_skill_bundle(root: Path, errors: list[str]) -> None:
     skill_root = root / EXPECTED_OPENAI_SKILL
     if not skill_root.is_dir():
         errors.append(f"missing OpenAI studio skill: {EXPECTED_OPENAI_SKILL.as_posix()}")
+    else:
+        for relative in REQUIRED_OPENAI_SKILL_FILES:
+            path = skill_root / relative
+            if not path.is_file():
+                errors.append(f"missing OpenAI studio skill file: {path.relative_to(root)}")
+
+        markdown_files = sorted(skill_root.rglob("*.md"))
+        combined = "\n".join(path.read_text(encoding="utf-8") for path in markdown_files)
+        for forbidden in FORBIDDEN_OPENAI_RUNTIME_REFERENCES:
+            if forbidden in combined:
+                errors.append(f"OpenAI studio skill contains unavailable runtime reference: {forbidden}")
+
+        visual_contract = skill_root / "references" / "visual-quality-contract.md"
+        if visual_contract.is_file():
+            text = visual_contract.read_text(encoding="utf-8")
+            for marker in REQUIRED_VISUAL_MARKERS:
+                if marker not in text:
+                    errors.append(f"OpenAI visual quality contract missing marker: {marker}")
+
+        main_skill = skill_root / "SKILL.md"
+        if main_skill.is_file():
+            text = main_skill.read_text(encoding="utf-8")
+            if "Do not proceed to motion while a blocking still defect remains" not in text:
+                errors.append("OpenAI studio skill must block motion until still QA passes")
+
+    autopilot_root = root / EXPECTED_OPENAI_AUTOPILOT
+    if not autopilot_root.is_dir():
+        errors.append(f"missing OpenAI autopilot skill: {EXPECTED_OPENAI_AUTOPILOT.as_posix()}")
         return
 
-    for relative in REQUIRED_OPENAI_SKILL_FILES:
-        path = skill_root / relative
+    for relative in REQUIRED_AUTOPILOT_FILES:
+        path = autopilot_root / relative
         if not path.is_file():
-            errors.append(f"missing OpenAI studio skill file: {path.relative_to(root)}")
+            errors.append(f"missing OpenAI autopilot skill file: {path.relative_to(root)}")
 
-    markdown_files = sorted(skill_root.rglob("*.md"))
+    markdown_files = sorted(autopilot_root.rglob("*.md"))
     combined = "\n".join(path.read_text(encoding="utf-8") for path in markdown_files)
     for forbidden in FORBIDDEN_OPENAI_RUNTIME_REFERENCES:
         if forbidden in combined:
-            errors.append(f"OpenAI studio skill contains unavailable runtime reference: {forbidden}")
+            errors.append(f"OpenAI autopilot contains unavailable runtime reference: {forbidden}")
 
-    visual_contract = skill_root / "references" / "visual-quality-contract.md"
-    if visual_contract.is_file():
-        text = visual_contract.read_text(encoding="utf-8")
-        for marker in REQUIRED_VISUAL_MARKERS:
-            if marker not in text:
-                errors.append(f"OpenAI visual quality contract missing marker: {marker}")
-
-    main_skill = skill_root / "SKILL.md"
-    if main_skill.is_file():
-        text = main_skill.read_text(encoding="utf-8")
-        if "Do not proceed to motion while a blocking still defect remains" not in text:
-            errors.append("OpenAI studio skill must block motion until still QA passes")
+    for path_name in REQUIRED_AUTOPILOT_PATHS:
+        if path_name not in combined:
+            errors.append(f"OpenAI autopilot missing execution path: {path_name}")
+    for capability in REQUIRED_AUTOPILOT_CAPABILITIES:
+        if capability not in combined:
+            errors.append(f"OpenAI autopilot missing capability contract: {capability}")
+    if "Unknown capabilities are unavailable" not in combined:
+        errors.append("OpenAI autopilot must fail closed on unknown capabilities")
+    if "does not automatically register Workspace Agents" not in combined:
+        errors.append("OpenAI autopilot must state that Workspace Agents are not automatically registered")
+    if "Never claim" not in combined:
+        errors.append("OpenAI autopilot must forbid fabricated tool or agent execution claims")
 
 
 def _validate_openai_manifest(root: Path, manifest: dict[str, Any], errors: list[str]) -> None:
@@ -335,8 +399,16 @@ def _validate_compatibility(root: Path, registry: dict[str, Any], errors: list[s
         openai_dist = distributions.get("openai")
         if not isinstance(claude_dist, dict) or claude_dist.get("skills_root") != "skills":
             errors.append("Claude distribution must keep the canonical skills root")
+        if not isinstance(claude_dist, dict) or claude_dist.get("execution") != "native-worker-graph":
+            errors.append("Claude distribution must preserve native worker graph execution")
         if not isinstance(openai_dist, dict) or openai_dist.get("skills_root") != EXPECTED_OPENAI_SKILLS_ROOT:
             errors.append("OpenAI distribution must use the isolated OpenAI skills root")
+        elif openai_dist.get("execution") != "capability-negotiated-autopilot":
+            errors.append("OpenAI distribution must use capability-negotiated-autopilot execution")
+        elif openai_dist.get("sandbox_artifacts") is not True or openai_dist.get("side_jobs") is not True:
+            errors.append("OpenAI distribution must enable sandbox artifact and side-job contracts")
+        elif openai_dist.get("workspace_agents") != "optional":
+            errors.append("OpenAI Workspace Agents support must remain optional")
 
     canonical = registry.get("canonical")
     if not isinstance(canonical, dict):
@@ -374,6 +446,17 @@ def _validate_codex_config(root: Path, errors: list[str]) -> None:
         errors.append("Codex repository config max_concurrent_threads_per_session must be 6")
     if "max_threads" in agents:
         errors.append("Codex repository config must not use legacy agents.max_threads")
+
+    for name in sorted(EXPECTED_AUTOPILOT_CODEX_AGENTS):
+        contract = agents.get(name)
+        if not isinstance(contract, dict):
+            errors.append(f"Codex repository config missing autopilot agent registration: {name}")
+            continue
+        expected_ref = f"agents/{name}.toml"
+        if contract.get("config_file") != expected_ref:
+            errors.append(f"Codex agent config reference drift for {name}")
+        if not isinstance(contract.get("description"), str) or not contract["description"].strip():
+            errors.append(f"Codex agent registration missing description: {name}")
 
     for key, contract in agents.items():
         if not isinstance(contract, dict):
