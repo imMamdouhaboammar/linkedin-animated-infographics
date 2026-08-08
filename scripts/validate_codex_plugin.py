@@ -5,13 +5,16 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import tomllib
 from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_NAME = "linkedin-animated-infographics"
-EXPECTED_VERSION = "3.2.0"
+EXPECTED_VERSION = "3.2.1"
+EXPECTED_OPENAI_SKILLS_ROOT = "openai-skills"
+EXPECTED_OPENAI_SKILL = Path("openai-skills/linkedin-infographic-studio")
 EXPECTED_CODEX_AGENTS = {"explorer", "reviewer", "docs_researcher"}
 EXPECTED_CANONICAL = {
     "skills_root": "skills",
@@ -24,6 +27,36 @@ EXPECTED_CANONICAL = {
     "research_gates": "research/capability-notes/gates.json",
     "worker_graph": "architecture/plugin-graph.json",
 }
+REQUIRED_OPENAI_SKILL_FILES = (
+    "SKILL.md",
+    "references/openai-runtime.md",
+    "references/role-passes.md",
+    "references/visual-quality-contract.md",
+    "references/motion-quality-contract.md",
+)
+FORBIDDEN_OPENAI_RUNTIME_REFERENCES = (
+    ".claude-plugin/",
+    "agents/",
+    "${CLAUDE_PLUGIN_ROOT}",
+    "helper/",
+    "architecture/",
+)
+REQUIRED_VISUAL_MARKERS = (
+    "82-92%",
+    "120px",
+    "Maximum bordered containment depth is two levels",
+    "top-heavy-composition",
+    "bottom-dead-zone",
+    "nested-card-density",
+    "generic-ui-grammar",
+    "weak-macro-rhythm",
+    "weak-visual-anchor",
+    "footer-detachment",
+    "motion-on-weak-still",
+    "decorative-motion",
+    "feed-scale-legibility",
+    "Maximum two targeted repair attempts",
+)
 REQUIRED_INTERFACE = {
     "displayName",
     "shortDescription",
@@ -35,6 +68,8 @@ REQUIRED_INTERFACE = {
     "privacyPolicyURL",
     "termsOfServiceURL",
     "defaultPrompt",
+    "composerIcon",
+    "logo",
 }
 REQUIRED_POSITIVE_CASE_FIELDS = {
     "id",
@@ -97,6 +132,54 @@ def _safe_repo_path(root: Path, relative: str) -> Path | None:
     return resolved
 
 
+def _validate_square_asset(path: Path, field: str, errors: list[str]) -> None:
+    if not path.is_file():
+        errors.append(f"OpenAI plugin {field} path does not exist")
+        return
+    if path.suffix.lower() != ".svg":
+        return
+    text = path.read_text(encoding="utf-8")
+    viewbox = re.search(r'viewBox=["\']\s*([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s*["\']', text)
+    if not viewbox:
+        errors.append(f"OpenAI plugin {field} SVG must declare a viewBox")
+        return
+    width = float(viewbox.group(3))
+    height = float(viewbox.group(4))
+    if width != height:
+        errors.append(f"OpenAI plugin {field} must reference a square image")
+
+
+def _validate_openai_skill_bundle(root: Path, errors: list[str]) -> None:
+    skill_root = root / EXPECTED_OPENAI_SKILL
+    if not skill_root.is_dir():
+        errors.append(f"missing OpenAI studio skill: {EXPECTED_OPENAI_SKILL.as_posix()}")
+        return
+
+    for relative in REQUIRED_OPENAI_SKILL_FILES:
+        path = skill_root / relative
+        if not path.is_file():
+            errors.append(f"missing OpenAI studio skill file: {path.relative_to(root)}")
+
+    markdown_files = sorted(skill_root.rglob("*.md"))
+    combined = "\n".join(path.read_text(encoding="utf-8") for path in markdown_files)
+    for forbidden in FORBIDDEN_OPENAI_RUNTIME_REFERENCES:
+        if forbidden in combined:
+            errors.append(f"OpenAI studio skill contains unavailable runtime reference: {forbidden}")
+
+    visual_contract = skill_root / "references" / "visual-quality-contract.md"
+    if visual_contract.is_file():
+        text = visual_contract.read_text(encoding="utf-8")
+        for marker in REQUIRED_VISUAL_MARKERS:
+            if marker not in text:
+                errors.append(f"OpenAI visual quality contract missing marker: {marker}")
+
+    main_skill = skill_root / "SKILL.md"
+    if main_skill.is_file():
+        text = main_skill.read_text(encoding="utf-8")
+        if "Do not proceed to motion while a blocking still defect remains" not in text:
+            errors.append("OpenAI studio skill must block motion until still QA passes")
+
+
 def _validate_openai_manifest(root: Path, manifest: dict[str, Any], errors: list[str]) -> None:
     if manifest.get("name") != EXPECTED_NAME:
         errors.append("OpenAI plugin name drift")
@@ -105,11 +188,11 @@ def _validate_openai_manifest(root: Path, manifest: dict[str, Any], errors: list
 
     skills_value = manifest.get("skills")
     skills_path = _safe_repo_path(root, skills_value) if isinstance(skills_value, str) else None
-    expected_skills = (root / "skills").resolve()
+    expected_skills = (root / EXPECTED_OPENAI_SKILLS_ROOT).resolve()
     if skills_path is None:
         errors.append("unsafe OpenAI plugin skills path")
     elif skills_path != expected_skills:
-        errors.append("OpenAI plugin skills path must resolve to the canonical skills root")
+        errors.append("OpenAI plugin skills path must resolve to the isolated OpenAI skills root")
     elif not skills_path.is_dir():
         errors.append("OpenAI plugin skills path does not resolve to a directory")
 
@@ -124,31 +207,24 @@ def _validate_openai_manifest(root: Path, manifest: dict[str, Any], errors: list
         errors.append("OpenAI plugin interface category must be Productivity")
 
     prompts = interface.get("defaultPrompt")
-    if not isinstance(prompts, list) or len(prompts) < 3 or any(
+    if not isinstance(prompts, list) or not 1 <= len(prompts) <= 3 or any(
         not isinstance(item, str) or not item.strip() for item in prompts
     ):
-        errors.append("OpenAI plugin defaultPrompt must contain at least three non-empty prompts")
+        errors.append("OpenAI plugin defaultPrompt must contain one to three non-empty prompts")
+
+    if "screenshots" in interface:
+        errors.append("OpenAI plugin interface must not declare screenshots for a skills-only ZIP")
 
     for field in ("composerIcon", "logo"):
         value = interface.get(field)
-        if value is None:
+        if not isinstance(value, str) or not value.strip():
+            errors.append(f"OpenAI plugin interface missing {field}")
             continue
         target = _safe_repo_path(root, value)
         if target is None:
             errors.append(f"unsafe OpenAI plugin {field} path")
-        elif not target.is_file():
-            errors.append(f"OpenAI plugin {field} path does not exist")
-
-    screenshots = interface.get("screenshots", [])
-    if not isinstance(screenshots, list):
-        errors.append("OpenAI plugin screenshots must be a list")
-    else:
-        for value in screenshots:
-            target = _safe_repo_path(root, value) if isinstance(value, str) else None
-            if target is None:
-                errors.append("unsafe OpenAI plugin screenshot path")
-            elif not target.is_file():
-                errors.append(f"OpenAI plugin screenshot path does not exist: {value}")
+        else:
+            _validate_square_asset(target, field, errors)
 
 
 def _validate_codex_marketplace(root: Path, marketplace: dict[str, Any], errors: list[str]) -> None:
@@ -251,6 +327,17 @@ def _validate_compatibility(root: Path, registry: dict[str, Any], errors: list[s
             if manifests.get(key) != expected:
                 errors.append(f"compatibility manifest path drift: {key}")
 
+    distributions = registry.get("distributions")
+    if not isinstance(distributions, dict):
+        errors.append("compatibility distributions must be an object")
+    else:
+        claude_dist = distributions.get("claude")
+        openai_dist = distributions.get("openai")
+        if not isinstance(claude_dist, dict) or claude_dist.get("skills_root") != "skills":
+            errors.append("Claude distribution must keep the canonical skills root")
+        if not isinstance(openai_dist, dict) or openai_dist.get("skills_root") != EXPECTED_OPENAI_SKILLS_ROOT:
+            errors.append("OpenAI distribution must use the isolated OpenAI skills root")
+
     canonical = registry.get("canonical")
     if not isinstance(canonical, dict):
         errors.append("compatibility canonical registry must be an object")
@@ -269,6 +356,8 @@ def _validate_compatibility(root: Path, registry: dict[str, Any], errors: list[s
     submission = registry.get("public_submission")
     if not isinstance(submission, dict) or submission.get("type") != "skills-only":
         errors.append("compatibility public submission type must be skills-only")
+    elif submission.get("skills_root") != EXPECTED_OPENAI_SKILLS_ROOT:
+        errors.append("compatibility public submission must use the OpenAI skills root")
 
 
 def _validate_codex_config(root: Path, errors: list[str]) -> None:
@@ -352,6 +441,8 @@ def _validate_submission(root: Path, errors: list[str]) -> None:
             errors.append("OpenAI submission category must be Productivity")
         if metadata.get("submission_status") != "prepared-not-submitted":
             errors.append("OpenAI submission status must remain prepared-not-submitted until external publication completes")
+        if metadata.get("skills_bundle") != "./openai-skills/":
+            errors.append("OpenAI submission skills bundle must use ./openai-skills/")
 
         prompts = metadata.get("starter_prompts")
         if not isinstance(prompts, list) or len(prompts) < 4 or any(
@@ -415,6 +506,7 @@ def validate_codex_plugin(root: Path = ROOT) -> list[str]:
 
     if openai_manifest:
         _validate_openai_manifest(root, openai_manifest, errors)
+    _validate_openai_skill_bundle(root, errors)
     if codex_marketplace:
         _validate_codex_marketplace(root, codex_marketplace, errors)
     if registry:
