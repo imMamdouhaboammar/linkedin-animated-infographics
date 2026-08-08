@@ -1,7 +1,7 @@
 {
   "name": "linkedin-animated-infographics",
-  "version": "3.2.1",
-  "description": "Create animated LinkedIn visual stories with sharp hooks, useful reveals, disciplined still-first composition, deterministic motion, and strict visual QA.",
+  "version": "3.2.2",
+  "description": "Create animated LinkedIn visual stories with capability-aware autopilot execution, strong visual hooks, sandbox artifacts, disciplined motion, and strict QA.",
   "author": {
     "name": "Mamdouh Aboammar",
     "url": "https://github.com/imMamdouhaboammar"
@@ -14,7 +14,8 @@
     "infographic",
     "animation",
     "visual-storytelling",
-    "info-stories",
+    "autopilot",
+    "multi-agent",
     "creative-direction",
     "visual-qa",
     "arabic",
@@ -23,8 +24,8 @@
   "skills": "./openai-skills/",
   "interface": {
     "displayName": "LinkedIn Animated Infographics",
-    "shortDescription": "Turn ideas into disciplined animated LinkedIn visual stories",
-    "longDescription": "Build feed-ready LinkedIn infographics through evidence checks, concept exploration, macro-layout planning, still-first critique, disciplined motion, and final visual verification.",
+    "shortDescription": "Create animated LinkedIn visual stories in capability-aware autopilot mode",
+    "longDescription": "Build feed-ready LinkedIn infographics through capability negotiation, real side jobs when available, sandbox artifacts, evidence checks, concept exploration, macro-layout planning, still-first critique, disciplined motion, and final verification.",
     "developerName": "Mamdouh Aboammar",
     "category": "Productivity",
     "capabilities": ["Read", "Write"],
@@ -32,7 +33,7 @@
     "privacyPolicyURL": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics/blob/main/PRIVACY.md",
     "termsOfServiceURL": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics/blob/main/TERMS.md",
     "defaultPrompt": [
-      "Turn this idea into an animated LinkedIn infographic with a strong visual hook and a useful aha moment.",
+      "Run this in autopilot and turn the idea into an animated LinkedIn infographic with a strong visual hook and useful aha moment.",
       "Create an Info-story from this material and choose the best story shape before designing it.",
       "Review this finished LinkedIn infographic and tell me what must be fixed before publishing."
     ],
