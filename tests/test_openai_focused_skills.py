@@ -10,6 +10,7 @@ CASES = ROOT / "submission" / "test-cases.json"
 class OpenAIFocusedSkillTests(unittest.TestCase):
     def test_expected_public_openai_skills_exist(self):
         expected = {
+            "linkedin-infographic-autopilot": "linkedin-infographic-autopilot",
             "linkedin-infographic-studio": "linkedin-infographic-studio",
             "linkedin-infographic-review": "linkedin-infographic-review",
             "exact-svg-mascot": "exact-svg-mascot",
@@ -34,6 +35,14 @@ class OpenAIFocusedSkillTests(unittest.TestCase):
             "motion-quality-contract.md",
         ):
             self.assertTrue((refs / filename).is_file(), filename)
+
+    def test_autopilot_has_executable_runtime_helper(self):
+        runtime = OPENAI_ROOT / "linkedin-infographic-autopilot" / "scripts" / "autopilot_runtime.py"
+        self.assertTrue(runtime.is_file())
+        text = runtime.read_text()
+        self.assertIn("select_execution_path", text)
+        self.assertIn("build_dispatch_plan", text)
+        self.assertIn("create_workspace", text)
 
     def test_focused_review_preserves_visual_failure_taxonomy(self):
         text = (OPENAI_ROOT / "linkedin-infographic-review" / "SKILL.md").read_text()
@@ -78,7 +87,7 @@ class OpenAIFocusedSkillTests(unittest.TestCase):
     def test_openai_reviewer_cases_name_real_public_skills(self):
         cases = json.loads(CASES.read_text())
         positive = {case["id"]: case["expected_behavior"] for case in cases["positive"]}
-        self.assertIn("linkedin-infographic-studio", positive["create-post"])
+        self.assertIn("linkedin-infographic-autopilot", positive["create-post"])
         self.assertIn("linkedin-infographic-studio", positive["info-story"])
         self.assertIn("linkedin-infographic-review", positive["qa"])
         self.assertIn("exact-svg-mascot", positive["exact-svg-mascot"])
