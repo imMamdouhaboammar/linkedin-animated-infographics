@@ -10,10 +10,12 @@ ROOT = Path(__file__).resolve().parents[1]
 CODEX_PLUGIN = ROOT / ".codex-plugin" / "plugin.json"
 CODEX_MARKETPLACE = ROOT / ".agents" / "plugins" / "marketplace.json"
 CLAUDE_PLUGIN = ROOT / ".claude-plugin" / "plugin.json"
+CLAUDE_AGENT = ROOT / "agents" / "artboard-builder.md"
 COMPATIBILITY = ROOT / "compatibility" / "codex.json"
 VALIDATOR = ROOT / "scripts" / "validate_codex_plugin.py"
 CODEX_CONFIG = ROOT / ".codex" / "config.toml"
 CODEX_AGENT_DIR = ROOT / ".codex" / "agents"
+OPENAI_SKILL = ROOT / "openai-skills" / "linkedin-infographic-studio"
 EXPECTED_CODEX_AGENTS = {
     "explorer": "read-only",
     "reviewer": "read-only",
@@ -37,11 +39,14 @@ def copy_fixture(root: Path):
         ".agents",
         ".codex",
         "skills",
+        "openai-skills",
+        "agents",
         "helper",
         "architecture",
         "research",
         "compatibility",
         "submission",
+        "assets",
     ):
         source = ROOT / relative
         if source.exists():
@@ -53,20 +58,20 @@ def copy_fixture(root: Path):
 
 
 class CodexPluginPackagingTests(unittest.TestCase):
-    def test_openai_plugin_manifest_exists_and_uses_canonical_skills(self):
+    def test_openai_plugin_manifest_uses_isolated_skills(self):
         self.assertTrue(CODEX_PLUGIN.exists(), "missing .codex-plugin/plugin.json")
         data = json.loads(CODEX_PLUGIN.read_text())
         self.assertEqual("linkedin-animated-infographics", data["name"])
-        self.assertEqual("3.2.0", data["version"])
-        self.assertEqual("./skills/", data["skills"])
+        self.assertEqual("3.2.1", data["version"])
+        self.assertEqual("./openai-skills/", data["skills"])
+        self.assertTrue(OPENAI_SKILL.is_dir())
         self.assertEqual("Mamdouh Aboammar", data["author"]["name"])
         self.assertEqual(
             "https://github.com/imMamdouhaboammar/linkedin-animated-infographics",
             data["repository"],
         )
 
-    def test_openai_plugin_manifest_has_install_surface_metadata(self):
-        self.assertTrue(CODEX_PLUGIN.exists(), "missing .codex-plugin/plugin.json")
+    def test_openai_plugin_manifest_is_directory_compliant(self):
         interface = json.loads(CODEX_PLUGIN.read_text())["interface"]
         for field in (
             "displayName",
@@ -79,10 +84,51 @@ class CodexPluginPackagingTests(unittest.TestCase):
             "privacyPolicyURL",
             "termsOfServiceURL",
             "defaultPrompt",
+            "composerIcon",
+            "logo",
         ):
             self.assertTrue(interface.get(field), field)
         self.assertEqual("Productivity", interface["category"])
-        self.assertGreaterEqual(len(interface["defaultPrompt"]), 3)
+        self.assertLessEqual(len(interface["defaultPrompt"]), 3)
+        self.assertGreaterEqual(len(interface["defaultPrompt"]), 1)
+        self.assertNotIn("screenshots", interface)
+        self.assertEqual("./assets/plugin-mark.svg", interface["composerIcon"])
+        self.assertEqual("./assets/plugin-mark.svg", interface["logo"])
+
+    def test_openai_studio_is_self_contained(self):
+        self.assertTrue((OPENAI_SKILL / "SKILL.md").is_file())
+        text = "\n".join(path.read_text() for path in OPENAI_SKILL.rglob("*.md"))
+        for forbidden in (
+            ".claude-plugin/",
+            "agents/",
+            "${CLAUDE_PLUGIN_ROOT}",
+            "helper/",
+            "architecture/",
+        ):
+            self.assertNotIn(forbidden, text)
+
+    def test_openai_visual_contract_has_blocking_layout_gates(self):
+        path = OPENAI_SKILL / "references" / "visual-quality-contract.md"
+        text = path.read_text()
+        for marker in (
+            "82-92%",
+            "120px",
+            "Maximum bordered containment depth is two levels",
+            "top-heavy-composition",
+            "bottom-dead-zone",
+            "nested-card-density",
+            "generic-ui-grammar",
+            "weak-macro-rhythm",
+            "weak-visual-anchor",
+            "footer-detachment",
+            "motion-on-weak-still",
+            "decorative-motion",
+            "feed-scale-legibility",
+            "Maximum two targeted repair attempts",
+        ):
+            self.assertIn(marker, text)
+        skill = (OPENAI_SKILL / "SKILL.md").read_text()
+        self.assertIn("Do not proceed to motion while a blocking still defect remains", skill)
 
     def test_repo_marketplace_exposes_root_plugin(self):
         self.assertTrue(CODEX_MARKETPLACE.exists(), "missing .agents/plugins/marketplace.json")
@@ -97,10 +143,16 @@ class CodexPluginPackagingTests(unittest.TestCase):
         self.assertEqual("ON_INSTALL", entry["policy"]["authentication"])
         self.assertEqual("Productivity", entry["category"])
 
-    def test_codex_and_claude_plugin_identity_stays_shared(self):
+    def test_claude_execution_contract_remains_present(self):
         codex = json.loads(CODEX_PLUGIN.read_text())
         claude = json.loads(CLAUDE_PLUGIN.read_text())
         self.assertEqual(claude["name"], codex["name"])
+        self.assertEqual("3.2.1", claude["version"])
+        self.assertTrue(CLAUDE_AGENT.is_file())
+        text = CLAUDE_AGENT.read_text()
+        self.assertIn("model: opus", text)
+        self.assertIn("artboard", text)
+        self.assertIn("info-stories", text)
 
 
 class CodexPluginParityTests(unittest.TestCase):
@@ -109,14 +161,17 @@ class CodexPluginParityTests(unittest.TestCase):
         self.assertIsNotNone(module, "missing scripts/validate_codex_plugin.py")
         return module
 
-    def test_compatibility_registry_declares_shared_core(self):
+    def test_compatibility_registry_declares_host_specific_distributions(self):
         self.assertTrue(COMPATIBILITY.exists(), "missing compatibility/codex.json")
         data = json.loads(COMPATIBILITY.read_text())
-        self.assertEqual("3.2.0", data["plugin_version"])
+        self.assertEqual("3.2.1", data["plugin_version"])
         self.assertEqual("skills", data["canonical"]["skills_root"])
+        self.assertEqual("skills", data["distributions"]["claude"]["skills_root"])
+        self.assertEqual("openai-skills", data["distributions"]["openai"]["skills_root"])
         self.assertEqual("helper/router.json", data["canonical"]["router"])
         self.assertEqual("architecture/plugin-graph.json", data["canonical"]["worker_graph"])
         self.assertEqual("skills-only", data["public_submission"]["type"])
+        self.assertEqual("openai-skills", data["public_submission"]["skills_root"])
         self.assertIn("codex", data["surfaces"])
         self.assertIn("chatgpt", data["surfaces"])
 
@@ -147,6 +202,50 @@ class CodexPluginParityTests(unittest.TestCase):
             path.write_text(json.dumps(data))
             errors = module.validate_codex_plugin(root)
             self.assertTrue(any("unsafe" in error.lower() and "skills" in error.lower() for error in errors), errors)
+
+    def test_validator_rejects_four_default_prompts(self):
+        module = self.require_validator()
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            copy_fixture(root)
+            path = root / ".codex-plugin" / "plugin.json"
+            data = json.loads(path.read_text())
+            data["interface"]["defaultPrompt"].append("Fourth prompt")
+            path.write_text(json.dumps(data))
+            errors = module.validate_codex_plugin(root)
+            self.assertTrue(any("one to three" in error.lower() for error in errors), errors)
+
+    def test_validator_rejects_screenshots_field(self):
+        module = self.require_validator()
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            copy_fixture(root)
+            path = root / ".codex-plugin" / "plugin.json"
+            data = json.loads(path.read_text())
+            data["interface"]["screenshots"] = ["./assets/demo.gif"]
+            path.write_text(json.dumps(data))
+            errors = module.validate_codex_plugin(root)
+            self.assertTrue(any("must not declare screenshots" in error.lower() for error in errors), errors)
+
+    def test_validator_rejects_unavailable_openai_runtime_reference(self):
+        module = self.require_validator()
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            copy_fixture(root)
+            path = root / "openai-skills" / "linkedin-infographic-studio" / "SKILL.md"
+            path.write_text(path.read_text() + "\nRead agents/artboard-builder.md\n")
+            errors = module.validate_codex_plugin(root)
+            self.assertTrue(any("unavailable runtime reference" in error.lower() for error in errors), errors)
+
+    def test_validator_rejects_missing_visual_gate(self):
+        module = self.require_validator()
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            copy_fixture(root)
+            path = root / "openai-skills" / "linkedin-infographic-studio" / "references" / "visual-quality-contract.md"
+            path.write_text(path.read_text().replace("bottom-dead-zone", "bottom-gap"))
+            errors = module.validate_codex_plugin(root)
+            self.assertTrue(any("missing marker: bottom-dead-zone" in error.lower() for error in errors), errors)
 
     def test_validator_rejects_marketplace_policy_drift(self):
         module = self.require_validator()
