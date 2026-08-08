@@ -31,3 +31,41 @@ args = ["-y", "@modelcontextprotocol/server-sequential-thinking"]
 [agents]
 enabled = true
 max_concurrent_threads_per_session = 6
+default_subagent_model = "gpt-5.6"
+default_subagent_reasoning_effort = "high"
+
+[agents.creative_director]
+description = "Compare evidence-safe creative directions and recommend the strongest story structure."
+config_file = "agents/creative_director.toml"
+
+[agents.evidence_researcher]
+description = "Audit claims and return a bounded evidence inventory without editing files."
+config_file = "agents/evidence_researcher.toml"
+
+[agents.copy_director]
+description = "Compress supported copy into high-signal visual slots without changing evidence."
+config_file = "agents/copy_director.toml"
+
+[agents.layout_composer]
+description = "Create macro-layout and build artifacts with workspace-write access."
+config_file = "agents/layout_composer.toml"
+
+[agents.still_critic]
+description = "Run independent still QA and block motion on unresolved visual defects."
+config_file = "agents/still_critic.toml"
+
+[agents.motion_director]
+description = "Implement story-serving motion after the still gate passes."
+config_file = "agents/motion_director.toml"
+
+[agents.render_qa]
+description = "Review actual rendered evidence for clipping, pacing, and frame integrity."
+config_file = "agents/render_qa.toml"
+
+[agents.final_verifier]
+description = "Independently verify evidence, process gates, artifacts, and execution claims."
+config_file = "agents/final_verifier.toml"
+
+[agents.tool_runner]
+description = "Run bounded build, render, validation, and artifact-generation jobs."
+config_file = "agents/tool_runner.toml"
