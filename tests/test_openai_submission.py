@@ -105,14 +105,15 @@ class OpenAISubmissionContractTests(unittest.TestCase):
         self.assertTrue({"create-post", "info-story", "qa", "exact-svg-mascot", "share-demo"}.issubset(positive_ids))
         self.assertTrue({"missing-exact-svg", "unsafe-demo-export", "share-without-consent"}.issubset(negative_ids))
 
-    def test_submission_readme_states_manual_external_submission(self):
+    def test_submission_readme_states_manual_external_update(self):
         self.assertTrue(README.is_file(), "missing submission/README.md")
         text = README.read_text().lower()
         self.assertIn("manual", text)
         self.assertIn("openai platform", text)
         self.assertIn("five positive", text)
         self.assertIn("three negative", text)
-        self.assertNotIn("already published", text)
+        self.assertIn("does not submit or publish a new plugin version automatically", text)
+        self.assertIn("a github commit alone does not update the package already published", text)
 
     def test_validator_rejects_wrong_reviewer_case_count(self):
         module = load_validator()
