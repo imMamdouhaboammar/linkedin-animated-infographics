@@ -18,6 +18,7 @@ class OpenAIAutopilotPackagingTests(unittest.TestCase):
             "references/tool-usage-policy.md",
             "references/autopilot-failure-policy.md",
             "references/workspace-agents-bridge.md",
+            "references/visual-quality-contract.md",
         )
         for relative in required:
             self.assertTrue((AUTOPILOT / relative).is_file(), relative)
@@ -25,6 +26,7 @@ class OpenAIAutopilotPackagingTests(unittest.TestCase):
     def test_autopilot_skill_is_self_contained_and_truthful(self):
         text = (AUTOPILOT / "SKILL.md").read_text()
         self.assertIn("name: linkedin-infographic-autopilot", text)
+        self.assertIn("references/visual-quality-contract.md", text)
         for marker in (
             "full-autopilot",
             "tool-rich-sequential",
@@ -42,6 +44,27 @@ class OpenAIAutopilotPackagingTests(unittest.TestCase):
             "architecture/",
         ):
             self.assertNotIn(forbidden, text)
+
+    def test_autopilot_visual_contract_matches_blocking_studio_quality_floor(self):
+        text = (AUTOPILOT / "references" / "visual-quality-contract.md").read_text()
+        for marker in (
+            "1080x1350",
+            "82-92%",
+            "120px",
+            "Maximum bordered containment depth is two levels",
+            "top-heavy-composition",
+            "bottom-dead-zone",
+            "nested-card-density",
+            "generic-ui-grammar",
+            "weak-macro-rhythm",
+            "weak-visual-anchor",
+            "footer-detachment",
+            "motion-on-weak-still",
+            "decorative-motion",
+            "feed-scale-legibility",
+            "Maximum two targeted repair attempts",
+        ):
+            self.assertIn(marker, text)
 
     def test_openai_manifest_points_to_distribution_and_release_3_2_2(self):
         data = json.loads(PLUGIN.read_text())
