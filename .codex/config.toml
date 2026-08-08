@@ -35,37 +35,37 @@ default_subagent_model = "gpt-5.6"
 default_subagent_reasoning_effort = "high"
 
 [agents.creative_director]
-description = "Compare evidence-safe creative directions and recommend the strongest story structure."
+description = "Adapter for canonical agents/creative-director.md; compare evidence-safe directions and return to the parent."
 config_file = "agents/creative_director.toml"
 
 [agents.evidence_researcher]
-description = "Audit claims and return a bounded evidence inventory without editing files."
+description = "Adapter for canonical agents/evidence-checker.md; finalize evidence before creative work."
 config_file = "agents/evidence_researcher.toml"
 
 [agents.copy_director]
-description = "Compress supported copy into high-signal visual slots without changing evidence."
+description = "Adapter for canonical agents/copy-compressor.md; compress approved copy without changing evidence."
 config_file = "agents/copy_director.toml"
 
 [agents.layout_composer]
-description = "Create macro-layout and build artifacts with workspace-write access."
+description = "Adapter for canonical agents/layout-composer.md; materialize only the assigned layout artifacts."
 config_file = "agents/layout_composer.toml"
 
 [agents.still_critic]
-description = "Run independent still QA and block motion on unresolved visual defects."
+description = "Adapter for canonical agents/post-critic.md; run the blocking pre-motion still critique."
 config_file = "agents/still_critic.toml"
 
 [agents.motion_director]
-description = "Implement story-serving motion after the still gate passes."
+description = "Adapter for canonical agents/motion-director.md; execute motion direction only after still PASS."
 config_file = "agents/motion_director.toml"
 
 [agents.render_qa]
-description = "Review actual rendered evidence for clipping, pacing, and frame integrity."
+description = "Adapter for canonical agents/render-qa.md; review actual rendered evidence and return to the parent."
 config_file = "agents/render_qa.toml"
 
 [agents.final_verifier]
-description = "Independently verify evidence, process gates, artifacts, and execution claims."
+description = "Adapter for canonical agents/story-verifier.md; independently verify the canonical acceptance criteria."
 config_file = "agents/final_verifier.toml"
 
 [agents.tool_runner]
-description = "Run bounded build, render, validation, and artifact-generation jobs."
+description = "Bounded execution adapter for a canonical worker contract explicitly supplied by the parent."
 config_file = "agents/tool_runner.toml"
