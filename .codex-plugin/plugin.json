@@ -1,7 +1,7 @@
 {
   "name": "linkedin-animated-infographics",
-  "version": "3.2.0",
-  "description": "Create animated LinkedIn visual stories with sharp hooks, useful reveals, deterministic motion, strict QA, and opt-in community publishing.",
+  "version": "3.2.1",
+  "description": "Create animated LinkedIn visual stories with sharp hooks, useful reveals, disciplined still-first composition, deterministic motion, and strict visual QA.",
   "author": {
     "name": "Mamdouh Aboammar",
     "url": "https://github.com/imMamdouhaboammar"
@@ -16,15 +16,15 @@
     "visual-storytelling",
     "info-stories",
     "creative-direction",
-    "community-demos",
+    "visual-qa",
     "arabic",
     "rtl"
   ],
-  "skills": "./skills/",
+  "skills": "./openai-skills/",
   "interface": {
     "displayName": "LinkedIn Animated Infographics",
-    "shortDescription": "Turn ideas into animated LinkedIn visual stories",
-    "longDescription": "Build feed-ready animated infographics with concept exploration, hook-driven copy, Info-stories, evidence checks, deterministic motion, QA, exact-SVG mascot handling, Arabic/RTL support, and optional community demo publishing.",
+    "shortDescription": "Turn ideas into disciplined animated LinkedIn visual stories",
+    "longDescription": "Build feed-ready LinkedIn infographics through evidence checks, concept exploration, macro-layout planning, still-first critique, disciplined motion, and final visual verification.",
     "developerName": "Mamdouh Aboammar",
     "category": "Productivity",
     "capabilities": ["Read", "Write"],
