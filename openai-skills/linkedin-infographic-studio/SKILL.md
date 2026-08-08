@@ -1,6 +1,6 @@
 ---
 name: linkedin-infographic-studio
-description: Create or redesign a static or animated LinkedIn infographic with evidence checks, concept exploration, macro-layout planning, still-first visual critique, disciplined motion, and final verification. Use for full infographic creation in ChatGPT or Codex.
+description: Create or redesign a static or animated LinkedIn infographic with evidence checks, concept exploration, art-direction selection, macro-layout planning, still-first visual critique, disciplined motion, and final verification. Use for full infographic creation in ChatGPT or Codex.
 ---
 
 # LinkedIn Infographic Studio
@@ -15,6 +15,8 @@ Before production, read these local references completely:
 
 - `references/openai-runtime.md`
 - `references/role-passes.md`
+- `references/visual-archetypes.md`
+- `references/copy-quality-contract.md`
 - `references/visual-quality-contract.md`
 - `references/motion-quality-contract.md`
 
@@ -48,8 +50,9 @@ Before choosing a layout:
 
 1. identify the useful relationship, tension, comparison, sequence, transformation, or reveal
 2. generate at least three meaningfully different creative directions
-3. select one direction based on comprehension, memorability, evidence fit, and feed behavior
-4. define the macro layout before writing detailed HTML/CSS
+3. choose an archetype from `references/visual-archetypes.md` or define a justified custom structure
+4. select one direction based on comprehension, memorability, evidence fit, and feed behavior
+5. define the macro layout before writing detailed HTML/CSS
 
 Avoid automatic reliance on:
 
@@ -73,6 +76,8 @@ Create an evidence inventory. Mark unsupported factual slots as blocked. Preserv
 
 Create at least three directions with different structural ideas, not three color variations. Each direction needs a visual hook, copy hook, useful payoff, story shape, visual archetype, and motion idea when animated.
 
+Do not present three directions that all reduce to a headline plus repeated cards.
+
 Choose the strongest direction and state why it fits the story.
 
 ### Phase 3: Story architecture
@@ -91,7 +96,11 @@ A viewer should understand what the visual is about within two seconds.
 
 ### Phase 4: Copy compression
 
+Apply `references/copy-quality-contract.md`.
+
 Write copy by visual slot. Remove repeated explanation before layout. Keep evidence-bearing language precise. Avoid generic thought-leadership filler and vague marketing language.
+
+The visual must carry part of the argument. Do not make the headline, subline, body, and takeaway all explain the same idea in different words.
 
 ### Phase 5: Macro layout
 
@@ -99,11 +108,15 @@ Create an explicit 1080x1350 layout specification before component styling.
 
 Define the major zones, proportional heights or bounding boxes, safe margins, alignment, visual anchor, structural fingerprint, expected vertical occupancy, footer reservation, and containment depth.
 
+State why the selected archetype fits the story relationship.
+
 Apply every blocking rule in `references/visual-quality-contract.md`.
 
 ### Phase 6: Still construction
 
 Build the static composition first. The still must communicate the useful idea without animation.
+
+Build macro zones before cards, labels, icons, or micro-decoration.
 
 When HTML is the requested production format, keep the artboard deterministic and fixed at the target dimensions. Use semantic HTML/CSS/SVG where appropriate. Preserve editable structure rather than flattening meaningful content prematurely.
 
