@@ -50,11 +50,11 @@ class OpenAISubmissionContractTests(unittest.TestCase):
             self.assertTrue(path.is_file(), f"missing {path.name}")
             self.assertGreater(len(path.read_text().strip()), 200, path.name)
 
-    def test_submission_metadata_is_skills_only_3_2_1(self):
+    def test_submission_metadata_is_skills_only_3_2_2(self):
         self.assertTrue(SUBMISSION.is_file(), "missing submission/openai-plugin.json")
         data = json.loads(SUBMISSION.read_text())
         self.assertEqual("linkedin-animated-infographics", data["name"])
-        self.assertEqual("3.2.1", data["version"])
+        self.assertEqual("3.2.2", data["version"])
         self.assertEqual("skills-only", data["submission_type"])
         self.assertEqual("Productivity", data["category"])
         self.assertEqual("./openai-skills/", data["skills_bundle"])
@@ -79,6 +79,7 @@ class OpenAISubmissionContractTests(unittest.TestCase):
         self.assertIn("isolates", notes)
         self.assertIn("claude", notes)
         self.assertIn("still-before-motion", notes)
+        self.assertIn("autopilot", notes)
 
     def test_exactly_five_positive_and_three_negative_cases(self):
         self.assertTrue(CASES.is_file(), "missing submission/test-cases.json")
