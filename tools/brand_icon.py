@@ -37,8 +37,15 @@ SVG_NS = "http://www.w3.org/2000/svg"
 
 # Anything that can reach the network, execute, or embed a remote document at
 # render time. A fetched artboard asset must be inert.
-FORBIDDEN_TAGS = {"script", "foreignobject", "iframe", "audio", "video", "animate"}
+#
+# <style> is on this list because the mark gets inlined into the artboard: a
+# stylesheet inside it is a stylesheet in the host document, and
+# `<style>@import url(...)</style>` both fetches over the network and can restyle
+# the page around it. An icon has no legitimate need for one.
+FORBIDDEN_TAGS = {"script", "foreignobject", "iframe", "audio", "video", "animate", "style"}
 REMOTE_SCHEME = re.compile(r"^\s*(?:https?:|//|javascript:|data:text/html)", re.I)
+# url(...) in any attribute value. Only a same-document fragment is legal.
+URL_REF = re.compile(r"url\(\s*['\"]?\s*([^)'\"]*)", re.I)
 
 VARIANT_SUFFIX = {"mono": "", "color": "-color", "text": "-text", "brand": "-brand-color"}
 
@@ -59,8 +66,10 @@ def resolve_name(manifest, slug, variant="color"):
         raise ValueError(f"Unknown variant {variant!r}. Valid choices: {', '.join(sorted(VARIANT_SUFFIX))}")
     slug = slug.strip().lower()
     candidates = [slug + VARIANT_SUFFIX[variant]]
-    if variant in {"color", "brand"}:
-        candidates += [slug + "-color", slug]
+    if variant == "brand":
+        candidates += [slug + "-brand", slug + "-color", slug]
+    elif variant == "color":
+        candidates += [slug]
     elif variant == "text":
         candidates += [slug]
     for name in candidates:
@@ -97,8 +106,12 @@ def sanitise(data: bytes, name: str) -> str:
                 raise ValueError(f"{name}: contains an event handler attribute {attribute}")
             if local in {"href", "src"} and REMOTE_SCHEME.match(value or ""):
                 raise ValueError(f"{name}: references a remote resource in {attribute}")
-            if local == "style" and "url(" in (value or "").lower():
-                raise ValueError(f"{name}: style attribute pulls an external url")
+            for reference in URL_REF.findall(value or ""):
+                if not reference.strip().startswith("#"):
+                    raise ValueError(
+                        f"{name}: {attribute} references {reference.strip()!r} through url(); "
+                        "only a same-document #fragment is allowed"
+                    )
     return text
 
 
@@ -111,13 +124,21 @@ def fetch(slug, variant="color", out=None, manifest_path=MANIFEST, timeout=30):
         data = response.read(MAX_BYTES + 1)
     text = sanitise(data, name)
     digest = hashlib.sha256(text.encode("utf-8")).hexdigest()
-    target = Path(out) if out else CACHE / f"{name}.svg"
+    if out:
+        candidate = Path(out)
+        target = (candidate if candidate.is_absolute() else ROOT / candidate).resolve()
+    else:
+        target = CACHE / f"{name}.svg"
+    if not target.is_relative_to(ROOT):
+        raise ValueError(
+            f"--out must stay inside the repository so check() can verify it; {target} does not"
+        )
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(text)
     record = {
         "slug": slug.strip().lower(),
         "variant": variant,
-        "file": str(target.relative_to(ROOT)) if target.is_relative_to(ROOT) else str(target),
+        "file": str(target.relative_to(ROOT)),
         "resolved_name": name,
         "source_url": url,
         "package": manifest["package"],

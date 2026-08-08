@@ -62,6 +62,12 @@ class ResolutionTests(unittest.TestCase):
             self.assertIn("not in", message)
             self.assertIn("Supply the exact SVG yourself", message)
 
+    def test_brand_variant_finds_a_vendor_that_ships_only_the_plain_brand_file(self):
+        self.assertEqual("replicate-brand", brand_icon.resolve_name(self.manifest, "replicate", "brand"))
+
+    def test_brand_variant_prefers_the_colour_brand_file_when_both_exist(self):
+        self.assertEqual("google-brand-color", brand_icon.resolve_name(self.manifest, "google", "brand"))
+
     def test_unknown_variant_is_rejected(self):
         with self.assertRaises(ValueError):
             brand_icon.resolve_name(self.manifest, "claude", "holographic")
@@ -97,6 +103,28 @@ class SanitiserTests(unittest.TestCase):
 
     def test_rejects_a_non_svg_root(self):
         self._reject('<html><body>no</body></html>', "expected svg")
+
+    def test_rejects_a_style_element_outright(self):
+        # The mark gets inlined into the artboard, so a stylesheet inside it is a
+        # stylesheet in the host document. @import would reach the network too.
+        self._reject('<svg xmlns="http://www.w3.org/2000/svg"><style>@import url(https://x.invalid/a.css);</style></svg>', "style")
+        self._reject('<svg xmlns="http://www.w3.org/2000/svg"><style>.a{fill:red}</style></svg>', "style")
+
+    def test_rejects_external_url_references_in_any_attribute(self):
+        for attribute, value in (("fill", "url(https://x.invalid/a)"),
+                                 ("filter", "url(//x.invalid/a)"),
+                                 ("mask", "url(http://x.invalid/a)"),
+                                 ("clip-path", "url(https://x.invalid/a)")):
+            self._reject(
+                f'<svg xmlns="http://www.w3.org/2000/svg"><path {attribute}="{value}" d="M0 0"/></svg>',
+                "url()",
+            )
+
+    def test_allows_a_same_document_fragment_reference(self):
+        # Gemini's real mark paints itself with url(#gradient), so this must stay legal.
+        markup = ('<svg xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g"/></defs>'
+                  '<path fill="url(#g)" d="M0 0"/></svg>')
+        self.assertIn("<svg", brand_icon.sanitise(markup.encode("utf-8"), "probe.svg"))
 
     def test_rejects_an_oversized_payload(self):
         self._reject('<svg xmlns="http://www.w3.org/2000/svg">' + "<path d='M0 0'/>" * 40000 + "</svg>", "ceiling")
@@ -135,6 +163,15 @@ class CacheIntegrityTests(unittest.TestCase):
             target.write_text(original)
         self.assertEqual(hashlib.sha256(original.encode()).hexdigest(),
                          hashlib.sha256(target.read_text().encode()).hexdigest())
+
+
+class OutPathTests(unittest.TestCase):
+    def test_out_outside_the_repository_is_refused(self):
+        # check() resolves recorded paths against ROOT, so a target it can never
+        # reach would let check pass while the fetched file goes uninspected.
+        with self.assertRaises(ValueError) as caught:
+            brand_icon.fetch("claude", out="/tmp/escaped-brand-icon.svg")
+        self.assertIn("inside the repository", str(caught.exception))
 
 
 class CliTests(unittest.TestCase):

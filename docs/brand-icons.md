@@ -62,14 +62,20 @@ Marks land in `assets/brand-icons/` and every one gets a row in `assets/brand-ic
 
 A fetched mark is remote input. It is parsed and inspected before it is ever written, and rejected outright if it contains:
 
-- a `<script>`, `<foreignObject>`, `<iframe>`, `<audio>` or `<video>` element
+- a `<script>`, `<style>`, `<foreignObject>`, `<iframe>`, `<audio>` or `<video>` element
 - any `on*` event handler attribute
 - an `href` or `src` pointing at `http:`, `https:`, `//`, `javascript:` or `data:text/html`
 - a `style` attribute pulling an external `url()`
 - a `<!DOCTYPE>` or `<!ENTITY>` declaration, which is the XXE vector
 - more than 256 KB, or anything that does not parse as XML with an `<svg>` root
 
+`<style>` is rejected outright rather than parsed. The mark gets inlined into the artboard, so a stylesheet inside it is a stylesheet in the host document: `<style>@import url(...)</style>` would both reach the network and restyle the page around it. An icon has no legitimate need for one.
+
 `check` re-runs the same inspection over the cache and compares each file against its recorded hash, so a mark that is edited after the fact fails rather than shipping quietly.
+
+## This does not satisfy the mascot gate
+
+The exact-SVG rule for a named or official **mascot** requires the asset the user or the task supplied. This tool does not meet that bar and is not a route around it: an aggregator's copy has different provenance and may be outdated, unofficial, or a community redraw. Use it for brand marks that identify a product inside a story. For mascot identity the HOLD stands until the user supplies or confirms the file, and you may cite this page as a place they might obtain it.
 
 ## Using a mark on an artboard
 
