@@ -23,6 +23,7 @@ def copy_fixture(root: Path):
         ".agents",
         ".codex",
         "skills",
+        "openai-skills",
         "agents",
         "assets",
         "helper",
@@ -53,7 +54,7 @@ class CodexReviewFixTests(unittest.TestCase):
             copy_fixture(root)
             path = root / ".codex-plugin" / "plugin.json"
             data = json.loads(path.read_text())
-            data["skills"] = "./skills"
+            data["skills"] = "./openai-skills"
             path.write_text(json.dumps(data))
             self.assertEqual([], module.validate_codex_plugin(root))
 
