@@ -30,7 +30,7 @@ Return validated mascot role, chosen creative direction, inspection/identity not
 ## Procedure
 
 1. For a named or official mascot, require the **exact SVG** before any production. Treat it as the identity source. Never redraw, approximate, substitute, generate a lookalike, or silently use a different mascot.
-2. If the exact SVG is missing, return `HOLD: exact SVG required`. In the main conversational context, ask the user to upload the SVG; inside a worker, return the HOLD to the parent workflow.
+2. If the exact SVG is missing, return `HOLD: exact SVG required`. For an AI or LLM product mark, check the pinned upstream set first with `tools/brand_icon.py` before holding: the vendor's own artwork may already be available, and a fetched exact SVG satisfies this gate where a redrawn one never does. See `docs/brand-icons.md`. In the main conversational context, ask the user to upload the SVG; inside a worker, return the HOLD to the parent workflow.
 3. Validate the request:
 
 ```bash

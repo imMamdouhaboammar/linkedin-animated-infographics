@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "assets": [
+    {
+      "slug": "claude",
+      "variant": "color",
+      "file": "assets/brand-icons/claude-color.svg",
+      "resolved_name": "claude-color",
+      "source_url": "https://unpkg.com/@lobehub/icons-static-svg@1.94.0/icons/claude-color.svg",
+      "package": "@lobehub/icons-static-svg",
+      "package_version": "1.94.0",
+      "license": "MIT",
+      "license_scope": "The MIT licence covers the packaging of this icon set. It does not transfer any right in the marks themselves. Every logo remains the trademark of its owner and may only be used nominatively, to identify that product.",
+      "sha256": "a3101f3047a119aa11825ad9369510f0c472428c8c52d420e31bc62db44a8364",
+      "fetched_on": "2026-08-08",
+      "trademark": "This mark is the trademark of its owner. Use it to identify that product and nothing else."
+    },
+    {
+      "slug": "gemini",
+      "variant": "color",
+      "file": "assets/brand-icons/gemini-color.svg",
+      "resolved_name": "gemini-color",
+      "source_url": "https://unpkg.com/@lobehub/icons-static-svg@1.94.0/icons/gemini-color.svg",
+      "package": "@lobehub/icons-static-svg",
+      "package_version": "1.94.0",
+      "license": "MIT",
+      "license_scope": "The MIT licence covers the packaging of this icon set. It does not transfer any right in the marks themselves. Every logo remains the trademark of its owner and may only be used nominatively, to identify that product.",
+      "sha256": "8ab0a9bafec11f7e69bcb9fc4ffd8f1bc927d1ddcbbb6ff36dee5ae8b5a9d602",
+      "fetched_on": "2026-08-08",
+      "trademark": "This mark is the trademark of its owner. Use it to identify that product and nothing else."
+    },
+    {
+      "slug": "openai",
+      "variant": "color",
+      "file": "assets/brand-icons/openai.svg",
+      "resolved_name": "openai",
+      "source_url": "https://unpkg.com/@lobehub/icons-static-svg@1.94.0/icons/openai.svg",
+      "package": "@lobehub/icons-static-svg",
+      "package_version": "1.94.0",
+      "license": "MIT",
+      "license_scope": "The MIT licence covers the packaging of this icon set. It does not transfer any right in the marks themselves. Every logo remains the trademark of its owner and may only be used nominatively, to identify that product.",
+      "sha256": "a595df6b423920c67a7f8f73c063e4bfb72d415948097b6cac063a2366bb5186",
+      "fetched_on": "2026-08-08",
+      "trademark": "This mark is the trademark of its owner. Use it to identify that product and nothing else."
+    }
+  ]
+}
