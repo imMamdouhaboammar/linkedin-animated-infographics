@@ -38,7 +38,7 @@ For Claude packaging:
 claude plugin validate .
 ```
 
-CI also performs the same-repository Claude Marketplace add/list/install smoke. OpenAI packaging is validated structurally and for cross-host parity by `scripts/validate_codex_plugin.py`; any Codex CLI marketplace smoke must use documented non-interactive behavior rather than a fabricated install command.
+CI also performs the same-repository Claude Marketplace add/list/install smoke. OpenAI packaging is validated structurally and for host-isolation contracts by `scripts/validate_codex_plugin.py`; any Codex CLI marketplace smoke must use documented non-interactive behavior rather than a fabricated install command.
 
 ## Validator responsibilities
 
@@ -48,7 +48,7 @@ Validates the merged Info-stories registry, semantic Story House tokens, compati
 
 ### `scripts/ecosystem_router.py check`
 
-Validates helper routes, capabilities, artifacts, local quality gates, research-gate linkage, skill/agent references, and graph capability coverage.
+Validates helper routes, capabilities, artifacts, local quality gates, research-gate linkage, skill/agent references, and graph capability coverage for the repository runtime.
 
 ### `scripts/research_gates.py check`
 
@@ -56,7 +56,7 @@ Validates research provenance, source SHAs/licenses, runtime gate contracts, own
 
 ### `scripts/plugin_graph.py check`
 
-Validates agent inventory, required skill preloads, shipping order, conditional mascot edge, helper/graph capability ownership, and create-post sequence consistency.
+Validates Claude/repository agent inventory, required skill preloads, shipping order, conditional mascot edge, helper/graph capability ownership, and create-post sequence consistency.
 
 ### `scripts/ecosystem_doctor.py check`
 
@@ -72,11 +72,13 @@ Validates one staged public contribution before GitHub publication. Preparation 
 
 ### `scripts/validate_marketplace.py`
 
-Validates the Claude Marketplace/plugin manifests, same-repository source, strict mode, version agreement, and required component structure.
+Validates the Claude Marketplace/plugin manifests, same-repository source, strict mode, version agreement, and required Claude component structure.
 
 ### `scripts/validate_codex_plugin.py`
 
-Validates `.codex-plugin/plugin.json`, `.agents/plugins/marketplace.json`, canonical Skills linkage, OpenAI/Claude identity and version parity, `compatibility/codex.json`, current repository Codex subagent configuration, public policy files, and the tracked OpenAI submission package including exactly five positive and three negative reviewer cases.
+Validates `.codex-plugin/plugin.json`, `.agents/plugins/marketplace.json`, the isolated `openai-skills/` distribution, directory compliance, square icon/logo references, absence of unsupported screenshots, OpenAI/Claude identity and version parity, `compatibility/codex.json`, current repository Codex subagent configuration, public policy files, and the tracked OpenAI submission package.
+
+It also rejects OpenAI runtime references to Claude-only paths and requires the blocking visual quality markers for vertical occupancy, dead space, containment depth, still-before-motion behavior, visual failure taxonomy, and bounded repair.
 
 ## Community demo changes
 
@@ -116,14 +118,22 @@ When adopting a new external capability:
 
 Ignored upstream clones under `research/upstreams/` never ship.
 
-## Adding a skill, agent, or public tool
+## Adding a Claude/repository skill, agent, or public tool
 
-A new public module is incomplete until it is declared in `helper/modules.json` with a real path, role, tests, and reachability links. Update routes, graph, preloads, artifacts, and gates as appropriate. `scripts/ecosystem_doctor.py check` must remain clean.
+A new canonical repository module is incomplete until it is declared in `helper/modules.json` with a real path, role, tests, and reachability links. Update routes, graph, preloads, artifacts, and gates as appropriate. `scripts/ecosystem_doctor.py check` must remain clean.
+
+## Adding an OpenAI public skill
+
+OpenAI public skills live under `openai-skills/` and must be self-contained for the behavior they claim to provide. Do not point them at Claude-only agents, helper routing, the repository worker graph, or Claude environment variables.
+
+Update `scripts/validate_codex_plugin.py` and `tests/test_codex_plugin.py` when the OpenAI package contract changes.
 
 ## Release work
 
-The current release is `3.2.0`.
+The current release is `3.2.1`.
 
 A public release requires the same plugin version across the Claude plugin manifest, Claude marketplace plugin entry, OpenAI plugin manifest, Codex compatibility registry, and OpenAI submission metadata.
 
-Before merge, require unit/validator success, official Claude validation, the available marketplace smoke, no blocking external check, and no unresolved review thread. Public OpenAI directory publication remains a separate external submission/review step and must not be claimed from repository CI alone.
+Claude and OpenAI do not need identical execution packaging. Claude keeps `skills/` + `agents/`; OpenAI uses `openai-skills/`. The parity target is quality discipline, not identical visual output.
+
+Before merge or publication, require unit/validator success, official Claude validation when available, the available marketplace smoke, no blocking external check, and no unresolved review thread. Updating the GitHub repository does not itself republish the OpenAI directory package.
