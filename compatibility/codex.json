@@ -1,7 +1,7 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "plugin_name": "linkedin-animated-infographics",
-  "plugin_version": "3.2.1",
+  "plugin_version": "3.2.2",
   "surfaces": ["codex", "chatgpt"],
   "manifests": {
     "openai": ".codex-plugin/plugin.json",
@@ -17,7 +17,11 @@
     },
     "openai": {
       "skills_root": "openai-skills",
-      "execution": "self-contained-sequential-role-passes"
+      "execution": "capability-negotiated-autopilot",
+      "sandbox_artifacts": true,
+      "side_jobs": true,
+      "workspace_agents": "optional",
+      "fallbacks": ["tool-rich-sequential", "safe-skill-only"]
     }
   },
   "canonical": {
@@ -33,7 +37,8 @@
   },
   "repo_development": {
     "codex_guide": ".codex/AGENTS.md",
-    "codex_config": ".codex/config.toml"
+    "codex_config": ".codex/config.toml",
+    "real_subagents": true
   },
   "public_submission": {
     "type": "skills-only",
@@ -47,6 +52,10 @@
     "quality-process-parity-not-visual-identity",
     "claude-behavior-regression-protected",
     "openai-self-contained-runtime",
+    "capability-negotiation-before-execution",
+    "no-fake-tool-or-agent-claims",
+    "sandbox-artifact-persistence-when-available",
+    "workspace-agents-optional-not-auto-installed",
     "evidence-integrity",
     "still-before-motion",
     "bounded-visual-repair",
