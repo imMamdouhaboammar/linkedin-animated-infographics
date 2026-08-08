@@ -4,56 +4,68 @@ Use side jobs only when real delegation is observed. A side job is a bounded uni
 
 The parent must wait for every required side job before using its result. If a worker fails, the parent either retries once when safe or executes the same contract sequentially.
 
-## Parallel-safe discovery jobs
+## Phase 1: evidence boundary
 
 ### evidence-research
 
+This job always completes before creative discovery begins.
+
 Input: supplied brief, claims, source material, and missing evidence slots
 
-Output bounded artifact: evidence inventory with supported, unsupported, and freshness-sensitive claims
+Output bounded artifact: finalized evidence inventory with supported, unsupported, contradicted, and freshness-sensitive claims plus protected fact slots
+
+The parent must wait for this artifact. Creative directions, visual archetypes, and copy critique consume the finalized evidence boundary rather than a preliminary inventory.
+
+## Phase 2: parallel-safe creative discovery
+
+After evidence is finalized, these jobs are independent enough to fan out when real delegation is observed.
 
 ### creative-direction-exploration
 
-Input: evidence inventory, audience, primary message, visual constraints
+Input: finalized evidence inventory, audience, primary message, and visual constraints
 
-Output bounded artifact: at least three structurally different creative directions with hook, visual anchor, story shape, and motion idea
+Output bounded artifact: at least three structurally different creative directions with hook, visual anchor, story shape, useful reveal, and motion idea
 
 ### visual-archetype-exploration
 
-Input: evidence inventory and candidate directions
+Input: finalized evidence inventory, audience, message relationship, and creative constraints
 
-Output bounded artifact: recommended visual archetypes, layout risks, and rejected generic-UI patterns
+Output bounded artifact: recommended visual archetypes, structural options, layout risks, and rejected generic-UI patterns
 
 ### copy-compression-critique
 
-Input: candidate copy slots and primary takeaway
+Input: finalized evidence inventory, primary takeaway, protected fact slots, and available candidate copy/source language
 
-Output bounded artifact: duplicate ideas, filler, unsupported claims, and compressed alternatives
+Output bounded artifact: duplication risks, filler, unsupported wording, protected facts, and compression guidance
 
-## Dependency-bound production jobs
+These creative-discovery jobs may be concurrent, but they cannot weaken or reinterpret the finalized evidence boundary.
 
-These normally run after a direction is selected:
+## Phase 3: dependency-bound production jobs
+
+These run only after the parent selects a direction and the required upstream artifact exists.
 
 ### still-critique
 
-Input: actual still or build artifact when inspection is available, plus layout plan
+Input: actual still or build artifact when inspection is available, layout plan, and complete visual-quality contract
 
-Output bounded artifact: blocking visual failures, top three defects, and PASS or FAIL:fixable
+Output bounded artifact: explicit PASS/FAIL taxonomy, blocking visual failures, top three defects, repair count, and PASS or FAIL:fixable/HOLD
 
 ### render-qa
 
-Input: actual rendered frames or animation evidence when available
+Input: actual rendered frames or animation evidence when available plus passing still report
 
-Output bounded artifact: clipping, footer clearance, feed-scale legibility, pacing, loop seam, and motion-purpose verdict
+Output bounded artifact: clipping, footer clearance, feed-scale legibility, pacing, loop seam, motion-purpose verdict, and PASS/FAIL:fixable/HOLD
 
 ### final-verification
 
-Input: evidence inventory, final artifacts, still report, and render report
+Input: finalized evidence inventory, final artifacts, complete still report, render report when applicable, and execution summary
 
-Output bounded artifact: independent PASS, FAIL:fixable, or HOLD with direct reasons
+Output bounded artifact: independent PASS, FAIL:fixable, or HOLD with direct evidence
 
 ## Coordination rules
 
+- Evidence is a dependency, not a peer of creative discovery
+- Finish `evidence-research` before launching creative-direction, visual-archetype, or copy-compression discovery
 - Parallelize only jobs without dependency edges
 - Never allow two side jobs to write the same artifact concurrently unless the host gives them isolated workspaces
 - The parent owns creative selection, user approvals, and publishing consent
