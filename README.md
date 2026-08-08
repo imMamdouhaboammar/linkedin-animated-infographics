@@ -85,7 +85,7 @@ safe-skill-only
 
 Unknown capabilities are treated as unavailable. The plugin never claims a subagent, tool call, render, file, connected-app action, or publication action that did not actually happen
 
-When real delegation is available, independent discovery work can fan out across evidence research, creative-direction exploration, visual-archetype exploration, and copy-compression critique. Dependency-bound production still proceeds through explicit gates
+Evidence finishes first. After the evidence boundary is finalized, real delegation can fan out creative-direction exploration, visual-archetype exploration, and copy-compression critique in parallel. Dependency-bound production then proceeds through explicit gates
 
 When sandbox writes are available, the workflow persists logical artifacts for evidence, concepts, copy, layout, build, still review, motion, render QA, verifier output, and final delivery. This reduces context loss and lets later QA inspect the same production inputs
 
@@ -98,15 +98,15 @@ The OpenAI package does not collapse concept, layout, motion, and QA into one pa
 Its production flow is:
 
 ```text
-evidence inventory
-  -> capability negotiation
-  -> parallel side jobs when real delegation exists
+capability negotiation
+  -> evidence research and finalized evidence boundary
+  -> parallel creative side jobs when real delegation exists
   -> creative directions
   -> story architecture
   -> copy compression
   -> macro layout
   -> still construction
-  -> still critique + targeted repair
+  -> complete still taxonomy + targeted repair
   -> motion direction only after still PASS
   -> motion implementation
   -> render QA
@@ -116,6 +116,8 @@ evidence inventory
 The still gate is blocking before motion
 
 It explicitly rejects top-heavy compositions, unexplained bottom dead zones, detached footers, weak visual anchors, nested-card density, generic UI grammar, weak macro rhythm, feed-scale legibility failures, motion on weak stills, and decorative motion
+
+The full Autopilot visual contract also keeps the 1080×1350 default canvas, roughly 82-92% usable vertical occupancy target, greater-than-120px unexplained footer-gap rejection, maximum two bordered containment levels, and explicit PASS/FAIL taxonomy from the studio quality floor
 
 ## Demos
 
@@ -151,7 +153,7 @@ A strong output should have
 
 Before story architecture starts, Claude's `creative-director` creates at least three genuinely different directions in `build/creative-concepts.json`
 
-The OpenAI autopilot applies the same creative standard. With real delegation observed, independent direction and evidence jobs can run as side jobs. Without delegation, the same contracts run sequentially without pretending agents were spawned
+The OpenAI autopilot applies the same creative standard. Evidence is finalized first. With real delegation observed, the creative-direction, visual-archetype, and copy-compression discovery jobs can then run in parallel. Without delegation, the same contracts run sequentially without pretending agents were spawned
 
 Each direction defines a visual hook, copy hook, aha mechanic, story shape, visual archetype, motion behavior, evidence dependencies, risks, and why the idea deserves attention
 
