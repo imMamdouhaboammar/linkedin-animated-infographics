@@ -1,12 +1,13 @@
 # Marketplace Packaging
 
-Version 3.2.0 ships two host adapters over one canonical product core.
+Version 3.2.1 ships two host adapters with shared quality intent and host-specific execution packaging.
 
 - Claude marketplace: `.claude-plugin/marketplace.json`
 - Claude plugin manifest: `.claude-plugin/plugin.json`
+- Claude Skills and workers: `skills/` + `agents/`
 - OpenAI repo marketplace: `.agents/plugins/marketplace.json`
 - OpenAI plugin manifest: `.codex-plugin/plugin.json`
-- canonical Skills for both hosts: `skills/`
+- OpenAI public Skills bundle: `openai-skills/`
 
 The plugin name is `linkedin-animated-infographics`. The marketplace source name is `mamdouh-creative-tools`.
 
@@ -19,14 +20,14 @@ Install from Claude Code:
 /plugin install linkedin-animated-infographics@mamdouh-creative-tools
 ```
 
-Validate locally:
+Claude keeps the existing native worker architecture. The OpenAI packaging change does not replace Claude agents or change the Claude routing contract.
+
+Validate Claude packaging:
 
 ```bash
 python3 scripts/validate_marketplace.py
 claude plugin validate .
 ```
-
-CI also registers the checked-out repository as a clean Claude marketplace source and installs `linkedin-animated-infographics@mamdouh-creative-tools`.
 
 ## Codex and ChatGPT
 
@@ -37,27 +38,42 @@ codex plugin marketplace add imMamdouhaboammar/linkedin-animated-infographics --
 codex plugin marketplace list
 ```
 
-The OpenAI marketplace entry points at the repository root using a local `./` source. The root `.codex-plugin/plugin.json` points at the canonical `./skills/` tree.
+The root `.codex-plugin/plugin.json` points at `./openai-skills/`.
 
-Use a supported Plugins Directory surface to install and test the plugin. Do not substitute undocumented `codex plugin install` syntax for the current marketplace/Plugins Directory flow.
+The OpenAI public workflow is compiled into `openai-skills/linkedin-infographic-studio/` so a skills-only installation does not depend on Claude-only agents, helper routing, or repository worker registration.
 
-Validate the OpenAI package and cross-host parity with:
+Use a supported Plugins Directory surface to install and test the public plugin.
+
+Validate the OpenAI package with:
 
 ```bash
 python3 scripts/validate_codex_plugin.py
 ```
 
-See [`codex.md`](codex.md) for the full Codex/ChatGPT contract.
+See [`codex.md`](codex.md) for the full Codex/ChatGPT contract and visual QA rules.
+
+## Quality parity
+
+Host parity means equivalent discipline and acceptance criteria, not identical visuals.
+
+Claude and OpenAI may make different creative choices. Both should preserve:
+
+- evidence integrity
+- concept exploration before layout
+- macro-layout planning before component styling
+- still QA before motion
+- adversarial visual critique
+- bounded repair before delivery
 
 ## Public OpenAI directory
 
-The 3.2.0 OpenAI package is prepared as a skills-only public submission. Tracked reviewer materials live in `submission/`.
+The 3.2.1 OpenAI package is prepared as a skills-only update. Tracked reviewer materials live in `submission/`.
 
-The repository status is `prepared-not-submitted`. OpenAI Platform permissions, verified publisher identity, availability selection, submission, review, and final publication remain external steps.
+Repository commits do not automatically replace the package already published in the OpenAI Plugins Directory. A new package/version still needs the supported OpenAI Platform update and publication flow.
 
 ## Versioning
 
-The 3.2.0 release must agree across:
+The 3.2.1 release must agree across:
 
 - `.claude-plugin/plugin.json`
 - the plugin entry inside `.claude-plugin/marketplace.json`
@@ -69,7 +85,7 @@ The top-level Claude marketplace catalog has its own catalog version and does no
 
 ## Release gate
 
-Before merging a packaging release:
+Before publishing a packaging release:
 
 ```bash
 python3 -m unittest discover -s tests -v
@@ -83,4 +99,4 @@ python3 scripts/validate_codex_plugin.py
 claude plugin validate .
 ```
 
-Do not treat a release as complete until the exact PR head passes the shared validators, both packaging validators, the official Claude validator, the available install smoke checks, and review closure.
+Do not treat a release as complete until the exact commit passes the applicable shared validators, both host packaging validators, and available install smoke checks.
