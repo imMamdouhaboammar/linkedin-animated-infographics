@@ -1,6 +1,6 @@
 # Workspace Agents bridge
 
-Workspace Agents are an optional execution capability. Installing this skills-only plugin does not automatically register Workspace Agents.
+Workspace Agents are an optional execution capability and are not automatically registered by installing this skills-only plugin.
 
 Use a Workspace Agent only when a callable agent is observed in the current host and its contract matches the bounded side job being delegated.
 
