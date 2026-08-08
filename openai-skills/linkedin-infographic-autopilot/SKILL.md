@@ -20,6 +20,9 @@ Read these local references before execution:
 - `references/tool-usage-policy.md`
 - `references/autopilot-failure-policy.md`
 - `references/workspace-agents-bridge.md`
+- `references/visual-quality-contract.md`
+
+The complete blocking visual gate in `references/visual-quality-contract.md` is authoritative for Autopilot. The summary below never replaces or weakens it.
 
 ## Autopilot rule
 
@@ -53,7 +56,7 @@ The helper can:
 
 - normalize unknown values to unavailable
 - select the execution path
-- generate a bounded side-job dispatch plan
+- generate a bounded evidence-first side-job dispatch plan
 - initialize the logical artifact workspace without fabricating artifact files
 
 Typical commands when execution is available:
@@ -68,17 +71,17 @@ If code execution is not observed, apply the same contracts directly from the re
 
 ## Required production sequence
 
-1. Build the evidence inventory
-2. Observe runtime capabilities and select the execution path
-3. Fan out independent side jobs when real delegation is observed
-4. Generate at least three structurally different creative directions
+1. Observe runtime capabilities and select the execution path
+2. Run evidence research/inventory first and finalize `evidence/evidence.json` or its non-materialized equivalent
+3. Only after the evidence artifact is finalized, fan out independent creative discovery side jobs when real delegation is observed
+4. Generate at least three structurally different creative directions from the finalized evidence boundary
 5. Select the direction and define the primary takeaway
-6. Compress copy into visual slots
+6. Compress copy into visual slots using only approved evidence
 7. Define macro layout before component styling
 8. Build the still when sandbox writes are observed
-9. Run still critique
+9. Run the complete still critique taxonomy from `references/visual-quality-contract.md`
 10. Repair blocking still defects, maximum two targeted repair attempts
-11. Proceed to motion only after the still passes
+11. Proceed to motion only after the complete still gate passes
 12. Implement motion only when the requested output and host capabilities support it
 13. Run render QA using actual rendered evidence when image inspection is observed
 14. Run an independent final verification pass
@@ -86,18 +89,19 @@ If code execution is not observed, apply the same contracts directly from the re
 
 ## Side jobs
 
-When real child-agent or equivalent side-job execution is observed, parallelize independent work instead of making the parent do everything serially.
+When real child-agent or equivalent side-job execution is observed, use dependency-aware delegation rather than making the parent do everything serially.
 
-The first fan-out may include:
+Evidence is not part of the first creative fan-out. `evidence-research` must complete first because every downstream creative job consumes its finalized supported/unsupported/freshness-sensitive inventory.
 
-- evidence research
+After evidence is finalized, the creative fan-out may run these independent jobs in parallel:
+
 - creative direction exploration
 - visual archetype exploration
 - copy compression critique
 
 The parent waits for required side jobs, validates their bounded artifacts, selects what survives, and owns the final decision.
 
-When real delegation is not observed, run those contracts sequentially. Do not describe sequential role passes as agents.
+When real delegation is not observed, run the same contracts sequentially in the same dependency order. Do not describe sequential role passes as agents.
 
 ## Sandbox and artifact behavior
 
@@ -117,20 +121,21 @@ A tool being described in documentation is not proof that it exists in the curre
 
 ## Visual gates
 
-The still is a blocking gate before motion.
+Apply every rule and every PASS/FAIL taxonomy item in `references/visual-quality-contract.md`.
 
-Reject severe versions of:
+In particular, for the default LinkedIn format the gate includes:
 
-- top-heavy composition
-- unexplained bottom dead space
-- detached footer
-- weak visual anchor
-- weak macro rhythm
-- excessive nested-card density
-- generic UI grammar replacing art direction
-- feed-scale legibility failure
-- motion on a weak still
-- decorative motion dominating explanatory motion
+- 1080x1350 canvas unless the user requests another format
+- roughly 82-92% usable vertical occupancy unless intentional negative space has a clear compositional job
+- rejection of unexplained footer/final-zone gaps greater than 120px
+- maximum bordered containment depth of two levels
+- one dominant visual anchor at feed scale
+- explicit macro rhythm and footer reservation
+- rejection of generic UI grammar, nested-card density, weak macro rhythm, weak visual anchor, top-heavy composition, and feed-scale legibility failure
+
+The critic must explicitly return PASS or FAIL for the full taxonomy, including `top-heavy-composition`, `bottom-dead-zone`, `nested-card-density`, `generic-ui-grammar`, `weak-macro-rhythm`, `weak-visual-anchor`, `footer-detachment`, `motion-on-weak-still`, `decorative-motion`, and `feed-scale-legibility`.
+
+Motion cannot begin while any blocking still item fails.
 
 If a blocking still defect remains after two targeted repairs, return `FAIL:fixable` or `HOLD` instead of shipping weak output.
 
@@ -153,7 +158,7 @@ Return:
 - observed capabilities used
 - side jobs actually executed
 - artifacts actually created
-- still verdict
+- complete still taxonomy verdict
 - motion/render verdict when applicable
 - final verdict: `PASS`, `FAIL:fixable`, or `HOLD`
 
