@@ -1,6 +1,6 @@
 name = "evidence_researcher"
 description = "Read-only Codex adapter for the canonical agents/evidence-checker.md product worker."
-model = "gpt-5.6-terra"
+model = "gpt-5.6"
 model_reasoning_effort = "medium"
 sandbox_mode = "read-only"
 
