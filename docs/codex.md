@@ -78,19 +78,22 @@ A capability counts as available only after it is observed in the current host. 
 
 ## Real side jobs
 
-When real delegation is observed, independent discovery jobs can run concurrently:
+Evidence is a dependency, not a peer creative job.
 
-- evidence research
+The parent first completes `evidence-research` and finalizes the supported, unsupported, contradicted, freshness-sensitive, and protected-fact boundary.
+
+After that evidence artifact is finalized, real delegation may run these independent creative jobs concurrently:
+
 - creative-direction exploration
 - visual-archetype exploration
 - copy-compression critique
 
-The parent waits for the required bounded results and remains responsible for synthesis and final decisions.
+The parent waits for all required bounded results and remains responsible for synthesis and final decisions.
 
 Production jobs with dependencies remain ordered:
 
 - still construction
-- still critique
+- complete still critique
 - targeted repair
 - motion direction
 - motion implementation
@@ -111,7 +114,7 @@ The helper provides deterministic behavior for:
 
 - capability normalization
 - execution-path selection
-- side-job dispatch planning
+- evidence-first side-job dispatch planning
 - sandbox workspace scaffolding
 
 It does not discover capabilities by itself. The parent passes only capabilities already observed in the current host.
@@ -150,20 +153,20 @@ Workspace initialization creates directories only. It does not fabricate evidenc
 
 The still gate is blocking before motion.
 
-The OpenAI skill explicitly checks problems that can pass ordinary technical QA while still producing weak design:
+Autopilot ships its own complete copy of the blocking OpenAI visual quality floor so selecting the parent workflow cannot bypass the studio gate.
 
-- top-heavy composition
-- unexplained bottom dead space
-- detached footer
-- weak visual anchor
-- weak macro rhythm
-- excessive nested-card density
-- generic dashboard/card grammar
-- feed-scale legibility
-- motion added to a weak still
-- decorative motion with no explanatory job
+The complete gate includes:
 
-The layout contract includes measurable guidance for vertical occupancy, a 120px unexplained dead-zone threshold, a maximum of two bordered containment levels, and a two-attempt targeted repair limit.
+- default 1080x1350 canvas unless the user requests another format
+- roughly 82-92% usable vertical occupancy unless negative space has a clear compositional job
+- rejection of unexplained gaps greater than 120px near the footer/final zone
+- maximum bordered containment depth of two levels
+- one dominant visual anchor at feed scale
+- explicit macro rhythm and footer reservation
+- per-item PASS/FAIL taxonomy for top-heavy composition, bottom dead zone, nested-card density, generic UI grammar, weak macro rhythm, weak visual anchor, footer detachment, motion on a weak still, decorative motion, and feed-scale legibility
+- maximum two targeted repair attempts
+
+Motion does not start until the full still taxonomy passes.
 
 ## Workspace Agents
 
@@ -202,25 +205,27 @@ Use supported Plugins Directory surfaces for installation and testing.
 
 `.codex/config.toml` and `.codex/agents/*.toml` are repository-development helpers. They are not a dependency of the installed public plugin.
 
-Existing repository roles remain:
+Existing repository-maintenance roles remain:
 
 - `explorer`
 - `reviewer`
 - `docs_researcher`
 
-Version 3.2.2 adds real project-scoped production roles:
+Version 3.2.2 also adds real project-scoped Codex adapters for canonical product workers:
 
-- `creative_director`
-- `evidence_researcher`
-- `copy_director`
-- `layout_composer`
-- `still_critic`
-- `motion_director`
-- `render_qa`
-- `final_verifier`
-- `tool_runner`
+- `creative_director` -> `agents/creative-director.md`
+- `evidence_researcher` -> `agents/evidence-checker.md`
+- `copy_director` -> `agents/copy-compressor.md`
+- `layout_composer` -> `agents/layout-composer.md`
+- `still_critic` -> `agents/post-critic.md`
+- `motion_director` -> `agents/motion-director.md`
+- `render_qa` -> `agents/render-qa.md`
+- `final_verifier` -> `agents/story-verifier.md`
+- `tool_runner` -> a canonical worker contract explicitly supplied by the parent
 
-Read/review roles use read-only sandboxes. Layout, motion, and bounded execution roles use workspace-write only where their job requires it. The root orchestrator owns final selection and publishing consent.
+These are adapters, not an alternative product graph. Each adapter reads `helper/GUIDE.md`, `architecture/plugin-graph.json`, and its mapped canonical worker contract before product work. The canonical worker owns required preloads, gates, HOLD conditions, artifact shapes, and handoff semantics.
+
+Read/review roles use read-only sandboxes. Layout, motion, and bounded execution roles use workspace-write only where their canonical job requires it. The root orchestrator owns final selection and publishing consent.
 
 The repository caps concurrent Codex subagent threads at six.
 
@@ -266,6 +271,6 @@ For a new release:
 
 Version 3.2.2 is prepared as a skills-only OpenAI update. The tracked handoff lives under `submission/` and includes listing metadata plus exactly five positive and three negative reviewer cases.
 
-The primary `create-post` reviewer case now targets `linkedin-infographic-autopilot` so review exercises capability negotiation and truthful fallback behavior rather than only the older sequential studio flow.
+The primary `create-post` reviewer case targets `linkedin-infographic-autopilot` and exercises capability negotiation, evidence-first delegation, the complete visual gate, and truthful fallback behavior.
 
 See [`../submission/README.md`](../submission/README.md) for the tracked handoff.
