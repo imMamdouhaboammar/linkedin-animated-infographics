@@ -276,8 +276,9 @@
   "verdict": "PASS",
   "repairs": [
     "White text on raw purple #8B5CF6 measured 4.23. Text-bearing purple fills switched to #6134D6 at 7.07.",
-    "The first pass measured 26 pairs and omitted the six white-on-brand monograms entirely. Measured on review: white failed on Google 3.56, TikTok 3.68, Reddit 3.44 and Google Analytics 3.09. Those four glyphs are now ink."
+    "The first pass measured 26 pairs and omitted the six white-on-brand monograms entirely. Measured on review: white failed on Google 3.56, TikTok 3.68, Reddit 3.44 and Google Analytics 3.09. Those four glyphs are now ink.",
+    "The three AI tool pills lost their coloured dot and border when the real marks landed. The pill border is now neutral #D9DEE5 and the product name stays ink on white at 17.75:1."
   ],
-  "vendor_colour_policy": "Vendor brand colours sit outside the encoding contract: they identify a source, they do not encode a stage or a state. They are declared as --b-* tokens so they are auditable. The monogram glyph is whichever of white or ink clears 4.5:1 on that brand colour, which keeps every brand value exact and leaves no unreadable mark. The three AI tool dots are 7px marks with no text on them and are not text pairs.",
+  "vendor_colour_policy": "Vendor brand colours sit outside the encoding contract: they identify a source, they do not encode a stage or a state. The six signal-source tokens are declared --b-* values carrying whichever of white or ink clears 4.5:1. The three AI marks are the vendors' own artwork, inlined unmodified, so their colours are theirs and are deliberately not tokenised or contrast-adjusted: recolouring a trademark to satisfy a palette rule is not an option. They carry no text, so no text pair applies; the readable element in each pill is the ink product name on white.",
   "coverage": "32/32 pairs"
 }

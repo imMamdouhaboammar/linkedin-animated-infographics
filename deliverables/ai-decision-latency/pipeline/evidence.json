@@ -41,16 +41,56 @@
     }
   ],
   "named_products": [
-    {"name": "Google", "role": "demand and search signal source", "spelling_locked": true},
-    {"name": "Meta", "role": "ad platform signal source", "spelling_locked": true},
-    {"name": "TikTok", "role": "ad platform signal source", "spelling_locked": true},
-    {"name": "LinkedIn", "role": "ad platform signal source", "spelling_locked": true},
-    {"name": "Reddit", "role": "conversation and competitor signal source", "spelling_locked": true},
-    {"name": "Google Analytics", "role": "site behaviour reporting source", "spelling_locked": true},
-    {"name": "Looker Studio", "role": "reporting surface", "spelling_locked": true},
-    {"name": "ChatGPT", "role": "AI assistance for interpretation and angle work", "spelling_locked": true},
-    {"name": "Claude", "role": "AI assistance for interpretation and angle work", "spelling_locked": true},
-    {"name": "Gemini", "role": "AI assistance for interpretation and angle work", "spelling_locked": true}
+    {
+      "name": "Google",
+      "role": "demand and search signal source",
+      "spelling_locked": true
+    },
+    {
+      "name": "Meta",
+      "role": "ad platform signal source",
+      "spelling_locked": true
+    },
+    {
+      "name": "TikTok",
+      "role": "ad platform signal source",
+      "spelling_locked": true
+    },
+    {
+      "name": "LinkedIn",
+      "role": "ad platform signal source",
+      "spelling_locked": true
+    },
+    {
+      "name": "Reddit",
+      "role": "conversation and competitor signal source",
+      "spelling_locked": true
+    },
+    {
+      "name": "Google Analytics",
+      "role": "site behaviour reporting source",
+      "spelling_locked": true
+    },
+    {
+      "name": "Looker Studio",
+      "role": "reporting surface",
+      "spelling_locked": true
+    },
+    {
+      "name": "ChatGPT",
+      "role": "AI assistance for interpretation and angle work",
+      "spelling_locked": true
+    },
+    {
+      "name": "Claude",
+      "role": "AI assistance for interpretation and angle work",
+      "spelling_locked": true
+    },
+    {
+      "name": "Gemini",
+      "role": "AI assistance for interpretation and angle work",
+      "spelling_locked": true
+    }
   ],
   "unsupported_slots": [
     {
@@ -71,7 +111,35 @@
     {
       "slot": "official platform logo artwork",
       "finding": "No official SVG for any platform or AI vendor was supplied or attached to the task.",
-      "resolution": "Blocked as trademark artwork. The repo's exact-SVG rule for named marks is applied to vendor logos too: no mark is redrawn or approximated. Platforms appear as correctly spelled name tokens carrying each vendor's brand colour and their role in the story. Exact SVGs can be dropped into the token slots without changing the layout."
+      "resolution": "Partially resolved. The three AI tools now carry their owners' own artwork, resolved from a pinned release of @lobehub/icons-static-svg (MIT packaging) and inlined unmodified. Nothing is traced from memory. The six signal-source platforms stay literal name tokens because that upstream set is an AI/LLM set and carries no mark for TikTok, LinkedIn, Reddit or Google Analytics: giving Google and Meta real logos while four siblings stayed text would read as a mistake, so the whole zone keeps one treatment.",
+      "marks_used": [
+        {
+          "label": "ChatGPT",
+          "resolved_name": "openai",
+          "source_url": "https://unpkg.com/@lobehub/icons-static-svg@1.94.0/icons/openai.svg",
+          "package_version": "1.94.0",
+          "sha256": "a595df6b423920c67a7f8f73c063e4bfb72d415948097b6cac063a2366bb5186",
+          "licence_scope": "MIT covers the packaging of the icon set and carries no right in the mark itself."
+        },
+        {
+          "label": "Claude",
+          "resolved_name": "claude-color",
+          "source_url": "https://unpkg.com/@lobehub/icons-static-svg@1.94.0/icons/claude-color.svg",
+          "package_version": "1.94.0",
+          "sha256": "a3101f3047a119aa11825ad9369510f0c472428c8c52d420e31bc62db44a8364",
+          "licence_scope": "MIT covers the packaging of the icon set and carries no right in the mark itself."
+        },
+        {
+          "label": "Gemini",
+          "resolved_name": "gemini-color",
+          "source_url": "https://unpkg.com/@lobehub/icons-static-svg@1.94.0/icons/gemini-color.svg",
+          "package_version": "1.94.0",
+          "sha256": "8ab0a9bafec11f7e69bcb9fc4ffd8f1bc927d1ddcbbb6ff36dee5ae8b5a9d602",
+          "licence_scope": "MIT covers the packaging of the icon set and carries no right in the mark itself."
+        }
+      ],
+      "trademark": "Each mark identifies the product it names, inside a zone labelled AI-ASSISTED THINKING and captioned 'These tools do not run the buy.' No endorsement is implied and no mark is recoloured or restyled. The ChatGPT pill carries OpenAI's mark, which is the mark that exists for that product.",
+      "zone_rule": "A zone uses vendor artwork only when every member of that zone has a real mark available."
     },
     {
       "slot": "platform integrations",
@@ -79,5 +147,5 @@
       "resolution": "Blocked. ChatGPT, Claude and Gemini appear only inside the zone labelled AI-ASSISTED THINKING and no arrow runs from them to an ad platform."
     }
   ],
-  "verdict": "PASS with four blocked slots. Production may proceed on mechanism and point-of-view content only."
+  "verdict": "PASS with three blocked slots and one partially resolved. The logo slot moved from blocked to partially resolved: the three AI tools carry their owners' own artwork with recorded provenance, and the six signal-source platforms stay literal because no real mark exists for four of them."
 }

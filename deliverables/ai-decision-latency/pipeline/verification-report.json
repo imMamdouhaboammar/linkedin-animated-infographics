@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "verdict": "PASS",
-  "attempt": 1,
+  "attempt": 2,
   "verifier_note": "Artifacts read directly rather than trusting upstream worker claims.",
   "criteria": [
     {
@@ -97,10 +97,10 @@
     },
     {
       "id": "official-logo-artwork",
-      "status": "NA",
+      "status": "PASS",
       "artifact": "build/evidence.json",
-      "observation": "No official SVG was supplied, so no vendor mark was traced or approximated. Platforms appear as correctly spelled name tokens in brand colours",
-      "evidence": "evidence.json unsupported_slots, entry 'official platform logo artwork'"
+      "observation": "The three AI tools carry their owners' own artwork, inlined unmodified from a pinned upstream release. The six signal-source platforms stay literal because no real mark exists for four of them, so the zone keeps one treatment. Nothing is traced from memory anywhere on the artboard.",
+      "evidence": "evidence.json marks_used records source URL, package version and sha256 for each of the three marks"
     },
     {
       "id": "spec-matches-build",

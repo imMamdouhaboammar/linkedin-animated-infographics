@@ -69,7 +69,7 @@
     {
       "gate": "evidence-traceability",
       "status": "PASS",
-      "note": "Four slots blocked in evidence.json and all four held in the build."
+      "note": "Three blocked slots held and the logo slot is now partially resolved with per-mark provenance: resolved name, pinned source URL, package version and sha256 for each of the three AI marks."
     }
   ],
   "findings": [
@@ -120,10 +120,10 @@
     },
     {
       "severity": "accepted",
-      "finding": "Platform and AI vendor marks are name tokens in brand colours rather than official logo artwork.",
-      "reasoning": "No official SVG was supplied or attached. The repository's exact-SVG rule for named marks is applied to vendor trademarks too, so nothing was traced from memory. Recognition comes from the correctly spelled name, the brand colour and the role in the story, and the token slots accept real SVGs without any layout change.",
+      "finding": "Platform and AI vendor marks: three real, six literal.",
+      "reasoning": "Resolved for the AI row. The three tools now carry their owners' own artwork from a pinned upstream set, inlined unmodified, with source URL, version and sha256 recorded in evidence.json. The six signal-source platforms stay literal name tokens: that set is an AI/LLM set and has no mark for TikTok, LinkedIn, Reddit or Google Analytics, and a row where Google and Meta are real logos while four siblings are text reads as a mistake rather than a decision. The rule applied is that a zone uses vendor artwork only when every member of that zone has one.",
       "blocking": "no",
-      "disclosure": "Disclosed on the artboard by using correctly spelled product names, in the deliverable README, and in the PR description. This is a recorded production decision, not an open question gating the verdict: supplying official SVGs later is a drop-in swap that changes no layout."
+      "disclosure": "Recorded in evidence.json, the deliverable README and the first comment."
     },
     {
       "severity": "accepted",

@@ -62,6 +62,10 @@ The ffmpeg bundled with Playwright does not have it and fails at `palettegen`.
 
 **No numbers.** Nothing on the artboard is measured. States are qualitative on purpose: `STRONG SIGNAL`, `NEEDS MORE DATA`, `LOSING MOMENTUM`. The three example insights sit under an `EXAMPLE OUTPUT` label because they are illustrative, not findings.
 
-**No traced logos.** No official SVG was supplied for any platform or AI vendor, so none was redrawn from memory. Platforms appear as correctly spelled name tokens in each vendor's brand colour, declared as `--b-*` tokens. Each monogram uses whichever of white or ink clears 4.5:1 on its brand colour, so no brand value is altered and no mark is unreadable. The token slots take real SVGs without any layout change.
+**Real marks where they exist, literal names where they do not.** Nothing is traced from memory anywhere on this artboard.
 
-This is a recorded production decision rather than an open question: supplying official SVGs later is a drop-in swap.
+The three AI tools carry their owners' own artwork, resolved from a pinned release of `@lobehub/icons-static-svg` and inlined unmodified. Source URL, package version and SHA-256 for each are in `pipeline/evidence.json`. MIT covers the packaging of that set and carries no right in the marks; each one identifies the product it names inside a zone captioned "These tools do not run the buy."
+
+The six signal-source platforms stay literal name tokens. That upstream set is an AI/LLM set: it has Google and Meta but no TikTok, LinkedIn, Reddit or Google Analytics. Giving two of six real logos while four siblings stayed as text would read as a mistake rather than a decision, so the whole zone keeps one treatment. The rule: **a zone uses vendor artwork only when every member of that zone has a real mark.**
+
+Supplying the four missing SVGs turns that zone over without a layout change.
