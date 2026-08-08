@@ -31,3 +31,41 @@ args = ["-y", "@modelcontextprotocol/server-sequential-thinking"]
 [agents]
 enabled = true
 max_concurrent_threads_per_session = 6
+default_subagent_model = "gpt-5.6"
+default_subagent_reasoning_effort = "high"
+
+[agents.creative_director]
+description = "Adapter for canonical agents/creative-director.md; compare evidence-safe directions and return to the parent."
+config_file = "agents/creative_director.toml"
+
+[agents.evidence_researcher]
+description = "Adapter for canonical agents/evidence-checker.md; finalize evidence before creative work."
+config_file = "agents/evidence_researcher.toml"
+
+[agents.copy_director]
+description = "Adapter for canonical agents/copy-compressor.md; compress approved copy without changing evidence."
+config_file = "agents/copy_director.toml"
+
+[agents.layout_composer]
+description = "Adapter for canonical agents/layout-composer.md; materialize only the assigned layout artifacts."
+config_file = "agents/layout_composer.toml"
+
+[agents.still_critic]
+description = "Adapter for canonical agents/post-critic.md; run the blocking pre-motion still critique."
+config_file = "agents/still_critic.toml"
+
+[agents.motion_director]
+description = "Adapter for canonical agents/motion-director.md; execute motion direction only after still PASS."
+config_file = "agents/motion_director.toml"
+
+[agents.render_qa]
+description = "Adapter for canonical agents/render-qa.md; review actual rendered evidence and return to the parent."
+config_file = "agents/render_qa.toml"
+
+[agents.final_verifier]
+description = "Adapter for canonical agents/story-verifier.md; independently verify the canonical acceptance criteria."
+config_file = "agents/final_verifier.toml"
+
+[agents.tool_runner]
+description = "Bounded execution adapter for a canonical worker contract explicitly supplied by the parent."
+config_file = "agents/tool_runner.toml"

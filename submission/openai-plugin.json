@@ -2,11 +2,11 @@
   "schema_version": 1,
   "name": "linkedin-animated-infographics",
   "display_name": "LinkedIn Animated Infographics",
-  "version": "3.2.1",
+  "version": "3.2.2",
   "submission_type": "skills-only",
   "category": "Productivity",
   "developer": "Mamdouh Aboammar",
-  "description": "Create LinkedIn visual stories with evidence checks, concept exploration, macro-layout planning, still-first visual critique, disciplined motion, focused QA, exact-SVG mascot handling, and verified community sharing.",
+  "description": "Create LinkedIn visual stories with capability-aware autopilot execution, real side jobs when available, sandbox artifacts, evidence checks, macro-layout planning, still-first visual critique, disciplined motion, focused QA, exact-SVG mascot handling, and verified community sharing.",
   "urls": {
     "website": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics",
     "support": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics/blob/main/SUPPORT.md",
@@ -14,7 +14,7 @@
     "terms": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics/blob/main/TERMS.md"
   },
   "starter_prompts": [
-    "Turn this idea into an animated LinkedIn infographic with a strong visual hook and a useful aha moment.",
+    "Run this in autopilot and turn the idea into an animated LinkedIn infographic with a strong visual hook and useful aha moment.",
     "Create an Info-story from this material and choose the best story shape before designing it.",
     "Review this finished LinkedIn infographic and tell me what must be fixed before publishing.",
     "Animate this named mascot using the exact SVG I attached.",
@@ -23,7 +23,7 @@
   "skills_bundle": "./openai-skills/",
   "manifest": ".codex-plugin/plugin.json",
   "test_cases": "submission/test-cases.json",
-  "release_notes": "Version 3.2.1 isolates the OpenAI skills distribution from the Claude worker runtime, adds a self-contained infographic studio workflow with macro-layout planning and still-before-motion blocking gates, and preserves focused public capabilities through dedicated review, exact-SVG mascot, and community-sharing skills. Claude's existing agent workflow remains behaviorally unchanged.",
+  "release_notes": "Version 3.2.2 isolates the OpenAI runtime from the Claude worker runtime while adding a capability-negotiated autopilot skill that uses real side jobs when observed, persists sandbox artifacts when available, selects truthful fallback paths when capabilities are missing, and coordinates still-before-motion and independent final verification. Repository-development Codex gains narrow real subagent roles. Claude remains on its existing native worker graph with behavior preserved.",
   "availability": "select-during-platform-submission",
   "external_prerequisites": [
     "Apps Management write access in the OpenAI organization used for publishing",
