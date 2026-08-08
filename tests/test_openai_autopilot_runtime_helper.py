@@ -40,13 +40,14 @@ class OpenAIAutopilotRuntimeHelperTests(unittest.TestCase):
         capabilities = mod.normalize_capabilities({"web_research": True, "image_inspection": True})
         self.assertEqual("tool-rich-sequential", mod.select_execution_path(capabilities))
 
-    def test_dispatch_plan_parallelizes_only_independent_discovery_jobs(self):
+    def test_dispatch_plan_finishes_evidence_before_parallel_creative_discovery(self):
         mod = load_runtime()
         full = mod.build_dispatch_plan(mod.normalize_capabilities({"subagents": True, "sandbox_write": True}))
+        self.assertEqual(["evidence-research"], full["evidence_jobs"])
+        self.assertTrue(full["must_finish_evidence_before_discovery"])
         self.assertEqual("parallel", full["discovery_mode"])
         self.assertEqual(
             [
-                "evidence-research",
                 "creative-direction-exploration",
                 "visual-archetype-exploration",
                 "copy-compression-critique",
@@ -60,6 +61,8 @@ class OpenAIAutopilotRuntimeHelperTests(unittest.TestCase):
 
         sequential = mod.build_dispatch_plan(mod.normalize_capabilities({"subagents": False, "sandbox_write": True}))
         self.assertEqual("sequential", sequential["discovery_mode"])
+        self.assertEqual(["evidence-research"], sequential["evidence_jobs"])
+        self.assertTrue(sequential["must_finish_evidence_before_discovery"])
 
     def test_workspace_scaffold_creates_directories_but_not_fake_delivery_artifacts(self):
         mod = load_runtime()
