@@ -4,7 +4,7 @@
 
 **Turn imagination into visual stories that stop the scroll and make the idea click**
 
-`Claude Code + Codex + ChatGPT · 3.2.0` · `1080×1350` · `Info-stories` · `Exact-SVG mascots` · `Arabic / RTL`
+`Claude Code + Codex + ChatGPT · 3.2.1` · `1080×1350` · `Info-stories` · `Exact-SVG mascots` · `Arabic / RTL`
 
 <br>
 
@@ -28,11 +28,15 @@ The plugin aims for both
 
 If the effect looks good but adds no meaning, it is decoration
 
-`creative-director` develops the concept before layout starts, then the workflow tests whether the idea survives copy, layout, motion, QA, and final verification
+`creative-director` develops the concept before layout starts in the Claude runtime. The OpenAI package compiles the same discipline into explicit sequential role passes so a skills-only install does not pretend unavailable workers exist
 
 ## Install
 
-The same canonical `skills/` power every supported host
+Version 3.2.1 keeps host execution isolated on purpose
+
+- Claude uses the existing `skills/` + `agents/` runtime
+- ChatGPT and Codex use the self-contained `openai-skills/` distribution
+- quality parity means equivalent discipline and acceptance criteria, not identical visual output
 
 ### Claude Code
 
@@ -56,9 +60,35 @@ codex plugin marketplace add imMamdouhaboammar/linkedin-animated-infographics --
 codex plugin marketplace list
 ```
 
-The OpenAI package is `.codex-plugin/plugin.json`; the repo marketplace is `.agents/plugins/marketplace.json`. Installation and testing use a supported Plugins Directory surface
+The OpenAI package is `.codex-plugin/plugin.json`; the repo marketplace is `.agents/plugins/marketplace.json`; the public skills bundle is `openai-skills/`
 
 [Codex / ChatGPT guide](docs/codex.md) · [Marketplace details](docs/marketplace.md)
+
+## OpenAI visual discipline
+
+The OpenAI package does not collapse concept, layout, motion, and QA into one pass
+
+Its parent skill runs:
+
+```text
+evidence inventory
+  -> creative directions
+  -> story architecture
+  -> palette contract
+  -> copy compression
+  -> macro layout
+  -> still construction
+  -> still critique + targeted repair
+  -> motion direction
+  -> motion implementation
+  -> render QA
+  -> adversarial visual critique
+  -> final verification
+```
+
+The still gate is blocking before motion
+
+It explicitly rejects top-heavy compositions, unexplained bottom dead zones, detached footers, weak visual anchors, nested-card density, generic UI grammar, weak macro rhythm, feed-scale legibility failures, motion on weak stills, and decorative motion
 
 ## Demos
 
@@ -85,20 +115,20 @@ A strong output should have
 | **AHA** | A payoff that changes understanding |
 | **Story** | A clear shape such as comparison, process, transformation, proof, interface flow, or framework |
 | **Color** | Creative and attractive without becoming loud |
-| **Composition** | Center-first unless the content reads better another way |
-| **Motion** | Deliberate, seekable, deterministic, and tied to meaning |
+| **Composition** | Intentional macro rhythm with no unexplained dead space |
+| **Motion** | Deliberate, deterministic, and tied to meaning |
 | **Evidence** | Claims, metrics, product states, logos, and proof tied to supplied material |
-| **Finish** | Mechanical QA, critique, and independent verification |
+| **Finish** | Still QA, mechanical QA, critique, and independent verification |
 
 ## Creative runtime
 
-Before story architecture starts, `creative-director` creates at least three genuinely different directions in `build/creative-concepts.json`
+Before story architecture starts, Claude's `creative-director` creates at least three genuinely different directions in `build/creative-concepts.json`
 
-Each direction defines a visual hook, copy hook, aha mechanic, story shape, Visual Style, Story Archetype, motion behavior, evidence dependencies, risks, and why the idea deserves attention
+The OpenAI studio applies the same requirement as a sequential creative-direction pass inside its self-contained skill
+
+Each direction defines a visual hook, copy hook, aha mechanic, story shape, visual archetype, motion behavior, evidence dependencies, risks, and why the idea deserves attention
 
 At least one direction must contain a real visual payoff, not a palette swap or a new card arrangement
-
-The local gates are `hooked-design-copy`, `creative-payoff`, `restrained-palette`, and `center-first-composition`
 
 ## Info-stories
 
@@ -109,7 +139,9 @@ Info-stories separates four decisions:
 3. **Story Archetype** for information structure
 4. **Motion Pattern** for how attention moves
 
-The source of truth is the merged registry returned by `scripts/info_stories.py::load_catalog()`
+The canonical Claude/repository source of truth is the merged registry returned by `scripts/info_stories.py::load_catalog()`
+
+The OpenAI public package carries the execution rules it needs inside `openai-skills/linkedin-infographic-studio/` instead of depending on unavailable repository worker registration
 
 UI Mockup Stories are first-class options. Real-looking product behavior must be supported by evidence. Concept UI stays clearly identifiable when it could be mistaken for real product proof
 
@@ -121,16 +153,16 @@ No silent redraw
 No substitute
 No lookalike
 
-The mascot path inspects the supplied SVG, finds usable geometry, develops motion around the real asset, preserves identity, and checks the animated result against the untouched source
+The Claude mascot path inspects the supplied SVG, finds usable geometry, develops motion around the real asset, preserves identity, and checks the animated result against the untouched source
 
 ```bash
 python3 scripts/mascot_contract.py directions
 python3 scripts/mascot_contract.py check build/mascot-request.json
 ```
 
-## Connected production path
+## Claude connected production path
 
-Read [`helper/GUIDE.md`](helper/GUIDE.md) before choosing a workflow or worker
+Read [`helper/GUIDE.md`](helper/GUIDE.md) before choosing a Claude workflow or worker
 
 ```text
 design-study
@@ -151,13 +183,13 @@ design-study
   -> optional share-demo
 ```
 
-`new-post` is the production parent workflow. `share-demo` is a separate opt-in parent workflow after verified delivery
+`new-post` is the Claude production parent workflow. `share-demo` is a separate opt-in parent workflow after verified delivery
 
 Workers return artifacts to their parent instead of coordinating peers through hidden handoffs
 
 ## Research that ships as behavior
 
-`research/` is part of production logic, not a reading folder
+`research/` is part of repository production logic, not a reading folder
 
 Current gates:
 
@@ -168,15 +200,17 @@ Each adopted gate keeps source provenance, inspected commit SHA, local behavior,
 ## Visual defaults
 
 - Palette character: `creative-attractive-restrained`
-- Composition: `center-first`
 - Text contrast: `4.5:1` minimum
 - State contrast: `3:1` minimum
 - One dominant visual anchor at feed scale
+- Macro zones before component styling
 - Motion intensity comes from the story, not from a need to animate everything
 
-Center-first can be overridden when comprehension or fidelity improves, including tables, UI mockups, terminal surfaces, timelines, Arabic / RTL reading flow, or a documented reference-DNA decision
+The OpenAI visual contract additionally targets roughly 82-92% usable vertical occupancy, rejects unexplained gaps greater than 120px near the footer, and limits bordered containment depth to two levels
 
 ## Workflows
+
+Claude repository workflows:
 
 ```text
 /linkedin-animated-infographics:new-post    [topic or URL] [--arabic] [--mascot]
@@ -185,7 +219,13 @@ Center-first can be overridden when comprehension or fidelity improves, includin
 /linkedin-animated-infographics:share-demo  [build directory]
 ```
 
-Programmatic routing:
+OpenAI public workflow:
+
+```text
+openai-skills/linkedin-infographic-studio/SKILL.md
+```
+
+Programmatic repository routing:
 
 ```bash
 python3 tools/route_request.py --request "Create an animated LinkedIn infographic"
@@ -211,13 +251,15 @@ claude plugin validate .
 
 `scripts/ecosystem_doctor.py` rejects dead, undeclared, unreachable, untested, disconnected, or unsafe public modules and manifest references
 
-`scripts/validate_codex_plugin.py` rejects OpenAI packaging, marketplace, Codex configuration, submission-readiness, or cross-host parity drift
+`scripts/validate_codex_plugin.py` rejects OpenAI packaging drift, non-self-contained OpenAI runtime references, directory compliance regressions, missing visual-quality gates, submission-readiness drift, and cross-host version drift
 
 ## Public Plugins Directory
 
-The 3.2.0 OpenAI package is **submission-ready**, not claimed as published
+The 3.2.1 OpenAI package is prepared as a skills-only update using `openai-skills/`
 
-`submission/` tracks listing metadata, five positive reviewer cases, three negative cases, and the manual OpenAI Platform handoff. Public availability still requires external publisher verification/permissions, OpenAI review, and publication after approval
+`submission/` tracks listing metadata, five positive reviewer cases, three negative cases, and the manual OpenAI Platform handoff
+
+A GitHub commit does not automatically replace the version already published in the directory. A new release still needs the supported OpenAI Platform update and publication flow
 
 ## Public tools
 
@@ -248,7 +290,7 @@ scripts/demo_submit.py
 
 Coding agents should also read [`AGENTS.md`](AGENTS.md) or [`CLAUDE.md`](CLAUDE.md)
 
-Both point to the same helper, research, module, and validation authority
+Both point to the same helper, research, module, and validation authority for repository development
 
 ## License
 
