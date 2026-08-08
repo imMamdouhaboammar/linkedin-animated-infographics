@@ -33,6 +33,39 @@ Select exactly one runtime path:
 
 Prefer the strongest safe path. Never pretend that a stronger path ran.
 
+## Executable runtime helper
+
+When `shell_or_code_execution` is observed, use `scripts/autopilot_runtime.py` to make orchestration decisions deterministic instead of relying only on free-form model judgment.
+
+Pass only capabilities actually observed in the current host. Example shape:
+
+```json
+{
+  "subagents": true,
+  "sandbox_write": true,
+  "shell_or_code_execution": true,
+  "image_inspection": true,
+  "web_research": true
+}
+```
+
+The helper can:
+
+- normalize unknown values to unavailable
+- select the execution path
+- generate a bounded side-job dispatch plan
+- initialize the logical artifact workspace without fabricating artifact files
+
+Typical commands when execution is available:
+
+```text
+python scripts/autopilot_runtime.py select-path --capabilities-json '<observed-json>'
+python scripts/autopilot_runtime.py dispatch-plan --capabilities-json '<observed-json>'
+python scripts/autopilot_runtime.py init-workspace <task-workspace>/work
+```
+
+If code execution is not observed, apply the same contracts directly from the references. Do not claim the helper ran.
+
 ## Required production sequence
 
 1. Build the evidence inventory
