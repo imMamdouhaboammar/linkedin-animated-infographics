@@ -16,6 +16,8 @@ _DIRECTIONS = [
     {"slug":"contextual-micro-reaction","purpose":"React to a nearby highlighted state with one context-specific micro motion.","communication_job":"local confirmation","allowed_parts":["eyes","head if addressable","whole body"],"loop_behavior":"short reaction followed by long neutral hold","motion_budget":"secondary motion only"}
 ]
 
+VERIFIED_SOURCES = {"user-supplied", "task-attached", "lobe"}
+
 
 def creative_directions():
     return [dict(item) for item in _DIRECTIONS]
@@ -28,22 +30,24 @@ def validate_mascot_request(request: dict) -> list[str]:
     svg_path = request.get("svg_path")
     if request.get("allow_substitute"):
         errors.append("Mascot substitution is not allowed for a requested official or named mascot.")
-    if requested_name and source not in {"user-supplied", "task-attached"}:
-        errors.append("The exact user-supplied SVG is required for a requested official or named mascot.")
+    if requested_name and source not in VERIFIED_SOURCES:
+        errors.append("An exact verified SVG is required for a requested official or named mascot.")
     if requested_name and not svg_path:
         errors.append("The exact mascot SVG path is required before animation can begin.")
+    if source == "lobe" and not str(request.get("source_ref") or "").strip():
+        errors.append("A Lobe mascot request must include its exact source_ref provenance.")
     if svg_path:
         path = Path(svg_path)
         if path.suffix.lower() != ".svg":
             errors.append("Mascot source must be an SVG file.")
-        elif source in {"user-supplied", "task-attached"} and not path.exists():
-            errors.append("The supplied mascot SVG path does not exist.")
+        elif source in VERIFIED_SOURCES and not path.exists():
+            errors.append("The verified mascot SVG path does not exist.")
     return errors
 
 
 def main(argv=None):
     import argparse
-    parser = argparse.ArgumentParser(description="Validate exact-SVG mascot requests or list creative directions")
+    parser = argparse.ArgumentParser(description="Validate verified-SVG mascot requests or list creative directions")
     sub = parser.add_subparsers(dest="command", required=True)
     check = sub.add_parser("check")
     check.add_argument("request", type=Path)
