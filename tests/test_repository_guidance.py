@@ -32,14 +32,16 @@ class RepositoryGuidanceTests(unittest.TestCase):
                     failures.append(f"{path.relative_to(ROOT)}: missing {needle}")
         self.assertEqual([], failures)
 
-    def test_guidance_names_creative_and_exact_asset_rules(self):
+    def test_guidance_names_visual_source_and_type_rules(self):
         for path in (ROOT / "AGENTS.md", ROOT / "CLAUDE.md"):
             text = path.read_text().lower()
             self.assertIn("creative-director", text)
             self.assertIn("hooked-design-copy", text)
             self.assertIn("creative-attractive-restrained", text)
             self.assertIn("center-first", text)
-            self.assertIn("exact svg", text)
+            self.assertIn("lobe-first", text)
+            self.assertIn("intentional typography", text)
+            self.assertIn("verified identity", text)
 
     def test_guidance_does_not_claim_catalog_json_alone_is_authority(self):
         banned = "catalog.json is the source of truth"
