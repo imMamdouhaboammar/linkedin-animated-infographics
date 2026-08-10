@@ -1,7 +1,7 @@
 {
   "name": "linkedin-animated-infographics",
-  "version": "3.2.2",
-  "description": "Create animated LinkedIn visual stories with capability-aware autopilot execution, strong visual hooks, sandbox artifacts, disciplined motion, and strict QA.",
+  "version": "3.3.0",
+  "description": "Create animated LinkedIn visual stories with verified identity sourcing, intentional typography, capability-aware execution, strong visual hooks, disciplined motion, and strict QA.",
   "author": {
     "name": "Mamdouh Aboammar",
     "url": "https://github.com/imMamdouhaboammar"
@@ -18,14 +18,16 @@
     "multi-agent",
     "creative-direction",
     "visual-qa",
+    "lobe-icons",
+    "typography",
     "arabic",
     "rtl"
   ],
   "skills": "./openai-skills/",
   "interface": {
     "displayName": "LinkedIn Animated Infographics",
-    "shortDescription": "Create animated LinkedIn visual stories in capability-aware autopilot mode",
-    "longDescription": "Build feed-ready LinkedIn infographics through capability negotiation, real side jobs when available, sandbox artifacts, evidence checks, concept exploration, macro-layout planning, still-first critique, disciplined motion, and final verification.",
+    "shortDescription": "Create animated LinkedIn visual stories with verified assets and intentional type",
+    "longDescription": "Build feed-ready LinkedIn infographics through verified identity sourcing, intentional typography, evidence checks, concept exploration, macro-layout planning, still-first critique, disciplined motion, and final verification.",
     "developerName": "Mamdouh Aboammar",
     "category": "Productivity",
     "capabilities": ["Read", "Write"],
