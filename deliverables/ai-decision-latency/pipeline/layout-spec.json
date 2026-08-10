@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "canvas": {
+    "w": 1080,
+    "h": 1350,
+    "safe_margin": 48,
+    "side_gutter": 60
+  },
+  "alignment_mode": "center-first",
+  "alignment_exception": {
+    "applies_to": "the hero band only",
+    "kind": "flow / lateral reading order",
+    "reason": "The centre band is a left-to-right argument: signals enter on the left, interpretation happens in the middle, decisions leave on the right. Centring the three lanes as a block preserves center-first at the page level; the lanes themselves must read laterally or the flow claim is lost. Every other zone is centred on the page axis.",
+    "recorded_by": "layout-composer"
+  },
+  "visual_anchor": "the centre interpretation panel with both mascots, sitting on the page centre axis at x=540",
+  "zones": [
+    {
+      "id": "hook",
+      "y": [
+        52,
+        337
+      ],
+      "share": 0.211,
+      "job": "state the position",
+      "align": "centre"
+    },
+    {
+      "id": "rail",
+      "y": [
+        336,
+        429
+      ],
+      "share": 0.069,
+      "job": "prove the position geometrically",
+      "align": "centre"
+    },
+    {
+      "id": "hero",
+      "y": [
+        432,
+        882
+      ],
+      "share": 0.333,
+      "job": "show the mechanism",
+      "align": "three lanes, centred as a block"
+    },
+    {
+      "id": "return_loop",
+      "y": [
+        886,
+        936
+      ],
+      "share": 0.037,
+      "job": "close the cycle",
+      "align": "centre"
+    },
+    {
+      "id": "nodes",
+      "y": [
+        944,
+        1112
+      ],
+      "share": 0.124,
+      "job": "make it usable",
+      "align": "centre"
+    },
+    {
+      "id": "aha",
+      "y": [
+        1118,
+        1190
+      ],
+      "share": 0.053,
+      "job": "compress the manual chain",
+      "align": "centre"
+    },
+    {
+      "id": "payoff",
+      "y": [
+        1198,
+        1248
+      ],
+      "share": 0.037,
+      "job": "land the payoff",
+      "align": "centre"
+    },
+    {
+      "id": "closer",
+      "y": [
+        1251,
+        1269
+      ],
+      "share": 0.013,
+      "job": "hand over the rule",
+      "align": "centre"
+    },
+    {
+      "id": "foot",
+      "y": [
+        1272,
+        1350
+      ],
+      "share": 0.058,
+      "job": "attribution",
+      "align": "centre"
+    }
+  ],
+  "vertical_utilisation": 0.901,
+  "component_counts": {
+    "signal_chips": 6,
+    "decision_chips": 3,
+    "nodes": 6,
+    "mascots": 2,
+    "chain_pills": 10,
+    "platform_tokens": 10
+  },
+  "structural_fingerprint": {
+    "zone_topology": "banded flow with a lateral three-lane centre and a closed return loop",
+    "card_grammar": "mixed-span: narrow signal chips, one large centre panel, small decision chips, numbered node band",
+    "divider": "connector",
+    "visual_anchor": "the centre interpretation panel carrying both mascots",
+    "density": "dense",
+    "motion_grammar": "connector draw with travelling signal tokens plus node state pulse"
+  },
+  "previous_fingerprint": {
+    "zone_topology": "grid",
+    "card_grammar": "equal cards",
+    "divider": "rule",
+    "visual_anchor": "headline",
+    "density": "medium",
+    "motion_grammar": "sequential highlight"
+  },
+  "previous_fingerprint_source": "demos/community/imMamdouhaboammar/claude-code-marketing-review \u2014 the prior published infographic in this repository, recorded so structural-originality can be measured rather than asserted.",
+  "type_scale": {
+    "hero": "74px / 800",
+    "hero_line_3": "29px / 800",
+    "secondary": "19px / 500",
+    "lane_head": "12px / 800 tracked",
+    "chip_signal": "14px / 600",
+    "decision_label": "20px / 800",
+    "node_question": "17px / 700",
+    "node_sub": "11px / 500",
+    "chain_pill": "11px / 800",
+    "payoff": "36px / 800",
+    "closer": "15.5px / 600"
+  },
+  "feed_scale_floor": "The hero, the secondary line, the decision labels and the payoff carry the takeaway and all read at 350px feed width. The six node questions are 17px and are supporting reference content, not the takeaway: they are legible at feed width but are the smallest load-bearing type on the page. Everything at or below 12px (rail tick labels, platform monograms, panel caveats) is deliberate micro annotation and is texture at feed scale.",
+  "footer_clearance": "The closer line ends at y=1269 and the footer bar occupies 1272-1350. No animated element enters the outer 48px safe margin.",
+  "handoff": "artboard-builder",
+  "measurement_note": "Bands are the measured bounding boxes of each zone's elements in the shipped post.html, not planned targets."
+}

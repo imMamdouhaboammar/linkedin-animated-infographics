@@ -1,0 +1,42 @@
+{
+  "houses": [
+    {
+      "slug": "signal-desk",
+      "name": "Signal Desk",
+      "tone": "bright editorial signal",
+      "tokens": {
+        "bg": "#FFFFFF",
+        "surface": "#F6F7F9",
+        "ink": "#101828",
+        "ink_2": "#344054",
+        "muted": "#59616E",
+        "line": "#E4E7EC",
+        "accent": "#246BFD",
+        "accent_deep": "#1A4FBF",
+        "support_1": "#FF6B24",
+        "support_1_deep": "#B23C00",
+        "support_2": "#14B8A6",
+        "support_2_deep": "#0B6E63",
+        "support_3": "#8B5CF6",
+        "support_3_deep": "#6134D6",
+        "support_4": "#22A866",
+        "support_4_deep": "#116B41",
+        "support_5": "#F8C94A",
+        "support_5_deep": "#8A6100"
+      },
+      "text_pairs": [
+        ["ink", "bg"], ["ink_2", "bg"], ["muted", "bg"], ["accent_deep", "bg"],
+        ["ink", "surface"], ["ink_2", "surface"], ["muted", "surface"], ["accent_deep", "surface"],
+        ["support_1_deep", "bg"], ["support_2_deep", "bg"], ["support_3_deep", "bg"],
+        ["support_4_deep", "bg"], ["support_5_deep", "bg"],
+        ["support_1_deep", "surface"], ["support_2_deep", "surface"], ["support_3_deep", "surface"],
+        ["support_4_deep", "surface"], ["support_5_deep", "surface"]
+      ],
+      "state_pairs": [
+        ["accent", "bg"], ["accent", "surface"],
+        ["support_1_deep", "bg"], ["support_2_deep", "bg"], ["support_3", "bg"],
+        ["support_4_deep", "bg"], ["support_5_deep", "bg"]
+      ]
+    }
+  ]
+}

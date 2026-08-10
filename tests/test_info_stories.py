@@ -16,7 +16,7 @@ class InfoStoriesRegistryTests(unittest.TestCase):
         cls.catalog = info_stories.load_catalog(CATALOG)
 
     def test_registry_counts_and_unique_slugs(self):
-        expected = {"houses": 10, "styles": 12, "archetypes": 15, "motions": 12}
+        expected = {"houses": 11, "styles": 12, "archetypes": 15, "motions": 12}
         for axis, count in expected.items():
             items = self.catalog[axis]
             self.assertEqual(count, len(items), axis)

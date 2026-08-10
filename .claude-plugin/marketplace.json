@@ -13,7 +13,7 @@
       "source": "./",
       "strict": true,
       "version": "3.3.0",
-      "description": "Create LinkedIn Info-stories with verified identity sourcing, intentional typography, brand icons, clean creative concepting, research gates, UI stories, strict QA, and opt-in community demo publishing.",
+      "description": "Create LinkedIn Info-stories with verified identity sourcing, intentional typography, brand icons, Signal Desk house, clean creative concepting, research gates, UI stories, strict QA, and opt-in community demo publishing.",
       "author": {
         "name": "Mamdouh Aboammar",
         "url": "https://github.com/imMamdouhaboammar"
@@ -22,7 +22,7 @@
       "repository": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics",
       "license": "MIT",
       "category": "design",
-      "tags": ["linkedin", "infographic", "animation", "creative-direction", "info-stories", "research-gates", "community-demos", "svg", "mascot", "ui-mockup", "lobe-icons", "typography"]
+      "tags": ["linkedin", "infographic", "animation", "creative-direction", "info-stories", "research-gates", "community-demos", "svg", "mascot", "ui-mockup", "lobe-icons", "typography", "signal-desk"]
     }
   ]
 }

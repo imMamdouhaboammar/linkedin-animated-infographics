@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "topic": "How AI actually helps a modern media buyer",
+  "source_kind": "user-authored point of view",
+  "source_note": "All substantive content comes from the user's brief. No external dataset, case study, or account was supplied, so nothing measurable may be asserted.",
+  "protected_claims": [
+    {
+      "id": "c1",
+      "claim": "AI does not buy the media; it shortens the time between signal and decision.",
+      "kind": "author-position",
+      "status": "supported-as-opinion",
+      "handling": "May appear as the hero. It is a stated point of view about workflow, not a measurable performance claim. No number may be attached to it."
+    },
+    {
+      "id": "c2",
+      "claim": "The biggest benefit of AI in media buying is reducing decision latency, not replacing campaign management.",
+      "kind": "author-position",
+      "status": "supported-as-opinion",
+      "handling": "May appear as the primary aha. Must never be phrased as a measured result."
+    },
+    {
+      "id": "c3",
+      "claim": "Media buying signals appear continuously: CPM moves, CTR drops, frequency rises, search demand shifts, a creative starts winning, an audience fatigues, conversion quality changes, competitor messaging changes.",
+      "kind": "domain-mechanism",
+      "status": "supported",
+      "handling": "These are named metric directions, not values. Arrows are legal. Numbers are not."
+    },
+    {
+      "id": "c4",
+      "claim": "The traditional workflow makes the buyer collect, inspect, compare, interpret, write, calculate, summarise and decide by hand.",
+      "kind": "domain-mechanism",
+      "status": "supported",
+      "handling": "May drive the before/after collapse. The collapse shows steps compressing, never a time saving in minutes or hours."
+    },
+    {
+      "id": "c5",
+      "claim": "The human still makes the business decision.",
+      "kind": "author-position",
+      "status": "supported-as-opinion",
+      "handling": "Load-bearing. Must be visually enforced: the AI mascot never performs the final selection."
+    }
+  ],
+  "named_products": [
+    {
+      "name": "Google",
+      "role": "demand and search signal source",
+      "spelling_locked": true
+    },
+    {
+      "name": "Meta",
+      "role": "ad platform signal source",
+      "spelling_locked": true
+    },
+    {
+      "name": "TikTok",
+      "role": "ad platform signal source",
+      "spelling_locked": true
+    },
+    {
+      "name": "LinkedIn",
+      "role": "ad platform signal source",
+      "spelling_locked": true
+    },
+    {
+      "name": "Reddit",
+      "role": "conversation and competitor signal source",
+      "spelling_locked": true
+    },
+    {
+      "name": "Google Analytics",
+      "role": "site behaviour reporting source",
+      "spelling_locked": true
+    },
+    {
+      "name": "Looker Studio",
+      "role": "reporting surface",
+      "spelling_locked": true
+    },
+    {
+      "name": "ChatGPT",
+      "role": "AI assistance for interpretation and angle work",
+      "spelling_locked": true
+    },
+    {
+      "name": "Claude",
+      "role": "AI assistance for interpretation and angle work",
+      "spelling_locked": true
+    },
+    {
+      "name": "Gemini",
+      "role": "AI assistance for interpretation and angle work",
+      "spelling_locked": true
+    }
+  ],
+  "unsupported_slots": [
+    {
+      "slot": "performance numbers",
+      "finding": "No CPM, CTR, CPA, CVR, ROAS, frequency or budget value is evidenced.",
+      "resolution": "Blocked. The artboard uses direction arrows and qualitative states only: STRONG SIGNAL, NEEDS MORE DATA, LOSING MOMENTUM."
+    },
+    {
+      "slot": "case study or client result",
+      "finding": "No account, brand or outcome was supplied.",
+      "resolution": "Blocked. No result, testimonial or proof bar appears anywhere on the artboard or in the caption."
+    },
+    {
+      "slot": "the three example insights",
+      "finding": "'Creative fatigue is increasing', 'Brand search demand is rising', 'Campaign B deserves another test' are illustrative, not observed.",
+      "resolution": "Allowed only inside a zone labelled EXAMPLE OUTPUT, so they cannot be read as reported findings."
+    },
+    {
+      "slot": "official platform logo artwork",
+      "finding": "No official SVG for any platform or AI vendor was supplied or attached to the task.",
+      "resolution": "Partially resolved. The three AI tools now carry their owners' own artwork, resolved from a pinned release of @lobehub/icons-static-svg (MIT packaging) and inlined unmodified. Nothing is traced from memory. The six signal-source platforms stay literal name tokens because that upstream set is an AI/LLM set and carries no mark for TikTok, LinkedIn, Reddit or Google Analytics: giving Google and Meta real logos while four siblings stayed text would read as a mistake, so the whole zone keeps one treatment.",
+      "marks_used": [
+        {
+          "label": "ChatGPT",
+          "resolved_name": "openai",
+          "source_url": "https://unpkg.com/@lobehub/icons-static-svg@1.94.0/icons/openai.svg",
+          "package_version": "1.94.0",
+          "sha256": "a595df6b423920c67a7f8f73c063e4bfb72d415948097b6cac063a2366bb5186",
+          "licence_scope": "MIT covers the packaging of the icon set and carries no right in the mark itself."
+        },
+        {
+          "label": "Claude",
+          "resolved_name": "claude-color",
+          "source_url": "https://unpkg.com/@lobehub/icons-static-svg@1.94.0/icons/claude-color.svg",
+          "package_version": "1.94.0",
+          "sha256": "a3101f3047a119aa11825ad9369510f0c472428c8c52d420e31bc62db44a8364",
+          "licence_scope": "MIT covers the packaging of the icon set and carries no right in the mark itself."
+        },
+        {
+          "label": "Gemini",
+          "resolved_name": "gemini-color",
+          "source_url": "https://unpkg.com/@lobehub/icons-static-svg@1.94.0/icons/gemini-color.svg",
+          "package_version": "1.94.0",
+          "sha256": "8ab0a9bafec11f7e69bcb9fc4ffd8f1bc927d1ddcbbb6ff36dee5ae8b5a9d602",
+          "licence_scope": "MIT covers the packaging of the icon set and carries no right in the mark itself."
+        }
+      ],
+      "trademark": "Each mark identifies the product it names, inside a zone labelled AI-ASSISTED THINKING and captioned 'These tools do not run the buy.' No endorsement is implied and no mark is recoloured or restyled. The ChatGPT pill carries OpenAI's mark, which is the mark that exists for that product.",
+      "zone_rule": "A zone uses vendor artwork only when every member of that zone has a real mark available."
+    },
+    {
+      "slot": "platform integrations",
+      "finding": "No evidence that any AI tool publishes ads or controls another platform.",
+      "resolution": "Blocked. ChatGPT, Claude and Gemini appear only inside the zone labelled AI-ASSISTED THINKING and no arrow runs from them to an ad platform."
+    }
+  ],
+  "verdict": "PASS with three blocked slots and one partially resolved. The logo slot moved from blocked to partially resolved: the three AI tools carry their owners' own artwork with recorded provenance, and the six signal-source platforms stay literal because no real mark exists for four of them."
+}
