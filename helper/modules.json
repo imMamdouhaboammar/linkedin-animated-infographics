@@ -37,7 +37,7 @@
       "type-curator": {"path": "agents/type-curator.md", "role": "Intentional render-safe typography direction", "tests": ["tests/test_agent_contracts.py", "tests/test_plugin_graph.py", "tests/test_visual_source_typography_engine.py"], "reachable_from": ["workflow:new-post", "route:info-story"]}
     },
     "tools": {
-      "asset_policy_check": {"path": "tools/asset_policy_check.py", "role": "Validate Lobe-first identity asset plans and render-safe provenance", "tests": ["tests/test_visual_source_typography_engine.py"], "reachable_from": ["agent:asset-curator", "skills/info-stories/SKILL.md"]},
+      "asset_policy_check": {"path": "tools/asset_policy_check.py", "role": "Validate Lobe-first identity asset plans and render-safe provenance", "tests": ["tests/test_visual_source_typography_engine.py"], "reachable_from": ["agents/asset-curator.md", "skills/info-stories/SKILL.md"]},
       "composition_check": {"path": "tools/composition_check.py", "role": "Validate Info-stories composition compatibility", "tests": ["tests/test_info_stories.py"], "reachable_from": ["skills/info-stories/SKILL.md"]},
       "contrast_check": {"path": "tools/contrast_check.py", "role": "Check semantic Story House contrast pairs", "tests": ["tests/test_info_stories_followup.py"], "reachable_from": ["skills/artboard/SKILL.md", "skills/info-stories/SKILL.md"]},
       "copy_slop_check": {"path": "tools/copy_slop_check.py", "role": "Return machine-readable named copy-pattern findings", "tests": ["tests/test_info_stories.py"], "reachable_from": ["skills/info-stories/SKILL.md"]},
@@ -47,7 +47,7 @@
       "palette_preview": {"path": "tools/palette_preview.py", "role": "Render Story House palette previews", "tests": ["tests/test_info_stories.py"], "reachable_from": ["skills/info-stories/SKILL.md"]},
       "route_request": {"path": "tools/route_request.py", "role": "Public deterministic request router CLI", "tests": ["tests/test_ecosystem_router.py"], "reachable_from": ["skills/post/SKILL.md", "helper/README.md"]},
       "story_scaffold": {"path": "tools/story_scaffold.py", "role": "Emit deterministic Info-stories briefs", "tests": ["tests/test_info_stories.py"], "reachable_from": ["skills/info-stories/SKILL.md"]},
-      "type_spec_check": {"path": "tools/type_spec_check.py", "role": "Validate intentional render-safe typography specs", "tests": ["tests/test_visual_source_typography_engine.py"], "reachable_from": ["agent:type-curator", "skills/artboard/SKILL.md", "skills/info-stories/SKILL.md"]}
+      "type_spec_check": {"path": "tools/type_spec_check.py", "role": "Validate intentional render-safe typography specs", "tests": ["tests/test_visual_source_typography_engine.py"], "reachable_from": ["agents/type-curator.md", "skills/artboard/SKILL.md", "skills/info-stories/SKILL.md"]}
     }
   }
 }
