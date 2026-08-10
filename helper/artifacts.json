@@ -1,16 +1,28 @@
 {
   "schema_version": 1,
   "artifacts": {
-    "build/design-study.json": {"producer": "design-study", "consumers": ["creative-director", "story-architect", "layout-composer"], "blocking": false},
-    "build/evidence.json": {"producer": "evidence-checker", "consumers": ["creative-director", "story-architect", "copy-compressor", "post-critic", "story-verifier"], "blocking": true},
+    "build/design-study.json": {"producer": "design-study", "consumers": ["creative-director", "story-architect", "type-curator", "layout-composer"], "blocking": false},
+    "build/evidence.json": {"producer": "evidence-checker", "consumers": ["asset-curator", "creative-director", "story-architect", "copy-compressor", "post-critic", "story-verifier"], "blocking": true},
+    "build/asset-plan.json": {
+      "producer": "asset-curator",
+      "consumers": ["creative-director", "layout-composer", "artboard-builder", "mascot-animator", "post-critic", "story-verifier"],
+      "blocking": true,
+      "required_fields": ["name", "kind", "source_type", "source_ref", "render_disposition", "identity_locked", "status"]
+    },
     "build/creative-concepts.json": {
       "producer": "creative-director",
-      "consumers": ["story-architect", "copy-compressor", "layout-composer", "motion-director"],
+      "consumers": ["story-architect", "type-curator", "copy-compressor", "layout-composer", "motion-director"],
       "blocking": true,
-      "required_fields": ["concept_name", "visual_hook", "copy_hook", "aha_mechanic", "story_shape", "recommended_visual_style", "recommended_story_archetype", "recommended_motion_behavior", "evidence_dependencies", "risk_notes", "why_it_earns_attention"]
+      "required_fields": ["concept_name", "visual_hook", "copy_hook", "aha_mechanic", "story_shape", "recommended_visual_style", "recommended_story_archetype", "recommended_motion_behavior", "evidence_dependencies", "risk_notes", "why_it_earns_attention", "relationship", "dominant_visual_anchor", "containment_strategy", "negative_space_strategy"]
     },
-    "build/story-brief.json": {"producer": "story-architect", "consumers": ["palette-curator", "copy-compressor", "layout-composer", "artboard-builder", "motion-director", "motion-engineer", "story-verifier"], "blocking": true},
-    "build/palette-check.json": {"producer": "palette-curator", "consumers": ["layout-composer", "artboard-builder"], "blocking": true},
+    "build/story-brief.json": {"producer": "story-architect", "consumers": ["palette-curator", "type-curator", "copy-compressor", "layout-composer", "artboard-builder", "motion-director", "motion-engineer", "story-verifier"], "blocking": true},
+    "build/palette-check.json": {"producer": "palette-curator", "consumers": ["type-curator", "layout-composer", "artboard-builder"], "blocking": true},
+    "build/type-spec.json": {
+      "producer": "type-curator",
+      "consumers": ["copy-compressor", "layout-composer", "artboard-builder", "post-critic", "story-verifier"],
+      "blocking": true,
+      "required_fields": ["direction_name", "headline_family", "body_family", "loading_strategy", "fallbacks", "pairing_reason", "story_fit", "render_safety", "status"]
+    },
     "build/artboard-copy.json": {"producer": "copy-compressor", "consumers": ["layout-composer", "artboard-builder"], "blocking": true},
     "build/layout-spec.json": {"producer": "layout-composer", "consumers": ["artboard-builder", "motion-director", "mascot-animator", "post-critic"], "blocking": true},
     "build/caption.md": {"producer": "caption-writer", "consumers": ["artboard-builder", "post-critic", "story-verifier"], "blocking": false},
