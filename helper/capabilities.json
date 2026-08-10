@@ -47,7 +47,6 @@
     "typography-direction": {
       "purpose": "Choose and preserve an intentional render-safe type system that fits story shape, density, language, and reference DNA.",
       "owners": ["type-curator", "layout-composer", "artboard-builder", "post-critic", "story-verifier"],
-      "local_native": true,
       "research_gates": ["design-dials", "reference-dna"],
       "local_defaults": {
         "loading_strategies": ["system", "embedded", "local-file"],
@@ -67,7 +66,6 @@
     "visual-asset-sourcing": {
       "purpose": "Resolve named AI and tool identities from exact user-supplied assets or Lobe, lock provenance, and prevent generated official lookalikes.",
       "owners": ["asset-curator", "layout-composer", "artboard-builder", "mascot-animator", "post-critic", "story-verifier"],
-      "local_native": true,
       "research_gates": ["evidence-traceability"],
       "local_defaults": {
         "identity_precedence": ["user-official", "lobe", "hold"],
