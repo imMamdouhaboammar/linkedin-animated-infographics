@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
   "plugin_name": "linkedin-animated-infographics",
-  "plugin_version": "3.2.2",
+  "plugin_version": "3.3.0",
   "surfaces": ["codex", "chatgpt"],
   "manifests": {
     "openai": ".codex-plugin/plugin.json",
@@ -33,7 +33,9 @@
     "artifacts": "helper/artifacts.json",
     "modules": "helper/modules.json",
     "research_gates": "research/capability-notes/gates.json",
-    "worker_graph": "architecture/plugin-graph.json"
+    "worker_graph": "architecture/plugin-graph.json",
+    "identity_policy": "skills/info-stories/references/asset-source-policy.md",
+    "typography_policy": "skills/info-stories/references/typography-direction.md"
   },
   "repo_development": {
     "codex_guide": ".codex/AGENTS.md",
@@ -57,8 +59,12 @@
     "sandbox-artifact-persistence-when-available",
     "workspace-agents-optional-not-auto-installed",
     "evidence-integrity",
+    "verified-identity-source-before-concept",
+    "lobe-first-supported-ai-tool-identities",
+    "intentional-render-safe-typography",
+    "clean-creative-structure",
     "still-before-motion",
     "bounded-visual-repair",
-    "exact-svg-mascot-rule"
+    "verified-svg-mascot-rule"
   ]
 }
