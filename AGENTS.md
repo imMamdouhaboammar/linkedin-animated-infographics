@@ -16,6 +16,8 @@ Machine-readable authority:
 - `research/capability-notes/gates.json`: adopted research-derived runtime gates
 - `architecture/plugin-graph.json`: executable worker order and skill preloads
 - `scripts/info_stories.py::load_catalog()`: merged Info-stories registry
+- `skills/info-stories/references/asset-source-policy.md`: Lobe-first verified identity policy
+- `skills/info-stories/references/typography-direction.md`: intentional typography policy
 - `compatibility/codex.json`: OpenAI package/parity declaration
 
 Run the strict runtime and host-package validators after structural changes:
@@ -32,9 +34,11 @@ python3 scripts/validate_codex_plugin.py
 
 The complete path is:
 
-`design-study -> evidence-checker -> creative-director -> story-architect -> palette-curator -> copy-compressor -> layout-composer -> caption-writer -> artboard-builder -> motion-director -> optional mascot-animator -> motion-engineer -> render-qa -> post-critic -> story-verifier`
+`design-study -> evidence-checker -> asset-curator -> creative-director -> story-architect -> palette-curator -> type-curator -> copy-compressor -> layout-composer -> caption-writer -> artboard-builder -> motion-director -> optional mascot-animator -> motion-engineer -> render-qa -> post-critic -> story-verifier`
 
-`creative-director` must generate evidence-safe concept directions before story architecture. Attention-bearing design copy follows `hooked-design-copy`, and a complete concept should produce a useful `creative-payoff` rather than decorative spectacle.
+`asset-curator` owns verified identity sourcing. `creative-director` owns concept structure. `type-curator` owns intentional typography before copy fitting. Downstream workers preserve `build/asset-plan.json` and `build/type-spec.json` rather than selecting replacements.
+
+Attention-bearing design copy follows `hooked-design-copy`, and a complete concept should produce a useful `creative-payoff` with `clean-creative-structure` rather than decorative spectacle.
 
 After verified delivery, `share-demo` may run only with explicit user consent. Community publishing ends at an open contributor PR and requires maintainer manual review and merge.
 
@@ -42,8 +46,10 @@ After verified delivery, `share-demo` may run only with explicit user consent. C
 
 - Palette default: `creative-attractive-restrained`
 - Composition default: `center-first`
+- Identity default: Lobe-first after an exact user-supplied official asset. Supported named AI/tool identities resolve through Lobe; missing verified identity assets HOLD instead of being approximated
+- Typography default: intentional typography. User-specified or supplied render-safe fonts win; otherwise use a curated deterministic system direction. Remote font loading during capture is forbidden
+- Creative structure: one dominant visual anchor, explicit relationship, deliberate containment, and deliberate negative space. Repeated cards are used when repetition is the story
 - Alignment exceptions are valid for tables, UI mockups, code/terminal surfaces, timelines, Arabic/RTL flow, or documented reference DNA when they improve comprehension/fidelity
-- Named or official mascots require the **exact SVG** supplied by the user/task. No automatic redraw, substitute, or lookalike
 - UI mockups that look real must be evidence-backed; conceptual UI must be identifiable when readers could mistake it for product proof
 
 ## Host packaging
@@ -91,4 +97,4 @@ python3 scripts/validate_codex_plugin.py
 
 ## Safety
 
-Never commit credentials, private MCP data, or user secrets. Do not fabricate claims, metrics, logos, UI states, testimonials, product behavior, or evidence to satisfy a visual slot. Report browser/render environment blockers separately from non-browser validation. Do not claim OpenAI public-directory publication until the external submission, review, and publication steps have actually completed.
+Never commit credentials, private MCP data, or user secrets. Do not fabricate claims, metrics, logos, UI states, testimonials, product behavior, or identity assets to satisfy a visual slot. Report browser/render environment blockers separately from non-browser validation. Do not claim OpenAI public-directory publication until the external submission, review, and publication steps have actually completed.
