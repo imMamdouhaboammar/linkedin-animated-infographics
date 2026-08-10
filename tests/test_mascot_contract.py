@@ -18,7 +18,7 @@ def load_module():
 
 
 class MascotContractTests(unittest.TestCase):
-    def test_named_mascot_requires_exact_user_svg(self):
+    def test_named_mascot_requires_verified_exact_svg(self):
         module = load_module()
         self.assertIsNotNone(module, "missing scripts/mascot_contract.py")
         request = {"requested_name": "Official Brand Mascot", "source": "missing", "svg_path": None}
@@ -31,6 +31,20 @@ class MascotContractTests(unittest.TestCase):
             svg = Path(tmp) / "official.svg"
             svg.write_text('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><path d="M0 0h10v10H0z"/></svg>')
             request = {"requested_name": "Official Brand Mascot", "source": "user-supplied", "svg_path": str(svg), "allow_substitute": False}
+            self.assertEqual([], module.validate_mascot_request(request))
+
+    def test_verified_lobe_svg_passes_identity_gate(self):
+        module = load_module()
+        with tempfile.TemporaryDirectory() as tmp:
+            svg = Path(tmp) / "claude.svg"
+            svg.write_text('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><path d="M0 0h10v10H0z"/></svg>')
+            request = {
+                "requested_name": "Claude",
+                "source": "lobe",
+                "source_ref": "@lobehub/icons-static-svg@1.91.0:claude.svg",
+                "svg_path": str(svg),
+                "allow_substitute": False,
+            }
             self.assertEqual([], module.validate_mascot_request(request))
 
     def test_substitution_is_rejected(self):
@@ -49,14 +63,14 @@ class MascotContractTests(unittest.TestCase):
             for key in ("purpose", "communication_job", "allowed_parts", "loop_behavior", "motion_budget"):
                 self.assertTrue(item.get(key), f"{item['slug']} missing {key}")
 
-    def test_workflow_routes_exact_svg_through_mascot_animator(self):
+    def test_workflow_routes_verified_identity_through_mascot_animator(self):
         text = (ROOT / "skills" / "new-post" / "SKILL.md").read_text()
-        self.assertIn("exact SVG", text)
+        self.assertIn("verified identity", text.lower())
         self.assertIn("mascot-animator", text)
         self.assertLess(text.index("artboard-builder"), text.index("mascot-animator"))
         self.assertLess(text.index("mascot-animator"), text.index("motion-engineer"))
 
-    def test_direct_skill_tells_main_model_to_request_svg(self):
+    def test_direct_skill_preserves_user_svg_fallback(self):
         text = (ROOT / "skills" / "svg-mascot-animator" / "SKILL.md").read_text().lower()
         self.assertIn("ask the user to upload the exact svg", text)
         self.assertIn("hold: exact svg required", text)
@@ -64,10 +78,11 @@ class MascotContractTests(unittest.TestCase):
     def test_mascot_agent_preloads_both_mascot_skills(self):
         path = ROOT / "agents" / "mascot-animator.md"
         self.assertTrue(path.exists())
-        text = path.read_text()
+        text = path.read_text().lower()
         self.assertIn("  - svg-mascot-animator", text)
         self.assertIn("  - mascots", text)
-        self.assertIn("exact user-supplied SVG", text)
+        self.assertIn("verified identity", text)
+        self.assertIn("lobe", text)
 
 
 if __name__ == "__main__":
