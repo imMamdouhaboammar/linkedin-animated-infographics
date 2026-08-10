@@ -15,7 +15,12 @@ The authoritative machine-readable files are:
 - `helper/modules.json`
 - `research/capability-notes/gates.json`
 - `architecture/plugin-graph.json`
-- merged Info-stories registry from `scripts/info_stories.py::load_catalog()`
+- merged Info-stories registry from `scripts.info_stories.py::load_catalog()`
+
+Supporting source contracts:
+
+- `skills/info-stories/references/asset-source-policy.md`: Lobe-first verified identity behavior
+- `skills/info-stories/references/typography-direction.md`: intentional typography behavior
 
 Run:
 
@@ -31,18 +36,20 @@ Subagents do not orchestrate peer subagents. The main/parent workflow owns seque
 
 For complete post creation, use `new-post` and follow the graph:
 
-`design-study -> evidence-checker -> creative-director -> story-architect -> palette-curator -> copy-compressor -> layout-composer -> caption-writer -> artboard-builder -> motion-director -> optional mascot-animator -> motion-engineer -> render-qa -> post-critic -> story-verifier`
+`design-study -> evidence-checker -> asset-curator -> creative-director -> story-architect -> palette-curator -> type-curator -> copy-compressor -> layout-composer -> caption-writer -> artboard-builder -> motion-director -> optional mascot-animator -> motion-engineer -> render-qa -> post-critic -> story-verifier`
 
 Required skill knowledge is preloaded through each agent's `skills:` frontmatter.
 
 ## Creative behavior
 
-- `creative-director` runs before story architecture and produces multiple evidence-safe concept directions
+- `asset-curator` applies Lobe-first verified identity sourcing after exact user-supplied official assets. Supported named AI/tool identities use Lobe; unresolved named identities HOLD rather than becoming lookalikes
+- `creative-director` runs after verified assets and before story architecture, producing multiple evidence-safe directions with explicit relationship, anchor, containment, negative space, and motion job
 - hero/design copy must satisfy `hooked-design-copy`, not merely report the topic
-- complete concepts should create a useful `creative-payoff` or documented reason to remain intentionally simple
+- complete concepts should create a useful `creative-payoff` and pass `clean-creative-structure`
 - palette default is `creative-attractive-restrained`
+- `type-curator` applies intentional typography before copy fitting. Explicit/supplied render-safe fonts win; remote font loading during capture is forbidden
 - composition default is `center-first` with evidence/comprehension-driven exceptions only
-- named/official mascot requests require the **exact SVG**; ask for it when missing and do not substitute a lookalike
+- a verified identity may come from an exact user/task SVG or an approved Lobe asset; downstream workers preserve the exact local SVG rather than substituting it
 
 ## Research behavior
 

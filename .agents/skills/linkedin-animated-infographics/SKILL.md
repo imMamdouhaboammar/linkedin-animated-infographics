@@ -18,6 +18,8 @@ Use this skill when modifying this repository. Start with `helper/GUIDE.md`; do 
 - `architecture/plugin-graph.json`: shipping sequence and required skill preloads
 - the merged registry returned by `scripts/info_stories.py::load_catalog()`: complete Info-stories authority
 
+Detailed visual-source and type behavior lives in `skills/info-stories/references/asset-source-policy.md` and `skills/info-stories/references/typography-direction.md`.
+
 The merged registry returned by `scripts/info_stories.py::load_catalog()` combines `skills/info-stories/catalog.json` with `skills/info-stories/extensions/*.json`. `catalog.json` alone is not the complete authority.
 
 ## Actual stack
@@ -37,9 +39,11 @@ There is no TypeScript application layer in the current repository.
 
 Shipping order:
 
-`design-study -> evidence-checker -> creative-director -> story-architect -> palette-curator -> copy-compressor -> layout-composer -> caption-writer -> artboard-builder -> motion-director -> optional mascot-animator -> motion-engineer -> render-qa -> post-critic -> story-verifier`
+`design-study -> evidence-checker -> asset-curator -> creative-director -> story-architect -> palette-curator -> type-curator -> copy-compressor -> layout-composer -> caption-writer -> artboard-builder -> motion-director -> optional mascot-animator -> motion-engineer -> render-qa -> post-critic -> story-verifier`
 
-`creative-director` owns early concept generation. Apply `hooked-design-copy`, `creative-payoff`, `creative-attractive-restrained`, and `center-first` as declared in helper contracts. Named official mascots require the exact SVG.
+`asset-curator` applies Lobe-first verified identity sourcing after exact user assets. `creative-director` applies `hooked-design-copy`, `creative-payoff`, and `clean-creative-structure`. `type-curator` applies intentional typography before copy fitting. Palette remains `creative-attractive-restrained` and composition remains `center-first` unless a documented exception improves comprehension.
+
+A named verified identity must come from the approved asset plan. Supported AI/tool identities may resolve from Lobe; unresolved identities HOLD. Downstream workers do not invent substitutes.
 
 ## Research
 
@@ -62,4 +66,4 @@ python3 scripts/validate_marketplace.py
 
 Use `scripts/ecosystem_doctor.py` as the strict reality gate. A declared module must exist, be reachable, have tests, and remain linked to the live architecture.
 
-Never fabricate factual content or product/UI proof to satisfy a template. Never commit credentials or private MCP configuration.
+Never fabricate factual content, product/UI proof, official identity assets, or typography provenance to satisfy a template. Never commit credentials or private MCP configuration.

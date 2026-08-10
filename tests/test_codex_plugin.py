@@ -21,6 +21,7 @@ EXPECTED_CODEX_AGENTS = {
     "reviewer": "read-only",
     "docs_researcher": "read-only",
 }
+EXPECTED_VERSION = "3.2.2"
 
 
 def load_validator():
@@ -62,7 +63,7 @@ class CodexPluginPackagingTests(unittest.TestCase):
         self.assertTrue(CODEX_PLUGIN.exists(), "missing .codex-plugin/plugin.json")
         data = json.loads(CODEX_PLUGIN.read_text())
         self.assertEqual("linkedin-animated-infographics", data["name"])
-        self.assertEqual("3.2.2", data["version"])
+        self.assertEqual(EXPECTED_VERSION, data["version"])
         self.assertEqual("./openai-skills/", data["skills"])
         self.assertTrue(OPENAI_SKILL.is_dir())
         self.assertEqual("Mamdouh Aboammar", data["author"]["name"])
@@ -125,6 +126,9 @@ class CodexPluginPackagingTests(unittest.TestCase):
             "decorative-motion",
             "feed-scale-legibility",
             "Maximum two targeted repair attempts",
+            "unverified-identity-asset",
+            "remote-font-dependency",
+            "generic-card-first-structure",
         ):
             self.assertIn(marker, text)
         skill = (OPENAI_SKILL / "SKILL.md").read_text()
@@ -147,7 +151,7 @@ class CodexPluginPackagingTests(unittest.TestCase):
         codex = json.loads(CODEX_PLUGIN.read_text())
         claude = json.loads(CLAUDE_PLUGIN.read_text())
         self.assertEqual(claude["name"], codex["name"])
-        self.assertEqual("3.2.2", claude["version"])
+        self.assertEqual(EXPECTED_VERSION, claude["version"])
         self.assertTrue(CLAUDE_AGENT.is_file())
         text = CLAUDE_AGENT.read_text()
         self.assertIn("model: opus", text)
@@ -164,7 +168,7 @@ class CodexPluginParityTests(unittest.TestCase):
     def test_compatibility_registry_declares_host_specific_distributions(self):
         self.assertTrue(COMPATIBILITY.exists(), "missing compatibility/codex.json")
         data = json.loads(COMPATIBILITY.read_text())
-        self.assertEqual("3.2.2", data["plugin_version"])
+        self.assertEqual(EXPECTED_VERSION, data["plugin_version"])
         self.assertEqual("skills", data["canonical"]["skills_root"])
         self.assertEqual("skills", data["distributions"]["claude"]["skills_root"])
         self.assertEqual("openai-skills", data["distributions"]["openai"]["skills_root"])
@@ -176,6 +180,8 @@ class CodexPluginParityTests(unittest.TestCase):
         self.assertEqual("openai-skills", data["public_submission"]["skills_root"])
         self.assertIn("codex", data["surfaces"])
         self.assertIn("chatgpt", data["surfaces"])
+        self.assertIn("verified-identity-source-before-concept", data["parity_invariants"])
+        self.assertIn("intentional-render-safe-typography", data["parity_invariants"])
 
     def test_validator_reports_clean_repository(self):
         module = self.require_validator()

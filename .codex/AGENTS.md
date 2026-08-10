@@ -17,6 +17,8 @@ Before changing routing, skills, agents, tools, research, packaging, or distribu
 - `research/capability-notes/gates.json`
 - `architecture/plugin-graph.json`
 - `compatibility/codex.json`
+- `skills/info-stories/references/asset-source-policy.md`
+- `skills/info-stories/references/typography-direction.md`
 
 Use the merged Info-stories registry from `scripts/info_stories.py::load_catalog()` rather than treating `catalog.json` alone as the source of truth.
 
@@ -35,7 +37,11 @@ Public OpenAI submission materials live under `submission/`. They prepare the pa
 
 `new-post` remains the canonical repository production parent workflow. Subtasks return bounded artifacts to it; no worker coordinates peer workers through hidden delegation.
 
-The complete path includes `evidence-checker` before `creative-director`. Evidence must be finalized before creative concepting. The creative worker then supplies evidence-safe concepts, copy/visual hooks, and a useful aha mechanic before downstream story/layout/motion decisions.
+The shipping order is:
+
+`design-study -> evidence-checker -> asset-curator -> creative-director -> story-architect -> palette-curator -> type-curator -> copy-compressor -> layout-composer -> caption-writer -> artboard-builder -> motion-director -> optional mascot-animator -> motion-engineer -> render-qa -> post-critic -> story-verifier`
+
+Evidence is finalized before verified identity sourcing. `asset-curator` then creates `build/asset-plan.json`. `creative-director` concepting follows. `type-curator` creates `build/type-spec.json` before copy fitting. Downstream workers preserve both artifacts.
 
 After final verification and delivery, `new-post` may offer community sharing. `share-demo` runs only after explicit user consent, validates the public package, and delegates GitHub contribution mechanics to `community-publisher`. Community publication stops at an open PR for maintainer manual review and merge.
 
@@ -43,9 +49,13 @@ Plugin-local defaults:
 
 - `hooked-design-copy`
 - `creative-payoff`
+- `clean-creative-structure`
 - `creative-attractive-restrained`
 - `center-first`
-- exact SVG required for a named/official mascot
+- Lobe-first verified identity sourcing after exact user-supplied official assets
+- intentional typography with no render-time remote font dependency
+
+A named verified identity may come from an exact user/task asset or an approved Lobe source. Missing verified identities HOLD instead of becoming generated substitutes.
 
 Research-derived gates remain active through `research/capability-notes/gates.json`.
 
@@ -71,28 +81,18 @@ Canonical product-worker adapters are allowed only when they obey all of these r
 - the mapped canonical worker contract owns inputs, required skill preloads, gates, HOLD conditions, output artifacts, and handoff semantics
 - the adapter executes only a bounded task from the parent and returns to the parent
 - the adapter must not create a parallel product orchestration model
-- the adapter cannot weaken evidence, visual, identity, verification, or publishing gates
+- the adapter cannot weaken evidence, visual, verified identity, typography, verification, or publishing gates
 - write-capable adapters may write only canonical or explicitly assigned task-workspace artifacts
 
-Current product adapters map to the canonical repository workers:
+Current product adapters map to the canonical repository workers where configured. `tool_runner` may perform bounded execution for a canonical worker contract supplied by the parent.
 
-- `creative_director` -> `agents/creative-director.md`
-- `evidence_researcher` -> `agents/evidence-checker.md`
-- `copy_director` -> `agents/copy-compressor.md`
-- `layout_composer` -> `agents/layout-composer.md`
-- `still_critic` -> `agents/post-critic.md`
-- `motion_director` -> `agents/motion-director.md`
-- `render_qa` -> `agents/render-qa.md`
-- `final_verifier` -> `agents/story-verifier.md`
-- `tool_runner` -> bounded execution for a canonical worker contract supplied by the parent
-
-Codex may parallelize independent tasks only after their dependencies are satisfied. Evidence is a prerequisite for creative concepting. Sequential execution remains a valid fallback when delegation is unavailable or unnecessary.
+Codex may parallelize independent tasks only after their dependencies are satisfied. Evidence precedes asset resolution, verified assets precede creative concepting, and typography precedes copy fitting. Sequential execution remains a valid fallback when delegation is unavailable or unnecessary.
 
 ## Public OpenAI runtime boundary
 
-The installed skills-only package does not depend on these project-scoped Codex adapters.
+The installed skills-only package does not depend on project-scoped Codex adapters.
 
-`openai-skills/linkedin-infographic-autopilot/` negotiates the capabilities actually exposed in the current host. If real delegation is observed it may use real side jobs. If not, it runs the same bounded contracts sequentially. It never claims project-scoped Codex agents exist in an installed ChatGPT/Codex plugin session unless they are actually exposed there.
+`openai-skills/linkedin-infographic-studio/` carries the matching asset-source, typography, creative-structure, visual QA, and final-verification contracts for ChatGPT/Codex hosts that do not expose the Claude worker graph.
 
 ## Strict validation
 
@@ -116,4 +116,4 @@ python3 scripts/validate_codex_plugin.py
 - Generic/coding-agent conventions: `.agents/skills/linkedin-animated-infographics/SKILL.md`
 - Claude-facing companion: `.claude/skills/linkedin-animated-infographics/SKILL.md`
 
-Keep user credentials and private MCP configuration outside the repository. Do not fabricate claims, UI behavior, proof, or mascot assets to satisfy a build. Do not publish a community demo without explicit user consent and export validation.
+Keep user credentials and private MCP configuration outside the repository. Do not fabricate claims, UI behavior, proof, identity assets, or typography provenance to satisfy a build. Do not publish a community demo without explicit user consent and export validation.

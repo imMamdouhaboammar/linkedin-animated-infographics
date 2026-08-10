@@ -14,23 +14,42 @@ Output:
 
 Block creative claims that require unavailable evidence.
 
-## 2. Creative director
+## 2. Asset curator
 
-Input: evidence inventory, audience, desired output mode, optional reference diagnosis.
+Input: evidence inventory, exact user-supplied assets, and named AI/tool identities required by the brief.
 
-Output: at least three meaningfully different creative directions. Each direction must include:
+Read `asset-source-policy.md`.
+
+Output a verified identity asset plan. Apply this precedence:
+- exact user-supplied official asset
+- Lobe for supported named AI/tool identities after reading `https://lobehub.com/icons/skill.md`
+- HOLD when no verified source exists
+
+Record exact provenance and require local/embedded render disposition. Never generate an official lookalike.
+
+## 3. Creative director
+
+Input: evidence inventory, approved asset plan, audience, desired output mode, optional reference diagnosis.
+
+Output at least three meaningfully different creative directions. Each direction must include:
 - visual hook
 - copy hook
 - useful reveal or relationship
 - story shape
+- relationship being visualized
+- dominant visual anchor
 - recommended visual archetype
-- motion behavior if relevant
+- containment strategy
+- negative-space strategy
+- motion behavior and its story job when animated
 - evidence dependencies
 - risk notes
 
+Apply clean creative structure. Include an editorial low-containment option when the story permits it. Include a diagrammatic or relationship-led option when a real relationship exists. Repeated cards are valid only when repetition is the story.
+
 Reject three directions that are only palette changes of the same layout.
 
-## 3. Story architect
+## 4. Story architect
 
 Input: selected direction and evidence.
 
@@ -40,11 +59,14 @@ Output:
 - opening state
 - reveal or comparison logic
 - closing takeaway
-- visual anchor
+- dominant visual anchor
+- containment and negative-space requirements
 - density target
 - intended emotional tone without exaggerated marketing language
 
-## 4. Palette curator
+Preserve the selected concept's clean structural relationship rather than converting it into generic cards.
+
+## 5. Palette curator
 
 Input: story architecture and brand constraints.
 
@@ -58,15 +80,35 @@ Output:
 
 Use a distinctive but restrained palette. Do not use multiple decorative accents to create interest.
 
-## 5. Copy compressor
+## 6. Type curator
 
-Input: evidence and story architecture.
+Input: story architecture, palette, optional reference diagnosis, language, and explicit user font requirements.
 
-Output copy by slot, not as a paragraph dump. Prioritize one idea per zone. Remove repeated explanation. Preserve mechanism, evidence, and useful specificity.
+Read `typography-direction.md`.
 
-## 6. Layout composer
+Output:
+- direction name
+- headline family
+- body family
+- optional mono family
+- loading strategy
+- fallbacks
+- weights and minimum feed sizes
+- pairing reason
+- story fit
+- render safety
 
-Input: story architecture, copy slots, palette.
+Use user-specified type when render-safe, then supplied/local assets, then a curated deterministic system direction. Remote @import and render-time network font requests fail.
+
+## 7. Copy compressor
+
+Input: evidence, selected direction, story architecture, and approved type spec.
+
+Output copy by slot, not as a paragraph dump. Prioritize one idea per zone. Remove repeated explanation. Preserve mechanism, evidence, useful specificity, and the minimum feed sizes implied by the type spec.
+
+## 8. Layout composer
+
+Input: story architecture, asset plan, type spec, copy slots, and palette.
 
 Output an explicit macro-layout specification before HTML or styling details:
 - canvas: 1080x1350
@@ -77,30 +119,32 @@ Output an explicit macro-layout specification before HTML or styling details:
 - takeaway zone
 - footer zone
 - zone bounding boxes or proportional heights
+- verified identity asset placements
+- exact type roles
 - alignment choice and reason
 - structural fingerprint
+- containment strategy
+- negative-space strategy
 - expected vertical occupancy
 - maximum containment depth
 
-Do not solve layout by immediately creating cards around every text block.
+Do not solve layout by immediately creating cards around every text block. Preserve the selected clean structure.
 
-## 7. Still builder
+## 9. Still builder
 
-Input: approved layout specification and copy.
+Input: approved layout specification, asset plan, type spec, and copy.
 
-Output a complete still-capable HTML artboard. Build macro zones first, then typography, visual relationship, details, and attribution.
+Output a complete still-capable HTML artboard. Build macro zones first, then typography, verified assets, visual relationship, details, and attribution.
 
-The still must communicate the useful idea with animation disabled.
+The still must communicate the useful idea with animation disabled. Final identity assets and fonts must be local, embedded, or system-safe rather than network-dependent.
 
-## 8. Still critic
+## 10. Still critic
 
-Input: rendered or directly inspected still.
+Input: rendered or directly inspected still plus asset/type specs.
 
-Output the top three visual defects, their severity, and exact repair actions. Apply every blocking rule in `visual-quality-contract.md`.
+Output the top three visual defects, their severity, and exact repair actions. Apply every blocking rule in `visual-quality-contract.md`, including identity provenance, typography, clean structure, balance, rhythm, visual anchor, content distribution, and generic visual patterns.
 
-Do not pass a still because its text is technically readable. Balance, rhythm, visual anchor, content distribution, and generic visual patterns are first-class acceptance criteria.
-
-## 9. Motion director
+## 11. Motion director
 
 Input: passing still and story architecture.
 
@@ -110,13 +154,13 @@ Output a motion plan that states what each motion explains. Every animation must
 - where did this item travel?
 - which state is active?
 
-## 10. Motion implementer
+## 12. Motion implementer
 
 Input: passing still and motion plan.
 
-Output deterministic motion that preserves the approved layout. Do not redesign the composition while animating it.
+Output deterministic motion that preserves the approved layout, identity assets, and typography. Do not redesign the composition while animating it.
 
-## 11. Render QA
+## 13. Render QA
 
 Input: animated or static artifact.
 
@@ -125,18 +169,20 @@ Output:
 - clipping/overflow verdict
 - footer clearance
 - feed-scale legibility
+- identity-asset load verdict
+- font-load verdict
 - animation seam verdict
 - motion pacing verdict
 - reduced-motion or static fallback notes when relevant
 
-## 12. Adversarial visual critic
+## 14. Adversarial visual critic
 
-Input: final render.
+Input: final render plus evidence, asset plan, and type spec.
 
-Re-run the visual failure taxonomy. Assume the first version contains defects and actively look for them.
+Re-run the visual failure taxonomy and explicitly check clean structure, identity provenance, and typography. Assume the first version contains defects and actively look for them.
 
-## 13. Final verifier
+## 15. Final verifier
 
-Input: evidence inventory, final artifact, still critic report, render QA, final visual critique.
+Input: evidence inventory, asset plan, type spec, final artifact, still critic report, render QA, and final visual critique.
 
-Output `PASS`, `FAIL:fixable`, or `HOLD` with a specific reason. Do not return PASS when any blocking visual or evidence gate remains unresolved.
+Output `PASS`, `FAIL:fixable`, or `HOLD` with a specific reason. Do not return PASS when any blocking visual, evidence, identity, typography, or render-safety gate remains unresolved.

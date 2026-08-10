@@ -15,6 +15,13 @@
       "applies_to_intents": ["create-post", "info-story"],
       "behavior": "A complete concept must contain at least one useful visual payoff or aha mechanism such as a reveal, relationship, comparison, transformation, state change, or interaction that improves understanding or memory. This is not spectacle and does not justify decorative 3D, glow, extreme saturation, excessive motion, or novelty without a story job."
     },
+    "clean-creative-structure": {
+      "stage": "concept-story-layout-and-final-review",
+      "severity": "blocking",
+      "owners": ["creative-director", "story-architect", "layout-composer", "post-critic"],
+      "applies_to_intents": ["create-post", "info-story", "qa"],
+      "behavior": "Concepts must create real structural variation around one dominant anchor and a useful relationship. Every direction records its archetype, containment strategy, negative-space strategy, and motion job. Reject generic headline-plus-cards layouts when repetition is not the story, palette-only reskins, decorative spectacle, and density solved by shrinking text."
+    },
     "restrained-palette": {
       "stage": "palette-artboard-and-final-review",
       "severity": "blocking",
@@ -28,6 +35,20 @@
       "owners": ["layout-composer", "artboard-builder", "post-critic"],
       "applies_to_intents": ["create-post", "info-story", "qa"],
       "behavior": "Use center-first composition for the primary visual anchor and major story zones. A non-centered alignment is valid only when the layout artifact records a comprehension or fidelity reason such as tables, UI mockups, code or terminal surfaces, timelines, Arabic RTL flow, or documented reference DNA."
+    },
+    "verified-identity-assets": {
+      "stage": "asset-layout-artboard-mascot-and-final-review",
+      "severity": "blocking",
+      "owners": ["asset-curator", "layout-composer", "artboard-builder", "mascot-animator", "post-critic", "story-verifier"],
+      "applies_to_intents": ["create-post", "info-story", "qa", "mascot-animation"],
+      "behavior": "Named AI/tool identities use exact user-supplied official assets first, then verified Lobe assets when covered. Missing verified named identities HOLD instead of being redrawn or approximated. Final render references must be local or embedded, and downstream workers must preserve the identity-locked source."
+    },
+    "intentional-typography": {
+      "stage": "type-copy-layout-artboard-and-final-review",
+      "severity": "blocking",
+      "owners": ["type-curator", "layout-composer", "artboard-builder", "post-critic", "story-verifier"],
+      "applies_to_intents": ["create-post", "info-story", "qa"],
+      "behavior": "Choose typography by story shape, density, language, reference DNA, and hierarchy. User-specified or supplied fonts take precedence. Loading must be system, embedded, or local-file; remote font imports or render-time network requests fail. Downstream workers preserve the approved type roles and fallbacks."
     }
   }
 }

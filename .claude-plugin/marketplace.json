@@ -13,7 +13,7 @@
       "source": "./",
       "strict": true,
       "version": "3.2.2",
-      "description": "Create LinkedIn Info-stories with creative concepting, research gates, exact-SVG mascots, UI stories, strict QA, and opt-in community demo publishing.",
+      "description": "Create LinkedIn Info-stories with verified identity sourcing, intentional typography, clean creative concepting, research gates, UI stories, strict QA, and opt-in community demo publishing.",
       "author": {
         "name": "Mamdouh Aboammar",
         "url": "https://github.com/imMamdouhaboammar"
@@ -22,7 +22,7 @@
       "repository": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics",
       "license": "MIT",
       "category": "design",
-      "tags": ["linkedin", "infographic", "animation", "creative-direction", "info-stories", "research-gates", "community-demos", "svg", "mascot", "ui-mockup"]
+      "tags": ["linkedin", "infographic", "animation", "creative-direction", "info-stories", "research-gates", "community-demos", "svg", "mascot", "ui-mockup", "lobe-icons", "typography"]
     }
   ]
 }

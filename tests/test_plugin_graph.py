@@ -38,21 +38,27 @@ class PluginGraphTests(unittest.TestCase):
         graph = json.loads(GRAPH.read_text())
         sequence = graph["workflows"]["new-post"]["sequence"]
         required = {
-            "creative-director", "story-architect", "palette-curator", "copy-compressor",
-            "layout-composer", "caption-writer", "artboard-builder", "render-qa",
-            "post-critic", "story-verifier",
+            "asset-curator", "creative-director", "story-architect", "palette-curator",
+            "type-curator", "copy-compressor", "layout-composer", "caption-writer",
+            "artboard-builder", "render-qa", "post-critic", "story-verifier",
         }
         self.assertTrue(required.issubset(sequence))
 
-    def test_creative_director_runs_between_evidence_and_story(self):
+    def test_asset_and_creative_order_is_explicit(self):
         sequence = json.loads(GRAPH.read_text())["workflows"]["new-post"]["sequence"]
-        self.assertLess(sequence.index("evidence-checker"), sequence.index("creative-director"))
+        self.assertLess(sequence.index("evidence-checker"), sequence.index("asset-curator"))
+        self.assertLess(sequence.index("asset-curator"), sequence.index("creative-director"))
         self.assertLess(sequence.index("creative-director"), sequence.index("story-architect"))
+
+    def test_type_direction_runs_before_copy(self):
+        sequence = json.loads(GRAPH.read_text())["workflows"]["new-post"]["sequence"]
+        self.assertLess(sequence.index("palette-curator"), sequence.index("type-curator"))
+        self.assertLess(sequence.index("type-curator"), sequence.index("copy-compressor"))
 
     def test_conditional_mascot_edge_is_explicit(self):
         edge = json.loads(GRAPH.read_text())["workflows"]["new-post"]["conditional"]["mascot"]
         self.assertEqual("mascot-animator", edge["agent"])
-        self.assertEqual("exact-svg", edge["asset_gate"])
+        self.assertEqual("verified-identity", edge["asset_gate"])
         self.assertEqual("artboard-builder", edge["after"])
         self.assertEqual("motion-engineer", edge["before"])
 
@@ -71,6 +77,7 @@ class PluginGraphTests(unittest.TestCase):
         expected = {
             "anti-slop", "creative-direction", "design-taste", "evidence", "hook-design-copy",
             "mascot-identity", "structural-fingerprint", "ui-mockup-fidelity", "verification-loop",
+            "visual-asset-sourcing", "typography-direction",
         }
         self.assertEqual(expected, set(graph["capabilities"]))
         workflow = graph["workflows"]["new-post"]
@@ -120,7 +127,7 @@ class PluginGraphTests(unittest.TestCase):
 
 class WorkerCoordinationTests(unittest.TestCase):
     def test_planning_workers_return_to_parent_orchestrator(self):
-        for name in ("creative-director", "story-architect", "layout-composer", "motion-director"):
+        for name in ("asset-curator", "creative-director", "story-architect", "type-curator", "layout-composer", "motion-director"):
             text = (ROOT / "agents" / f"{name}.md").read_text()
             self.assertIn("parent workflow", text.lower(), name)
             self.assertNotIn("Handoff the approved brief to", text, name)

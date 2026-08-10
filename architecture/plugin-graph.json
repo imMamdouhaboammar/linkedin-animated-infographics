@@ -5,9 +5,11 @@
       "sequence": [
         "design-study",
         "evidence-checker",
+        "asset-curator",
         "creative-director",
         "story-architect",
         "palette-curator",
+        "type-curator",
         "copy-compressor",
         "layout-composer",
         "caption-writer",
@@ -21,7 +23,7 @@
       "conditional": {
         "mascot": {
           "flag": "--mascot",
-          "asset_gate": "exact-svg",
+          "asset_gate": "verified-identity",
           "agent": "mascot-animator",
           "after": "artboard-builder",
           "before": "motion-engineer"
@@ -31,6 +33,7 @@
   },
   "agents": {
     "artboard-builder": {"required_skills": ["artboard", "info-stories"]},
+    "asset-curator": {"required_skills": ["info-stories"]},
     "caption-writer": {"required_skills": ["caption"]},
     "community-publisher": {"required_skills": ["share-demo"]},
     "copy-compressor": {"required_skills": ["info-stories", "caption"]},
@@ -45,7 +48,8 @@
     "post-critic": {"required_skills": ["info-stories", "caption", "render"]},
     "render-qa": {"required_skills": ["render"]},
     "story-architect": {"required_skills": ["info-stories"]},
-    "story-verifier": {"required_skills": ["info-stories", "render"]}
+    "story-verifier": {"required_skills": ["info-stories", "render"]},
+    "type-curator": {"required_skills": ["info-stories"]}
   },
   "capabilities": {
     "anti-slop": ["copy-compressor", "caption-writer", "post-critic"],
@@ -55,7 +59,9 @@
     "hook-design-copy": ["creative-director", "copy-compressor", "caption-writer", "post-critic"],
     "mascot-identity": ["mascot-animator", "post-critic", "story-verifier"],
     "structural-fingerprint": ["layout-composer", "artboard-builder", "post-critic"],
+    "typography-direction": ["type-curator", "layout-composer", "artboard-builder", "post-critic", "story-verifier"],
     "ui-mockup-fidelity": ["evidence-checker", "layout-composer", "artboard-builder", "post-critic"],
-    "verification-loop": ["render-qa", "post-critic", "story-verifier"]
+    "verification-loop": ["render-qa", "post-critic", "story-verifier"],
+    "visual-asset-sourcing": ["asset-curator", "layout-composer", "artboard-builder", "mascot-animator", "post-critic", "story-verifier"]
   }
 }

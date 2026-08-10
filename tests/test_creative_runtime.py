@@ -15,6 +15,9 @@ HOOK_DOC = ROOT / "skills" / "info-stories" / "references" / "hook-driven-design
 EXPECTED_QUALITY_GATES = {
     "hooked-design-copy",
     "creative-payoff",
+    "clean-creative-structure",
+    "verified-identity-assets",
+    "intentional-typography",
     "restrained-palette",
     "center-first-composition",
 }
@@ -51,11 +54,15 @@ class CreativeRuntimeTests(unittest.TestCase):
         self.assertIn("creative-director", route["agents"])
         self.assertIn("creative-direction", route["capabilities"])
         self.assertIn("hook-design-copy", route["capabilities"])
+        self.assertIn("visual-asset-sourcing", route["capabilities"])
+        self.assertIn("typography-direction", route["capabilities"])
 
     def test_info_story_route_keeps_creative_concepting_available(self):
         router = json.loads(ROUTER.read_text())
         route = router["routes"]["info-story"]
         self.assertIn("creative-director", route["agents"])
+        self.assertIn("asset-curator", route["agents"])
+        self.assertIn("type-curator", route["agents"])
         self.assertIn("creative-direction", route["capabilities"])
 
     def test_creative_capabilities_are_local_native_and_owned(self):
@@ -75,7 +82,8 @@ class CreativeRuntimeTests(unittest.TestCase):
             "concept_name", "visual_hook", "copy_hook", "aha_mechanic", "story_shape",
             "recommended_visual_style", "recommended_story_archetype",
             "recommended_motion_behavior", "evidence_dependencies", "risk_notes",
-            "why_it_earns_attention",
+            "why_it_earns_attention", "relationship", "dominant_visual_anchor",
+            "containment_strategy", "negative_space_strategy",
         ):
             self.assertIn(field, contract["required_fields"])
 
@@ -83,7 +91,7 @@ class CreativeRuntimeTests(unittest.TestCase):
         self.assertTrue(CREATIVE_AGENT.exists())
         text = CREATIVE_AGENT.read_text().lower()
         self.assertRegex(text, r"at least\s+three|minimum\s+three")
-        for needle in ("visual hook", "copy hook", "aha", "evidence", "parent workflow", "do not invent"):
+        for needle in ("visual hook", "copy hook", "aha", "evidence", "parent workflow", "do not invent", "clean-creative-structure"):
             self.assertIn(needle, text)
 
     def test_hook_driven_design_copy_reference_exists(self):

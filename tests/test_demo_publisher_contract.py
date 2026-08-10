@@ -80,16 +80,16 @@ class DemoPublisherContractTests(unittest.TestCase):
 
     def test_new_post_offers_sharing_only_after_verification_and_delivery(self):
         text = (ROOT / "skills" / "new-post" / "SKILL.md").read_text()
-        verify = text.index("### 15. Independent acceptance")
-        deliver = text.index("### 16. Deliver")
-        share = text.index("### 17. Share with the community")
+        verify = text.index("### 17. Independent acceptance")
+        deliver = text.index("### 18. Deliver")
+        share = text.index("### 19. Share with the community")
         self.assertLess(verify, deliver)
         self.assertLess(deliver, share)
         self.assertIn("only when the final verification verdict is `PASS`", text)
 
     def test_decline_or_no_answer_means_no_github_write(self):
         text = (ROOT / "skills" / "new-post" / "SKILL.md").read_text().lower()
-        share = text[text.index("### 17. share with the community"):]
+        share = text[text.index("### 19. share with the community"):]
         self.assertIn("declines", share)
         self.assertIn("no answer", share)
         self.assertIn("no github write", share)
