@@ -1,6 +1,6 @@
 ---
 name: new-post
-description: Run the complete evidence-to-delivery workflow for a static or animated LinkedIn infographic, including creative concepting, story architecture, production, critique, and independent verification.
+description: Run the complete evidence-to-delivery workflow for a static or animated LinkedIn infographic, including verified identity sourcing, creative concepting, typography direction, story architecture, production, critique, and independent verification.
 disable-model-invocation: true
 argument-hint: "[topic or URL] [optional: --arabic] [optional: --mascot]"
 ---
@@ -17,7 +17,7 @@ Read `helper/GUIDE.md` before execution. Treat `helper/router.json`, `helper/cap
 
 ## Use when
 
-Use this workflow when the user wants a complete new infographic or a substantial redesign that should proceed from source/evidence through concept, copy, artboard, optional motion, QA, and delivery.
+Use this workflow when the user wants a complete new infographic or a substantial redesign that should proceed from source/evidence through verified assets, concept, type, copy, artboard, optional motion, QA, and delivery.
 
 Use focused skills instead when the request is only a render, only QA, only mascot animation, only a design study, or only publishing an already verified demo.
 
@@ -29,7 +29,8 @@ Use focused skills instead when the request is only a render, only QA, only masc
 - language and static/animated output preference
 - optional visual references
 - optional brand/UI assets
-- exact SVG when a named or official mascot is requested
+- optional exact official identity assets or named AI/tool identities that may resolve through Lobe
+- explicit typography requirements when present
 
 ## Outputs
 
@@ -37,9 +38,11 @@ The parent workflow may produce:
 
 - `build/design-study.json`
 - `build/evidence.json`
+- `build/asset-plan.json`
 - `build/creative-concepts.json`
 - `build/story-brief.json`
 - `build/palette-check.json`
+- `build/type-spec.json`
 - `build/artboard-copy.json`
 - `build/layout-spec.json`
 - `build/caption.md`
@@ -55,89 +58,103 @@ The parent workflow may produce:
 
 ## Procedure
 
-### 0. Route and asset gates
+### 0. Route and conditional gates
 
 Resolve the request through the helper. Apply local quality gates and research gates before production.
 
-If the user names a specific or official mascot, require the exact user-supplied or task-attached SVG. Record `build/mascot-request.json` and validate it with `scripts/mascot_contract.py check`. Never redraw, approximate, substitute, or silently generate a lookalike.
-
 If Arabic/RTL is active, load the `arabic` skill before copy or layout work.
+
+If a named or official mascot is requested, record `build/mascot-request.json`. The identity is not allowed to bypass the verified identity path. Exact user/task SVG assets keep priority; supported AI/tool identities may resolve from Lobe; unresolved named identities HOLD.
 
 ### 1. Reference diagnosis
 
-When visual references exist, delegate to `design-study` and save `build/design-study.json`. Activate `reference-dna`. Study reusable structure, hierarchy, rhythm, density, and motion grammar without cloning distinctive work.
+When visual references exist, delegate to `design-study` and save `build/design-study.json`. Activate `reference-dna`. Study reusable structure, hierarchy, rhythm, density, type roles, and motion grammar without cloning distinctive work.
 
 ### 2. Evidence inventory
 
-Delegate to `evidence-checker`. Save `build/evidence.json` with protected claims, metrics, product states, logos, proof, and unsupported slots. Unsupported proof is blocked before creative/copy/layout production.
+Delegate to `evidence-checker`. Save `build/evidence.json` with protected claims, metrics, product states, named identities, logos, proof, and unsupported slots. Unsupported proof is blocked before creative/copy/layout production.
 
-### 3. Creative concept directions
+### 3. Verified identity asset plan
 
-Delegate to `creative-director` with the evidence record, optional design study, audience, language, output mode, and approved constraints. Save `build/creative-concepts.json`.
+Delegate to `asset-curator`. Save `build/asset-plan.json`.
 
-Require at least three meaningfully different directions. Every direction contains a visual hook, copy hook, aha mechanic, story shape, recommended style/archetype/motion behavior, evidence dependencies, risk notes, and why it earns attention. At least one direction must contain a useful visual payoff or aha moment through a reveal, relationship, comparison, transformation, state change, or interaction. Spectacle without a story job does not count.
+Apply `verified-identity-assets` and `skills/info-stories/references/asset-source-policy.md`. Exact user-supplied official assets win. For supported named AI/tool identities, the worker reads `https://lobehub.com/icons/skill.md` and follows the current Lobe instructions. Final production assets must be local or embedded. If a named identity cannot be verified, stop with `HOLD: verified identity asset required` instead of generating a lookalike.
 
-Apply `hooked-design-copy` and `creative-payoff`. The parent workflow selects or approves one direction before story architecture.
+### 4. Creative concept directions
 
-### 4. Story contract
+Delegate to `creative-director` with the evidence record, asset plan, optional design study, audience, language, output mode, and approved constraints. Save `build/creative-concepts.json`.
 
-Delegate to `story-architect` with the selected concept, evidence, optional design study, one takeaway, CTA, language, and output mode. Save `build/story-brief.json` with Story House, Visual Style, Story Archetype, Motion Patterns, design dials, and execution bridge.
+Require at least three meaningfully different directions. Every direction contains a visual hook, copy hook, aha mechanic, story relationship, dominant visual anchor, structure/archetype, containment strategy, negative-space strategy, motion job, evidence dependencies, risk notes, and why it earns attention.
 
-### 5. Palette contract
+Apply `hooked-design-copy`, `creative-payoff`, and `clean-creative-structure`. When the story permits, include an editorial low-containment option. When a real relationship exists, include a diagrammatic or relationship-led option. Repeated cards are valid only when repeated units are the story.
+
+The parent workflow selects or approves one direction before story architecture.
+
+### 5. Story contract
+
+Delegate to `story-architect` with the selected concept, evidence, optional design study, one takeaway, CTA, language, and output mode. Save `build/story-brief.json` with Story House, Visual Style, Story Archetype, Motion Patterns, design dials, clean-structure requirements, and execution bridge.
+
+### 6. Palette contract
 
 Delegate to `palette-curator`. Save `build/palette-check.json`.
 
 The plugin default is `creative-attractive-restrained`: use an engaging, memorable, harmonious palette without exaggerated saturation, unnecessary neon, or competing accents unless the approved brief explicitly calls for them. Text/state contrast floors remain blocking.
 
-### 6. Artboard copy
+### 7. Typography contract
 
-Delegate to `copy-compressor` with evidence, selected concept, story brief, and target slots. Save `build/artboard-copy.json`. The hero and attention-bearing story openers must use evidence-safe hooks; literal labels remain literal where clarity wins.
+Delegate to `type-curator`. Save `build/type-spec.json`.
 
-### 7. Static layout specification
+Apply `intentional-typography` and `skills/info-stories/references/typography-direction.md`. User-specified typography wins when render-safe, followed by supplied/bundled local assets, then a curated deterministic system direction. Remote @import or another render-time font request is blocking.
 
-Delegate to `layout-composer`. Save `build/layout-spec.json` with zone order, proportions, visual anchor, component counts, structural fingerprint, assets, alignment mode, and any exception reason.
+### 8. Artboard copy
+
+Delegate to `copy-compressor` with evidence, selected concept, type spec, story brief, and target slots. Save `build/artboard-copy.json`. The hero and attention-bearing story openers must use evidence-safe hooks; literal labels remain literal where clarity wins. Copy must fit the type-spec minimum feed sizes without silent font substitution.
+
+### 9. Static layout specification
+
+Delegate to `layout-composer`. Save `build/layout-spec.json` with zone order, proportions, visual anchor, component counts, structural fingerprint, clean-structure requirements, verified asset placements, exact type roles, alignment mode, and any exception reason.
 
 Use `center-first` for the primary visual anchor and major story zones. A non-centered alignment requires a recorded comprehension/fidelity reason such as tables, UI mockups, code/terminal surfaces, timelines, Arabic/RTL flow, or reference-DNA fidelity.
 
-### 8. Caption
+### 10. Caption
 
 Delegate to `caption-writer`. Save `build/caption.md` and `build/first-comment.md`. The opening hook must be specific and evidence-safe. Show the caption and selected story direction for approval before still construction when interactive approval is available.
 
-### 9. Still construction
+### 11. Still construction
 
-Delegate to `artboard-builder` with the approved story, palette, copy, layout, and caption artifacts. It returns `build/post.html` and `build/still.png` after static checks. Show the still as the visual approval gate when interaction is available.
+Delegate to `artboard-builder` with the approved story, asset plan, type spec, palette, copy, layout, and caption artifacts. It returns `build/post.html` and `build/still.png` after source, typography, and static checks. Show the still as the visual approval gate when interaction is available.
 
-### 10. Motion direction
+### 12. Motion direction
 
 For animated output, delegate to `motion-director` with the approved still, selected concept, story brief, layout spec, and mascot role when applicable. Save `build/motion-direction.json`. Static output records this stage as skipped.
 
-### 11. Mascot component when active
+### 13. Mascot component when active
 
-After still construction and before motion implementation, delegate the validated exact SVG to `mascot-animator`. Save identity and rig evidence plus `build/mascot/motion-contract.json`. The supplied SVG remains the identity source.
+After still construction and before motion implementation, delegate the verified identity SVG to `mascot-animator`. The source may be exact user/task input or a verified Lobe asset already copied locally by `asset-curator`. Save identity and rig evidence plus `build/mascot/motion-contract.json`. The verified SVG remains the identity source.
 
-### 12. Motion implementation
+### 14. Motion implementation
 
 For animated output, delegate to `motion-engineer` with the approved still, story brief, motion direction, and mascot contract when present. It returns the animated `build/post.html`. Static output skips this stage.
 
-### 13. Render mechanics and QA
+### 15. Render mechanics and QA
 
 Delegate to `render-qa`. Save `build/render-report.json`. A render HOLD returns control to this parent workflow for a targeted fix and re-run.
 
-### 14. Adversarial review
+### 16. Adversarial review
 
-Delegate to `post-critic` with the artifact, caption, evidence, selected concept, layout, mascot identity notes when present, and render report. Save `build/critic-report.json`.
+Delegate to `post-critic` with the artifact, caption, evidence, asset plan, type spec, selected concept, layout, mascot identity notes when present, and render report. Save `build/critic-report.json`.
 
-The critic must explicitly evaluate `hooked-design-copy`, `creative-payoff`, `restrained-palette`, and `center-first-composition` in addition to applicable research gates.
+The critic explicitly evaluates `hooked-design-copy`, `creative-payoff`, `clean-creative-structure`, `verified-identity-assets`, `intentional-typography`, `restrained-palette`, and `center-first-composition` in addition to applicable research gates.
 
-### 15. Independent acceptance
+### 17. Independent acceptance
 
-Delegate to `story-verifier`. Save `build/verification-report.json`. The verifier reads artifacts directly. `FAIL:fixable` may trigger a targeted fix and re-check. Maximum two targeted repair attempts; a third unresolved failure escalates.
+Delegate to `story-verifier`. Save `build/verification-report.json`. The verifier reads artifacts directly, including identity provenance and typography. `FAIL:fixable` may trigger a targeted fix and re-check. Maximum two targeted repair attempts; a third unresolved failure escalates.
 
-### 16. Deliver
+### 18. Deliver
 
-Deliver the final artifact, caption, first comment, resolved Info-stories choices, selected creative concept, render numbers when applicable, active gate summary, and final verification verdict.
+Deliver the final artifact, caption, first comment, resolved Info-stories choices, selected creative concept, identity source summary, type direction, render numbers when applicable, active gate summary, and final verification verdict.
 
-### 17. Share with the community (optional)
+### 19. Share with the community (optional)
 
 Offer community sharing only when the final verification verdict is `PASS` and delivery is complete.
 
@@ -153,9 +170,13 @@ If `share-demo` later returns a HOLD, preserve the already delivered artifact an
 
 Stop and return a precise HOLD when any blocking production requirement is unresolved, including:
 
-- missing exact SVG for a named or official mascot
+- missing verified identity asset for a named AI/tool/logo/mascot
+- Lobe coverage cannot be verified for a required supported identity
+- final identity asset is remote-only instead of local/embedded
+- typography depends on a remote font request or cannot meet feed-scale legibility
 - unsupported factual proof, metric, product state, logo, or claim
-- hook or aha concept that depends on invented evidence
+- hook or aha concept depends on invented evidence
+- selected concept fails `clean-creative-structure`
 - failing contrast or Story House compatibility
 - unresolved blocking local quality gate
 - unresolved blocking research gate
@@ -173,6 +194,8 @@ Do not fill missing inputs with plausible content.
 - local gates: `helper/quality-gates.json`
 - artifacts: `helper/artifacts.json`
 - executable graph: `architecture/plugin-graph.json`
+- identity source policy: `skills/info-stories/references/asset-source-policy.md`
+- typography policy: `skills/info-stories/references/typography-direction.md`
 - creative copy reference: `skills/info-stories/references/hook-driven-design-copy.md`
 - design defaults: `skills/info-stories/references/design-taste-gates.md`
 - focused QA: `qa-post`
@@ -183,4 +206,4 @@ Do not fill missing inputs with plausible content.
 
 Complete post creation may activate `prose-specificity`, `voice-preservation`, `design-dials`, `structural-originality`, `reference-dna`, `contrast-discipline`, `evidence-traceability`, and `bounded-verification` according to `research/capability-notes/gates.json`.
 
-The two final safety gates are `evidence-traceability` and `bounded-verification`; they remain active even when the chosen creative direction is intentionally simple. The optional `share-demo` workflow inherits the final PASS as a publication prerequisite.
+The final safety gates include identity provenance, typography render safety, `evidence-traceability`, and `bounded-verification`. They remain active even when the chosen creative direction is intentionally simple. The optional `share-demo` workflow inherits the final PASS as a publication prerequisite.
