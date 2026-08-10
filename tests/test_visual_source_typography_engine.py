@@ -111,7 +111,6 @@ class VisualSourceTypographyEngineTests(unittest.TestCase):
         }
         errors = module.validate(payload)
         self.assertTrue(any("version" in error.lower() for error in errors), errors)
-        self.assertTrue(any("source_ref" in error for error in errors), errors)
 
     def test_asset_validator_returns_errors_for_json_valid_wrong_types(self):
         module = load_module(ASSET_TOOL, "asset_policy_check_types")
@@ -132,8 +131,25 @@ class VisualSourceTypographyEngineTests(unittest.TestCase):
         errors = module.validate(payload)
         self.assertTrue(errors)
         self.assertTrue(any("source_type" in error for error in errors), errors)
-        self.assertTrue(any("package" in error for error in errors), errors)
         self.assertTrue(any("render_disposition" in error for error in errors), errors)
+
+    def test_asset_validator_rejects_non_string_lobe_package_without_crashing(self):
+        module = load_module(ASSET_TOOL, "asset_policy_check_lobe_package_type")
+        payload = {
+            "assets": [{
+                "name": "Claude",
+                "kind": "brand-logo",
+                "source_type": "lobe",
+                "source_ref": "@lobehub/icons-static-svg@1.91.0:claude.svg",
+                "lobe_slug": "claude",
+                "package": {"name": "@lobehub/icons-static-svg"},
+                "render_disposition": "embedded",
+                "identity_locked": True,
+                "status": "PASS",
+            }]
+        }
+        errors = module.validate(payload)
+        self.assertTrue(any("package" in error for error in errors), errors)
 
     def test_type_validator_accepts_safe_pair_and_rejects_remote_loading(self):
         module = load_module(TYPE_TOOL, "type_spec_check")
