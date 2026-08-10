@@ -7,7 +7,7 @@
       "research_gates": ["prose-specificity", "voice-preservation"]
     },
     "creative-direction": {
-      "purpose": "Generate evidence-safe concept directions with visual hooks, copy hooks, and useful aha mechanics before story architecture hardens.",
+      "purpose": "Generate evidence-safe concept directions with visual hooks, copy hooks, useful aha mechanics, and clean structural variation before story architecture hardens.",
       "owners": ["creative-director", "story-architect", "layout-composer", "post-critic"],
       "local_native": true,
       "research_gates": []
@@ -34,7 +34,7 @@
       "research_gates": []
     },
     "mascot-identity": {
-      "purpose": "Preserve the exact supplied official mascot identity through inspection, animation, and verification.",
+      "purpose": "Preserve an already verified exact mascot identity through inspection, animation, and verification.",
       "owners": ["mascot-animator", "post-critic", "story-verifier"],
       "local_native": true,
       "research_gates": []
@@ -43,6 +43,16 @@
       "purpose": "Require meaningful structural variation and reject palette-only reskins.",
       "owners": ["layout-composer", "artboard-builder", "post-critic"],
       "research_gates": ["structural-originality", "reference-dna"]
+    },
+    "typography-direction": {
+      "purpose": "Choose and preserve an intentional render-safe type system that fits story shape, density, language, and reference DNA.",
+      "owners": ["type-curator", "layout-composer", "artboard-builder", "post-critic", "story-verifier"],
+      "local_native": true,
+      "research_gates": ["design-dials", "reference-dna"],
+      "local_defaults": {
+        "loading_strategies": ["system", "embedded", "local-file"],
+        "remote_font_loading": "forbidden"
+      }
     },
     "ui-mockup-fidelity": {
       "purpose": "Keep product UI mockups legible and evidence-backed, and distinguish documented UI from concept UI.",
@@ -53,6 +63,17 @@
       "purpose": "Produce deterministic render evidence, adversarial review, and bounded independent verification before delivery.",
       "owners": ["render-qa", "post-critic", "story-verifier"],
       "research_gates": ["bounded-verification", "evidence-traceability"]
+    },
+    "visual-asset-sourcing": {
+      "purpose": "Resolve named AI and tool identities from exact user-supplied assets or Lobe, lock provenance, and prevent generated official lookalikes.",
+      "owners": ["asset-curator", "layout-composer", "artboard-builder", "mascot-animator", "post-critic", "story-verifier"],
+      "local_native": true,
+      "research_gates": ["evidence-traceability"],
+      "local_defaults": {
+        "identity_precedence": ["user-official", "lobe", "hold"],
+        "lobe_skill": "https://lobehub.com/icons/skill.md",
+        "render_disposition": ["local", "embedded"]
+      }
     }
   }
 }
