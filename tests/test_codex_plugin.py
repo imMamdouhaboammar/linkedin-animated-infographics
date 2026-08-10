@@ -21,7 +21,7 @@ EXPECTED_CODEX_AGENTS = {
     "reviewer": "read-only",
     "docs_researcher": "read-only",
 }
-EXPECTED_VERSION = "3.3.0"
+EXPECTED_VERSION = "3.2.2"
 
 
 def load_validator():
