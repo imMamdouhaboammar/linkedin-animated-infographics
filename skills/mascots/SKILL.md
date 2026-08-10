@@ -33,6 +33,7 @@ Return validated mascot role, chosen creative direction, source provenance, insp
 1. Apply the verified identity precedence from `asset-source-policy.md`: exact user/task official asset first, then a verified Lobe asset for a supported named AI/tool identity, otherwise HOLD.
 2. The complete workflow consumes the exact local SVG recorded by `build/asset-plan.json`. Never redraw, approximate, substitute, generate a lookalike, or silently use a different mascot.
 3. In a direct focused mascot task with no asset plan, ask the user to upload the exact SVG. If it is missing, return `HOLD: exact SVG required`.
+   A third-party icon aggregator does not satisfy this gate for mascots. `tools/brand_icon.py` resolves brand marks for artboard logos, where the job is to identify a product in a story. Mascot identity is a stricter job: the asset must be the one the user or the task supplied, because an aggregator's copy has different provenance and may be outdated, unofficial, or a community redraw. You may point the user at `docs/brand-icons.md` as a place to obtain the official file, but the HOLD stands until they supply or confirm it.
 4. Validate the request:
 
 ```bash
@@ -52,25 +53,21 @@ python3 ${CLAUDE_PLUGIN_ROOT}/scripts/bake_mascot.py idle --loop 6000 --id amb -
 python3 ${CLAUDE_PLUGIN_ROOT}/scripts/bake_mascot.py payoff --loop 6000 --id win --at .89 --rise 18 --zeta .30
 ```
 
-10. UI mockup stories may use a mascot only when it does not cover story-critical controls or imply a product assistant that does not actually exist.
-11. Verify identity, provenance, purpose, frame-zero readability, loop reset, motion budget, and accessibility before returning the component.
+10. Route to `svg-mascot-animator` or `agents/mascot-animator.md`.
 
 ## HOLD conditions
 
-Return a HOLD when no verified exact SVG is available, Lobe provenance cannot be confirmed for a Lobe-backed identity, the SVG cannot support the requested articulation without identity-changing redraw, required brand details are ambiguous, or the requested mascot behavior would fabricate product behavior or compete with the approved reading order.
+Return a HOLD when a named/official mascot is requested without an exact SVG source or asset-plan resolution, the mascot lacks a clear reading job, the direction redraws the identity, character motion exceeds the motion budget, frame 0 is altered, or the motion direction conflicts with the story motion.
 
 ## Related components
 
-- routing authority: `helper/GUIDE.md`
-- identity policy: `skills/info-stories/references/asset-source-policy.md`
-- verified identity worker: `agents/asset-curator.md`
-- mascot worker: `agents/mascot-animator.md`
+- asset policy: `skills/info-stories/references/asset-source-policy.md`
+- brand icons: `tools/brand_icon.py`, `docs/brand-icons.md`
 - animator skill: `skills/svg-mascot-animator/SKILL.md`
-- creative directions: `skills/svg-mascot-animator/references/creative-directions.md`
-- detailed doctrine: `references/mascots.md`
-- request validator: `scripts/mascot_contract.py`
-- motion baker: `scripts/bake_mascot.py`
+- contract checker: `scripts/mascot_contract.py`
+- math engine: `scripts/bake_mascot.py`
+- worker: `agents/mascot-animator.md`
 
 ## Research gates
 
-Mascot identity provenance follows the local verified identity contract. When the mascot is embedded in a complete Info-story, also respect active `design-dials`, `structural-originality`, `evidence-traceability`, and `bounded-verification` gates from the parent route.
+Apply `mascot-identity` to preserve exact mascot geometry and identity. Apply `motion-on-weak-still` and `decorative-motion` to keep character motion meaningful and inside the motion budget.

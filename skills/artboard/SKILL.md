@@ -44,7 +44,16 @@ Return or support generation of `build/post.html`, `build/still.png`, asset/type
 10. For UI stories, read `skills/info-stories/references/ui-mockup-rules.md`. Preserve evidence-qualified product states and feed-width legibility. Concept UI must remain identifiable when it could be mistaken for real product evidence.
 11. Keep exactly one `#artboard` at `1080x1350`, render-safe fonts, mandatory attribution, and load-bearing text at or above the existing feed-scale floor.
 12. Enforce text contrast of at least 4.5:1 and the existing state-pair floor. Use the resolved semantic tokens rather than arbitrary one-off colors.
-13. Run the source and static checks:
+13. When the composition names an official product, use the vendor's own mark rather than a redrawn one. Resolve it from the pinned upstream set and inline the result:
+
+```bash
+python3 ${CLAUDE_PLUGIN_ROOT}/tools/brand_icon.py list --query claude
+python3 ${CLAUDE_PLUGIN_ROOT}/tools/brand_icon.py fetch claude --variant color
+```
+
+The set covers AI and LLM brands only. When a named platform is not in it, that is a HOLD on the artwork, not a licence to approximate: keep the literal product name or ask for the exact SVG. If only some members of a zone have a real mark, use literal names for the whole zone rather than shipping a half-branded row, and record which rule applied. Full contract in `docs/brand-icons.md`.
+
+14. Run the static checks:
 
 ```bash
 python3 tools/asset_policy_check.py build/asset-plan.json
@@ -53,7 +62,7 @@ python3 ${CLAUDE_PLUGIN_ROOT}/scripts/check_render.py build/post.html --out buil
 python3 ${CLAUDE_PLUGIN_ROOT}/scripts/check_render.py build/post.html --mobile
 ```
 
-14. Inspect the rendered still at feed width. Confirm visual anchor, clean structure, identity fidelity, typography, alignment decision, structural fingerprint, footer clearance, UI readability, and restrained palette character.
+15. Inspect the rendered still at feed width. Confirm visual anchor, clean structure, identity fidelity, typography, alignment decision, structural fingerprint, footer clearance, UI readability, and restrained palette character.
 
 ## HOLD conditions
 
@@ -71,6 +80,7 @@ Return a HOLD when contrast fails, the selected Story House/style combination is
 - identity check: `tools/asset_policy_check.py`
 - typography check: `tools/type_spec_check.py`
 - contrast check: `tools/contrast_check.py`
+- official brand marks: `tools/brand_icon.py`, `docs/brand-icons.md`
 - worker: `agents/artboard-builder.md`
 
 ## Research gates

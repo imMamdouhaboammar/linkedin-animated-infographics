@@ -12,8 +12,8 @@
       "name": "linkedin-animated-infographics",
       "source": "./",
       "strict": true,
-      "version": "3.2.2",
-      "description": "Create LinkedIn Info-stories with verified identity sourcing, intentional typography, clean creative concepting, research gates, UI stories, strict QA, and opt-in community demo publishing.",
+      "version": "3.3.0",
+      "description": "Create LinkedIn Info-stories with verified identity sourcing, intentional typography, brand icons, clean creative concepting, research gates, UI stories, strict QA, and opt-in community demo publishing.",
       "author": {
         "name": "Mamdouh Aboammar",
         "url": "https://github.com/imMamdouhaboammar"

@@ -1,6 +1,6 @@
 # Codex and ChatGPT
 
-Version 3.2.2 gives Codex and ChatGPT a capability-negotiated OpenAI autopilot distribution while preserving the existing Claude execution path.
+Version 3.3.0 gives Codex and ChatGPT a capability-negotiated OpenAI autopilot distribution while preserving the existing Claude execution path.
 
 The target is quality and process parity, not identical visual output. Claude and OpenAI may choose different creative directions, layouts, palettes, and motion treatments, but both must follow disciplined evidence, concept, layout, still QA, motion, and verification stages.
 
@@ -188,7 +188,7 @@ Claude keeps the existing canonical runtime:
 - `architecture/plugin-graph.json`
 - `.claude-plugin/`
 
-The 3.2.2 work does not replace Claude agents with OpenAI role passes. Claude remains on `native-worker-graph`. Only release version metadata is synchronized where repository parity requires it.
+The 3.3.0 work does not replace Claude agents with OpenAI role passes. Claude remains on `native-worker-graph`. Only release version metadata is synchronized where repository parity requires it.
 
 ## Add the repository marketplace
 
@@ -211,7 +211,7 @@ Existing repository-maintenance roles remain:
 - `reviewer`
 - `docs_researcher`
 
-Version 3.2.2 also adds real project-scoped Codex adapters for canonical product workers:
+Version 3.3.0 also adds real project-scoped Codex adapters for canonical product workers:
 
 - `creative_director` -> `agents/creative-director.md`
 - `evidence_researcher` -> `agents/evidence-checker.md`
@@ -269,7 +269,7 @@ For a new release:
 
 ## Public Plugins Directory
 
-Version 3.2.2 is prepared as a skills-only OpenAI update. The tracked handoff lives under `submission/` and includes listing metadata plus exactly five positive and three negative reviewer cases.
+Version 3.3.0 is prepared as a skills-only OpenAI update. The tracked handoff lives under `submission/` and includes listing metadata plus exactly five positive and three negative reviewer cases.
 
 The primary `create-post` reviewer case targets `linkedin-infographic-autopilot` and exercises capability negotiation, evidence-first delegation, the complete visual gate, and truthful fallback behavior.
 
