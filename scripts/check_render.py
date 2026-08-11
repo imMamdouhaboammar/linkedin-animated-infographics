@@ -15,6 +15,7 @@ from scripts.visual_contract import (
     ContractError,
     VisualContract,
     exit_code,
+    file_sha256,
     finding,
     render_lines,
     skipped,
@@ -129,6 +130,7 @@ def main(argv=None) -> int:
         "schema_version": 1,
         "stage": "still",
         "artifact": str(Path(args.html).resolve()),
+        "artifact_sha256": file_sha256(Path(args.html)),
         "capture": capture,
         "outputs": {
             "still": str(still.resolve()),

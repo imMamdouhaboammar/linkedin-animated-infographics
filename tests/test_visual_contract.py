@@ -18,7 +18,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACT = ROOT / "helper" / "visual-contract.json"
 SEVERITIES = {"blocking", "advisory"}
-REQUIRED_FIELDS = ("value", "unit", "severity", "gate", "measured_by", "rationale")
+REQUIRED_FIELDS = ("value", "comparison", "unit", "severity", "gate", "measured_by", "rationale")
 
 
 def load_contract():
@@ -70,6 +70,8 @@ class VisualContractStructureTests(unittest.TestCase):
                 failures.append(f"{tid}: gate {threshold.get('gate')!r} is not declared")
             if not isinstance(threshold.get("value"), (int, float)):
                 failures.append(f"{tid}: value must be numeric")
+            if threshold.get("comparison") not in {"eq", "min", "max"}:
+                failures.append(f"{tid}: comparison must be eq, min, or max")
         self.assertEqual([], failures)
 
     def test_measuring_scripts_exist(self):

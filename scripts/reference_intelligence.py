@@ -14,6 +14,11 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CURATED = ROOT / "research" / "reference-studies" / "visual-library.json"
 DEFAULT_STATE = ROOT / ".plugin-state" / "reference-studies"
 SAMPLE_LABELS = ("first", "middle", "pre_seam", "final")
+GENERATED_REFERENCE_FIELDS = {
+    "dimensions", "bytes", "frame_count", "duration_ms", "fps", "loop",
+    "palette_shares", "frame_completeness", "changed_pixel_mean", "seam_ratio",
+    "sha256", "asset_path", "frame_paths",
+}
 
 
 class ReferenceIngestionError(ValueError):
@@ -200,12 +205,16 @@ def _state_path(state_dir: Path, relative: str) -> Path:
     return candidate
 
 
-def _cached_reference(state_dir: Path, cached: dict | None, reference_id: str, sha256: str) -> dict | None:
-    if not cached or cached.get("id") != reference_id or cached.get("sha256") != sha256:
+def _curated_metadata(metadata: dict) -> dict:
+    return {key: value for key, value in metadata.items() if key not in GENERATED_REFERENCE_FIELDS}
+
+
+def _cached_reference(state_dir: Path, cached: dict | None, metadata: dict, sha256: str) -> dict | None:
+    if not cached or cached.get("id") != metadata["id"] or cached.get("sha256") != sha256:
         return None
     relative_paths = [cached.get("asset_path", ""), *cached.get("frame_paths", {}).values()]
     if relative_paths and all(_state_path(state_dir, relative).is_file() for relative in relative_paths):
-        return cached
+        return {**cached, **_curated_metadata(metadata)}
     return None
 
 
@@ -279,7 +288,7 @@ def ingest_library(library: Path, state_dir: Path, curated: dict) -> dict:
     aliases = []
     for sha256, group in sorted(groups.items()):
         source, metadata = _canonical_source(group, sha256)
-        cached = _cached_reference(state_dir, cached_by_sha.get(sha256), metadata["id"], sha256)
+        cached = _cached_reference(state_dir, cached_by_sha.get(sha256), metadata, sha256)
         references.append(cached or _write_reference(source, state_dir, metadata, sha256))
         aliases.extend(_alias_rows(group, (source, metadata), sha256))
     references.sort(key=lambda row: _reference_number(row["id"]))
@@ -308,6 +317,7 @@ def check_library(state_dir: Path, curated: dict) -> list[str]:
     canonical_ids = {row["id"] for row in manifest.get("references", [])}
     curated_rows = curated.get("references", []) + curated.get("aliases", [])
     curated_ids = {row["id"] for row in curated_rows if row.get("id")}
+    curated_by_filename = _curated_by_filename(curated)
     alias_ids = {row["id"] for row in manifest.get("aliases", []) if row.get("id")}
     missing_ids = sorted(curated_ids - canonical_ids - alias_ids)
     if missing_ids:
@@ -315,6 +325,14 @@ def check_library(state_dir: Path, curated: dict) -> list[str]:
     if not canonical_ids:
         errors.append("manifest has no canonical references")
     for reference in manifest.get("references", []):
+        expected = curated_by_filename.get(reference.get("source_filename"))
+        if expected is None:
+            errors.append(f"{reference['id']}: source is not in curated metadata")
+        elif any(
+            reference.get(field) != value
+            for field, value in _curated_metadata(expected).items()
+        ):
+            errors.append(f"{reference['id']}: curated metadata drift")
         try:
             asset = _state_path(state_dir, reference["asset_path"])
             frames = {

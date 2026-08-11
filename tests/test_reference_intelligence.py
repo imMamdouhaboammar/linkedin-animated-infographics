@@ -158,6 +158,36 @@ class ReferenceIntelligenceTests(unittest.TestCase):
             self.assertEqual(first, second)
             self.assertEqual(mtimes, {path: path.stat().st_mtime_ns for path in cached_paths})
 
+    def test_cached_media_refreshes_curated_rights_without_rewriting_assets(self):
+        module = load_module()
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            library = root / "library"
+            library.mkdir()
+            shutil.copy2(FIXTURES / "valid.gif", library / "valid.gif")
+            state = root / "state"
+            metadata = curated(("REF-001", "valid.gif"))
+
+            first = module.ingest_library(library, state, metadata)
+            cached_paths = [state / first["references"][0]["asset_path"]]
+            cached_paths.extend(state / path for path in first["references"][0]["frame_paths"].values())
+            mtimes = {path: path.stat().st_mtime_ns for path in cached_paths}
+            metadata["references"][0].update(
+                rights_state="verified",
+                provenance_state="verified",
+                observations=["new canonical review"],
+            )
+
+            self.assertIn("curated metadata drift", "\n".join(module.check_library(state, metadata)))
+            second = module.ingest_library(library, state, metadata)
+
+            reference = second["references"][0]
+            self.assertEqual("verified", reference["rights_state"])
+            self.assertEqual("verified", reference["provenance_state"])
+            self.assertEqual(["new canonical review"], reference["observations"])
+            self.assertEqual([], module.check_library(state, metadata))
+            self.assertEqual(mtimes, {path: path.stat().st_mtime_ns for path in cached_paths})
+
     def test_unusual_dimensions_durations_transparency_and_missing_loop_are_measured(self):
         module = load_module()
         with tempfile.TemporaryDirectory() as temporary:

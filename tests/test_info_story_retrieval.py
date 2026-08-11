@@ -335,6 +335,16 @@ class InfoStoryRetrievalTests(unittest.TestCase):
         self.assertEqual("review", payload["stage"])
         self.assertLessEqual(len(first.stdout.rstrip("\n").encode("utf-8")), 4000)
 
+    def test_default_catalog_fails_closed_without_reference_authority(self):
+        original = self.mod.DEFAULT_REFERENCE_LIBRARY
+        with tempfile.TemporaryDirectory() as temporary:
+            self.mod.DEFAULT_REFERENCE_LIBRARY = Path(temporary) / "missing.json"
+            try:
+                with self.assertRaisesRegex(ValueError, "missing reference library"):
+                    self.mod.load_catalog()
+            finally:
+                self.mod.DEFAULT_REFERENCE_LIBRARY = original
+
     def test_real_editorial_and_local_setup_references_are_retrievable_as_primary(self):
         catalog = self.mod.load_catalog()
         cases = (

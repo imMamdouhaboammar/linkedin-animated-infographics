@@ -46,6 +46,12 @@ def passing_fragment(kind: str) -> dict:
     }
 
 
+def bind_fragment(fragment: dict, artifact: Path) -> dict:
+    fragment["artifact"] = str(artifact)
+    fragment["artifact_sha256"] = hashlib.sha256(artifact.read_bytes()).hexdigest()
+    return fragment
+
+
 class RenderReportMergeTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
@@ -57,8 +63,9 @@ class RenderReportMergeTests(unittest.TestCase):
         self.fragments = {}
         for kind in KINDS:
             path = self.root / f"{kind}.json"
-            fragment = passing_fragment(kind)
-            fragment["artifact"] = str(self.gif if kind == "gif" else self.html)
+            fragment = bind_fragment(
+                passing_fragment(kind), self.gif if kind == "gif" else self.html
+            )
             path.write_text(json.dumps(fragment))
             self.fragments[kind] = path
         self.report = self.root / "render-report.json"
@@ -101,8 +108,7 @@ class RenderReportMergeTests(unittest.TestCase):
             set(report["digests"]["fragments"]), {"artboard", "still", "gif"})
 
     def test_na_blocking_evidence_writes_a_failing_report(self):
-        fragment = passing_fragment("gif")
-        fragment["artifact"] = str(self.gif)
+        fragment = bind_fragment(passing_fragment("gif"), self.gif)
         row = next(
             finding for finding in fragment["findings"]
             if finding["severity"] == "blocking"
@@ -118,8 +124,7 @@ class RenderReportMergeTests(unittest.TestCase):
         self.assertIn(row["gate"], report["summary"]["failed_gates"])
 
     def test_missing_blocking_evidence_is_materialized_and_fails(self):
-        fragment = passing_fragment("still")
-        fragment["artifact"] = str(self.html)
+        fragment = bind_fragment(passing_fragment("still"), self.html)
         missing = next(
             finding for finding in fragment["findings"]
             if finding["severity"] == "blocking"
@@ -147,7 +152,7 @@ class RenderReportMergeTests(unittest.TestCase):
         self.assertFalse(self.report.exists())
 
     def test_stale_contract_metadata_is_rejected(self):
-        fragment = passing_fragment("gif")
+        fragment = bind_fragment(passing_fragment("gif"), self.gif)
         row = fragment["findings"][0]
         row["severity"] = "blocking" if row["severity"] == "advisory" else "advisory"
         row["threshold"] = row["threshold"] + 1
@@ -160,9 +165,9 @@ class RenderReportMergeTests(unittest.TestCase):
         self.assertFalse(self.report.exists())
 
     def test_threshold_from_the_wrong_stage_is_rejected(self):
-        still = passing_fragment("still")
+        still = bind_fragment(passing_fragment("still"), self.html)
         misplaced = still["findings"].pop()
-        artboard = passing_fragment("artboard")
+        artboard = bind_fragment(passing_fragment("artboard"), self.html)
         artboard["findings"].append(misplaced)
         self.fragments["still"].write_text(json.dumps(still))
         self.fragments["artboard"].write_text(json.dumps(artboard))
@@ -183,6 +188,27 @@ class RenderReportMergeTests(unittest.TestCase):
 
         self.assertEqual(outcome.returncode, 2)
         self.assertIn("stage", outcome.stderr)
+        self.assertFalse(self.report.exists())
+
+    def test_declared_pass_must_match_measurement(self):
+        fragment = json.loads(self.fragments["artboard"].read_text())
+        row = next(row for row in fragment["findings"] if row["threshold_id"] == "artboard.width")
+        row["measured"] = 1
+        self.fragments["artboard"].write_text(json.dumps(fragment))
+
+        outcome = self.run_merge()
+
+        self.assertEqual(outcome.returncode, 2)
+        self.assertIn("status does not match measurement", outcome.stderr)
+        self.assertFalse(self.report.exists())
+
+    def test_fragment_digest_must_match_current_artifact(self):
+        self.html.write_bytes(b"<html>changed after measurement</html>")
+
+        outcome = self.run_merge()
+
+        self.assertEqual(outcome.returncode, 2)
+        self.assertIn("artifact digest", outcome.stderr)
         self.assertFalse(self.report.exists())
 
 

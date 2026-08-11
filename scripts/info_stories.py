@@ -62,9 +62,14 @@ def load_catalog(path=DEFAULT_CATALOG, extensions_dir=None):
                     catalog.setdefault(axis, []).extend(payload.get(axis, []))
     if len(catalog.get("mechanisms", [])) > MECHANISM_CAP:
         raise ValueError(f"mechanisms: maximum {MECHANISM_CAP} entries")
-    if is_default and DEFAULT_REFERENCE_LIBRARY.exists():
+    if is_default:
+        if not DEFAULT_REFERENCE_LIBRARY.is_file():
+            raise ValueError(f"missing reference library: {DEFAULT_REFERENCE_LIBRARY}")
         library = json.loads(DEFAULT_REFERENCE_LIBRARY.read_text())
-        catalog["references"] = library.get("references", [])
+        references = library.get("references")
+        if not isinstance(references, list) or not references:
+            raise ValueError("reference library requires non-empty references list")
+        catalog["references"] = references
     return catalog
 
 

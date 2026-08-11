@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import sys
 from pathlib import Path
@@ -20,6 +19,7 @@ from scripts.visual_contract import (
     WARN,
     ContractError,
     VisualContract,
+    file_sha256,
     skipped,
     summarize,
 )
@@ -36,7 +36,21 @@ ROW_FIELDS = {
 
 
 def digest(path: Path) -> dict:
-    return {"path": str(path.resolve()), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
+    return {"path": str(path.resolve()), "sha256": file_sha256(path)}
+
+
+def _measurement_passes(row: dict, threshold: dict) -> bool:
+    measured = row["measured"]
+    if not isinstance(measured, (int, float)) or isinstance(measured, bool):
+        raise ValueError(f"non-numeric measurement for {row['threshold_id']}")
+    comparison = threshold["comparison"]
+    if comparison == "eq":
+        return measured == threshold["value"]
+    if comparison == "min":
+        return measured >= threshold["value"]
+    if comparison == "max":
+        return measured <= threshold["value"]
+    raise ValueError(f"invalid comparison for {row['threshold_id']}")
 
 
 def read_fragment(path: Path, kind: str, contract: VisualContract) -> dict:
@@ -52,6 +66,9 @@ def read_fragment(path: Path, kind: str, contract: VisualContract) -> dict:
         raise ValueError(f"render fragment stage is not {kind}: {path}")
     if not isinstance(fragment.get("artifact"), str) or not fragment["artifact"]:
         raise ValueError(f"render fragment has no artifact metadata: {path}")
+    artifact_sha256 = fragment.get("artifact_sha256")
+    if not isinstance(artifact_sha256, str) or len(artifact_sha256) != 64:
+        raise ValueError(f"render fragment has no artifact digest: {path}")
     findings = fragment.get("findings")
     if not isinstance(findings, list):
         raise ValueError(f"render fragment has no findings list: {path}")
@@ -80,6 +97,21 @@ def read_fragment(path: Path, kind: str, contract: VisualContract) -> dict:
         allowed = {PASS, FAIL, NA} if threshold["severity"] == BLOCKING else {PASS, WARN, NA}
         if row["status"] not in allowed or threshold["severity"] not in {BLOCKING, ADVISORY}:
             raise ValueError(f"invalid status for {threshold_id} in {kind} fragment")
+        if row["status"] == NA:
+            if row["measured"] is not None:
+                raise ValueError(f"NA row has a measurement for {threshold_id}")
+            continue
+        passes = _measurement_passes(row, threshold)
+        if (
+            threshold.get("exception_field")
+            and row.get("exception_applied") is True
+            and isinstance(row["detail"], str)
+            and row["detail"].startswith("excused: ")
+        ):
+            passes = True
+        expected = PASS if passes else FAIL if threshold["severity"] == BLOCKING else WARN
+        if row["status"] != expected:
+            raise ValueError(f"status does not match measurement for {threshold_id}")
     return fragment
 
 
@@ -96,6 +128,8 @@ def merge_fragments(paths: dict[str, Path], input_path: Path, output_path: Path)
     for kind, fragment in fragments.items():
         if Path(fragment["artifact"]).resolve() != expected_artifacts[kind]:
             raise ValueError(f"stale artifact metadata in {kind} render fragment")
+        if fragment["artifact_sha256"] != file_sha256(expected_artifacts[kind]):
+            raise ValueError(f"stale artifact digest in {kind} render fragment")
     findings = [row for fragment in fragments.values() for row in fragment["findings"]]
     for kind, producer in FRAGMENT_PRODUCERS.items():
         present = {row["threshold_id"] for row in fragments[kind]["findings"]}

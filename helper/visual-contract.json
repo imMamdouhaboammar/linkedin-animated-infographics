@@ -8,6 +8,7 @@
   "thresholds": {
     "artboard.width": {
       "value": 1080,
+      "comparison": "eq",
       "unit": "px",
       "severity": "blocking",
       "gate": "artboard-integrity",
@@ -20,6 +21,7 @@
     },
     "artboard.height": {
       "value": 1350,
+      "comparison": "eq",
       "unit": "px",
       "severity": "blocking",
       "gate": "artboard-integrity",
@@ -32,6 +34,7 @@
     },
     "type.feed_width_px": {
       "value": 350,
+      "comparison": "eq",
       "unit": "px",
       "severity": "advisory",
       "gate": "feed-scale-legibility",
@@ -44,6 +47,7 @@
     },
     "type.feed_floor_px": {
       "value": 22,
+      "comparison": "min",
       "unit": "px",
       "severity": "advisory",
       "gate": "feed-scale-legibility",
@@ -56,6 +60,7 @@
     },
     "type.absolute_floor_px": {
       "value": 10,
+      "comparison": "min",
       "unit": "px",
       "severity": "blocking",
       "gate": "feed-scale-legibility",
@@ -67,6 +72,7 @@
     },
     "type.min_headline_px": {
       "value": 40,
+      "comparison": "min",
       "unit": "px",
       "severity": "blocking",
       "gate": "weak-visual-anchor",
@@ -78,6 +84,7 @@
     },
     "occupancy.min_pct": {
       "value": 82,
+      "comparison": "min",
       "unit": "percent",
       "severity": "advisory",
       "gate": "bottom-dead-zone",
@@ -91,6 +98,7 @@
     },
     "occupancy.max_pct": {
       "value": 92,
+      "comparison": "max",
       "unit": "percent",
       "severity": "advisory",
       "gate": "bottom-dead-zone",
@@ -103,6 +111,7 @@
     },
     "footer.max_gap_px": {
       "value": 120,
+      "comparison": "max",
       "unit": "px",
       "severity": "blocking",
       "gate": "footer-detachment",
@@ -118,6 +127,7 @@
     },
     "containment.max_border_depth": {
       "value": 2,
+      "comparison": "max",
       "unit": "levels",
       "severity": "blocking",
       "gate": "nested-card-density",
@@ -132,6 +142,7 @@
     },
     "safe_margin_px": {
       "value": 48,
+      "comparison": "min",
       "unit": "px",
       "severity": "blocking",
       "gate": "safe-zone-violation",
@@ -145,6 +156,7 @@
     },
     "contrast.text_min_ratio": {
       "value": 4.5,
+      "comparison": "min",
       "unit": "ratio",
       "severity": "blocking",
       "gate": "contrast-floor",
@@ -156,6 +168,7 @@
     },
     "contrast.state_min_ratio": {
       "value": 3.0,
+      "comparison": "min",
       "unit": "ratio",
       "severity": "blocking",
       "gate": "contrast-floor",
@@ -165,6 +178,7 @@
     },
     "motion.max_patterns": {
       "value": 2,
+      "comparison": "max",
       "unit": "patterns",
       "severity": "blocking",
       "gate": "motion-discipline",
@@ -176,6 +190,7 @@
     },
     "motion.max_moving_area_pct": {
       "value": 20,
+      "comparison": "max",
       "unit": "percent",
       "severity": "advisory",
       "gate": "motion-budget",
@@ -188,6 +203,7 @@
     },
     "motion.mean_step_warn_pct": {
       "value": 2.0,
+      "comparison": "max",
       "unit": "percent",
       "severity": "advisory",
       "gate": "motion-budget",
@@ -199,6 +215,7 @@
     },
     "motion.mean_step_max_pct": {
       "value": 5.0,
+      "comparison": "max",
       "unit": "percent",
       "severity": "blocking",
       "gate": "motion-budget",
@@ -211,6 +228,7 @@
     },
     "loop.seam_ratio_warn": {
       "value": 1.25,
+      "comparison": "max",
       "unit": "ratio",
       "severity": "advisory",
       "gate": "loop-close",
@@ -222,6 +240,7 @@
     },
     "loop.seam_ratio_max": {
       "value": 2.0,
+      "comparison": "max",
       "unit": "ratio",
       "severity": "blocking",
       "gate": "loop-close",
@@ -234,6 +253,7 @@
     },
     "fonts.first_choice_available": {
       "value": 1,
+      "comparison": "min",
       "unit": "stacks",
       "severity": "advisory",
       "gate": "font-determinism",
@@ -245,6 +265,7 @@
     },
     "gif.max_bytes": {
       "value": 5242880,
+      "comparison": "max",
       "unit": "bytes",
       "severity": "blocking",
       "gate": "file-budget",

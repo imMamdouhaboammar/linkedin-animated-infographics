@@ -19,6 +19,7 @@ area cannot be a pass/fail gate.
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 
@@ -35,6 +36,14 @@ NA = "NA"
 
 class ContractError(RuntimeError):
     """The contract is missing, unparseable, or lacks a requested threshold."""
+
+
+def file_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as source:
+        for chunk in iter(lambda: source.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def load_contract(path: Path | None = None) -> dict:

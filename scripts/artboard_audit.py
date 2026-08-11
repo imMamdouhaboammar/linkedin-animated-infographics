@@ -41,6 +41,7 @@ from scripts.visual_contract import (
     ContractError,
     VisualContract,
     exit_code,
+    file_sha256,
     finding,
     render_lines,
     skipped,
@@ -108,14 +109,16 @@ def audit(page, contract: VisualContract, *, exception_reason: str = "") -> tupl
         gap = footer["gap_px"]
         limit = contract.value("footer.max_gap_px")
         excused = bool(exception_reason) and gap > limit
-        findings.append(finding(
+        footer_finding = finding(
             contract, "footer.max_gap_px", ok=gap <= limit or excused, measured=gap,
             detail=(f"excused: {exception_reason}" if excused else
                     "" if gap <= limit else
                     "footer is detached from the composition above it"),
             evidence=[f"footer <{footer['tag']} class=\"{footer['cls']}\"> "
                       f"top y={footer['top']}"],
-        ))
+        )
+        footer_finding["exception_applied"] = excused
+        findings.append(footer_finding)
 
     depth = geometry.get("containment", 0)
     limit = contract.value("containment.max_border_depth")
@@ -262,6 +265,7 @@ def main(argv=None) -> int:
         "schema_version": 1,
         "stage": "artboard",
         "artifact": str(Path(args.html).resolve()),
+        "artifact_sha256": file_sha256(Path(args.html)),
         "seeked_at_s": args.at,
         "capture": info,
         "verdict": summary["verdict"],
