@@ -104,6 +104,40 @@ class ReferenceIntelligenceTests(unittest.TestCase):
             with self.assertRaisesRegex(module.ReferenceIngestionError, "invalid cached manifest"):
                 module.ingest_library(library, state, curated(("REF-001", "valid.gif")))
 
+    def test_cached_paths_must_stay_inside_state_directory(self):
+        module = load_module()
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            library = root / "library"
+            library.mkdir()
+            shutil.copy2(FIXTURES / "valid.gif", library / "valid.gif")
+            state = root / "state"
+            metadata = curated(("REF-001", "valid.gif"))
+            module.ingest_library(library, state, metadata)
+            manifest_path = state / "manifest.json"
+            manifest = json.loads(manifest_path.read_text())
+            outside = root / "outside.gif"
+            shutil.copy2(FIXTURES / "valid.gif", outside)
+            manifest["references"][0]["asset_path"] = str(outside)
+            manifest_path.write_text(json.dumps(manifest))
+
+            with self.assertRaisesRegex(module.ReferenceIngestionError, "outside state directory"):
+                module.ingest_library(library, state, metadata)
+            self.assertIn("outside state directory", "\n".join(module.check_library(state, metadata)))
+
+    def test_malformed_manifest_shape_returns_validation_error(self):
+        module = load_module()
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            state = root / "state"
+            state.mkdir()
+            (state / "manifest.json").write_text(json.dumps({"schema_version": 1, "references": {}}))
+
+            errors = module.check_library(state, curated())
+
+            self.assertTrue(errors)
+            self.assertIn("references must be a list", errors[0])
+
     def test_unchanged_sha_reuses_cached_asset_and_frames(self):
         module = load_module()
         with tempfile.TemporaryDirectory() as temporary:

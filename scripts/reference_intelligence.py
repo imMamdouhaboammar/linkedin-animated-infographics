@@ -164,11 +164,47 @@ def _decode_metrics(source: Path) -> tuple[dict, dict[str, Image.Image]]:
             image.close()
 
 
+def _validate_manifest(manifest: object) -> dict:
+    if not isinstance(manifest, dict):
+        raise ReferenceIngestionError("manifest must be an object")
+    if manifest.get("schema_version") != 1:
+        raise ReferenceIngestionError("manifest schema_version must be 1")
+    for field in ("references", "aliases"):
+        rows = manifest.get(field, [])
+        if not isinstance(rows, list):
+            raise ReferenceIngestionError(f"manifest {field} must be a list")
+        if not all(isinstance(row, dict) for row in rows):
+            raise ReferenceIngestionError(f"manifest {field} rows must be objects")
+    for row in manifest.get("references", []):
+        if not isinstance(row.get("id"), str) or not isinstance(row.get("sha256"), str):
+            raise ReferenceIngestionError("manifest reference requires string id and sha256")
+        if not isinstance(row.get("asset_path"), str) or not row["asset_path"]:
+            raise ReferenceIngestionError(f"{row.get('id', 'reference')}: invalid asset_path")
+        frames = row.get("frame_paths")
+        if not isinstance(frames, dict) or any(
+            not isinstance(frames.get(label), str) or not frames[label]
+            for label in SAMPLE_LABELS
+        ):
+            raise ReferenceIngestionError(f"{row.get('id', 'reference')}: invalid frame_paths")
+    return manifest
+
+
+def _state_path(state_dir: Path, relative: str) -> Path:
+    path = Path(relative)
+    if path.is_absolute():
+        raise ReferenceIngestionError(f"cached path outside state directory: {relative}")
+    root = state_dir.resolve()
+    candidate = (root / path).resolve()
+    if candidate != root and root not in candidate.parents:
+        raise ReferenceIngestionError(f"cached path outside state directory: {relative}")
+    return candidate
+
+
 def _cached_reference(state_dir: Path, cached: dict | None, reference_id: str, sha256: str) -> dict | None:
     if not cached or cached.get("id") != reference_id or cached.get("sha256") != sha256:
         return None
     relative_paths = [cached.get("asset_path", ""), *cached.get("frame_paths", {}).values()]
-    if relative_paths and all((state_dir / relative).is_file() for relative in relative_paths):
+    if relative_paths and all(_state_path(state_dir, relative).is_file() for relative in relative_paths):
         return cached
     return None
 
@@ -231,8 +267,12 @@ def ingest_library(library: Path, state_dir: Path, curated: dict) -> dict:
     manifest_path = state_dir / "manifest.json"
     if manifest_path.exists():
         try:
-            cached_manifest = json.loads(manifest_path.read_text())
-        except json.JSONDecodeError as exc:
+            cached_manifest = _validate_manifest(json.loads(manifest_path.read_text()))
+            for row in cached_manifest["references"]:
+                _state_path(state_dir, row["asset_path"])
+                for relative in row["frame_paths"].values():
+                    _state_path(state_dir, relative)
+        except (json.JSONDecodeError, ReferenceIngestionError) as exc:
             raise ReferenceIngestionError(f"invalid cached manifest: {exc}") from exc
     cached_by_sha = {row["sha256"]: row for row in (cached_manifest or {}).get("references", [])}
     references = []
@@ -261,6 +301,10 @@ def check_library(state_dir: Path, curated: dict) -> list[str]:
         return [f"missing manifest: {manifest_path}"]
     except json.JSONDecodeError as exc:
         return [f"invalid manifest JSON: {exc}"]
+    try:
+        manifest = _validate_manifest(manifest)
+    except ReferenceIngestionError as exc:
+        return [f"invalid manifest: {exc}"]
     canonical_ids = {row["id"] for row in manifest.get("references", [])}
     curated_rows = curated.get("references", []) + curated.get("aliases", [])
     curated_ids = {row["id"] for row in curated_rows if row.get("id")}
@@ -271,13 +315,21 @@ def check_library(state_dir: Path, curated: dict) -> list[str]:
     if not canonical_ids:
         errors.append("manifest has no canonical references")
     for reference in manifest.get("references", []):
-        asset = state_dir / reference.get("asset_path", "")
+        try:
+            asset = _state_path(state_dir, reference["asset_path"])
+            frames = {
+                label: _state_path(state_dir, reference["frame_paths"][label])
+                for label in SAMPLE_LABELS
+            }
+        except ReferenceIngestionError as exc:
+            errors.append(f"{reference['id']}: {exc}")
+            continue
         if not asset.is_file():
             errors.append(f"{reference['id']}: missing cached asset")
         elif _sha256(asset) != reference.get("sha256"):
             errors.append(f"{reference['id']}: cached asset SHA mismatch")
         for label in SAMPLE_LABELS:
-            frame = state_dir / reference.get("frame_paths", {}).get(label, "")
+            frame = frames[label]
             if not frame.is_file():
                 errors.append(f"{reference['id']}: missing {label} frame")
     return errors
