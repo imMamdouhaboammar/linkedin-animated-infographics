@@ -4,13 +4,17 @@
 from __future__ import annotations
 
 import argparse
+import base64
+import binascii
 import hashlib
 import json
 import re
 import shutil
 import sys
+from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
+from urllib.parse import unquote_to_bytes
 
 PUBLIC_FILES = {"demo.gif", "index.html", "demo.json"}
 REQUIRED_METADATA = {
@@ -46,9 +50,13 @@ REMOTE_EXECUTABLE = re.compile(
     r"<script\b[^>]*\bsrc\s*=\s*['\"](?:https?:)?//[^'\"]+['\"][^>]*>",
     re.IGNORECASE,
 )
-MEDIA_ATTRIBUTE = re.compile(r"\b(?:src|href)\s*=\s*['\"]([^'\"]+)['\"]", re.IGNORECASE)
 RIGHTS_ATTRIBUTE = re.compile(
     r"\b(?:data-)?rights[-_]state\s*=\s*['\"]([^'\"]+)['\"]",
+    re.IGNORECASE,
+)
+CSS_URL = re.compile(r"\burl\(\s*(['\"]?)(.*?)\1\s*\)", re.IGNORECASE | re.DOTALL)
+DATA_IMAGE = re.compile(
+    r"data:image/[a-z0-9.+-]+(?:;[a-z0-9.+_-]+(?:=[a-z0-9.+_-]+)?)*;base64,[a-z0-9+/=_%-]*",
     re.IGNORECASE,
 )
 REFERENCE_MEDIA_PATTERNS: tuple[re.Pattern[str], ...] = (
@@ -82,7 +90,8 @@ def _collect_sha256(value: Any) -> set[str]:
     digests: set[str] = set()
     if isinstance(value, dict):
         for key, item in value.items():
-            if key == "sha256" and isinstance(item, str) and re.fullmatch(r"[0-9a-fA-F]{64}", item):
+            is_digest = key == "sha256" or key.endswith("_sha256")
+            if is_digest and isinstance(item, str) and re.fullmatch(r"[0-9a-fA-F]{64}", item):
                 digests.add(item.lower())
             else:
                 digests.update(_collect_sha256(item))
@@ -92,20 +101,157 @@ def _collect_sha256(value: Any) -> set[str]:
     return digests
 
 
-def _forbidden_reference_digests(repo_root: Path) -> set[str]:
-    digests: set[str] = set()
-    candidates = (
-        repo_root / "research" / "reference-studies" / "visual-library.json",
-        repo_root / ".plugin-state" / "reference-studies" / "manifest.json",
+def _invalid_sha256_fields(value: Any, trail: str = "") -> list[str]:
+    invalid: list[str] = []
+    if isinstance(value, dict):
+        for key, item in value.items():
+            location = f"{trail}.{key}" if trail else key
+            if key == "sha256" or key.endswith("_sha256"):
+                if not isinstance(item, str) or not re.fullmatch(r"[0-9a-fA-F]{64}", item):
+                    invalid.append(location)
+            else:
+                invalid.extend(_invalid_sha256_fields(item, location))
+    elif isinstance(value, list):
+        for index, item in enumerate(value):
+            invalid.extend(_invalid_sha256_fields(item, f"{trail}[{index}]"))
+    return invalid
+
+
+def _load_json_authority(path: Path, label: str) -> tuple[dict[str, Any] | None, list[str]]:
+    if not path.is_file():
+        return None, [f"{label} missing: {path}"]
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        return None, [f"{label} invalid: {exc}"]
+    if not isinstance(data, dict):
+        return None, [f"{label} invalid: JSON root must be an object"]
+    return data, []
+
+
+def _forbidden_reference_digests(repo_root: Path) -> tuple[set[str], list[str]]:
+    canonical_path = repo_root / "research" / "reference-studies" / "visual-library.json"
+    canonical, findings = _load_json_authority(
+        canonical_path,
+        "canonical reference digest authority",
     )
-    for path in candidates:
-        if not path.is_file():
-            continue
-        try:
-            digests.update(_collect_sha256(json.loads(path.read_text(encoding="utf-8"))))
-        except (OSError, json.JSONDecodeError):
-            continue
-    return digests
+    if canonical is None:
+        return set(), findings
+
+    references = canonical.get("references")
+    if not isinstance(references, list):
+        return set(), ["canonical reference digest authority invalid: references must be a list"]
+    invalid_canonical = _invalid_sha256_fields(canonical)
+    if invalid_canonical:
+        return set(), [
+            "canonical reference digest authority invalid SHA-256 fields: "
+            + ", ".join(invalid_canonical)
+        ]
+    canonical_digests = {
+        row.get("sha256", "").lower()
+        for row in references
+        if isinstance(row, dict)
+        and isinstance(row.get("sha256"), str)
+        and re.fullmatch(r"[0-9a-fA-F]{64}", row["sha256"])
+    }
+    if not canonical_digests:
+        return set(), ["canonical reference digest authority has no usable canonical digests"]
+
+    digests = set(canonical_digests)
+    digests.update(_collect_sha256(canonical))
+    manifest_path = repo_root / ".plugin-state" / "reference-studies" / "manifest.json"
+    if manifest_path.exists():
+        manifest, manifest_findings = _load_json_authority(
+            manifest_path,
+            "local reference digest authority",
+        )
+        if manifest_findings:
+            return digests, manifest_findings
+        invalid_manifest = _invalid_sha256_fields(manifest)
+        if invalid_manifest:
+            return digests, [
+                "local reference digest authority invalid SHA-256 fields: "
+                + ", ".join(invalid_manifest)
+            ]
+        digests.update(_collect_sha256(manifest))
+    return digests, []
+
+
+class _MediaReferenceParser(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.references: list[str] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        del tag
+        for name, value in attrs:
+            if value is None:
+                continue
+            lowered = name.lower()
+            if lowered in {"src", "href"} or lowered.endswith(":href"):
+                self.references.append(value.strip())
+            elif lowered == "srcset":
+                self.references.extend(_srcset_references(value))
+
+    handle_startendtag = handle_starttag
+
+
+def _srcset_references(value: str) -> list[str]:
+    embedded = [match.group(0) for match in DATA_IMAGE.finditer(value)]
+    remaining = DATA_IMAGE.sub("", value)
+    references = list(embedded)
+    for candidate in remaining.split(","):
+        candidate = candidate.strip()
+        if candidate:
+            token = candidate.split()[0]
+            if not re.fullmatch(r"\d+(?:\.\d+)?[wx]", token, re.IGNORECASE):
+                references.append(token)
+    return references
+
+
+def _media_references(html_text: str) -> list[str]:
+    parser = _MediaReferenceParser()
+    try:
+        parser.feed(html_text)
+        parser.close()
+    except (TypeError, ValueError):
+        pass
+    references = list(parser.references)
+    references.extend(match.group(2).strip() for match in CSS_URL.finditer(html_text))
+    return references
+
+
+def _is_filesystem_absolute(value: str) -> bool:
+    normalized = value.replace("\\", "/")
+    return bool(
+        value.lower().startswith("file:")
+        or (normalized.startswith("/") and not normalized.startswith("//"))
+        or value.startswith("\\\\")
+        or re.match(r"^[A-Za-z]:/", normalized)
+    )
+
+
+def _embedded_media_finding(value: str, forbidden_digests: set[str]) -> str | None:
+    if not value.lower().startswith("data:image/"):
+        return None
+    header, separator, payload = value.partition(",")
+    if not separator or not header.lower().endswith(";base64") or not payload:
+        return "index.html: malformed embedded media data URI"
+    try:
+        encoded = b"".join(unquote_to_bytes(payload).split())
+        decoded = base64.b64decode(encoded, validate=True)
+    except (ValueError, binascii.Error):
+        return "index.html: malformed embedded media data URI"
+    if not decoded:
+        return "index.html: malformed embedded media data URI"
+    media_type = header[5:].split(";", 1)[0].lower()
+    if media_type == "image/gif" and not decoded.startswith((b"GIF87a", b"GIF89a")):
+        return "index.html: malformed embedded media GIF"
+    if media_type == "image/png" and not decoded.startswith(b"\x89PNG\r\n\x1a\n"):
+        return "index.html: malformed embedded media PNG"
+    if hashlib.sha256(decoded).hexdigest() in forbidden_digests:
+        return "index.html: embedded reference source media digest detected"
+    return None
 
 
 def _rights_findings(value: Any, label: str, trail: str = "") -> list[str]:
@@ -133,32 +279,31 @@ def restricted_media_findings(
     """Return public-export findings for private reference or unlicensed media."""
     findings: list[str] = []
     repo_root = Path(repo_root)
+    forbidden_digests, authority_findings = _forbidden_reference_digests(repo_root)
+    findings.extend(authority_findings)
     if gif_path and gif_path.is_file():
-        if _sha256(gif_path) in _forbidden_reference_digests(repo_root):
+        if _sha256(gif_path) in forbidden_digests:
             findings.append("demo.gif: reference source media digest detected")
         normalized_gif_path = gif_path.as_posix()
         if any(pattern.search(normalized_gif_path) for pattern in REFERENCE_MEDIA_PATTERNS):
             findings.append(f"demo.gif: reference study media detected: {gif_path.name}")
 
-    for match in MEDIA_ATTRIBUTE.finditer(html_text):
-        value = match.group(1)
+    for value in _media_references(html_text):
         normalized = value.replace("\\", "/")
-        filesystem_absolute = (
-            (normalized.startswith("/") and not normalized.startswith("//"))
-            or value.startswith("\\\\")
-            or re.match(r"^[A-Za-z]:/", normalized)
-        )
-        if value.lower().startswith("file:") or filesystem_absolute:
+        if _is_filesystem_absolute(value):
             findings.append(f"index.html: absolute media path detected: {value}")
         if any(pattern.search(normalized) for pattern in REFERENCE_MEDIA_PATTERNS):
             findings.append(f"index.html: reference study media detected: {value}")
+        embedded_finding = _embedded_media_finding(value, forbidden_digests)
+        if embedded_finding:
+            findings.append(embedded_finding)
 
     for match in RIGHTS_ATTRIBUTE.finditer(html_text):
         if match.group(1).strip().lower() != "verified":
             findings.append("index.html: media rights_state must be verified")
     if metadata is not None:
         findings.extend(_rights_findings(metadata, "publication metadata"))
-    return findings
+    return list(dict.fromkeys(findings))
 
 
 def _read_json(path: Path) -> dict[str, Any]:
