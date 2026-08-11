@@ -10,7 +10,6 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CATALOG = ROOT / "skills" / "info-stories" / "catalog.json"
 DEFAULT_EXTENSIONS = ROOT / "skills" / "info-stories" / "extensions"
 DEFAULT_REFERENCE_LIBRARY = ROOT / "research" / "reference-studies" / "visual-library.json"
-DEFAULT_REFERENCE_LIBRARY = ROOT / "research" / "reference-studies" / "visual-library.json"
 AXIS_ALIASES = {
     "house": "houses",
     "style": "styles",

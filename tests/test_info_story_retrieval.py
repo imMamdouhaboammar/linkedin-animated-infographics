@@ -335,6 +335,29 @@ class InfoStoryRetrievalTests(unittest.TestCase):
         self.assertEqual("review", payload["stage"])
         self.assertLessEqual(len(first.stdout.rstrip("\n").encode("utf-8")), 4000)
 
+    def test_real_editorial_and_local_setup_references_are_retrievable_as_primary(self):
+        catalog = self.mod.load_catalog()
+        cases = (
+            ("REF-029", ["compare-options", "reframe-belief"], "comparison", "editorial-thesis-contrast"),
+            ("REF-035", ["show-process", "teach-workflow"], "setup-guide", "local-setup-command-rail"),
+        )
+        for reference_id, story_jobs, content_shape, expected_slug in cases:
+            query = {
+                "story_jobs": story_jobs,
+                "content_shape": content_shape,
+                "output_mode": "gif",
+                "language": "en",
+                "density": "medium",
+                "evidence_mode": "documented",
+                "reference_ids": [reference_id],
+                "top_k": 5,
+            }
+            ranked = self.mod.rank_mechanisms(catalog, query)
+            capsule = self.mod.build_context_capsule(catalog, ranked, "review", 8000)
+            self.assertEqual(expected_slug, ranked[0]["slug"])
+            self.assertEqual(reference_id, capsule["references"][0]["id"])
+            self.assertEqual("primary", capsule["references"][0]["role"])
+
 
 if __name__ == "__main__":
     unittest.main()

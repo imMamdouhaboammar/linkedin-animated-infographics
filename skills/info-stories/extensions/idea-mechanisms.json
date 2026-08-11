@@ -5131,6 +5131,118 @@
           "source verdict language"
         ]
       }
+    },
+    {
+      "slug": "editorial-thesis-contrast",
+      "name": "Editorial Thesis Contrast",
+      "origin": "extracted",
+      "story_jobs": ["compare-options", "reframe-belief"],
+      "content_shapes": ["comparison", "thesis"],
+      "compatibility": {
+        "output_modes": ["gif", "static"],
+        "languages": ["*"],
+        "densities": ["low", "medium"],
+        "evidence_modes": ["documented", "conceptual", "attributed"],
+        "styles": ["comparison-grid", "field-guide", "story-strip"],
+        "archetypes": ["what-each-piece-does", "before-after-workflow", "decision-cards"],
+        "motions": ["sequential-highlight", "spotlight-sweep"]
+      },
+      "hook": "State one disputed thesis, then separate two terms across the same evidence axis.",
+      "beats": ["thesis", "term-one", "term-two", "shared-evidence", "consequence"],
+      "palette_roles": ["paper-base", "ink", "single-editorial-accent"],
+      "layout": {
+        "topology": "editorial thesis with paired evidence columns",
+        "zones": ["headline", "thesis", "term-one", "term-two", "evidence-note"],
+        "proportions": "2:2:2:1",
+        "negative_space": "Keep a quiet band around the thesis and a shared gutter between terms."
+      },
+      "hierarchy": {
+        "primary": "thesis",
+        "secondary": "paired terms",
+        "reading_order": ["headline", "thesis", "term-one", "term-two", "evidence-note"]
+      },
+      "typography": {
+        "classes": ["serif", "sans"],
+        "roles": ["display", "body", "label"],
+        "language_policy": "Use editorial contrast by role; never infer the source screenshot font."
+      },
+      "motion": {
+        "job": "compare-states",
+        "target": "paired evidence terms",
+        "sequence": ["complete-thesis", "term-one", "term-two", "shared-consequence"],
+        "timing_family": "measured-cross-highlight",
+        "static_regions": ["headline", "source-note"]
+      },
+      "loop": {
+        "strategy": "hold-reset",
+        "hold": "Hold the complete comparison long enough to resolve both definitions.",
+        "reset": "Return directly to the complete thesis frame."
+      },
+      "constraints": ["Keep frame zero complete.", "Cite the evidence behind both terms."],
+      "anti_patterns": ["Decorative newspaper imitation.", "Two unrelated card columns without a shared axis."],
+      "implementation_hints": ["Use one shared baseline for both terms.", "Let type scale carry the thesis instead of decorative imagery."],
+      "reference_ids": ["REF-029"],
+      "influence_axes": {"REF-029": ["structure", "typography"]},
+      "originality": {
+        "adopt": ["thesis-first hierarchy", "paired terms on a shared axis"],
+        "reject": ["source wording", "source illustration", "source palette measurements"]
+      }
+    },
+    {
+      "slug": "local-setup-command-rail",
+      "name": "Local Setup Command Rail",
+      "origin": "extracted",
+      "story_jobs": ["show-process", "teach-workflow", "explain-system"],
+      "content_shapes": ["process", "setup-guide"],
+      "compatibility": {
+        "output_modes": ["gif", "static"],
+        "languages": ["*"],
+        "densities": ["medium", "high"],
+        "evidence_modes": ["documented", "conceptual", "attributed", "product-proof"],
+        "styles": ["command-canvas", "sequence-board", "signal-sheet"],
+        "archetypes": ["step-by-step-playbook", "one-prompt-full-workflow", "working-screen"],
+        "motions": ["sequential-highlight", "type-on-terminal"]
+      },
+      "hook": "Pair a concise setup promise with an ordered command rail and a separate explanation column.",
+      "beats": ["promise", "prerequisites", "install", "configure", "run", "verify"],
+      "palette_roles": ["dark-base", "command-surface", "active-step-accent"],
+      "layout": {
+        "topology": "two-column command rail and explanation guide",
+        "zones": ["headline", "step-rail", "command-panel", "explanation-panel", "verification"],
+        "proportions": "1:2:3:1",
+        "negative_space": "Keep commands isolated from prose and reserve one calm verification footer."
+      },
+      "hierarchy": {
+        "primary": "command-panel",
+        "secondary": "active step",
+        "reading_order": ["headline", "prerequisites", "step-rail", "command-panel", "verification"]
+      },
+      "typography": {
+        "classes": ["sans", "mono"],
+        "roles": ["display", "body", "label", "mono"],
+        "language_policy": "Use mono only for commands and verify glyph coverage for surrounding copy."
+      },
+      "motion": {
+        "job": "reveal-order",
+        "target": "active setup step",
+        "sequence": ["complete-guide", "prerequisite", "install", "configure", "run", "verify"],
+        "timing_family": "long-dwell-step-highlight",
+        "static_regions": ["headline", "command text", "verification footer"]
+      },
+      "loop": {
+        "strategy": "hold-reset",
+        "hold": "Hold every step long enough to read its command and explanation.",
+        "reset": "Reset only after the verified final state is readable."
+      },
+      "constraints": ["Keep frame zero complete.", "Commands and product states require evidence."],
+      "anti_patterns": ["Typing every command character as decoration.", "Mixing commands and explanatory copy in one dense block."],
+      "implementation_hints": ["Use semantic columns instead of equal cards.", "Highlight one step while keeping all commands readable."],
+      "reference_ids": ["REF-035"],
+      "influence_axes": {"REF-035": ["structure", "motion"]},
+      "originality": {
+        "adopt": ["two-column instructional split", "one active step at a time"],
+        "reject": ["source headline", "source commands", "source product marks", "source signature styling"]
+      }
     }
   ]
 }
