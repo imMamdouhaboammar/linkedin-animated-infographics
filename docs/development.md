@@ -2,6 +2,8 @@
 
 The repository uses contract-first development. Public behavior is represented in machine-readable helper, graph, gate, module, demo, and host-packaging files and protected by regression tests.
 
+The Python tools require Python 3.11 or newer. CI uses Python 3.12 and installs Pillow, Playwright, and Chromium before running the render and reference fixtures. The real user-supplied GIF corpus is local-only; CI validates the same ingestion contract with tracked synthetic fixtures.
+
 ## Core development loop
 
 1. Add or update a failing test for the intended behavior
