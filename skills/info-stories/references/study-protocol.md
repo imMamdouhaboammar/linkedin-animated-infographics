@@ -30,3 +30,9 @@ Return a JSON-compatible object with: `source`, `source_kind`, `provenance`, `su
 ## Study to build handoff
 
 The studied DNA can override catalog defaults only after the user accepts the diagnosis. Even then, keep hard constraints: contrast, safe margin, first-frame completeness, motion budget, honest claims, and attribution.
+
+## Evidence contract
+
+Rank observations (`primary`, `secondary`, `tertiary`) and attach `confidence` (`high`, `medium`, `low`) to each. Record `provenance` and `rights` separately as `user_owned`, `public_reference`, `licensed_asset`, or `unknown`; never infer ownership. Every recommendation names its evidence and the focused context it applies to (`surface`, `type`, `structure`, `rhythm`, `motion`, or `copy`).
+
+If a requested reference is missing, unreadable, or lacks sufficient evidence, return `HOLD: reference evidence unavailable` and do not invent findings. A route with no references must explicitly return `SKIP: no reference supplied`.

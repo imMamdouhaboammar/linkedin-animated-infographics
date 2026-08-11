@@ -50,3 +50,4 @@ Own and execute `design-dials`. Downstream owners apply `structural-originality`
 ## Outputs
 
 Return `build/story-brief.json` to the parent workflow with Story House, Visual Style, Story Archetype, Motion Patterns, design dials, execution artboard archetype, selected concept identifier, rationale per axis, unresolved factual inputs, and compatibility warnings.
+Carry selected study IDs/capsules only; retain evidence rank/confidence and provenance/rights. Reference evidence `HOLD`s; absent references are `SKIP`.

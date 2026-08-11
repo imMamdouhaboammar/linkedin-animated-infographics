@@ -50,3 +50,4 @@ Own and execute `reference-dna`. When the route also activates `design-dials` or
 ## Outputs
 
 Return `build/design-study.json` to the parent workflow with the validated study-report fields, ranked local candidates, confidence notes, reproduction boundaries, and a concise diagnosis. Do not build HTML, final copy, or animation.
+Every observation includes ranked evidence, confidence, provenance, rights, and focused context. Missing/invalid requested evidence is `HOLD`; no supplied reference is `SKIP`.

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "artifacts": {
-    "build/design-study.json": {"producer": "design-study", "consumers": ["creative-director", "story-architect", "layout-composer"], "blocking": false},
+    "build/design-study.json": {"producer": "design-study", "consumers": ["creative-director", "story-architect", "layout-composer"], "blocking": false, "contract": "ranked evidence/confidence/provenance/rights/focused contexts; reference HOLD or no-reference SKIP"},
     "build/evidence.json": {"producer": "evidence-checker", "consumers": ["creative-director", "story-architect", "copy-compressor", "post-critic", "story-verifier"], "blocking": true},
     "build/creative-concepts.json": {
       "producer": "creative-director",
@@ -18,11 +18,11 @@
     "build/post.html": {"producer": "artboard-builder", "consumers": ["motion-engineer", "render-qa", "post-critic", "story-verifier", "parent:share-demo"], "blocking": true},
     "build/post.gif": {"producer": "render-qa", "consumers": ["parent:new-post", "parent:share-demo"], "blocking": true},
     "build/still.png": {"producer": "artboard-builder", "consumers": ["motion-director", "mascot-animator", "parent:new-post"], "blocking": true},
-    "build/motion-direction.json": {"producer": "motion-director", "consumers": ["mascot-animator", "motion-engineer"], "blocking": false},
+    "build/motion-direction.json": {"producer": "motion-director", "consumers": ["mascot-animator", "motion-engineer"], "blocking": false, "contract": "one communication job per motion: target, sequence, duration, easing, hold, reset, static regions"},
     "build/mascot-request.json": {"producer": "parent:new-post", "consumers": ["mascot-animator"], "blocking": true},
     "build/mascot/motion-contract.json": {"producer": "mascot-animator", "consumers": ["motion-engineer", "post-critic", "story-verifier"], "blocking": true},
     "build/render-report.json": {"producer": "render-qa", "consumers": ["post-critic", "story-verifier", "parent:share-demo"], "blocking": true},
-    "build/critic-report.json": {"producer": "post-critic", "consumers": ["story-verifier"], "blocking": true},
+    "build/critic-report.json": {"producer": "post-critic", "consumers": ["story-verifier"], "blocking": true, "contract": "six 1-5 evidence-backed quality axes; applicable score <3 blocks"},
     "build/verification-report.json": {"producer": "story-verifier", "consumers": ["parent:new-post", "parent:share-demo"], "blocking": true},
     "build/community-demo.json": {"producer": "parent:share-demo", "consumers": ["community-publisher"], "blocking": true},
     "build/community-demo-package": {"producer": "parent:share-demo", "consumers": ["community-publisher"], "blocking": true}
