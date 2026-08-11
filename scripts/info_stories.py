@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CATALOG = ROOT / "skills" / "info-stories" / "catalog.json"
 DEFAULT_EXTENSIONS = ROOT / "skills" / "info-stories" / "extensions"
 DEFAULT_REFERENCE_LIBRARY = ROOT / "research" / "reference-studies" / "visual-library.json"
+DEFAULT_REFERENCE_LIBRARY = ROOT / "research" / "reference-studies" / "visual-library.json"
 AXIS_ALIASES = {
     "house": "houses",
     "style": "styles",
@@ -485,6 +486,15 @@ def validate_study_evidence(report):
     evidence = report.get("ranked_evidence")
     if not isinstance(evidence, list) or not evidence:
         return ["READY study requires ranked_evidence"]
+    try:
+        reference_library = json.loads(DEFAULT_REFERENCE_LIBRARY.read_text())
+        valid_reference_ids = {
+            row["id"] for field in ("references", "aliases")
+            for row in reference_library.get(field, []) if row.get("id")
+        }
+    except (OSError, json.JSONDecodeError, TypeError):
+        valid_reference_ids = set()
+        errors.append("Canonical reference library is unavailable or invalid")
     seen_ranks = set()
     for index, row in enumerate(evidence):
         if not isinstance(row, dict):
@@ -493,6 +503,8 @@ def validate_study_evidence(report):
         label = row.get("reference_id") or index
         if not isinstance(row.get("reference_id"), str) or not re.fullmatch(r"REF-\d{3}", row["reference_id"]):
             errors.append(f"Evidence {label}: invalid reference_id")
+        elif row["reference_id"] not in valid_reference_ids:
+            errors.append(f"Evidence {label}: unknown reference_id")
         rank = row.get("rank")
         if not isinstance(rank, int) or rank < 1 or rank in seen_ranks:
             errors.append(f"Evidence {label}: rank must be a unique positive integer")
@@ -588,6 +600,8 @@ def validate_visual_quality_report(report):
             errors.append(f"Quality axis {index} must be an object")
             continue
         axis = row.get("axis")
+        if axis not in QUALITY_AXES:
+            errors.append(f"Unknown quality axis {axis!r}")
         if axis in by_axis:
             errors.append(f"Duplicate quality axis {axis}")
         by_axis[axis] = row

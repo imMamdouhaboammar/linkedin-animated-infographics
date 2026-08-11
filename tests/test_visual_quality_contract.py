@@ -63,6 +63,11 @@ class VisualQualityContractTests(unittest.TestCase):
         report["axes"][0].pop("reason")
         self.assertTrue(any("reason" in error for error in self.mod.validate_visual_quality_report(report)))
 
+    def test_unknown_quality_axis_is_rejected(self):
+        report = quality_report()
+        report["axes"].append({"axis": "Vibes", "applicable": False, "reason": "not a contract axis"})
+        self.assertTrue(any("Unknown quality axis" in error for error in self.mod.validate_visual_quality_report(report)))
+
     def test_ready_study_requires_ranked_traceable_focused_evidence(self):
         study = {
             "source": "library",
@@ -86,6 +91,14 @@ class VisualQualityContractTests(unittest.TestCase):
         self.assertEqual([], self.mod.validate_study_report(study))
         study["ranked_evidence"][0]["rights_state"] = ""
         self.assertTrue(any("rights_state" in error for error in self.mod.validate_study_report(study)))
+
+    def test_ready_study_rejects_unknown_canonical_reference(self):
+        study = {"reference_status": "READY", "ranked_evidence": [{
+            "reference_id": "REF-999", "rank": 1, "confidence": "high",
+            "provenance_state": "unverified", "rights_state": "unverified",
+            "focused_contexts": {"layout": ["unknown"]},
+        }]}
+        self.assertTrue(any("unknown reference_id" in error for error in self.mod.validate_study_evidence(study)))
 
     def test_reference_hold_and_no_reference_skip_are_explicit(self):
         base = {"reference_status": "HOLD", "status_reason": "requested asset unreadable"}
