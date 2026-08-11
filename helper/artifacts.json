@@ -22,7 +22,7 @@
     "build/mascot-request.json": {"producer": "parent:new-post", "consumers": ["mascot-animator"], "blocking": true},
     "build/mascot/motion-contract.json": {"producer": "mascot-animator", "consumers": ["motion-engineer", "post-critic", "story-verifier"], "blocking": true},
     "build/render-report.json": {"producer": "render-qa", "consumers": ["post-critic", "story-verifier", "parent:share-demo"], "blocking": true},
-    "build/critic-report.json": {"producer": "post-critic", "consumers": ["story-verifier"], "blocking": true, "contract": "six 1-5 evidence-backed quality axes; applicable score <3 blocks"},
+    "build/critic-report.json": {"producer": "post-critic", "consumers": ["story-verifier"], "blocking": true, "contract": "Purpose, Hierarchy, Execution, Specificity, Restraint, Variety: 1-5 with evidence; applicable score <3 blocks"},
     "build/verification-report.json": {"producer": "story-verifier", "consumers": ["parent:new-post", "parent:share-demo"], "blocking": true},
     "build/community-demo.json": {"producer": "parent:share-demo", "consumers": ["community-publisher"], "blocking": true},
     "build/community-demo-package": {"producer": "parent:share-demo", "consumers": ["community-publisher"], "blocking": true}

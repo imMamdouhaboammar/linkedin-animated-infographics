@@ -302,6 +302,10 @@ class InfoStoryRetrievalTests(unittest.TestCase):
         self.assertLessEqual(len(encoded), 1300)
         self.assertGreater(capsule["omitted_mechanisms"], 0)
 
+    def test_empty_context_capsule_still_enforces_utf8_byte_budget(self):
+        with self.assertRaisesRegex(ValueError, "byte_budget"):
+            self.mod.build_context_capsule({"mechanisms": []}, [], "concept", 1)
+
     def test_default_catalog_and_cli_are_valid_and_deterministic(self):
         catalog = self.mod.load_catalog()
         self.assertGreaterEqual(len(catalog["mechanisms"]), 30)

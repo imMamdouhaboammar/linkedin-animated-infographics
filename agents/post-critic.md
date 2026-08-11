@@ -59,4 +59,4 @@ Apply `prose-specificity`, `voice-preservation`, `structural-originality`, `cont
 ## Outputs
 
 Return `build/critic-report.json` to the parent workflow with three ordered groups: `must_fix`, `would_improve`, and `leave_alone`. Put the highest-leverage change first and include the gate or evidence row behind each blocking finding. If the artifact is ready, say so plainly.
-Score hierarchy, composition, typography, contrast, rhythm, and originality from 1–5 with evidence and an actionable finding; any applicable score below 3 blocks.
+Score Purpose, Hierarchy, Execution, Specificity, Restraint, and Variety from 1–5 with evidence and an actionable finding; any applicable score below 3 blocks.

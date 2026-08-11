@@ -307,6 +307,8 @@ def build_context_capsule(catalog, ranked, stage, byte_budget):
         included_mechanisms = candidate_mechanisms
     if ranked and not included_rows:
         raise ValueError(f"byte_budget {byte_budget} is too small for one {stage} mechanism")
+    if _capsule_bytes(capsule) > byte_budget:
+        raise ValueError(f"byte_budget {byte_budget} is too small for an empty {stage} capsule")
     return capsule
 
 
@@ -450,6 +452,8 @@ STUDY_REQUIRED_FIELDS = (
     "source", "source_kind", "provenance", "surface", "type_roles", "structure",
     "rhythm", "motion", "visual_anchor", "recommendations", "copy_boundaries",
 )
+QUALITY_AXES = ("Purpose", "Hierarchy", "Execution", "Specificity", "Restraint", "Variety")
+FONT_POLICIES = {"exact-required", "fallback-accepted"}
 
 
 def validate_study_report(report):
@@ -463,6 +467,148 @@ def validate_study_report(report):
     for axis in ("house", "style", "archetype", "motion"):
         if isinstance(recs, dict) and axis not in recs:
             errors.append(f"Study recommendations missing {axis}")
+    errors.extend(validate_study_evidence(report))
+    return errors
+
+
+def validate_study_evidence(report):
+    errors = []
+    status = report.get("reference_status")
+    if status is None:
+        return errors
+    if status not in {"READY", "HOLD", "SKIP"}:
+        return [f"Unknown reference_status: {status!r}"]
+    if status in {"HOLD", "SKIP"}:
+        if not report.get("status_reason"):
+            errors.append(f"{status} requires status_reason")
+        return errors
+    evidence = report.get("ranked_evidence")
+    if not isinstance(evidence, list) or not evidence:
+        return ["READY study requires ranked_evidence"]
+    seen_ranks = set()
+    for index, row in enumerate(evidence):
+        if not isinstance(row, dict):
+            errors.append(f"ranked_evidence[{index}] must be an object")
+            continue
+        label = row.get("reference_id") or index
+        if not isinstance(row.get("reference_id"), str) or not re.fullmatch(r"REF-\d{3}", row["reference_id"]):
+            errors.append(f"Evidence {label}: invalid reference_id")
+        rank = row.get("rank")
+        if not isinstance(rank, int) or rank < 1 or rank in seen_ranks:
+            errors.append(f"Evidence {label}: rank must be a unique positive integer")
+        seen_ranks.add(rank)
+        if row.get("confidence") not in {"high", "medium", "low"}:
+            errors.append(f"Evidence {label}: invalid confidence")
+        for field in ("provenance_state", "rights_state"):
+            if not row.get(field):
+                errors.append(f"Evidence {label}: missing {field}")
+        contexts = row.get("focused_contexts")
+        if not isinstance(contexts, dict) or not contexts or any(not value for value in contexts.values()):
+            errors.append(f"Evidence {label}: focused_contexts must be a non-empty object")
+    return errors
+
+
+def validate_typography_spec(spec):
+    roles = spec.get("roles") if isinstance(spec, dict) else None
+    if not isinstance(roles, list):
+        return ["Typography roles must be a list"]
+    errors = []
+    seen = set()
+    for index, row in enumerate(roles):
+        if not isinstance(row, dict):
+            errors.append(f"Typography role {index} must be an object")
+            continue
+        role = row.get("role")
+        if role not in {"display", "body", "label", "mono"} or role in seen:
+            errors.append(f"Typography role {role!r} is invalid or duplicated")
+        seen.add(role)
+        for field in ("stack_id", "families"):
+            if not row.get(field):
+                errors.append(f"Typography role {role or index} missing {field}")
+        if not isinstance(row.get("scripts"), list) or not row["scripts"]:
+            errors.append(f"Typography role {role or index} requires scripts")
+        weights = row.get("weights")
+        if not isinstance(weights, list) or not weights or any(not isinstance(weight, int) for weight in weights):
+            errors.append(f"Typography role {role or index} requires numeric weights")
+        if row.get("font_policy") not in FONT_POLICIES:
+            errors.append(f"Typography role {role or index} has invalid font_policy")
+    for required in ("display", "body", "label"):
+        if required not in seen:
+            errors.append(f"Typography missing {required} role")
+    return errors
+
+
+def validate_motion_direction(report):
+    if not isinstance(report, dict):
+        return ["Motion direction must be an object"]
+    output_mode = report.get("output_mode")
+    motions = report.get("motions")
+    if output_mode not in {"gif", "static"}:
+        return ["Motion output_mode must be gif or static"]
+    if not isinstance(motions, list):
+        return ["Motion motions must be a list"]
+    if output_mode == "static" and motions:
+        return ["static output must not declare motions"]
+    if len(motions) > 2:
+        return ["Motion direction allows at most two motions"]
+    errors = []
+    required = ("communication_job", "target", "sequence", "duration_ms", "easing_family", "hold_ms", "reset", "static_regions")
+    for index, row in enumerate(motions):
+        if not isinstance(row, dict):
+            errors.append(f"Motion {index} must be an object")
+            continue
+        for field in required:
+            if field not in row or row[field] in (None, "", []):
+                errors.append(f"Motion {index} missing {field}")
+        if not isinstance(row.get("sequence"), list) or not row.get("sequence"):
+            errors.append(f"Motion {index} requires sequence")
+        if not isinstance(row.get("static_regions"), list) or not row.get("static_regions"):
+            errors.append(f"Motion {index} requires static_regions")
+        if not isinstance(row.get("duration_ms"), int) or row.get("duration_ms", 0) <= 0:
+            errors.append(f"Motion {index} duration_ms must be positive")
+        if not isinstance(row.get("hold_ms"), int) or row.get("hold_ms", -1) < 0:
+            errors.append(f"Motion {index} hold_ms must be non-negative")
+    return errors
+
+
+def validate_visual_quality_report(report):
+    if not isinstance(report, dict):
+        return ["Visual quality report must be an object"]
+    errors = []
+    render = report.get("render_evidence")
+    if not isinstance(render, dict) or not render.get("artifact") or not re.fullmatch(r"[0-9a-f]{64}", str(render.get("sha256", ""))):
+        errors.append("Visual quality report requires render evidence artifact and SHA-256")
+    rows = report.get("axes")
+    if not isinstance(rows, list):
+        return errors + ["Visual quality axes must be a list"]
+    by_axis = {}
+    blocking = False
+    for index, row in enumerate(rows):
+        if not isinstance(row, dict):
+            errors.append(f"Quality axis {index} must be an object")
+            continue
+        axis = row.get("axis")
+        if axis in by_axis:
+            errors.append(f"Duplicate quality axis {axis}")
+        by_axis[axis] = row
+        if row.get("applicable") is False:
+            if not row.get("reason"):
+                errors.append(f"Quality axis {axis or index} requires non-applicable reason")
+            continue
+        score = row.get("score")
+        if not isinstance(score, int) or not 1 <= score <= 5:
+            errors.append(f"Quality axis {axis or index} score must be integer 1-5")
+        elif score < 3:
+            blocking = True
+        for field in ("evidence", "finding"):
+            if not row.get(field):
+                errors.append(f"Quality axis {axis or index} missing {field}")
+    for axis in QUALITY_AXES:
+        if axis not in by_axis:
+            errors.append(f"Missing quality axis {axis}")
+    expected = "HOLD" if blocking else "PASS"
+    if report.get("verdict") != expected:
+        errors.append(f"Visual quality verdict must be {expected}")
     return errors
 
 
