@@ -40,6 +40,10 @@ claude plugin validate .
 
 CI also performs the same-repository Claude Marketplace add/list/install smoke. OpenAI packaging is validated structurally and for host-isolation contracts by `scripts/validate_codex_plugin.py`; any Codex CLI marketplace smoke must use documented non-interactive behavior rather than a fabricated install command.
 
+## Visual intelligence contracts
+
+Run `python3 scripts/reference_intelligence.py ingest --library /path/to/gifs`, `python3 scripts/reference_intelligence.py check`, and `python3 tools/story_retrieve.py --query query.json`. Ingest writes ignored `.plugin-state/reference-studies/{manifest.json,assets/,frames/}`; duplicate SHA inputs become aliases and cache reuse is SHA-based. Retrieval stages are `concept|story|palette-type|layout|motion|review` and output is UTF-8 byte-budgeted. Study status is READY/HOLD/SKIP; quality axes are Purpose, Hierarchy, Execution, Specificity, Restraint, Variety, with applicable scores below 3 blocking.
+
 ## Validator responsibilities
 
 ### `scripts/info_stories.py check`

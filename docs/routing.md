@@ -2,6 +2,10 @@
 
 The repository routes requests through `helper/` before choosing production workers. The human-readable entry is [`../helper/GUIDE.md`](../helper/GUIDE.md); `helper/router.json` is the machine-readable route registry.
 
+## Visual reference contract
+
+Reference studies record ranked evidence, confidence, provenance, rights, and focused contexts. Missing or invalid requested evidence returns HOLD; no supplied reference returns SKIP.
+
 ## Intents
 
 | Intent | Execution |

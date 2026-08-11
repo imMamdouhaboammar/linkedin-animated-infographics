@@ -28,6 +28,9 @@ jobs:
         with:
           node-version: "22"
 
+      - name: Install Python runtime dependencies
+        run: python3 -m pip install Pillow playwright
+
       - name: Python unit tests
         run: python3 -m unittest discover -s tests -v
 
@@ -36,6 +39,9 @@ jobs:
 
       - name: Validate Info-stories registry
         run: python3 scripts/info_stories.py check
+
+      - name: Validate reference cache contract
+        run: python3 scripts/reference_intelligence.py check
 
       - name: Validate ecosystem router
         run: python3 scripts/ecosystem_router.py check

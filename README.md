@@ -264,6 +264,10 @@ Programmatic repository routing:
 python3 tools/route_request.py --request "Create an animated LinkedIn infographic"
 ```
 
+## Visual intelligence
+
+Run `python3 scripts/reference_intelligence.py ingest --library /path/to/gifs` then `python3 scripts/reference_intelligence.py check`; state is ignored under `.plugin-state/reference-studies/`. Use `python3 tools/story_retrieve.py --query query.json` for deterministic UTF-8 byte-budgeted capsules. Provenance and reuse rights remain unverified unless explicitly supplied.
+
 ## Strict validation
 
 Disconnected capability means failure
