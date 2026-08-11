@@ -136,7 +136,7 @@ Update `scripts/validate_codex_plugin.py` and `tests/test_codex_plugin.py` when 
 
 ## Release work
 
-The current release is `3.2.1`.
+The current release is `3.3.0`.
 
 A public release requires the same plugin version across the Claude plugin manifest, Claude marketplace plugin entry, OpenAI plugin manifest, Codex compatibility registry, and OpenAI submission metadata.
 

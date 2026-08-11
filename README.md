@@ -4,7 +4,7 @@
 
 **Turn imagination into visual stories that stop the scroll and make the idea click**
 
-`Claude Code + Codex + ChatGPT · 3.2.2` · `1080×1350` · `Info-stories` · `Exact-SVG mascots` · `Arabic / RTL`
+`Claude Code + Codex + ChatGPT · 3.3.0` · `1080×1350` · `Info-stories` · `Exact-SVG mascots` · `Arabic / RTL`
 
 <br>
 
@@ -32,7 +32,7 @@ If the effect looks good but adds no meaning, it is decoration
 
 ## Install
 
-Version 3.2.2 keeps host execution isolated on purpose
+Version 3.3.0 adds deterministic visual-reference retrieval and measured render evidence while keeping host execution isolated
 
 - Claude uses the existing `skills/` + `agents/` runtime and native worker graph
 - ChatGPT and Codex use the self-contained `openai-skills/` distribution
@@ -292,7 +292,7 @@ claude plugin validate .
 
 ## Public Plugins Directory
 
-The 3.2.2 OpenAI package is prepared as a skills-only update using `openai-skills/`
+The 3.3.0 OpenAI package is prepared as a skills-only update using `openai-skills/`
 
 `submission/` tracks listing metadata, five positive reviewer cases, three negative cases, and the manual OpenAI Platform handoff
 
