@@ -8,10 +8,32 @@ ROOT = Path(__file__).resolve().parents[1]
 HELPER_FILES = ("router.json", "capabilities.json", "artifacts.json", "quality-gates.json")
 REQUIRED_CONDITIONS = frozenset({"arabic", "ui_mockup", "visual_reference", "official_mascot"})
 PARENT_WORKFLOWS = frozenset({"new-post", "share-demo"})
+REFERENCE_STAGE_CONDITION = {
+    "condition": "visual_reference",
+    "before": "evidence-checker",
+    "on_absent": "SKIP",
+    "on_missing": "HOLD",
+}
+REFERENCE_RUNTIME = {
+    "owner": "design-study",
+    "persistent_ingestion": "local-only",
+    "public_openai_fallback": "generated-capsule",
+    "source_media_export": "forbidden",
+}
+REFERENCE_IMPLEMENTATION_REFS = {
+    "tools/story_retrieve.py",
+    "scripts/validate_codex_plugin.py",
+}
 CONDITION_SCHEMA = {
     "arabic": {"adds_skills": list},
     "ui_mockup": {"adds_capabilities": list, "adds_agents": list},
-    "visual_reference": {"adds_agents": list, "adds_capabilities": list},
+    "visual_reference": {
+        "stage": str,
+        "evidence_field": str,
+        "on_absent": str,
+        "on_missing": str,
+        "adds_capabilities": list,
+    },
     "official_mascot": {
         "asset_gate": str,
         "adds_skills": list,
@@ -74,6 +96,19 @@ def _validate_required_conditions(router: dict) -> list[str]:
             if invalid:
                 errors.append(
                     f"condition {condition_id} required field {field} must be {expected_type.__name__}"
+                )
+    reference = conditions.get("visual_reference", {})
+    expected_reference = {
+        "stage": "design-study",
+        "evidence_field": "reference_evidence",
+        "on_absent": "SKIP",
+        "on_missing": "HOLD",
+    }
+    if isinstance(reference, dict):
+        for field, expected in expected_reference.items():
+            if field in reference and reference[field] != expected:
+                errors.append(
+                    f"condition visual_reference {field} must be {expected!r}"
                 )
     return errors
 
@@ -233,6 +268,30 @@ def validate_ecosystem(root: Path = ROOT) -> list[str]:
                 errors.append(f"plugin graph missing helper capabilities: {', '.join(missing)}")
             if extra:
                 errors.append(f"helper registry missing graph capabilities: {', '.join(extra)}")
+        graph_condition = (
+            graph.get("workflows", {})
+            .get("new-post", {})
+            .get("stage_conditions", {})
+            .get("design-study")
+        )
+        if graph_condition != REFERENCE_STAGE_CONDITION:
+            errors.append("design-study graph stage condition drift")
+
+    reference_runtime = capabilities.get("design-taste", {}).get("reference_runtime")
+    if reference_runtime != REFERENCE_RUNTIME:
+        errors.append("design-taste reference runtime drift")
+    readiness = quality_gates.get("reference-evidence-readiness", {})
+    if (
+        readiness.get("stage") != "reference-diagnosis"
+        or readiness.get("severity") != "blocking"
+        or readiness.get("owners") != ["design-study"]
+        or set(readiness.get("applies_to_intents", [])) != {"create-post", "design-study", "info-story"}
+        or not {"HOLD", "SKIP"}.issubset(set(str(readiness.get("behavior", "")).split()))
+    ):
+        errors.append("reference-evidence-readiness quality gate drift")
+    reference_gate = research_gates.get("reference-dna", {})
+    if not REFERENCE_IMPLEMENTATION_REFS.issubset(set(reference_gate.get("implementation_refs", []))):
+        errors.append("reference-dna implementation refs drift")
     return errors
 
 
@@ -300,6 +359,14 @@ def _quality_gates_for(intent: str, ecosystem: dict) -> list[str]:
     return [gate_id for gate_id, gate in gates.items() if intent in gate.get("applies_to_intents", [])]
 
 
+def _has_reference_evidence(value) -> bool:
+    if isinstance(value, str):
+        return bool(value.strip())
+    if isinstance(value, (list, tuple)):
+        return any(_has_reference_evidence(item) for item in value)
+    return bool(value)
+
+
 def _finalize_route(result: dict, request: dict, ecosystem: dict) -> dict:
     for key in ("skills", "agents", "conditional_agents", "capabilities", "asset_gates"):
         result[key] = _dedupe(result[key])
@@ -333,6 +400,10 @@ def route_request(request: dict, root: Path = ROOT) -> dict:
         "asset_gates": [],
         "research_gates": [],
         "quality_gates": [],
+        "reference_diagnosis": {
+            "status": conditions["visual_reference"]["on_absent"],
+            "reason": "no reference supplied",
+        },
     }
 
     language = (request.get("language") or "").lower()
@@ -344,10 +415,30 @@ def route_request(request: dict, root: Path = ROOT) -> dict:
         result["capabilities"].extend(condition.get("adds_capabilities", []))
         result["agents"].extend(condition.get("adds_agents", []))
 
-    if request.get("visual_reference") is True:
-        condition = conditions["visual_reference"]
-        result["agents"].extend(condition.get("adds_agents", []))
+    condition = conditions["visual_reference"]
+    reference_requested = request.get("visual_reference") is True or intent == "design-study"
+    if reference_requested:
+        evidence = request.get(condition["evidence_field"])
+        evidence_available = _has_reference_evidence(evidence)
+        result["agents"] = [agent for agent in result["agents"] if agent != condition["stage"]]
+        result["agents"].insert(0, condition["stage"])
         result["capabilities"].extend(condition.get("adds_capabilities", []))
+        request = dict(request)
+        request["visual_reference"] = True
+        if not evidence_available:
+            result["status"] = condition["on_missing"]
+            result["reason"] = "reference evidence unavailable"
+            result["reference_diagnosis"] = {
+                "status": condition["on_missing"],
+                "reason": "reference evidence unavailable",
+            }
+            return _finalize_route(result, request, ecosystem)
+        result["reference_diagnosis"] = {
+            "status": "READY",
+            "reason": "reference evidence available",
+        }
+    else:
+        result["agents"] = [agent for agent in result["agents"] if agent != condition["stage"]]
 
     mascot = request.get("mascot") or {}
     svg_asset = _resolve_asset_path(root, mascot.get("svg_path"))
@@ -389,6 +480,7 @@ def explain_route(route: dict) -> str:
         f"research gates: {', '.join(route['research_gates']) or 'none'}",
         f"quality gates: {', '.join(route['quality_gates']) or 'none'}",
         f"asset gates: {', '.join(route['asset_gates']) or 'none'}",
+        f"reference diagnosis: {route['reference_diagnosis']['status']} ({route['reference_diagnosis']['reason']})",
     ]
     if route.get("reason"):
         lines.append(f"reason: {route['reason']}")
@@ -410,6 +502,7 @@ def _request_from_args(args):
         "output": getattr(args, "output", None),
         "ui_mockup": getattr(args, "ui_mockup", False),
         "visual_reference": getattr(args, "visual_reference", False),
+        "reference_evidence": getattr(args, "reference_evidence", []),
     }
     if mascot:
         request["mascot"] = mascot
@@ -423,6 +516,7 @@ def _add_route_args(parser):
     parser.add_argument("--output")
     parser.add_argument("--ui-mockup", action="store_true")
     parser.add_argument("--visual-reference", action="store_true")
+    parser.add_argument("--reference-evidence", action="append", default=[])
     parser.add_argument("--mascot-name")
     parser.add_argument("--official-mascot", action="store_true")
     parser.add_argument("--svg-path")

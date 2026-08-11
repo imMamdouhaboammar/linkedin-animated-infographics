@@ -1,4 +1,5 @@
 import json
+import hashlib
 import tempfile
 import unittest
 from pathlib import Path
@@ -50,6 +51,15 @@ class DemoGalleryContractTests(unittest.TestCase):
 
     def require_module(self):
         self.assertIsNotNone(validate_demo_dir, "scripts.demo_gallery must exist")
+
+    def write_reference_library_for_gif(self, payload=b"GIF89a"):
+        path = self.root / "research" / "reference-studies"
+        path.mkdir(parents=True, exist_ok=True)
+        (path / "visual-library.json").write_text(json.dumps({
+            "schema_version": 1,
+            "references": [{"id": "REF-001", "sha256": hashlib.sha256(payload).hexdigest()}],
+            "aliases": [],
+        }))
 
     def test_demo_directory_is_exactly_three_public_files(self):
         self.require_module()
@@ -104,6 +114,20 @@ class DemoGalleryContractTests(unittest.TestCase):
         demo = self.make_demo(notes="Authorization: Bearer placeholder-credential-value")
         errors = validate_demo_dir(demo, self.root)
         self.assertTrue(any("bearer credential" in error for error in errors), errors)
+
+    def test_direct_demo_rejects_reference_source_digest(self):
+        self.require_module()
+        self.write_reference_library_for_gif()
+        demo = self.make_demo()
+        errors = validate_demo_dir(demo, self.root)
+        self.assertTrue(any("reference source media digest" in error for error in errors), errors)
+
+    def test_direct_demo_rejects_contact_sheet_reference(self):
+        self.require_module()
+        demo = self.make_demo()
+        (demo / "index.html").write_text('<img src="contact_sheet.png">')
+        errors = validate_demo_dir(demo, self.root)
+        self.assertTrue(any("reference study media" in error for error in errors), errors)
 
     def test_catalog_order_is_deterministic(self):
         self.require_module()

@@ -18,6 +18,14 @@
         "post-critic",
         "story-verifier"
       ],
+      "stage_conditions": {
+        "design-study": {
+          "condition": "visual_reference",
+          "before": "evidence-checker",
+          "on_absent": "SKIP",
+          "on_missing": "HOLD"
+        }
+      },
       "conditional": {
         "mascot": {
           "flag": "--mascot",

@@ -20,6 +20,12 @@
         "palette_character": "creative-attractive-restrained",
         "composition_alignment": "center-first",
         "alignment_exceptions": ["tables", "ui-mockups", "code-or-terminal", "timelines", "arabic-rtl", "reference-dna"]
+      },
+      "reference_runtime": {
+        "owner": "design-study",
+        "persistent_ingestion": "local-only",
+        "public_openai_fallback": "generated-capsule",
+        "source_media_export": "forbidden"
       }
     },
     "evidence": {

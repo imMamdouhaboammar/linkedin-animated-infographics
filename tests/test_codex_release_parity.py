@@ -39,6 +39,26 @@ def copy_fixture(root: Path):
 
 
 class CodexReleaseParityTests(unittest.TestCase):
+    def test_compatibility_declares_visual_intelligence_boundary(self):
+        registry = json.loads((ROOT / "compatibility" / "codex.json").read_text())
+        self.assertEqual(
+            "skills/info-stories/extensions/idea-mechanisms.json",
+            registry["canonical"]["visual_mechanisms"],
+        )
+        self.assertEqual(
+            "research/reference-studies/visual-library.json",
+            registry["canonical"]["reference_library"],
+        )
+        openai = registry["distributions"]["openai"]
+        self.assertEqual("generated-compact-capsule", openai["reference_context"])
+        self.assertFalse(openai["persistent_reference_ingestion"])
+        self.assertEqual(2, len(openai["visual_intelligence_capsules"]))
+        self.assertTrue({
+            "canonical-reference-capsule-digest",
+            "deterministic-reference-selection",
+            "no-source-reference-media-export",
+        }.issubset(registry["parity_invariants"]))
+
     def test_validator_rejects_claude_plugin_version_drift(self):
         module = load_validator()
         with tempfile.TemporaryDirectory() as tmp:

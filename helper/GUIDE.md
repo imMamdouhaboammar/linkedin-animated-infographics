@@ -84,7 +84,7 @@ Enable the `ui-mockup-fidelity` capability. Product states, features, metrics, i
 
 ### Visual references
 
-Use `design-study` to extract reusable design DNA. Do not copy a reference pixel-for-pixel or treat its palette as the only source of variation. When a reference is present, activate `reference-dna` before layout production. A studied alignment pattern may override center-first only when it materially serves the content and is recorded as a reference-DNA decision.
+Read `reference_diagnosis` before evidence work. `SKIP` means no reference was supplied and `design-study` is not invoked. `HOLD` means reference intent was explicit but usable `reference_evidence` is unavailable; stop before `evidence-checker`. `READY` runs `design-study` first, activates `reference-dna`, and records `build/design-study.json`. Downstream workers consume only selected mechanism IDs and focused stage contexts from that artifact, not the full reference library or raw source media. Do not copy a reference pixel-for-pixel or treat its palette as the only source of variation. A studied alignment pattern may override center-first only when it materially serves the content and is recorded as a reference-DNA decision.
 
 ### Static versus animated output
 
@@ -94,7 +94,7 @@ Static work stops after still QA and final verification. Animated work adds moti
 
 Community publishing is an optional public export boundary after delivery. `new-post` may offer it only after final verification `PASS`. A yes routes to the focused `share-demo` parent workflow; a no or no answer performs no GitHub write.
 
-The public package is exactly `demo.gif`, `index.html`, and `demo.json`. `scripts/demo_submit.py` performs packaging/preflight and `scripts/demo_gallery.py` validates the repository gallery. Source prompts are private by default, rights confirmation is explicit, and GitHub publication stops at a pull request requiring maintainer manual review and merge.
+The public package is exactly `demo.gif`, `index.html`, and `demo.json`. `scripts/demo_submit.py` performs packaging/preflight and `scripts/demo_gallery.py` validates the repository gallery. Reference-study GIFs, sampled frames, contact sheets, `.plugin-state/reference-studies` paths, local or absolute filesystem references, and media whose `rights_state` is not `verified` are excluded even when the three-file shape and top-level rights confirmation pass. Source prompts are private by default, rights confirmation is explicit, and GitHub publication stops at a pull request requiring maintainer manual review and merge.
 
 ## Parent workflow rule
 

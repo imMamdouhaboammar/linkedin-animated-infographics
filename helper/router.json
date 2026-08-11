@@ -49,6 +49,12 @@
     "arabic": {"adds_skills": ["arabic"]},
     "ui_mockup": {"adds_capabilities": ["ui-mockup-fidelity", "evidence"], "adds_agents": ["evidence-checker"]},
     "official_mascot": {"asset_gate": "exact-svg", "adds_skills": ["mascots", "svg-mascot-animator"], "adds_agents": ["mascot-animator"], "adds_capabilities": ["mascot-identity"]},
-    "visual_reference": {"adds_agents": ["design-study"], "adds_capabilities": ["design-taste", "structural-fingerprint"]}
+    "visual_reference": {
+      "stage": "design-study",
+      "evidence_field": "reference_evidence",
+      "on_absent": "SKIP",
+      "on_missing": "HOLD",
+      "adds_capabilities": ["design-taste", "structural-fingerprint"]
+    }
   }
 }

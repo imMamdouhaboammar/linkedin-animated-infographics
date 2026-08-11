@@ -65,7 +65,13 @@ If Arabic/RTL is active, load the `arabic` skill before copy or layout work.
 
 ### 1. Reference diagnosis
 
-When visual references exist, delegate to `design-study` and save `build/design-study.json`. Activate `reference-dna`. Study reusable structure, hierarchy, rhythm, density, and motion grammar without cloning distinctive work.
+Consume `reference_diagnosis` from the helper before evidence inventory:
+
+- `SKIP`: no reference was supplied; do not invoke `design-study`.
+- `HOLD`: explicit reference intent has no usable `reference_evidence`; stop before `evidence-checker` with `HOLD: reference evidence unavailable`.
+- `READY`: invoke `design-study` as the first worker and save `build/design-study.json`. Activate `reference-dna` and study reusable structure, hierarchy, rhythm, density, and motion grammar without cloning distinctive work.
+
+Downstream workers receive only the selected mechanism IDs and the focused stage context from `build/design-study.json`, never the full reference library or raw reference media.
 
 ### 2. Evidence inventory
 

@@ -44,8 +44,8 @@
       "owners": ["design-study", "layout-composer"],
       "applies_to_intents": ["create-post", "design-study", "info-story"],
       "requires": "visual_reference",
-      "local_behavior": "When references are supplied, extract reusable canvas rhythm, topology, card and connector grammar, token roles, density, motion grammar, attribution, and visual anchor without cloning distinctive work.",
-      "implementation_refs": ["skills/info-stories/references/study-protocol.md", "agents/design-study.md", "agents/layout-composer.md"]
+      "local_behavior": "No reference request is SKIP. An explicit request without usable evidence is HOLD before evidence-checker. With evidence, use deterministic mechanism retrieval and focused stage capsules to extract reusable structure, hierarchy, rhythm, density, and motion grammar without cloning distinctive work.",
+      "implementation_refs": ["skills/info-stories/references/study-protocol.md", "agents/design-study.md", "agents/layout-composer.md", "tools/story_retrieve.py", "scripts/validate_codex_plugin.py"]
     },
     "contrast-discipline": {
       "sources": ["taste-skill", "hallmark"],

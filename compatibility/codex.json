@@ -21,6 +21,12 @@
       "sandbox_artifacts": true,
       "side_jobs": true,
       "workspace_agents": "optional",
+      "reference_context": "generated-compact-capsule",
+      "persistent_reference_ingestion": false,
+      "visual_intelligence_capsules": [
+        "openai-skills/linkedin-infographic-studio/references/visual-intelligence-capsule.json",
+        "openai-skills/linkedin-infographic-autopilot/references/visual-intelligence-capsule.json"
+      ],
       "fallbacks": ["tool-rich-sequential", "safe-skill-only"]
     }
   },
@@ -33,7 +39,9 @@
     "artifacts": "helper/artifacts.json",
     "modules": "helper/modules.json",
     "research_gates": "research/capability-notes/gates.json",
-    "worker_graph": "architecture/plugin-graph.json"
+    "worker_graph": "architecture/plugin-graph.json",
+    "visual_mechanisms": "skills/info-stories/extensions/idea-mechanisms.json",
+    "reference_library": "research/reference-studies/visual-library.json"
   },
   "repo_development": {
     "codex_guide": ".codex/AGENTS.md",
@@ -59,6 +67,9 @@
     "evidence-integrity",
     "still-before-motion",
     "bounded-visual-repair",
-    "exact-svg-mascot-rule"
+    "exact-svg-mascot-rule",
+    "canonical-reference-capsule-digest",
+    "deterministic-reference-selection",
+    "no-source-reference-media-export"
   ]
 }

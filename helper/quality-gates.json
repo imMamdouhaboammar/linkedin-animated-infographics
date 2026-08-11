@@ -1,6 +1,13 @@
 {
   "schema_version": 1,
   "gates": {
+    "reference-evidence-readiness": {
+      "stage": "reference-diagnosis",
+      "severity": "blocking",
+      "owners": ["design-study"],
+      "applies_to_intents": ["create-post", "design-study", "info-story"],
+      "behavior": "No reference request is SKIP and does not invoke design-study. An explicit reference request without usable reference evidence is HOLD before evidence-checker. An explicit reference request with supplied evidence is READY and runs design-study first."
+    },
     "hooked-design-copy": {
       "stage": "concept-copy-and-final-review",
       "severity": "blocking",

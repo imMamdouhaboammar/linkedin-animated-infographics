@@ -1,4 +1,5 @@
 import json
+import hashlib
 import tempfile
 import unittest
 from pathlib import Path
@@ -47,6 +48,15 @@ class DemoSubmitTests(unittest.TestCase):
 
     def require_module(self):
         self.assertIsNotNone(prepare_submission, "scripts.demo_submit must exist")
+
+    def write_reference_library_for_gif(self, payload=b"GIF89a"):
+        path = self.root / "research" / "reference-studies"
+        path.mkdir(parents=True, exist_ok=True)
+        (path / "visual-library.json").write_text(json.dumps({
+            "schema_version": 1,
+            "references": [{"id": "REF-001", "sha256": hashlib.sha256(payload).hexdigest()}],
+            "aliases": [],
+        }))
 
     def test_prepare_requires_verification_pass(self):
         self.require_module()
@@ -109,6 +119,47 @@ class DemoSubmitTests(unittest.TestCase):
         (self.build / "post.html").write_text('<img src="file:///Users/alice/private.png">')
         with self.assertRaisesRegex(ValueError, "public export scan"):
             prepare_submission(self.build, self.stage, self.metadata())
+
+    def test_reference_source_digest_is_rejected_even_with_rights_confirmation(self):
+        self.require_module()
+        self.write_reference_library_for_gif()
+        with self.assertRaisesRegex(ValueError, "reference source media digest"):
+            prepare_submission(self.build, self.stage, self.metadata(), repo_root=self.root)
+
+    def test_contact_sheet_and_reference_study_paths_are_rejected(self):
+        self.require_module()
+        cases = (
+            '<img src="contact-sheet.png">',
+            '<img src=".plugin-state/reference-studies/contact_sheet.png">',
+            '<img src="frames/REF-001/frame-0001.png">',
+            '<img src="assets/REF-001.gif">',
+        )
+        for index, html in enumerate(cases):
+            with self.subTest(html=html):
+                (self.build / "post.html").write_text(html)
+                with self.assertRaisesRegex(ValueError, "reference study media"):
+                    prepare_submission(self.build, self.stage / str(index), self.metadata())
+
+    def test_posix_and_windows_absolute_media_attributes_are_rejected(self):
+        self.require_module()
+        cases = ('<img src="/var/tmp/private.png">', '<a href="D:\\work\\private.png">x</a>')
+        for index, html in enumerate(cases):
+            with self.subTest(html=html):
+                (self.build / "post.html").write_text(html)
+                with self.assertRaisesRegex(ValueError, "absolute media path"):
+                    prepare_submission(self.build, self.stage / str(index), self.metadata())
+
+    def test_plain_route_text_is_not_misclassified_as_absolute_media_path(self):
+        self.require_module()
+        (self.build / "post.html").write_text("Open /pricing to compare plans.")
+        out = prepare_submission(self.build, self.stage, self.metadata())
+        self.assertTrue((out / "index.html").is_file())
+
+    def test_unverified_media_rights_record_is_rejected(self):
+        self.require_module()
+        metadata = self.metadata(media=[{"path": "diagram.svg", "rights_state": "unresolved"}])
+        with self.assertRaisesRegex(ValueError, "rights_state"):
+            prepare_submission(self.build, self.stage, metadata)
 
     def test_signed_urls_are_rejected(self):
         self.require_module()

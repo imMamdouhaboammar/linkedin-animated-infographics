@@ -56,6 +56,19 @@ class PluginGraphTests(unittest.TestCase):
         self.assertEqual("artboard-builder", edge["after"])
         self.assertEqual("motion-engineer", edge["before"])
 
+    def test_design_study_stage_condition_precedes_evidence(self):
+        workflow = json.loads(GRAPH.read_text())["workflows"]["new-post"]
+        condition = workflow["stage_conditions"]["design-study"]
+        self.assertEqual(
+            {
+                "condition": "visual_reference",
+                "before": "evidence-checker",
+                "on_absent": "SKIP",
+                "on_missing": "HOLD",
+            },
+            condition,
+        )
+
     def test_knowledge_workers_preload_required_skills(self):
         graph = json.loads(GRAPH.read_text())
         for agent, contract in graph["agents"].items():

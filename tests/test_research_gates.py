@@ -167,9 +167,50 @@ class ResearchGateTests(unittest.TestCase):
     def test_reference_route_activates_reference_dna_gate(self):
         module = load_module(ROUTER_SCRIPT, "ecosystem_router")
         route = module.route_request(
-            {"request": "Study this reference and build a post", "visual_reference": True}, ROOT
+            {
+                "request": "Study this reference and build a post",
+                "visual_reference": True,
+                "reference_evidence": ["reference.gif"],
+            }, ROOT
         )
         self.assertIn("reference-dna", route["research_gates"])
+
+    def test_reference_gate_records_retrieval_and_generated_capsule_runtime(self):
+        gate = json.loads(GATES.read_text())["gates"]["reference-dna"]
+        self.assertIn("HOLD", gate["local_behavior"])
+        self.assertIn("SKIP", gate["local_behavior"])
+        self.assertIn("deterministic", gate["local_behavior"].lower())
+        self.assertIn("tools/story_retrieve.py", gate["implementation_refs"])
+        self.assertIn("scripts/validate_codex_plugin.py", gate["implementation_refs"])
+        runtime = json.loads(CAPABILITIES.read_text())["capabilities"]["design-taste"]["reference_runtime"]
+        self.assertEqual("design-study", runtime["owner"])
+        self.assertEqual("local-only", runtime["persistent_ingestion"])
+        self.assertEqual("generated-capsule", runtime["public_openai_fallback"])
+        self.assertEqual("forbidden", runtime["source_media_export"])
+
+    def test_ecosystem_validator_rejects_reference_runtime_and_implementation_drift(self):
+        router = load_module(ROUTER_SCRIPT, "ecosystem_router_reference_drift")
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            root.mkdir()
+            copy_research_fixture(root)
+            capabilities_path = root / "helper" / "capabilities.json"
+            capabilities = json.loads(capabilities_path.read_text())
+            capabilities["capabilities"]["design-taste"]["reference_runtime"]["source_media_export"] = "allowed"
+            capabilities_path.write_text(json.dumps(capabilities))
+            errors = router.validate_ecosystem(root)
+            self.assertTrue(any("reference runtime drift" in error for error in errors), errors)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            root.mkdir()
+            copy_research_fixture(root)
+            gates_path = root / "research" / "capability-notes" / "gates.json"
+            gates = json.loads(gates_path.read_text())
+            gates["gates"]["reference-dna"]["implementation_refs"].remove("tools/story_retrieve.py")
+            gates_path.write_text(json.dumps(gates))
+            errors = router.validate_ecosystem(root)
+            self.assertTrue(any("reference-dna implementation refs drift" in error for error in errors), errors)
 
     def test_adoption_matrix_names_runtime_gate_ids(self):
         text = (ROOT / "research" / "capability-notes" / "adoption-matrix.md").read_text()
