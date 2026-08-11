@@ -1,0 +1,181 @@
+{
+  "schema_version": 1,
+  "purpose": "Deterministic real-corpus retrieval cases for the visual intelligence engine.",
+  "briefs": [
+    {
+      "id": "maturity-ladder",
+      "intent": "Explain a capability maturity ladder from foundational practice to advanced operation.",
+      "expected": {
+        "leading_mechanism": "capability-ladder",
+        "primary_reference_id": "REF-005"
+      },
+      "query": {
+        "story_jobs": [
+          "show-progression",
+          "teach-framework"
+        ],
+        "content_shape": "ladder",
+        "output_mode": "gif",
+        "language": "en",
+        "density": "medium",
+        "evidence_mode": "documented",
+        "reference_ids": [
+          "REF-005"
+        ],
+        "top_k": 5,
+        "stage": "review",
+        "byte_budget": 8000
+      }
+    },
+    {
+      "id": "model-selection",
+      "intent": "Compare model choices along a shared decision spectrum.",
+      "expected": {
+        "leading_mechanism": "decision-spectrum",
+        "primary_reference_id": "REF-018"
+      },
+      "query": {
+        "story_jobs": [
+          "compare-options",
+          "trace-decision"
+        ],
+        "content_shape": "spectrum",
+        "output_mode": "gif",
+        "language": "en",
+        "density": "medium",
+        "evidence_mode": "documented",
+        "reference_ids": [
+          "REF-018"
+        ],
+        "top_k": 5,
+        "stage": "review",
+        "byte_budget": 8000
+      }
+    },
+    {
+      "id": "radial-ecosystem",
+      "intent": "Explain an ecosystem as a central capability surrounded by related tools.",
+      "expected": {
+        "leading_mechanism": "radial-tool-constellation",
+        "primary_reference_id": "REF-021"
+      },
+      "query": {
+        "story_jobs": [
+          "explain-system",
+          "catalog-reference"
+        ],
+        "content_shape": "network",
+        "output_mode": "gif",
+        "language": "en",
+        "density": "medium",
+        "evidence_mode": "documented",
+        "reference_ids": [
+          "REF-021"
+        ],
+        "top_k": 5,
+        "stage": "review",
+        "byte_budget": 8000
+      }
+    },
+    {
+      "id": "layered-stack",
+      "intent": "Show a dense operational stack as ordered readiness layers.",
+      "expected": {
+        "leading_mechanism": "readiness-layer-reveal",
+        "primary_reference_id": "REF-015"
+      },
+      "query": {
+        "story_jobs": [
+          "show-progression",
+          "catalog-reference"
+        ],
+        "content_shape": "stack",
+        "output_mode": "gif",
+        "language": "en",
+        "density": "high",
+        "evidence_mode": "documented",
+        "reference_ids": [
+          "REF-015"
+        ],
+        "top_k": 5,
+        "stage": "review",
+        "byte_budget": 8000
+      }
+    },
+    {
+      "id": "editorial-comparison",
+      "intent": "Contrast two disputed terms under one evidence-backed editorial thesis.",
+      "expected": {
+        "leading_mechanism": "editorial-thesis-contrast",
+        "primary_reference_id": "REF-029"
+      },
+      "query": {
+        "story_jobs": [
+          "compare-options",
+          "reframe-belief"
+        ],
+        "content_shape": "thesis",
+        "output_mode": "gif",
+        "language": "en",
+        "density": "medium",
+        "evidence_mode": "documented",
+        "reference_ids": [
+          "REF-029"
+        ],
+        "top_k": 5,
+        "stage": "review",
+        "byte_budget": 8000
+      }
+    },
+    {
+      "id": "human-ai-handoff",
+      "intent": "Route workflow decisions between a human owner and an AI operator.",
+      "expected": {
+        "leading_mechanism": "dual-actor-decision-flow",
+        "primary_reference_id": "REF-033"
+      },
+      "query": {
+        "story_jobs": [
+          "trace-decision",
+          "reframe-belief"
+        ],
+        "content_shape": "workflow",
+        "output_mode": "gif",
+        "language": "en",
+        "density": "medium",
+        "evidence_mode": "documented",
+        "reference_ids": [
+          "REF-033"
+        ],
+        "top_k": 5,
+        "stage": "review",
+        "byte_budget": 8000
+      }
+    },
+    {
+      "id": "local-tool-setup",
+      "intent": "Teach a local tool setup as ordered commands with separate explanations.",
+      "expected": {
+        "leading_mechanism": "local-setup-command-rail",
+        "primary_reference_id": "REF-035"
+      },
+      "query": {
+        "story_jobs": [
+          "show-process",
+          "teach-workflow"
+        ],
+        "content_shape": "setup-guide",
+        "output_mode": "gif",
+        "language": "en",
+        "density": "medium",
+        "evidence_mode": "documented",
+        "reference_ids": [
+          "REF-035"
+        ],
+        "top_k": 5,
+        "stage": "review",
+        "byte_budget": 8000
+      }
+    }
+  ]
+}
