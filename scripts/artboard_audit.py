@@ -223,7 +223,6 @@ def _font_finding(contract: VisualContract, fonts: dict) -> dict:
         evidence=[f"{s['first']!r} unavailable, resolved to {s['resolved']!r}"
                   for s in missing[:6]],
     )
-    row["threshold"] = len(stacks)
     return row
 
 
@@ -261,7 +260,8 @@ def main(argv=None) -> int:
     summary = summarize(findings)
     report = {
         "schema_version": 1,
-        "artifact": str(args.html),
+        "stage": "artboard",
+        "artifact": str(Path(args.html).resolve()),
         "seeked_at_s": args.at,
         "capture": info,
         "verdict": summary["verdict"],

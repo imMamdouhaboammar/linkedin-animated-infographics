@@ -45,6 +45,11 @@ STILL_JSON="$EVIDENCE/still.json"
 GIF_JSON="$EVIDENCE/gif.json"
 mkdir -p "$EVIDENCE"
 
+BROWSER_CMD=(python3 "$HERE/render_probe.py" browser-path)
+[[ -n "$BROWSER" ]] && BROWSER_CMD+=(--browser "$BROWSER")
+BROWSER="$("${BROWSER_CMD[@]}")"
+[[ -n "$BROWSER" ]] || { echo "render browser could not be resolved" >&2; exit 2; }
+
 echo "── lint ─────────────────────────────────────"
 bash "$HERE/lint_artboard.sh" "$HTML"
 
@@ -52,7 +57,7 @@ echo
 echo "── artboard audit ───────────────────────────"
 set +e
 ARTBOARD_CMD=(python3 "$HERE/artboard_audit.py" "$HTML" --json "$ARTBOARD_JSON")
-[[ -n "$BROWSER" ]] && ARTBOARD_CMD+=(--browser "$BROWSER")
+ARTBOARD_CMD+=(--browser "$BROWSER")
 "${ARTBOARD_CMD[@]}"
 ARTBOARD_STATUS=$?
 set -e
@@ -63,7 +68,7 @@ echo "── still ────────────────────�
 set +e
 STILL_CMD=(python3 "$HERE/check_render.py" "$HTML" --out "$STILL" \
   --json "$STILL_JSON" --selector "$SELECTOR" "${MOBILE_ARG[@]}")
-[[ -n "$BROWSER" ]] && STILL_CMD+=(--browser "$BROWSER")
+STILL_CMD+=(--browser "$BROWSER")
 "${STILL_CMD[@]}"
 STILL_STATUS=$?
 set -e
@@ -74,8 +79,9 @@ echo "── capture ───────────────────�
 CAPTURE_CMD=(python3 "$HERE/capture_frames.py" "$HTML" \
   --out "$FRAMES" --duration "$DURATION" --fps "$FPS" \
   --selector "$SELECTOR" --scale "$SCALE")
-[[ -n "$BROWSER" ]] && CAPTURE_CMD+=(--browser "$BROWSER")
+CAPTURE_CMD+=(--browser "$BROWSER")
 "${CAPTURE_CMD[@]}"
+python3 "$HERE/render_probe.py" stamp-capture "$FRAMES/capture.json" --browser "$BROWSER"
 
 echo
 echo "── assemble ─────────────────────────────────"

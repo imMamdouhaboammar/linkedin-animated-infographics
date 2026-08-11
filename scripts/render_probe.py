@@ -20,9 +20,13 @@ happens in Python against ``helper/visual-contract.json``.
 
 from __future__ import annotations
 
+import argparse
 import contextlib
+import json
 import os
+import re
 import shlex
+import subprocess
 from pathlib import Path
 
 BROWSER_CANDIDATES = [
@@ -75,6 +79,35 @@ def resolve_browser(playwright, explicit: str | None = None) -> tuple[str | None
     raise SystemExit(
         "No Chrome build available. Run: bash scripts/setup.sh "
         "(or pass --browser <path> to a Chrome/Chromium binary)")
+
+
+def resolved_browser_path(explicit: str | None = None) -> str:
+    """Return the one concrete executable every render stage should receive."""
+    try:
+        from playwright.sync_api import sync_playwright
+    except ImportError:
+        raise SystemExit("playwright is not installed. Run: bash scripts/setup.sh")
+    if explicit and not Path(explicit).is_file():
+        raise SystemExit(f"Browser not found at {explicit}")
+    with sync_playwright() as playwright:
+        executable, _ = resolve_browser(playwright, explicit)
+        return str(Path(executable or playwright.chromium.executable_path).resolve())
+
+
+def browser_version(executable: str) -> str:
+    completed = subprocess.run(
+        [executable, "--version"], capture_output=True, text=True, check=False)
+    match = re.search(r"\d+(?:\.\d+)+", completed.stdout + completed.stderr)
+    if completed.returncode or not match:
+        raise SystemExit(f"Could not read browser version from {executable}")
+    return match.group(0)
+
+
+def stamp_capture(path: Path, executable: str) -> None:
+    metadata = json.loads(path.read_text())
+    metadata["browser"] = str(Path(executable).resolve())
+    metadata["browser_version"] = browser_version(executable)
+    path.write_text(json.dumps(metadata, indent=2, sort_keys=True) + "\n")
 
 
 # Pause every animation and hold it at a fixed time so measurement is repeatable.
@@ -465,3 +498,23 @@ def open_artboard(html_path, *, width=1080, height=1350, at=0.0, browser=None,
             }
         finally:
             instance.close()
+
+
+def main(argv=None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    commands = parser.add_subparsers(dest="command", required=True)
+    resolve = commands.add_parser("browser-path")
+    resolve.add_argument("--browser", default=None)
+    stamp = commands.add_parser("stamp-capture")
+    stamp.add_argument("capture")
+    stamp.add_argument("--browser", required=True)
+    args = parser.parse_args(argv)
+    if args.command == "browser-path":
+        print(resolved_browser_path(args.browser))
+    else:
+        stamp_capture(Path(args.capture), args.browser)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

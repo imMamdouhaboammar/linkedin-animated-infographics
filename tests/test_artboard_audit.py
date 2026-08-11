@@ -18,6 +18,7 @@ so a machine without the render toolchain cannot report these gates as verified.
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -131,6 +132,32 @@ class ViolatingArtboardTests(unittest.TestCase):
                    if r["threshold_id"] == "containment.max_border_depth")
         self.assertIn("div.panel", row["evidence"][0])
         self.assertIn("div.inner", row["evidence"][0])
+
+
+class RenderPipelineBrowserTests(unittest.TestCase):
+    def test_all_render_stages_record_one_browser_identity(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            output = Path(tmp) / "post.gif"
+            env = os.environ.copy()
+            env["PATH"] = f"/opt/homebrew/bin:{env['PATH']}"
+            outcome = subprocess.run(
+                ["bash", str(ROOT / "scripts" / "render.sh"),
+                 str(FIXTURES / "artboard-min.html"), str(output),
+                 "--duration", "0.3", "--fps", "10", "--no-mobile"],
+                capture_output=True, text=True, cwd=ROOT, timeout=180, env=env,
+            )
+            if any(marker in outcome.stderr for marker in TOOLCHAIN_MARKERS):
+                self.skipTest(f"render toolchain unavailable: {outcome.stderr.strip()}")
+            self.assertEqual(outcome.returncode, 0, outcome.stderr + outcome.stdout)
+            evidence = output.parent / ".render-evidence"
+            fragments = [
+                json.loads((evidence / name).read_text())
+                for name in ("artboard.json", "still.json", "gif.json")
+            ]
+            browsers = {fragment["capture"]["browser"] for fragment in fragments}
+            versions = {fragment["capture"]["browser_version"] for fragment in fragments}
+            self.assertEqual(len(browsers), 1, browsers)
+            self.assertEqual(len(versions), 1, versions)
 
 
 if __name__ == "__main__":

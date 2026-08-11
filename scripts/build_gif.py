@@ -163,6 +163,23 @@ def write_report(path, report):
     target.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
 
 
+def file_budget_finding(contract, *, size, requested_mb):
+    contract_limit = contract.value("gif.max_bytes")
+    requested_limit = int(requested_mb * 1024 * 1024)
+    effective_limit = min(contract_limit, requested_limit)
+    row = finding(
+        contract,
+        "gif.max_bytes",
+        ok=size <= effective_limit,
+        measured=size,
+        detail="" if size <= effective_limit else
+        "GIF remains over the effective delivery budget after the reduction ladder",
+    )
+    row["requested_threshold"] = requested_limit
+    row["effective_threshold"] = effective_limit
+    return row
+
+
 def main(argv=None):
     try:
         contract = VisualContract()
@@ -229,7 +246,7 @@ def main(argv=None):
         print(f"loop     : biggest frame-to-frame change {max_step:.2f}%, "
               f"seam {seam:.2f}% (x{ratio:.2f}) — {verdict}")
 
-    budget = args.max_mb * 1024 * 1024
+    budget = min(args.max_mb * 1024 * 1024, contract.value("gif.max_bytes"))
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
 
@@ -261,19 +278,12 @@ def main(argv=None):
         mb = size / 1024 / 1024
         scale = ladder[-1][1]
 
-    size_row = finding(
-        contract,
-        "gif.max_bytes",
-        ok=size <= budget,
-        measured=size,
-        detail="" if size <= budget else
-        "GIF remains over the delivery budget after the reduction ladder",
-    )
-    size_row["threshold"] = int(budget)
-    findings.append(size_row)
+    findings.append(file_budget_finding(
+        contract, size=size, requested_mb=args.max_mb))
     summary = summarize(findings)
     report = {
         "schema_version": 1,
+        "stage": "gif",
         "artifact": str(out.resolve()),
         "source": str(frames_dir.resolve()),
         "capture": json.loads(meta_path.read_text()) if meta_path.exists() else {},

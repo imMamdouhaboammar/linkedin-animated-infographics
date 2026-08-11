@@ -152,6 +152,20 @@ class ContractMatchesCodeTests(unittest.TestCase):
         expected_mb = contract["gif.max_bytes"]["value"] / 1024 / 1024
         self.assertEqual(expected_mb, defaults["max_mb"])
 
+    def test_caller_budget_cannot_weaken_the_contract_limit(self):
+        from scripts.build_gif import file_budget_finding
+        from scripts.visual_contract import VisualContract
+
+        contract = VisualContract()
+        contract_limit = contract.value("gif.max_bytes")
+        row = file_budget_finding(
+            contract,
+            size=contract_limit + 1,
+            requested_mb=10,
+        )
+        self.assertEqual(row["status"], "FAIL")
+        self.assertEqual(row["threshold"], contract_limit)
+
     def test_contrast_floors_match_the_catalog_validator(self):
         """info_stories.validate_catalog enforces these; the contract must agree."""
         contract = load_contract()["thresholds"]

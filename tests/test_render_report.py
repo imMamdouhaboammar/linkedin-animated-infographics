@@ -38,7 +38,12 @@ def passing_fragment(kind: str) -> dict:
             "detail": "",
             "evidence": [],
         })
-    return {"schema_version": 1, "artifact": f"{kind}.artifact", "findings": findings}
+    return {
+        "schema_version": 1,
+        "stage": kind,
+        "artifact": f"{kind}.artifact",
+        "findings": findings,
+    }
 
 
 class RenderReportMergeTests(unittest.TestCase):
@@ -52,7 +57,9 @@ class RenderReportMergeTests(unittest.TestCase):
         self.fragments = {}
         for kind in KINDS:
             path = self.root / f"{kind}.json"
-            path.write_text(json.dumps(passing_fragment(kind)))
+            fragment = passing_fragment(kind)
+            fragment["artifact"] = str(self.gif if kind == "gif" else self.html)
+            path.write_text(json.dumps(fragment))
             self.fragments[kind] = path
         self.report = self.root / "render-report.json"
 
@@ -95,6 +102,7 @@ class RenderReportMergeTests(unittest.TestCase):
 
     def test_na_blocking_evidence_writes_a_failing_report(self):
         fragment = passing_fragment("gif")
+        fragment["artifact"] = str(self.gif)
         row = next(
             finding for finding in fragment["findings"]
             if finding["severity"] == "blocking"
@@ -111,6 +119,7 @@ class RenderReportMergeTests(unittest.TestCase):
 
     def test_missing_blocking_evidence_is_materialized_and_fails(self):
         fragment = passing_fragment("still")
+        fragment["artifact"] = str(self.html)
         missing = next(
             finding for finding in fragment["findings"]
             if finding["severity"] == "blocking"
@@ -135,6 +144,45 @@ class RenderReportMergeTests(unittest.TestCase):
         outcome = self.run_merge()
 
         self.assertEqual(outcome.returncode, 2)
+        self.assertFalse(self.report.exists())
+
+    def test_stale_contract_metadata_is_rejected(self):
+        fragment = passing_fragment("gif")
+        row = fragment["findings"][0]
+        row["severity"] = "blocking" if row["severity"] == "advisory" else "advisory"
+        row["threshold"] = row["threshold"] + 1
+        self.fragments["gif"].write_text(json.dumps(fragment))
+
+        outcome = self.run_merge()
+
+        self.assertEqual(outcome.returncode, 2)
+        self.assertIn("contract metadata", outcome.stderr)
+        self.assertFalse(self.report.exists())
+
+    def test_threshold_from_the_wrong_stage_is_rejected(self):
+        still = passing_fragment("still")
+        misplaced = still["findings"].pop()
+        artboard = passing_fragment("artboard")
+        artboard["findings"].append(misplaced)
+        self.fragments["still"].write_text(json.dumps(still))
+        self.fragments["artboard"].write_text(json.dumps(artboard))
+
+        outcome = self.run_merge()
+
+        self.assertEqual(outcome.returncode, 2)
+        self.assertIn("does not belong to artboard", outcome.stderr)
+        self.assertFalse(self.report.exists())
+
+    def test_wrong_stage_or_artifact_is_rejected(self):
+        fragment = passing_fragment("still")
+        fragment["stage"] = "artboard"
+        fragment["artifact"] = str(self.root / "stale.html")
+        self.fragments["still"].write_text(json.dumps(fragment))
+
+        outcome = self.run_merge()
+
+        self.assertEqual(outcome.returncode, 2)
+        self.assertIn("stage", outcome.stderr)
         self.assertFalse(self.report.exists())
 
 

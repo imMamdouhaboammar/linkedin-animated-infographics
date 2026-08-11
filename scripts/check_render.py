@@ -127,6 +127,7 @@ def main(argv=None) -> int:
     summary = summarize(findings)
     report = {
         "schema_version": 1,
+        "stage": "still",
         "artifact": str(Path(args.html).resolve()),
         "capture": capture,
         "outputs": {
