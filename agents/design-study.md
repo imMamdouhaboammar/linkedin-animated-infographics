@@ -38,6 +38,7 @@ Return a HOLD when the reference is unavailable, too incomplete to support the r
 
 ## Quality gates
 
+- `reference-evidence-readiness`
 - evidence-safe reference interpretation
 - explicit uncertainty for inferred properties
 - no pixel-copy or signature-work reproduction
