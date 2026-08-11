@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Fixture: violating artboard</title>
+<!--
+  Deliberately defective artboard. Each defect targets exactly one blocking gate in
+  helper/visual-contract.json, so a CI failure names the gate that regressed:
+
+    nested-card-density     .panel > .card > .inner  = containment depth 3 (limit 2)
+    footer-detachment       footer top y=1000, composition ends y=700 = 300px gap (limit 120)
+    feed-scale-legibility   .micro renders at 8px (absolute floor 10px)
+    weak-visual-anchor      largest type is 32px (headline floor 40px)
+    contrast-floor          .faint is #c9c9c9 on #ffffff = 1.6:1 (floor 4.5:1)
+    bottom-dead-zone        content spans y=200..1030 = 61.5% occupancy (band 82-92%) [advisory]
+
+  It passes scripts/lint_artboard.sh on purpose. The linter reads source text; the audit
+  measures a rendered browser. Keeping this file clean for the linter is what proves the
+  two checkers catch different classes of defect rather than shadowing each other.
+-->
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: #2b2b2b; }
+  #artboard {
+    position: relative;
+    width: 1080px;
+    height: 1350px;
+    background: #eeeeee;
+    color: #222222;
+    font-family: sans-serif;
+    overflow: hidden;
+  }
+  .panel {
+    position: absolute; left: 96px; top: 200px; width: 888px; height: 500px;
+    background: #ffffff;
+    border: 2px solid #cccccc;
+    padding: 40px;
+  }
+  .card {
+    position: absolute; left: 40px; top: 40px; width: 808px; height: 420px;
+    background: #f2f2f2;
+    border: 2px solid #d4d4d4;
+    padding: 32px;
+  }
+  .inner {
+    position: absolute; left: 32px; top: 32px; width: 744px; height: 356px;
+    background: #ffffff;
+    border: 2px solid #dcdcdc;
+    padding: 28px;
+  }
+  .headline { font-size: 32px; line-height: 40px; font-weight: 700; }
+  .body { margin-top: 20px; font-size: 24px; line-height: 32px; }
+  .faint { margin-top: 20px; font-size: 24px; line-height: 32px; color: #c9c9c9; }
+  .micro { margin-top: 24px; font-size: 8px; line-height: 12px; color: #444444; }
+  .foot {
+    position: absolute; left: 96px; top: 1000px; width: 888px; height: 30px;
+    font-size: 22px; line-height: 30px; font-weight: 700; color: #555555;
+  }
+</style>
+</head>
+<body>
+<div id="artboard">
+  <div class="panel">
+    <div class="card">
+      <div class="inner">
+        <p class="headline">Three bordered surfaces deep</p>
+        <p class="body">Every number in this block was chosen to trip one named gate.</p>
+        <p class="faint">This line sits at 1.6 to 1 against its own background.</p>
+        <p class="micro">Eight pixel legal text nobody can read in a feed.</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot">test fixture / expected to fail the artboard audit</div>
+</div>
+</body>
+</html>

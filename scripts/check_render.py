@@ -1,194 +1,156 @@
 #!/usr/bin/env python3
-"""
-check_render.py — render the still frame and audit it before you animate.
+"""Render a deterministic still and emit measured still/motion evidence."""
 
-Produces:
-  - the full 1080x1350 still (frame 0 of the loop)
-  - a 350px-wide downscale, which is roughly how LinkedIn renders it in feed
-  - a text audit: artboard size, smallest rendered text, safe-zone violations,
-    and how much of the canvas is animated
-
-Run this before writing any animation CSS. The still is the approval gate.
-
-Usage:
-    python3 check_render.py build/post.html --out build/still.png
-    python3 check_render.py build/post.html --out build/still.png --at 2.4
-"""
+from __future__ import annotations
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
-try:
-    from playwright.sync_api import sync_playwright
-except ImportError:
-    sys.exit("playwright is not installed. Run: bash scripts/setup.sh")
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-BROWSER_CANDIDATES = [
-    "/usr/bin/google-chrome",
-    "/usr/bin/google-chrome-stable",
-    "/usr/bin/chromium",
-    "/opt/google/chrome/chrome",
-    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-]
-
-AUDIT = """
-(margin) => {
-  const board = document.querySelector('#artboard');
-  const out = { board: null, smallText: [], marginMotion: [], motionArea: 0, anims: 0 };
-  if (!board) return out;
-  const br = board.getBoundingClientRect();
-  out.board = { w: Math.round(br.width), h: Math.round(br.height) };
-
-  // Smallest rendered text, walking leaf nodes that actually contain characters.
-  const seen = new Map();
-  document.querySelectorAll('#artboard *').forEach(el => {
-    const hasText = [...el.childNodes].some(
-      n => n.nodeType === 3 && n.textContent.trim().length > 0);
-    if (!hasText) return;
-    const cs = getComputedStyle(el);
-    const size = parseFloat(cs.fontSize);
-    const sample = el.textContent.trim().slice(0, 42);
-    if (!seen.has(size)) seen.set(size, sample);
-  });
-  out.smallText = [...seen.entries()]
-    .sort((a, b) => a[0] - b[0]).slice(0, 5)
-    .map(([size, sample]) => ({ size: Math.round(size * 10) / 10, sample }));
-
-  // Animated elements: total moving area, and anything inside the safe margin.
-  const animated = new Set();
-  document.getAnimations().forEach(a => {
-    if (a.effect && a.effect.target) animated.add(a.effect.target);
-    out.anims++;
-  });
-  animated.forEach(el => {
-    const r = el.getBoundingClientRect();
-    out.motionArea += Math.max(0, r.width) * Math.max(0, r.height);
-    const inMargin =
-      r.top    < br.top + margin    ||
-      r.left   < br.left + margin   ||
-      r.right  > br.right - margin  ||
-      r.bottom > br.bottom - margin;
-    if (inMargin) {
-      out.marginMotion.push({
-        tag: el.tagName.toLowerCase(),
-        cls: (el.className && el.className.baseVal !== undefined
-              ? el.className.baseVal : el.className || '').toString().slice(0, 40),
-      });
-    }
-  });
-  return out;
-}
-"""
+from scripts.render_probe import GEOMETRY_JS, MOTION_JS, open_artboard
+from scripts.visual_contract import (
+    ContractError,
+    VisualContract,
+    exit_code,
+    finding,
+    render_lines,
+    skipped,
+    summarize,
+)
 
 
-def find_browser(explicit=None):
-    if explicit:
-        return explicit
-    for c in BROWSER_CANDIDATES:
-        if Path(c).exists():
-            return c
-    return None
+def still_findings(page, contract: VisualContract, margin: int) -> tuple[list[dict], dict]:
+    geometry = page.evaluate(GEOMETRY_JS)
+    motion = page.evaluate(MOTION_JS, margin)
+    board = geometry.get("board")
+    if not board:
+        return [
+            skipped(contract, "motion.max_moving_area_pct", geometry.get("error", "no artboard")),
+            skipped(contract, "safe_margin_px", geometry.get("error", "no artboard")),
+        ], {"geometry": geometry, "motion": motion}
+
+    canvas = board["w"] * board["h"]
+    moving_pct = 100.0 * motion["motionArea"] / canvas if canvas else 0.0
+    margin_motion = motion["marginMotion"]
+    clearance = motion["minClearance"]
+    measured_clearance = margin if clearance is None else clearance
+    findings = [
+        finding(
+            contract,
+            "motion.max_moving_area_pct",
+            ok=moving_pct <= contract.value("motion.max_moving_area_pct"),
+            measured=round(moving_pct, 2),
+            detail="" if moving_pct <= contract.value("motion.max_moving_area_pct")
+            else "animated bounding boxes exceed the advisory area budget",
+        ),
+        finding(
+            contract,
+            "safe_margin_px",
+            ok=not margin_motion,
+            measured=measured_clearance,
+            detail="no animated elements" if clearance is None else "" if not margin_motion else
+            f"{len(margin_motion)} animated element(s) enter the safe margin",
+            evidence=[f"<{row['tag']} class=\"{row['cls']}\">" for row in margin_motion[:6]],
+        ),
+    ]
+    return findings, {"geometry": geometry, "motion": motion}
 
 
-def main():
-    ap = argparse.ArgumentParser(description=__doc__,
-                                 formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("html")
-    ap.add_argument("--out", default="still.png")
-    ap.add_argument("--at", type=float, default=0.0,
-                    help="seek all animations to this time in seconds before capture")
-    ap.add_argument("--selector", default="#artboard")
-    ap.add_argument("--width", type=int, default=1080)
-    ap.add_argument("--height", type=int, default=1350)
-    ap.add_argument("--margin", type=int, default=48,
-                    help="safe margin in px that nothing should animate inside")
-    ap.add_argument("--browser", default=None)
-    args = ap.parse_args()
-
-    html = Path(args.html).resolve()
-    if not html.exists():
-        sys.exit(f"No such file: {html}")
-    out = Path(args.out)
-    out.parent.mkdir(parents=True, exist_ok=True)
-
-    with sync_playwright() as p:
-        kw = {"args": ["--no-sandbox", "--disable-dev-shm-usage", "--hide-scrollbars",
-                       "--force-color-profile=srgb", "--disable-lcd-text",
-                       "--font-render-hinting=none", "--disable-gpu"]}
-        exe = find_browser(args.browser)
-        if exe:
-            kw["executable_path"] = exe
-        browser = p.chromium.launch(**kw)
-        page = browser.new_page(viewport={"width": args.width, "height": args.height})
-        page.goto(html.as_uri(), wait_until="load")
-        try:
-            page.evaluate("() => document.fonts && document.fonts.ready")
-        except Exception:
-            pass
-        page.wait_for_timeout(600)
-        page.evaluate(
-            "(t) => { document.getAnimations().forEach(a => { a.pause(); "
-            "a.currentTime = t; }); "
-            "document.querySelectorAll('svg').forEach(s => { "
-            "try { s.pauseAnimations(); s.setCurrentTime(t/1000); } catch(e){} }); }",
-            args.at * 1000,
-        )
-        report = page.evaluate(AUDIT, args.margin)
-        el = page.query_selector(args.selector)
-        (el or page).screenshot(path=str(out))
-        browser.close()
-
-    # Mobile preview.
-    mobile = out.with_name(out.stem + "_mobile350.png")
+def save_mobile_preview(still: Path, width: int) -> Path | None:
     try:
         from PIL import Image
-        im = Image.open(out)
-        w = 350
-        im.resize((w, round(im.height * w / im.width)), Image.LANCZOS).save(mobile)
     except ImportError:
-        mobile = None
+        return None
+    mobile = still.with_name(still.stem + f"_mobile{width}.png")
+    with Image.open(still) as image:
+        height = round(image.height * width / image.width)
+        image.resize((width, height), Image.Resampling.LANCZOS).save(mobile)
+    return mobile
 
-    canvas = args.width * args.height
-    pct = 100.0 * report["motionArea"] / canvas if canvas else 0
 
-    print("── artboard ─────────────────────────────────")
-    if report["board"]:
-        b = report["board"]
-        ok = "ok" if (b["w"], b["h"]) == (1080, 1350) else "expected 1080x1350"
-        print(f"  size            {b['w']}x{b['h']}  ({ok})")
+def write_report(path: str, report: dict) -> None:
+    target = Path(path)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
+
+
+def main(argv=None) -> int:
+    try:
+        contract = VisualContract()
+    except ContractError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("html")
+    parser.add_argument("--out", default="still.png")
+    parser.add_argument("--json", dest="json_out", default=None)
+    parser.add_argument("--at", type=float, default=0.0)
+    parser.add_argument("--selector", default="#artboard")
+    parser.add_argument("--width", type=int, default=contract.int_value("artboard.width"))
+    parser.add_argument("--height", type=int, default=contract.int_value("artboard.height"))
+    parser.add_argument("--margin", type=int, default=contract.int_value("safe_margin_px"))
+    parser.add_argument("--browser", default=None)
+    mobile = parser.add_mutually_exclusive_group()
+    mobile.add_argument("--mobile", dest="mobile", action="store_true")
+    mobile.add_argument("--no-mobile", dest="mobile", action="store_false")
+    parser.set_defaults(mobile=True)
+    args = parser.parse_args(argv)
+
+    still = Path(args.out)
+    still.parent.mkdir(parents=True, exist_ok=True)
+    with open_artboard(
+        args.html,
+        width=args.width,
+        height=args.height,
+        at=args.at,
+        browser=args.browser,
+    ) as (page, capture):
+        findings, measurements = still_findings(page, contract, args.margin)
+        target = page.query_selector(args.selector)
+        (target or page).screenshot(path=str(still))
+
+    feed_width = contract.int_value("type.feed_width_px")
+    mobile_path = save_mobile_preview(still, feed_width) if args.mobile else None
+    if args.mobile:
+        findings.append(
+            finding(contract, "type.feed_width_px", ok=mobile_path is not None,
+                    measured=feed_width if mobile_path else None,
+                    detail="" if mobile_path else "Pillow unavailable; no mobile preview")
+        )
     else:
-        print(f"  '{args.selector}' not found — captured the viewport instead")
+        findings.append(skipped(contract, "type.feed_width_px", "disabled by --no-mobile"))
 
-    print("── type ─────────────────────────────────────")
-    for t in report["smallText"]:
-        flag = "  TOO SMALL for feed" if t["size"] < 22 else ""
-        print(f"  {t['size']:>5}px   {t['sample']!r}{flag}")
-    print("  (below 22px is unreadable at LinkedIn's ~350px feed width)")
+    summary = summarize(findings)
+    report = {
+        "schema_version": 1,
+        "artifact": str(Path(args.html).resolve()),
+        "capture": capture,
+        "outputs": {
+            "still": str(still.resolve()),
+            "mobile": str(mobile_path.resolve()) if mobile_path else None,
+        },
+        "verdict": summary["verdict"],
+        "summary": summary,
+        "findings": findings,
+        "measurements": measurements,
+    }
+    if args.json_out:
+        write_report(args.json_out, report)
 
-    print("── motion ───────────────────────────────────")
-    print(f"  animations      {report['anims']}")
-    print(f"  moving area     {pct:.1f}% of canvas"
-          f"   {'ok' if pct <= 20 else 'OVER BUDGET, target under 20%'}")
-    if pct > 20:
-        print("  Note: this counts each animated element's full bounding box. A stroked"
-              "\n        circle or path reports its whole box while only the stroke moves,"
-              "\n        so ring and wire animations overstate here. Judge those on the"
-              "\n        final GIF size instead.")
-    if report["marginMotion"]:
-        print(f"  SAFE-ZONE VIOLATION: {len(report['marginMotion'])} animated element(s) "
-              f"inside the {args.margin}px margin:")
-        for m in report["marginMotion"][:6]:
-            print(f"    <{m['tag']} class=\"{m['cls']}\">")
-        print("  The title block and footer must stay still.")
-    else:
-        print(f"  margin          clean ({args.margin}px)")
-
-    print("── output ───────────────────────────────────")
-    print(f"  still           {out}")
-    if mobile:
-        print(f"  mobile preview  {mobile}   <- judge legibility on this one")
+    print("── still audit ──────────────────────────────")
+    print("\n".join(render_lines(findings)))
+    print(f"── verdict: {summary['verdict']}")
+    print(f"  still           {still}")
+    if mobile_path:
+        print(f"  mobile preview  {mobile_path}")
+    if args.json_out:
+        print(f"  report          {args.json_out}")
+    return exit_code(findings)
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

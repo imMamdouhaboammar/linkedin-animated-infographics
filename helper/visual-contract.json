@@ -1,0 +1,274 @@
+{
+  "schema_version": 1,
+  "role": "Single source of truth for every measurable visual threshold in this plugin. Prose in skills/, openai-skills/, and README.md must agree with the numbers here; tests/test_visual_contract.py enforces that agreement in both directions.",
+  "severity_meaning": {
+    "blocking": "Mechanically unambiguous. A measuring script exits non-zero and the render report records FAIL.",
+    "advisory": "Measured and always reported, but the metric over-reports or needs compositional judgment, so it informs the critic instead of hard-failing the script."
+  },
+  "thresholds": {
+    "artboard.width": {
+      "value": 1080,
+      "unit": "px",
+      "severity": "blocking",
+      "gate": "artboard-integrity",
+      "measured_by": "scripts/artboard_audit.py",
+      "rationale": "LinkedIn portrait feed slot.",
+      "doc_assertions": {
+        "README.md": ["1080"],
+        "skills/artboard/SKILL.md": ["1080"]
+      }
+    },
+    "artboard.height": {
+      "value": 1350,
+      "unit": "px",
+      "severity": "blocking",
+      "gate": "artboard-integrity",
+      "measured_by": "scripts/artboard_audit.py",
+      "rationale": "LinkedIn portrait feed slot.",
+      "doc_assertions": {
+        "README.md": ["1350"],
+        "skills/artboard/SKILL.md": ["1350"]
+      }
+    },
+    "type.feed_width_px": {
+      "value": 350,
+      "unit": "px",
+      "severity": "advisory",
+      "gate": "feed-scale-legibility",
+      "measured_by": "scripts/check_render.py",
+      "rationale": "Approximate width LinkedIn renders the image at in feed. The downscale is the honest legibility test.",
+      "doc_assertions": {
+        "skills/render/SKILL.md": ["350px feed"],
+        "skills/artboard/references/design-systems.md": ["350px"]
+      }
+    },
+    "type.feed_floor_px": {
+      "value": 22,
+      "unit": "px",
+      "severity": "advisory",
+      "gate": "feed-scale-legibility",
+      "measured_by": "scripts/artboard_audit.py",
+      "rationale": "Below 22px in the artboard is texture at feed scale. Acceptable for micro labels and card body copy, not for load-bearing text. A script cannot always tell which is which, so every sub-floor node is reported and the critic judges load-bearing status.",
+      "doc_assertions": {
+        "skills/render/references/qa-gates.md": ["below 22px"],
+        "skills/artboard/references/design-systems.md": ["The 22px floor"]
+      }
+    },
+    "type.absolute_floor_px": {
+      "value": 10,
+      "unit": "px",
+      "severity": "blocking",
+      "gate": "feed-scale-legibility",
+      "measured_by": "scripts/artboard_audit.py",
+      "rationale": "The type scale's smallest sanctioned role is the 10-11px micro label. Rendered text below 10px is broken at any reading distance, with no judgment needed.",
+      "doc_assertions": {
+        "skills/artboard/references/design-systems.md": ["10"]
+      }
+    },
+    "type.min_headline_px": {
+      "value": 40,
+      "unit": "px",
+      "severity": "blocking",
+      "gate": "weak-visual-anchor",
+      "measured_by": "scripts/artboard_audit.py",
+      "rationale": "The sanctioned headline role is 56-72px. If the largest text on the artboard is under 40px there is no type hierarchy at all, which is a structural failure rather than a taste question.",
+      "doc_assertions": {
+        "skills/artboard/references/design-systems.md": ["56"]
+      }
+    },
+    "occupancy.min_pct": {
+      "value": 82,
+      "unit": "percent",
+      "severity": "advisory",
+      "gate": "bottom-dead-zone",
+      "measured_by": "scripts/artboard_audit.py",
+      "rationale": "The primary composition should use roughly 82-92% of the usable vertical canvas. Intentional sparse concepts may go lower when the negative space has a clear compositional job, so this is reported rather than hard-failed.",
+      "doc_assertions": {
+        "openai-skills/linkedin-infographic-studio/references/visual-quality-contract.md": ["82-92%"],
+        "openai-skills/linkedin-infographic-autopilot/references/visual-quality-contract.md": ["82-92%"],
+        "README.md": ["82-92%"]
+      }
+    },
+    "occupancy.max_pct": {
+      "value": 92,
+      "unit": "percent",
+      "severity": "advisory",
+      "gate": "bottom-dead-zone",
+      "measured_by": "scripts/artboard_audit.py",
+      "rationale": "Above roughly 92% the composition is crowding its own margins. Density earned through editing can exceed it, so this informs the critic.",
+      "doc_assertions": {
+        "openai-skills/linkedin-infographic-studio/references/visual-quality-contract.md": ["82-92%"],
+        "openai-skills/linkedin-infographic-autopilot/references/visual-quality-contract.md": ["82-92%"]
+      }
+    },
+    "footer.max_gap_px": {
+      "value": 120,
+      "unit": "px",
+      "severity": "blocking",
+      "gate": "footer-detachment",
+      "measured_by": "scripts/artboard_audit.py",
+      "rationale": "An unexplained vertical gap greater than 120px between the end of the primary composition and the footer leaves the footer detached from the page. Blocking, with a documented-exception path for deliberate negative space.",
+      "exception_field": "layout_spec.exception_reason",
+      "doc_assertions": {
+        "openai-skills/linkedin-infographic-studio/references/visual-quality-contract.md": ["greater than 120px"],
+        "openai-skills/linkedin-infographic-autopilot/references/visual-quality-contract.md": ["greater than 120px"],
+        "openai-skills/linkedin-infographic-review/SKILL.md": ["greater than 120px"],
+        "README.md": ["120px"]
+      }
+    },
+    "containment.max_border_depth": {
+      "value": 2,
+      "unit": "levels",
+      "severity": "blocking",
+      "gate": "nested-card-density",
+      "measured_by": "scripts/artboard_audit.py",
+      "rationale": "Maximum bordered containment depth is two levels. A bordered card inside a bordered card inside a bordered panel is unambiguous and mechanically countable.",
+      "doc_assertions": {
+        "openai-skills/linkedin-infographic-studio/references/visual-quality-contract.md": ["containment depth is two levels"],
+        "openai-skills/linkedin-infographic-autopilot/references/visual-quality-contract.md": ["containment depth is two levels"],
+        "openai-skills/linkedin-infographic-review/SKILL.md": ["two bordered containment levels"],
+        "README.md": ["two bordered containment levels"]
+      }
+    },
+    "safe_margin_px": {
+      "value": 48,
+      "unit": "px",
+      "severity": "blocking",
+      "gate": "safe-zone-violation",
+      "measured_by": "scripts/check_render.py",
+      "rationale": "The title block and footer are where the reader's eye returns. Motion inside the outer 48px makes the whole image feel unstable. Animated elements are enumerable, so this blocks.",
+      "doc_assertions": {
+        "skills/render/references/qa-gates.md": ["48px safe margin"],
+        "skills/motion/SKILL.md": ["48px safe zone"],
+        "skills/mascots/SKILL.md": ["48px safe zone"]
+      }
+    },
+    "contrast.text_min_ratio": {
+      "value": 4.5,
+      "unit": "ratio",
+      "severity": "blocking",
+      "gate": "contrast-floor",
+      "measured_by": "scripts/artboard_audit.py",
+      "rationale": "WCAG AA body floor, already enforced on catalog tokens by scripts/info_stories.py::validate_catalog. The audit extends the same function to colours as actually rendered.",
+      "doc_assertions": {
+        "skills/render/references/qa-gates.md": ["4.5:1"]
+      }
+    },
+    "contrast.state_min_ratio": {
+      "value": 3.0,
+      "unit": "ratio",
+      "severity": "blocking",
+      "gate": "contrast-floor",
+      "measured_by": "scripts/info_stories.py",
+      "rationale": "Non-text state and boundary floor, enforced on catalog state_pairs.",
+      "doc_assertions": {}
+    },
+    "motion.max_patterns": {
+      "value": 2,
+      "unit": "patterns",
+      "severity": "blocking",
+      "gate": "motion-discipline",
+      "measured_by": "scripts/info_stories.py",
+      "rationale": "Two motion primitives is the norm for a single-focus layout; check_composition already enforces it on the story contract.",
+      "doc_assertions": {
+        "skills/render/references/qa-gates.md": ["Two primitives"]
+      }
+    },
+    "motion.max_moving_area_pct": {
+      "value": 20,
+      "unit": "percent",
+      "severity": "advisory",
+      "gate": "motion-budget",
+      "measured_by": "scripts/check_render.py",
+      "rationale": "DELIBERATELY ADVISORY. The repo's own measurements refute this as a gate: the Specimen Grid reference moves ~85% of the canvas and still encodes at an eighth of the per-frame cost of an ~11% reference. Bounding-box area over-reports badly for stroke animations and dense grids of small loops. Treat it as a smell test for an accidental full-canvas fade. The real budget is motion.mean_step_max_pct.",
+      "doc_assertions": {
+        "skills/render/references/qa-gates.md": ["not as a pass/fail gate"],
+        "skills/motion/references/animation-recipes.md": ["That rule is wrong"]
+      }
+    },
+    "motion.mean_step_warn_pct": {
+      "value": 2.0,
+      "unit": "percent",
+      "severity": "advisory",
+      "gate": "motion-budget",
+      "measured_by": "scripts/build_gif.py",
+      "rationale": "Mean share of pixels changing between consecutive frames. Under 2% is healthy on any ground; 2-5% is viable only on a dark flat ground.",
+      "doc_assertions": {
+        "skills/render/references/qa-gates.md": ["under 2%"]
+      }
+    },
+    "motion.mean_step_max_pct": {
+      "value": 5.0,
+      "unit": "percent",
+      "severity": "blocking",
+      "gate": "motion-budget",
+      "measured_by": "scripts/build_gif.py",
+      "rationale": "Above 5% mean per-frame change, something full-bleed is animating. This is the real motion budget, measured in changed pixels rather than area.",
+      "doc_assertions": {
+        "skills/render/references/qa-gates.md": ["under 5%"],
+        "skills/motion/references/animation-recipes.md": ["Changed pixels per frame"]
+      }
+    },
+    "loop.seam_ratio_warn": {
+      "value": 1.25,
+      "unit": "ratio",
+      "severity": "advisory",
+      "gate": "loop-close",
+      "measured_by": "scripts/build_gif.py",
+      "rationale": "Seam change divided by the largest change between any two consecutive frames. At or below 1.25 the seam is indistinguishable from any other frame boundary, which is what a clean loop means.",
+      "doc_assertions": {
+        "skills/render/references/qa-gates.md": ["1.25"]
+      }
+    },
+    "loop.seam_ratio_max": {
+      "value": 2.0,
+      "unit": "ratio",
+      "severity": "blocking",
+      "gate": "loop-close",
+      "measured_by": "scripts/build_gif.py",
+      "rationale": "AUTHORITATIVE loop metric, replacing two conflicting absolute seam percentages that appeared in prose (0.5% in animation-recipes.md and 8% in qa-gates.md described the same measurement with a 16x disagreement). An absolute seam percentage is misleading because the last frame legitimately sits one step of motion before the loop point, and on a stepped animation one step can be a large visual change. The ratio normalises the seam against that step, so it is the number that gates.",
+      "doc_assertions": {
+        "skills/render/references/qa-gates.md": ["2.0"],
+        "skills/motion/references/animation-recipes.md": ["seam"]
+      }
+    },
+    "fonts.first_choice_available": {
+      "value": 1,
+      "unit": "stacks",
+      "severity": "advisory",
+      "gate": "font-determinism",
+      "measured_by": "scripts/artboard_audit.py",
+      "rationale": "ADVISORY BY DESIGN. No font files are bundled and network fonts are banned by scripts/lint_artboard.sh, so the same HTML renders with different typography on macOS, CI Linux and Windows. A fallback face can be a perfectly good serif, so this does not block. What must never happen is the substitution being silent: the audit records the first-choice family and the family that actually resolved, so every type measurement in the report can be read against the typography that really rendered.",
+      "doc_assertions": {
+        "skills/artboard/references/design-systems.md": ["font"]
+      }
+    },
+    "gif.max_bytes": {
+      "value": 5242880,
+      "unit": "bytes",
+      "severity": "blocking",
+      "gate": "file-budget",
+      "measured_by": "scripts/build_gif.py",
+      "rationale": "5 MB. LinkedIn accepts larger but transcodes them, and the transcode is visibly worse than an honest reduction ladder.",
+      "doc_assertions": {
+        "skills/render/references/production-pipeline.md": ["5 MB"],
+        "skills/render/references/qa-gates.md": ["5 MB"]
+      }
+    }
+  },
+  "gates": {
+    "artboard-integrity": "The artboard element exists and measures exactly the declared canvas.",
+    "feed-scale-legibility": "Load-bearing text survives the feed-width downscale.",
+    "weak-visual-anchor": "A dominant type hierarchy exists.",
+    "bottom-dead-zone": "The composition fills its vertical canvas intentionally.",
+    "footer-detachment": "The footer belongs to the page rather than floating below a gap.",
+    "nested-card-density": "Bordered containment stays within two levels.",
+    "safe-zone-violation": "The outer safe margin stays free of motion.",
+    "contrast-floor": "Text and state colours meet their contrast ratios as rendered.",
+    "motion-discipline": "Motion pattern count stays within the story contract limit.",
+    "motion-budget": "Per-frame changed-pixel cost stays inside the encode budget.",
+    "font-determinism": "The typography that rendered is recorded, so it can never differ silently between machines.",
+    "loop-close": "The loop seam is indistinguishable from any other frame boundary.",
+    "file-budget": "The encoded GIF fits the delivery budget."
+  }
+}

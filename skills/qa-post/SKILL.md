@@ -36,12 +36,12 @@ Return `build/render-report.json`, `build/critic-report.json`, `build/verificati
 1. Run deterministic render checks:
 
 ```bash
-python3 ${CLAUDE_PLUGIN_ROOT}/scripts/check_render.py <path> --out /tmp/qa-still.png
-python3 ${CLAUDE_PLUGIN_ROOT}/scripts/check_render.py <path> --mobile
 bash ${CLAUDE_PLUGIN_ROOT}/scripts/lint_artboard.sh <path>
+python3 ${CLAUDE_PLUGIN_ROOT}/scripts/artboard_audit.py <path> --json /tmp/artboard-audit.json
+python3 ${CLAUDE_PLUGIN_ROOT}/scripts/check_render.py <path> --out /tmp/qa-still.png --mobile --json /tmp/still-audit.json
 ```
 
-2. Walk the `render` skill and `references/qa-gates.md`. Inspect frame 0 and feed-width output. For GIFs, capture seam, changed-pixel motion, duration, and file-size evidence.
+2. Walk the `render` skill and `references/qa-gates.md`. Inspect frame 0 and feed-width output. For GIFs, use `render.sh` so lint, measured artboard/still/GIF fragments, and the merged `build/render-report.json` are all produced.
 3. If a caption exists, apply the `caption` skill and `hooked-design-copy`. Check truncation, one archetype, factual support, CTA discipline, and anti-slop findings.
 4. Delegate adversarial review to `post-critic`. It must evaluate `creative-payoff`, `restrained-palette`, `center-first-composition`, UI fidelity, mascot identity when present, motion meaning, and evidence safety.
 5. Any must-fix item produces a HOLD until corrected or proven not applicable.

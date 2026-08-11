@@ -6,7 +6,8 @@ screen and obvious in someone else's feed.
 ## Gate 1 — Artboard integrity
 
 ```bash
-python3 scripts/check_render.py build/post.html --out build/still.png
+python3 scripts/artboard_audit.py build/post.html --json build/artboard-audit.json
+python3 scripts/check_render.py build/post.html --out build/still.png --mobile --json build/still-audit.json
 ```
 
 - [ ] Size reports exactly `1080x1350`
@@ -60,13 +61,22 @@ exception and runs one ambient loop per cell plus a category sweep.
 
 From `build_gif.py`:
 
-- [ ] `loop:` delta reported under 8%
+- [ ] `loop:` seam multiplier at or below 1.25 (`x1.25` in the printed line)
+- [ ] never above 2.0
 
-That number is the share of pixels differing between the first and last captured frame.
-For a smoothly moving animation a few percent is expected — the last frame is one step
-before the loop point, not identical to the first. Above 8% means something genuinely
-does not close: a keyframe whose `100%` differs from its `0%`, or a duration that is not
-an integer division of the loop.
+The number that gates is the **ratio**, printed as `x<n>`: the seam change divided by the
+largest change between any two consecutive frames in the loop.
+
+Do not gate on the raw seam percentage. The last captured frame legitimately sits one step
+of motion *before* the loop point, so it is never identical to frame 0, and on a stepped
+animation one step can be a large visual change that also occurs at several other points
+in the loop. An absolute percentage therefore fails in both directions: it flags clean
+fast loops and passes broken slow ones. The ratio normalises the seam against the loop's
+own biggest step, so at or below 1.25 the seam is indistinguishable from any other frame
+boundary — which is exactly what a clean loop means.
+
+Above 2.0 means something genuinely does not close: a keyframe whose `100%` differs from
+its `0%`, or a duration that is not an integer division of the loop.
 
 Then watch the GIF loop five times in a row. If your eye catches a jump, it will catch
 it in feed too.
@@ -151,7 +161,7 @@ See `references/arabic-rtl.md` for the full list.
 When you are shipping fast:
 
 1. Look at `still_mobile350.png`. Does the takeaway land?
-2. Is the moving area under 20%?
+2. Is mean changed-pixel motion under 5%?
 3. Watch the loop five times. Any jump?
 4. Search the HTML for `YOUR NAME` and `yoursite.com`.
 5. Read line 1 of the caption. Would you stop for it?
@@ -178,3 +188,10 @@ Only when the artboard carries a character. Full doctrine in `references/mascots
 Known false positive: `check_render.py` flags animated groups living inside `<defs>` as
 safe-zone violations, because a defs child reports a zero-size rect at the origin. Confirm
 whether the flagged element is a template before moving anything.
+
+## Machine-readable verdict
+
+`render.sh` writes artboard, still, and GIF JSON fragments, then merges them into
+`build/render-report.json`. Every finding carries its measured value, threshold, unit,
+severity, status, and evidence. Missing or `NA` blocking evidence fails the merge; the
+report also records SHA-256 digests for the input HTML, output GIF, and source fragments.
