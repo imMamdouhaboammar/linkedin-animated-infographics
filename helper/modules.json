@@ -5,7 +5,7 @@
       "arabic": {"path": "skills/arabic/SKILL.md", "role": "Arabic and bilingual RTL adaptation", "tests": ["tests/test_skill_contracts.py"], "reachable_from": ["condition:arabic"]},
       "artboard": {"path": "skills/artboard/SKILL.md", "role": "Static artboard structure and execution contract", "tests": ["tests/test_skill_contracts.py", "tests/test_visual_defaults.py"], "reachable_from": ["route:create-post", "route:info-story", "agent:artboard-builder"]},
       "caption": {"path": "skills/caption/SKILL.md", "role": "Hook-led evidence-safe LinkedIn caption contract", "tests": ["tests/test_skill_contracts.py", "tests/test_creative_runtime.py"], "reachable_from": ["route:create-post", "route:qa", "agent:caption-writer"]},
-      "info-stories": {"path": "skills/info-stories/SKILL.md", "role": "Story registry and composition contract", "tests": ["tests/test_skill_contracts.py", "tests/test_info_stories.py", "tests/test_ui_mockup_stories.py"], "reachable_from": ["route:create-post", "route:info-story", "agent:story-architect"]},
+      "info-stories": {"path": "skills/info-stories/SKILL.md", "role": "Story registry, mechanism retrieval, and composition contract", "tests": ["tests/test_skill_contracts.py", "tests/test_info_stories.py", "tests/test_info_story_retrieval.py", "tests/test_ui_mockup_stories.py"], "reachable_from": ["route:create-post", "route:info-story", "agent:story-architect"]},
       "mascots": {"path": "skills/mascots/SKILL.md", "role": "Infographic mascot role and exact-SVG rules", "tests": ["tests/test_skill_contracts.py", "tests/test_mascot_contract.py"], "reachable_from": ["route:mascot-animation", "condition:official_mascot", "agent:mascot-animator"]},
       "motion": {"path": "skills/motion/SKILL.md", "role": "Seekable infographic motion contract", "tests": ["tests/test_skill_contracts.py", "tests/test_info_stories.py"], "reachable_from": ["route:create-post", "route:info-story", "agent:motion-engineer"]},
       "new-post": {"path": "skills/new-post/SKILL.md", "role": "Canonical full parent production workflow", "tests": ["tests/test_skill_contracts.py", "tests/test_plugin_graph.py", "tests/test_creative_runtime.py"], "reachable_from": ["route:create-post"]},
@@ -43,6 +43,7 @@
       "fingerprint_check": {"path": "tools/fingerprint_check.py", "role": "Reject palette-only structural reskins", "tests": ["tests/test_info_stories_followup.py"], "reachable_from": ["skills/artboard/SKILL.md", "skills/info-stories/SKILL.md"]},
       "palette_preview": {"path": "tools/palette_preview.py", "role": "Render Story House palette previews", "tests": ["tests/test_info_stories.py"], "reachable_from": ["skills/info-stories/SKILL.md"]},
       "route_request": {"path": "tools/route_request.py", "role": "Public deterministic request router CLI", "tests": ["tests/test_ecosystem_router.py"], "reachable_from": ["skills/post/SKILL.md", "helper/README.md"]},
+      "story_retrieve": {"path": "tools/story_retrieve.py", "role": "Retrieve ranked visual mechanisms and stage-specific reference context", "tests": ["tests/test_info_story_retrieval.py"], "reachable_from": ["skills/info-stories/SKILL.md"]},
       "story_scaffold": {"path": "tools/story_scaffold.py", "role": "Emit deterministic Info-stories briefs", "tests": ["tests/test_info_stories.py"], "reachable_from": ["skills/info-stories/SKILL.md"]}
     }
   }

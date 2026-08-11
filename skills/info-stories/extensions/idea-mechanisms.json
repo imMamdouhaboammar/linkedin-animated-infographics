@@ -1,0 +1,5136 @@
+{
+  "mechanisms": [
+    {
+      "slug": "progressive-proof-board",
+      "name": "Progressive Proof Board",
+      "origin": "extracted",
+      "story_jobs": [
+        "show-process",
+        "prove-result"
+      ],
+      "content_shapes": [
+        "process",
+        "proof"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "medium",
+          "high"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "sequence-board",
+          "command-canvas",
+          "proof-mosaic",
+          "signal-sheet"
+        ],
+        "archetypes": [
+          "step-by-step-playbook",
+          "raw-input-to-final-output",
+          "working-screen",
+          "build-once-reuse-often"
+        ],
+        "motions": [
+          "sequential-highlight",
+          "card-reveal"
+        ]
+      },
+      "hook": "Lead with the finished outcome, then expose the operating steps around it.",
+      "beats": [
+        "outcome",
+        "setup",
+        "workflow",
+        "proof"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "asymmetric proof board",
+        "zones": [
+          "hook",
+          "proof-window",
+          "workflow-cards",
+          "outcome"
+        ],
+        "proportions": "1:3:2",
+        "negative_space": "Keep the proof window isolated from instructional cards."
+      },
+      "hierarchy": {
+        "primary": "proof-window",
+        "secondary": "hook",
+        "reading_order": [
+          "hook",
+          "proof-window",
+          "workflow-cards",
+          "outcome"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "sans",
+          "mono"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "reveal-order",
+        "target": "active workflow card",
+        "sequence": [
+          "complete-board",
+          "active-card",
+          "proof-hold"
+        ],
+        "timing_family": "stepped",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "hold-reset",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Reset only after the complete state is readable."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with proof-window."
+      ],
+      "implementation_hints": [
+        "Build asymmetric proof board with semantic grid areas.",
+        "Keep proof-window as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-001"
+      ],
+      "influence_axes": {
+        "REF-001": [
+          "structure",
+          "motion"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "unequal proof and instruction zones",
+          "localized progress focus"
+        ],
+        "reject": [
+          "portrait",
+          "source metrics",
+          "signature starburst"
+        ]
+      }
+    },
+    {
+      "slug": "advisor-convergence",
+      "name": "Advisor Convergence",
+      "origin": "extracted",
+      "story_jobs": [
+        "compare-options",
+        "trace-decision"
+      ],
+      "content_shapes": [
+        "comparison",
+        "decision"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "medium"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "comparison-grid",
+          "signal-sheet",
+          "funnel-board"
+        ],
+        "archetypes": [
+          "decision-cards",
+          "what-each-piece-does"
+        ],
+        "motions": [
+          "connector-draw",
+          "active-route-swap"
+        ]
+      },
+      "hook": "Make competing positions converge on one explicit decision owner.",
+      "beats": [
+        "question",
+        "positions",
+        "convergence",
+        "verdict"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "branch-to-verdict map",
+        "zones": [
+          "setup",
+          "advisor-row",
+          "chair",
+          "verdict"
+        ],
+        "proportions": "1:2:1:1",
+        "negative_space": "Reserve a wide quiet band around the convergence point."
+      },
+      "hierarchy": {
+        "primary": "chair",
+        "secondary": "advisor-row",
+        "reading_order": [
+          "setup",
+          "advisor-row",
+          "chair",
+          "verdict"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "sans"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "trace-route",
+        "target": "decision connectors",
+        "sequence": [
+          "positions",
+          "convergence",
+          "verdict"
+        ],
+        "timing_family": "draw-hold-reset",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "hold-reset",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Reset only after the complete state is readable."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with chair."
+      ],
+      "implementation_hints": [
+        "Build branch-to-verdict map with semantic grid areas.",
+        "Keep chair as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-002"
+      ],
+      "influence_axes": {
+        "REF-002": [
+          "structure",
+          "motion"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "many-to-one connector logic",
+          "verdict as final visual weight"
+        ],
+        "reject": [
+          "source people",
+          "quoted advice",
+          "brand emblem"
+        ]
+      }
+    },
+    {
+      "slug": "annotated-learning-rail",
+      "name": "Annotated Learning Rail",
+      "origin": "extracted",
+      "story_jobs": [
+        "teach-framework",
+        "show-process"
+      ],
+      "content_shapes": [
+        "sequence",
+        "framework"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "medium"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "signal-sheet",
+          "field-guide"
+        ],
+        "archetypes": [
+          "framework-in-one-page",
+          "step-by-step-playbook",
+          "raw-input-to-final-output"
+        ],
+        "motions": [
+          "sequential-highlight",
+          "card-reveal"
+        ]
+      },
+      "hook": "Use one numbered rail to make three different learning modules read as one path.",
+      "beats": [
+        "promise",
+        "module-one",
+        "module-two",
+        "module-three"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "numbered side rail",
+        "zones": [
+          "hook",
+          "rail",
+          "modules",
+          "footer"
+        ],
+        "proportions": "1:5:1",
+        "negative_space": "Keep the rail narrow so examples, not numbers, carry meaning."
+      },
+      "hierarchy": {
+        "primary": "modules",
+        "secondary": "rail",
+        "reading_order": [
+          "hook",
+          "module-one",
+          "module-two",
+          "module-three"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "sans",
+          "mono"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "reveal-order",
+        "target": "rail marker",
+        "sequence": [
+          "module-one",
+          "module-two",
+          "module-three"
+        ],
+        "timing_family": "stepped",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "seamless-return",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Return through the same visual path."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with modules."
+      ],
+      "implementation_hints": [
+        "Build numbered side rail with semantic grid areas.",
+        "Keep modules as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-004"
+      ],
+      "influence_axes": {
+        "REF-004": [
+          "structure",
+          "motion"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "numbered continuity across varied modules",
+          "module-specific diagrams"
+        ],
+        "reject": [
+          "source copy",
+          "platform logos",
+          "exact module examples"
+        ]
+      }
+    },
+    {
+      "slug": "capability-ladder",
+      "name": "Capability Ladder",
+      "origin": "extracted",
+      "story_jobs": [
+        "show-progression",
+        "teach-framework"
+      ],
+      "content_shapes": [
+        "ladder",
+        "maturity"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "medium",
+          "high"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "sequence-board",
+          "signal-sheet",
+          "stack-ledger"
+        ],
+        "archetypes": [
+          "thirty-day-breakdown",
+          "step-by-step-playbook",
+          "framework-in-one-page"
+        ],
+        "motions": [
+          "sequential-highlight"
+        ]
+      },
+      "hook": "Turn an abstract progression into levels with visible capability thresholds.",
+      "beats": [
+        "entry-level",
+        "intermediate-levels",
+        "top-level",
+        "next-step"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "stacked capability ladder",
+        "zones": [
+          "hook",
+          "level-stack",
+          "threshold-rail",
+          "footer"
+        ],
+        "proportions": "1:6:1",
+        "negative_space": "Separate levels with consistent gutters, not decorative dividers."
+      },
+      "hierarchy": {
+        "primary": "level-stack",
+        "secondary": "hook",
+        "reading_order": [
+          "hook",
+          "entry-level",
+          "intermediate-levels",
+          "top-level"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "sans",
+          "mono"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "show-progression",
+        "target": "active level",
+        "sequence": [
+          "entry-level",
+          "intermediate-levels",
+          "top-level"
+        ],
+        "timing_family": "stepped",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "ping-pong",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Reset only after the complete state is readable."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with level-stack."
+      ],
+      "implementation_hints": [
+        "Build stacked capability ladder with semantic grid areas.",
+        "Keep level-stack as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-005"
+      ],
+      "influence_axes": {
+        "REF-005": [
+          "structure",
+          "motion"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "level bands with threshold labels",
+          "one active tier at a time"
+        ],
+        "reject": [
+          "source mascot",
+          "source labels",
+          "rainbow used without semantics"
+        ]
+      }
+    },
+    {
+      "slug": "loop-quadrant-engine",
+      "name": "Loop Quadrant Engine",
+      "origin": "extracted",
+      "story_jobs": [
+        "explain-system",
+        "show-process"
+      ],
+      "content_shapes": [
+        "process",
+        "cycle"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "high"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "sequence-board",
+          "command-canvas",
+          "funnel-board"
+        ],
+        "archetypes": [
+          "inside-the-stack",
+          "framework-in-one-page",
+          "step-by-step-playbook",
+          "raw-input-to-final-output"
+        ],
+        "motions": [
+          "active-route-swap"
+        ]
+      },
+      "hook": "Make repetition concrete by tying four operating jobs to one central loop.",
+      "beats": [
+        "standard",
+        "goal",
+        "team",
+        "review",
+        "memory",
+        "schedule"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "central spine with paired quadrants",
+        "zones": [
+          "hook",
+          "context-row",
+          "left-cards",
+          "loop-spine",
+          "right-cards"
+        ],
+        "proportions": "1:1:3:1:3",
+        "negative_space": "Give the central loop enough air to connect both columns."
+      },
+      "hierarchy": {
+        "primary": "loop-spine",
+        "secondary": "paired-cards",
+        "reading_order": [
+          "hook",
+          "context-row",
+          "paired-cards",
+          "loop-spine"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "sans",
+          "mono"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "explain-cycle",
+        "target": "loop-spine",
+        "sequence": [
+          "standard-goal",
+          "team-review",
+          "memory-schedule"
+        ],
+        "timing_family": "continuous-route",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "seamless-return",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Return through the same visual path."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with loop-spine."
+      ],
+      "implementation_hints": [
+        "Build central spine with paired quadrants with semantic grid areas.",
+        "Keep loop-spine as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-006"
+      ],
+      "influence_axes": {
+        "REF-006": [
+          "structure",
+          "motion"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "central cycle as shared dependency",
+          "paired operating jobs"
+        ],
+        "reject": [
+          "source mascot",
+          "exact commands",
+          "six identical card treatments"
+        ]
+      }
+    },
+    {
+      "slug": "agent-ring",
+      "name": "Agent Ring",
+      "origin": "extracted",
+      "story_jobs": [
+        "explain-system",
+        "show-relationships"
+      ],
+      "content_shapes": [
+        "network",
+        "process"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "low",
+          "medium"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "funnel-board",
+          "tool-catalog",
+          "sequence-board",
+          "command-canvas"
+        ],
+        "archetypes": [
+          "inside-the-stack",
+          "framework-in-one-page",
+          "ecosystem-snapshot"
+        ],
+        "motions": [
+          "connector-draw",
+          "active-route-swap"
+        ]
+      },
+      "hook": "Place the output at the center and let specialist roles orbit by dependency.",
+      "beats": [
+        "center-output",
+        "roles",
+        "handoffs",
+        "complete-system"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "radial role ring",
+        "zones": [
+          "hook",
+          "center",
+          "orbit",
+          "role-notes"
+        ],
+        "proportions": "1:2:3",
+        "negative_space": "Protect the center with a broad negative-space moat."
+      },
+      "hierarchy": {
+        "primary": "center",
+        "secondary": "orbit",
+        "reading_order": [
+          "hook",
+          "center",
+          "roles",
+          "handoffs"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "sans"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "trace-route",
+        "target": "orbit connector",
+        "sequence": [
+          "center",
+          "clockwise-roles",
+          "center"
+        ],
+        "timing_family": "circular-trace",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "seamless-return",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Return through the same visual path."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with center."
+      ],
+      "implementation_hints": [
+        "Build radial role ring with semantic grid areas.",
+        "Keep center as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-009"
+      ],
+      "influence_axes": {
+        "REF-009": [
+          "structure",
+          "motion"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "central output with named role orbit",
+          "connector-led reading order"
+        ],
+        "reject": [
+          "source robot",
+          "source website",
+          "role descriptions"
+        ]
+      }
+    },
+    {
+      "slug": "taxonomy-spotlight-matrix",
+      "name": "Taxonomy Spotlight Matrix",
+      "origin": "extracted",
+      "story_jobs": [
+        "catalog-reference",
+        "compare-options"
+      ],
+      "content_shapes": [
+        "catalog",
+        "matrix"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "high"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "tool-catalog",
+          "signal-sheet"
+        ],
+        "archetypes": [
+          "ecosystem-snapshot",
+          "framework-in-one-page",
+          "decision-cards",
+          "what-each-piece-does"
+        ],
+        "motions": [
+          "sequential-highlight"
+        ]
+      },
+      "hook": "Organize a large catalog by role, then spotlight one useful cell at a time.",
+      "beats": [
+        "category-row",
+        "catalog-grid",
+        "selection",
+        "takeaway"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "grouped catalog matrix",
+        "zones": [
+          "hook",
+          "category-headers",
+          "cell-grid",
+          "footer"
+        ],
+        "proportions": "1:1:6:1",
+        "negative_space": "Keep dark inactive cells quiet enough for the active category to dominate."
+      },
+      "hierarchy": {
+        "primary": "active-cell",
+        "secondary": "category-headers",
+        "reading_order": [
+          "hook",
+          "category-headers",
+          "cell-grid",
+          "footer"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "sans",
+          "mono"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "locate-item",
+        "target": "category cells",
+        "sequence": [
+          "category",
+          "row-scan",
+          "selected-cell"
+        ],
+        "timing_family": "scan-hold-reset",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "seamless-return",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Return through the same visual path."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with active-cell."
+      ],
+      "implementation_hints": [
+        "Build grouped catalog matrix with semantic grid areas.",
+        "Keep active-cell as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-010"
+      ],
+      "influence_axes": {
+        "REF-010": [
+          "structure",
+          "motion"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "role-grouped grid",
+          "spotlight without moving the whole catalog"
+        ],
+        "reject": [
+          "source mascots",
+          "brand-specific taxonomy",
+          "exact cell count"
+        ]
+      }
+    },
+    {
+      "slug": "single-screen-evidence-window",
+      "name": "Single Screen Evidence Window",
+      "origin": "extracted",
+      "story_jobs": [
+        "prove-result",
+        "show-interface"
+      ],
+      "content_shapes": [
+        "product-screen",
+        "proof"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "low"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "ui-storyboard",
+          "interface-cutaway",
+          "proof-mosaic",
+          "signal-sheet"
+        ],
+        "archetypes": [
+          "working-screen",
+          "build-once-reuse-often",
+          "screen-to-outcome"
+        ],
+        "motions": [
+          "card-reveal",
+          "soft-zoom-focus"
+        ]
+      },
+      "hook": "Let one documented interface state prove the claim while three chips frame its value.",
+      "beats": [
+        "claim",
+        "screen",
+        "proof-chips",
+        "cta"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "single evidence window",
+        "zones": [
+          "hook",
+          "screen",
+          "proof-row",
+          "brand"
+        ],
+        "proportions": "1:4:1:1",
+        "negative_space": "Use generous margins around the screen so it remains the only anchor."
+      },
+      "hierarchy": {
+        "primary": "screen",
+        "secondary": "hook",
+        "reading_order": [
+          "hook",
+          "screen",
+          "proof-chips",
+          "cta"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "serif",
+          "mono",
+          "sans"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "show-state-change",
+        "target": "screen state",
+        "sequence": [
+          "initial-state",
+          "working-state",
+          "result-state"
+        ],
+        "timing_family": "state-hold",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "direct-reset",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Reset only after the complete state is readable."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with screen."
+      ],
+      "implementation_hints": [
+        "Build single evidence window with semantic grid areas.",
+        "Keep screen as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-012"
+      ],
+      "influence_axes": {
+        "REF-012": [
+          "structure",
+          "motion",
+          "typography"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "one evidence-bearing screen",
+          "quiet proof-chip support"
+        ],
+        "reject": [
+          "source product UI",
+          "source claims",
+          "photographic background"
+        ]
+      }
+    },
+    {
+      "slug": "terminal-stack-cutaway",
+      "name": "Terminal Stack Cutaway",
+      "origin": "extracted",
+      "story_jobs": [
+        "explain-system",
+        "show-process"
+      ],
+      "content_shapes": [
+        "process",
+        "stack"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "high"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "sequence-board",
+          "command-canvas",
+          "stack-ledger"
+        ],
+        "archetypes": [
+          "inside-the-stack",
+          "framework-in-one-page",
+          "step-by-step-playbook",
+          "raw-input-to-final-output"
+        ],
+        "motions": [
+          "type-on-terminal",
+          "sequential-highlight"
+        ]
+      },
+      "hook": "Pair a working terminal with a layered system cutaway so command and consequence stay connected.",
+      "beats": [
+        "command",
+        "layer-stack",
+        "setup",
+        "outcome"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "terminal plus stack cutaway",
+        "zones": [
+          "hook",
+          "process-strip",
+          "terminal",
+          "stack",
+          "setup-rail",
+          "outcome"
+        ],
+        "proportions": "1:1:3:2:2",
+        "negative_space": "Keep the terminal and stack dominant; support rails stay narrow."
+      },
+      "hierarchy": {
+        "primary": "terminal",
+        "secondary": "stack",
+        "reading_order": [
+          "hook",
+          "process-strip",
+          "terminal",
+          "stack",
+          "setup-rail",
+          "outcome"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "serif",
+          "mono",
+          "sans"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "connect-command",
+        "target": "terminal and stack",
+        "sequence": [
+          "command",
+          "layer-response",
+          "outcome"
+        ],
+        "timing_family": "type-then-highlight",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "hold-reset",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Reset only after the complete state is readable."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with terminal."
+      ],
+      "implementation_hints": [
+        "Build terminal plus stack cutaway with semantic grid areas.",
+        "Keep terminal as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-014"
+      ],
+      "influence_axes": {
+        "REF-014": [
+          "structure",
+          "motion",
+          "typography"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "asymmetric command-to-stack topology",
+          "small operational motion footprint"
+        ],
+        "reject": [
+          "source headline",
+          "provider names",
+          "exact coral styling"
+        ]
+      }
+    },
+    {
+      "slug": "readiness-layer-reveal",
+      "name": "Readiness Layer Reveal",
+      "origin": "extracted",
+      "story_jobs": [
+        "show-progression",
+        "catalog-reference"
+      ],
+      "content_shapes": [
+        "stack",
+        "maturity"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "high"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "stack-ledger",
+          "command-canvas",
+          "sequence-board"
+        ],
+        "archetypes": [
+          "thirty-day-breakdown",
+          "step-by-step-playbook",
+          "ecosystem-snapshot",
+          "framework-in-one-page"
+        ],
+        "motions": [
+          "sequential-highlight"
+        ]
+      },
+      "hook": "Reveal a long stack in meaningful readiness groups while keeping the full destination visible.",
+      "beats": [
+        "baseline",
+        "ready-layers",
+        "gap",
+        "complete-stack"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "progressive readiness stack",
+        "zones": [
+          "hook",
+          "layer-stack",
+          "explanation-rail",
+          "coverage"
+        ],
+        "proportions": "1:5:2:1",
+        "negative_space": "Fade unreached layers without erasing their place in the system."
+      },
+      "hierarchy": {
+        "primary": "ready-layers",
+        "secondary": "explanation-rail",
+        "reading_order": [
+          "hook",
+          "baseline",
+          "ready-layers",
+          "complete-stack"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "sans",
+          "mono"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "show-progression",
+        "target": "stack layers",
+        "sequence": [
+          "baseline",
+          "middle-layers",
+          "complete-stack"
+        ],
+        "timing_family": "progressive-fill",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "hold-reset",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Reset only after the complete state is readable."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with ready-layers."
+      ],
+      "implementation_hints": [
+        "Build progressive readiness stack with semantic grid areas.",
+        "Keep ready-layers as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-015"
+      ],
+      "influence_axes": {
+        "REF-015": [
+          "structure",
+          "motion"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "readiness shown by layer activation",
+          "side rail explains exceptions"
+        ],
+        "reject": [
+          "source integrations",
+          "source percentages",
+          "vendor branding"
+        ]
+      }
+    },
+    {
+      "slug": "decision-spectrum",
+      "name": "Decision Spectrum",
+      "origin": "extracted",
+      "story_jobs": [
+        "compare-options",
+        "trace-decision"
+      ],
+      "content_shapes": [
+        "comparison",
+        "spectrum"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "medium",
+          "high"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "comparison-grid",
+          "signal-sheet"
+        ],
+        "archetypes": [
+          "decision-cards",
+          "what-each-piece-does"
+        ],
+        "motions": [
+          "active-route-swap"
+        ]
+      },
+      "hook": "Replace a flat comparison table with one shared decision axis and four anchored options.",
+      "beats": [
+        "decision-question",
+        "axis",
+        "option-zones",
+        "choice-rule"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "split spectrum with central scale",
+        "zones": [
+          "hook",
+          "left-options",
+          "scale",
+          "right-options",
+          "rule"
+        ],
+        "proportions": "1:3:1:3:1",
+        "negative_space": "Leave the scale uncluttered so relative position remains legible."
+      },
+      "hierarchy": {
+        "primary": "scale",
+        "secondary": "option-zones",
+        "reading_order": [
+          "hook",
+          "easy-options",
+          "scale",
+          "hard-options",
+          "rule"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "sans",
+          "mono"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "compare-thresholds",
+        "target": "spectrum marker",
+        "sequence": [
+          "low",
+          "medium",
+          "high",
+          "max"
+        ],
+        "timing_family": "sweep-hold-reset",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "ping-pong",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Reset only after the complete state is readable."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with scale."
+      ],
+      "implementation_hints": [
+        "Build split spectrum with central scale with semantic grid areas.",
+        "Keep scale as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-018"
+      ],
+      "influence_axes": {
+        "REF-018": [
+          "structure",
+          "motion"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "shared effort axis",
+          "quadrant-specific evidence"
+        ],
+        "reject": [
+          "source product names",
+          "source token limits",
+          "signature emblem"
+        ]
+      }
+    },
+    {
+      "slug": "radial-tool-constellation",
+      "name": "Radial Tool Constellation",
+      "origin": "extracted",
+      "story_jobs": [
+        "explain-system",
+        "catalog-reference"
+      ],
+      "content_shapes": [
+        "network",
+        "catalog"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "medium"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "funnel-board",
+          "tool-catalog",
+          "signal-sheet"
+        ],
+        "archetypes": [
+          "inside-the-stack",
+          "framework-in-one-page",
+          "ecosystem-snapshot"
+        ],
+        "motions": [
+          "connector-draw",
+          "active-route-swap"
+        ]
+      },
+      "hook": "Show one operating core with tools arranged by functional relationship rather than popularity.",
+      "beats": [
+        "core",
+        "tool-families",
+        "connections",
+        "coverage"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "radial tool constellation",
+        "zones": [
+          "hook",
+          "core",
+          "orbit-groups",
+          "footer"
+        ],
+        "proportions": "1:2:4:1",
+        "negative_space": "Use empty space between orbit groups to preserve family boundaries."
+      },
+      "hierarchy": {
+        "primary": "core",
+        "secondary": "orbit-groups",
+        "reading_order": [
+          "hook",
+          "core",
+          "orbit-groups",
+          "coverage"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "sans"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "trace-route",
+        "target": "core spokes",
+        "sequence": [
+          "core",
+          "family-one",
+          "family-two",
+          "complete"
+        ],
+        "timing_family": "radial-pulse",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "seamless-return",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Return through the same visual path."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with core."
+      ],
+      "implementation_hints": [
+        "Build radial tool constellation with semantic grid areas.",
+        "Keep core as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-021"
+      ],
+      "influence_axes": {
+        "REF-021": [
+          "structure",
+          "motion"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "central system with sparse spokes",
+          "family-level rather than item-level emphasis"
+        ],
+        "reject": [
+          "source logo",
+          "source tool brands",
+          "signature starburst"
+        ]
+      }
+    },
+    {
+      "slug": "dense-command-index",
+      "name": "Dense Command Index",
+      "origin": "extracted",
+      "story_jobs": [
+        "catalog-reference",
+        "teach-framework"
+      ],
+      "content_shapes": [
+        "reference",
+        "catalog"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "high"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "field-guide",
+          "signal-sheet",
+          "tool-catalog"
+        ],
+        "archetypes": [
+          "ecosystem-snapshot",
+          "framework-in-one-page",
+          "step-by-step-playbook"
+        ],
+        "motions": [
+          "sequential-highlight"
+        ]
+      },
+      "hook": "Make a dense index scannable through narrow category bands and aligned definition columns.",
+      "beats": [
+        "orientation",
+        "categories",
+        "entries",
+        "lookup-cue"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "multi-column command index",
+        "zones": [
+          "hook",
+          "category-columns",
+          "entry-rows",
+          "footer"
+        ],
+        "proportions": "1:7:1",
+        "negative_space": "Use repeated baselines and pale category fields instead of card chrome."
+      },
+      "hierarchy": {
+        "primary": "entry-rows",
+        "secondary": "category-columns",
+        "reading_order": [
+          "hook",
+          "category-columns",
+          "entry-rows",
+          "lookup-cue"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "sans",
+          "mono"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "locate-item",
+        "target": "category header",
+        "sequence": [
+          "category-one",
+          "category-two",
+          "category-three"
+        ],
+        "timing_family": "column-scan",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "direct-reset",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Reset only after the complete state is readable."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with entry-rows."
+      ],
+      "implementation_hints": [
+        "Build multi-column command index with semantic grid areas.",
+        "Keep entry-rows as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-022"
+      ],
+      "influence_axes": {
+        "REF-022": [
+          "structure",
+          "typography"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "category-colored columns",
+          "strict command-definition alignment"
+        ],
+        "reject": [
+          "source command list",
+          "source icon",
+          "exact category colors"
+        ]
+      }
+    },
+    {
+      "slug": "proof-mosaic",
+      "name": "Proof Mosaic",
+      "origin": "extracted",
+      "story_jobs": [
+        "prove-result",
+        "show-variety"
+      ],
+      "content_shapes": [
+        "proof",
+        "gallery"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "medium"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "proof-mosaic",
+          "signal-sheet"
+        ],
+        "archetypes": [
+          "working-screen",
+          "build-once-reuse-often"
+        ],
+        "motions": [
+          "spotlight-sweep"
+        ]
+      },
+      "hook": "Let a small set of real outputs carry the argument, with copy reduced to orientation and CTA.",
+      "beats": [
+        "claim",
+        "examples",
+        "variety",
+        "cta"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "unequal proof mosaic",
+        "zones": [
+          "hook",
+          "hero-examples",
+          "support-examples",
+          "cta"
+        ],
+        "proportions": "1:4:2:1",
+        "negative_space": "Keep wide gutters around screenshots so the collage does not become visual noise."
+      },
+      "hierarchy": {
+        "primary": "hero-examples",
+        "secondary": "hook",
+        "reading_order": [
+          "hook",
+          "hero-examples",
+          "support-examples",
+          "cta"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "sans"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "spotlight-proof",
+        "target": "proof tile",
+        "sequence": [
+          "hero-one",
+          "hero-two",
+          "support-row"
+        ],
+        "timing_family": "spotlight-hold",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "ping-pong",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Reset only after the complete state is readable."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with hero-examples."
+      ],
+      "implementation_hints": [
+        "Build unequal proof mosaic with semantic grid areas.",
+        "Keep hero-examples as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-023"
+      ],
+      "influence_axes": {
+        "REF-023": [
+          "structure",
+          "motion"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "outputs as evidence",
+          "unequal tile scale"
+        ],
+        "reject": [
+          "source screenshots",
+          "source mascot stickers",
+          "source CTA"
+        ]
+      }
+    },
+    {
+      "slug": "progressive-comparison-matrix",
+      "name": "Progressive Comparison Matrix",
+      "origin": "extracted",
+      "story_jobs": [
+        "compare-options",
+        "teach-framework"
+      ],
+      "content_shapes": [
+        "comparison",
+        "matrix"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "high"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "comparison-grid",
+          "signal-sheet"
+        ],
+        "archetypes": [
+          "decision-cards",
+          "what-each-piece-does",
+          "framework-in-one-page",
+          "step-by-step-playbook"
+        ],
+        "motions": [
+          "sequential-highlight"
+        ]
+      },
+      "hook": "Reveal a comparison by row so each criterion is understood before the full matrix appears.",
+      "beats": [
+        "options",
+        "criteria",
+        "row-evidence",
+        "decision"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "fixed-label comparison matrix",
+        "zones": [
+          "hook",
+          "option-header",
+          "row-labels",
+          "cells",
+          "decision"
+        ],
+        "proportions": "1:1:1:5:1",
+        "negative_space": "Hold generous padding inside cells; density comes from alignment, not tiny type."
+      },
+      "hierarchy": {
+        "primary": "row-labels",
+        "secondary": "cells",
+        "reading_order": [
+          "hook",
+          "option-header",
+          "row-labels",
+          "cells",
+          "decision"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "sans",
+          "mono"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "compare-criteria",
+        "target": "matrix row",
+        "sequence": [
+          "labels",
+          "criteria-rows",
+          "decision"
+        ],
+        "timing_family": "row-reveal",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "hold-reset",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Reset only after the complete state is readable."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with row-labels."
+      ],
+      "implementation_hints": [
+        "Build fixed-label comparison matrix with semantic grid areas.",
+        "Keep row-labels as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-026"
+      ],
+      "influence_axes": {
+        "REF-026": [
+          "structure",
+          "motion",
+          "typography"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "fixed row labels",
+          "progressive row completion"
+        ],
+        "reject": [
+          "source terms",
+          "signature mascot",
+          "source verdicts"
+        ]
+      }
+    },
+    {
+      "slug": "skill-pipeline-cards",
+      "name": "Skill Pipeline Cards",
+      "origin": "extracted",
+      "story_jobs": [
+        "show-process",
+        "explain-system"
+      ],
+      "content_shapes": [
+        "process",
+        "pipeline"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "medium"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "sequence-board",
+          "command-canvas",
+          "stack-ledger"
+        ],
+        "archetypes": [
+          "step-by-step-playbook",
+          "raw-input-to-final-output",
+          "inside-the-stack",
+          "framework-in-one-page"
+        ],
+        "motions": [
+          "connector-draw",
+          "active-route-swap"
+        ]
+      },
+      "hook": "Connect a compact command strip to five distinct production stages and one output proof.",
+      "beats": [
+        "command",
+        "stages",
+        "handoffs",
+        "output"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "command-led pipeline cards",
+        "zones": [
+          "hook",
+          "command-strip",
+          "stage-row",
+          "proof",
+          "install-strip"
+        ],
+        "proportions": "1:1:2:2:1",
+        "negative_space": "Separate the proof artifact from the stage cards so output is not mistaken for a step."
+      },
+      "hierarchy": {
+        "primary": "stage-row",
+        "secondary": "command-strip",
+        "reading_order": [
+          "hook",
+          "command-strip",
+          "stage-row",
+          "proof",
+          "install-strip"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "serif",
+          "mono",
+          "sans"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "trace-route",
+        "target": "pipeline handoff",
+        "sequence": [
+          "command",
+          "stages",
+          "output"
+        ],
+        "timing_family": "route-highlight",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "seamless-return",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Return through the same visual path."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with stage-row."
+      ],
+      "implementation_hints": [
+        "Build command-led pipeline cards with semantic grid areas.",
+        "Keep stage-row as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-027"
+      ],
+      "influence_axes": {
+        "REF-027": [
+          "structure",
+          "motion",
+          "typography"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "command-to-stage-to-proof sequence",
+          "stage cards with distinct jobs"
+        ],
+        "reject": [
+          "source copy",
+          "source robot",
+          "installation command"
+        ]
+      }
+    },
+    {
+      "slug": "claim-evidence-verdict",
+      "name": "Claim Evidence Verdict",
+      "origin": "extracted",
+      "story_jobs": [
+        "prove-result",
+        "trace-decision"
+      ],
+      "content_shapes": [
+        "proof",
+        "decision"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "medium"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "proof-mosaic",
+          "signal-sheet",
+          "funnel-board",
+          "comparison-grid"
+        ],
+        "archetypes": [
+          "working-screen",
+          "build-once-reuse-often",
+          "decision-cards"
+        ],
+        "motions": [
+          "sequential-highlight"
+        ]
+      },
+      "hook": "Resolve one strong claim through evidence rows and an explicit verdict strip.",
+      "beats": [
+        "claim",
+        "answer",
+        "evidence",
+        "verdict",
+        "action"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "claim evidence verdict panel",
+        "zones": [
+          "hook",
+          "query",
+          "answer",
+          "evidence-table",
+          "verdict",
+          "cta"
+        ],
+        "proportions": "1:1:2:2:1:1",
+        "negative_space": "Keep evidence labels quiet and reserve accent for verdict-changing rows."
+      },
+      "hierarchy": {
+        "primary": "verdict",
+        "secondary": "answer",
+        "reading_order": [
+          "hook",
+          "query",
+          "answer",
+          "evidence-table",
+          "verdict",
+          "cta"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "serif",
+          "sans",
+          "mono"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "validate-claim",
+        "target": "evidence row",
+        "sequence": [
+          "claim",
+          "evidence-one",
+          "evidence-two",
+          "verdict"
+        ],
+        "timing_family": "evidence-scan",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "hold-reset",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Reset only after the complete state is readable."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with verdict."
+      ],
+      "implementation_hints": [
+        "Build claim evidence verdict panel with semantic grid areas.",
+        "Keep verdict as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-030"
+      ],
+      "influence_axes": {
+        "REF-030": [
+          "structure",
+          "motion",
+          "typography"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "claim-to-evidence-to-verdict logic",
+          "semantic evidence states"
+        ],
+        "reject": [
+          "source UI",
+          "source product answer",
+          "source claim"
+        ]
+      }
+    },
+    {
+      "slug": "dual-actor-decision-flow",
+      "name": "Dual Actor Decision Flow",
+      "origin": "extracted",
+      "story_jobs": [
+        "trace-decision",
+        "reframe-belief"
+      ],
+      "content_shapes": [
+        "decision",
+        "workflow"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "medium",
+          "high"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "funnel-board",
+          "comparison-grid",
+          "sequence-board"
+        ],
+        "archetypes": [
+          "decision-cards",
+          "before-after-workflow"
+        ],
+        "motions": [
+          "connector-draw"
+        ]
+      },
+      "hook": "Place two decision actors at the center and route each surrounding question to the right owner.",
+      "beats": [
+        "tension",
+        "actors",
+        "decision-questions",
+        "compressed-workflow",
+        "rule"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "dual-actor radial decision map",
+        "zones": [
+          "hook",
+          "source-list",
+          "actor-center",
+          "question-ring",
+          "workflow-strip",
+          "rule"
+        ],
+        "proportions": "1:1:3:3:1:1",
+        "negative_space": "Protect the two actors from surrounding labels with a clear central field."
+      },
+      "hierarchy": {
+        "primary": "actor-center",
+        "secondary": "question-ring",
+        "reading_order": [
+          "hook",
+          "source-list",
+          "actor-center",
+          "question-ring",
+          "workflow-strip",
+          "rule"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "sans"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "trace-decision",
+        "target": "actor routes",
+        "sequence": [
+          "question-one",
+          "actor-one",
+          "question-two",
+          "actor-two"
+        ],
+        "timing_family": "alternating-route",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "seamless-return",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Return through the same visual path."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with actor-center."
+      ],
+      "implementation_hints": [
+        "Build dual-actor radial decision map with semantic grid areas.",
+        "Keep actor-center as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-033"
+      ],
+      "influence_axes": {
+        "REF-033": [
+          "structure",
+          "motion"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "two-owner decision model",
+          "question routes around a central pair"
+        ],
+        "reject": [
+          "source characters",
+          "source logos",
+          "source thesis copy"
+        ]
+      }
+    },
+    {
+      "slug": "tension-resolution-split",
+      "name": "Tension to Resolution Split",
+      "origin": "new",
+      "story_jobs": [
+        "reframe-belief",
+        "show-transformation"
+      ],
+      "content_shapes": [
+        "before-after",
+        "argument"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "low",
+          "medium"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "story-strip"
+        ],
+        "archetypes": [
+          "before-after-workflow"
+        ],
+        "motions": [
+          "card-reveal"
+        ]
+      },
+      "hook": "Make the misconception and corrected model collide across one decisive seam.",
+      "beats": [
+        "old-model",
+        "friction",
+        "new-model",
+        "consequence"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "opposed split with resolution seam",
+        "zones": [
+          "hook",
+          "old-side",
+          "seam",
+          "new-side",
+          "payoff"
+        ],
+        "proportions": "1:3:1:3:1",
+        "negative_space": "Use the seam as the only strong divider; keep both sides internally quiet."
+      },
+      "hierarchy": {
+        "primary": "seam",
+        "secondary": "new-side",
+        "reading_order": [
+          "hook",
+          "old-side",
+          "friction",
+          "new-side",
+          "payoff"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "serif",
+          "sans"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "show-transformation",
+        "target": "resolution seam",
+        "sequence": [
+          "old-model",
+          "seam",
+          "new-model"
+        ],
+        "timing_family": "wipe-hold-reset",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "ping-pong",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Reset only after the complete state is readable."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with seam."
+      ],
+      "implementation_hints": [
+        "Build opposed split with resolution seam with semantic grid areas.",
+        "Keep seam as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-033"
+      ],
+      "influence_axes": {
+        "REF-033": [
+          "structure"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "clear actor separation",
+          "one compressed decision rule"
+        ],
+        "reject": [
+          "source illustration",
+          "source color path",
+          "source wording"
+        ]
+      }
+    },
+    {
+      "slug": "before-trigger-after-triptych",
+      "name": "Before Trigger After Triptych",
+      "origin": "new",
+      "story_jobs": [
+        "show-transformation",
+        "show-process"
+      ],
+      "content_shapes": [
+        "before-after",
+        "sequence"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "low",
+          "medium"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "story-strip"
+        ],
+        "archetypes": [
+          "before-after-workflow",
+          "step-by-step-playbook",
+          "raw-input-to-final-output"
+        ],
+        "motions": [
+          "card-reveal",
+          "soft-zoom-focus"
+        ]
+      },
+      "hook": "Show change as three causally linked states, not two disconnected screenshots.",
+      "beats": [
+        "before",
+        "trigger",
+        "after",
+        "result"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "causal state triptych",
+        "zones": [
+          "hook",
+          "before",
+          "trigger",
+          "after",
+          "result"
+        ],
+        "proportions": "1:2:1:2:1",
+        "negative_space": "Use equal outer panels and a narrower trigger panel to encode causality."
+      },
+      "hierarchy": {
+        "primary": "trigger",
+        "secondary": "after",
+        "reading_order": [
+          "hook",
+          "before",
+          "trigger",
+          "after",
+          "result"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "sans",
+          "mono"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "show-state-change",
+        "target": "state panels",
+        "sequence": [
+          "before",
+          "trigger",
+          "after"
+        ],
+        "timing_family": "state-transition",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "hold-reset",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Reset only after the complete state is readable."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with trigger."
+      ],
+      "implementation_hints": [
+        "Build causal state triptych with semantic grid areas.",
+        "Keep trigger as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-012"
+      ],
+      "influence_axes": {
+        "REF-012": [
+          "structure",
+          "motion"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "documented state sequence",
+          "single trigger between states"
+        ],
+        "reject": [
+          "source interface",
+          "source claims",
+          "photographic backdrop"
+        ]
+      }
+    },
+    {
+      "slug": "constraint-funnel",
+      "name": "Constraint Funnel",
+      "origin": "new",
+      "story_jobs": [
+        "trace-decision",
+        "teach-framework"
+      ],
+      "content_shapes": [
+        "funnel",
+        "decision"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "medium"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "funnel-board",
+          "comparison-grid"
+        ],
+        "archetypes": [
+          "decision-cards",
+          "framework-in-one-page",
+          "step-by-step-playbook"
+        ],
+        "motions": [
+          "connector-draw"
+        ]
+      },
+      "hook": "Turn a long option list into a visible sequence of eliminating constraints.",
+      "beats": [
+        "options",
+        "constraint-one",
+        "constraint-two",
+        "shortlist",
+        "decision"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "constraint narrowing funnel",
+        "zones": [
+          "hook",
+          "option-pool",
+          "filters",
+          "shortlist",
+          "decision"
+        ],
+        "proportions": "1:2:3:1:1",
+        "negative_space": "Increase negative space as options narrow so the decision feels earned."
+      },
+      "hierarchy": {
+        "primary": "filters",
+        "secondary": "decision",
+        "reading_order": [
+          "hook",
+          "option-pool",
+          "filters",
+          "shortlist",
+          "decision"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "sans"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "trace-decision",
+        "target": "filter gates",
+        "sequence": [
+          "option-pool",
+          "filter-one",
+          "filter-two",
+          "decision"
+        ],
+        "timing_family": "narrowing-flow",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "direct-reset",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Reset only after the complete state is readable."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with filters."
+      ],
+      "implementation_hints": [
+        "Build constraint narrowing funnel with semantic grid areas.",
+        "Keep filters as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-002"
+      ],
+      "influence_axes": {
+        "REF-002": [
+          "structure"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "many-to-one decision geometry",
+          "explicit final owner"
+        ],
+        "reject": [
+          "source advisors",
+          "source quotes",
+          "signature symbol"
+        ]
+      }
+    },
+    {
+      "slug": "anatomy-cutaway",
+      "name": "Anatomy Cutaway",
+      "origin": "new",
+      "story_jobs": [
+        "explain-system",
+        "teach-framework"
+      ],
+      "content_shapes": [
+        "anatomy",
+        "stack"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "medium",
+          "high"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "field-guide",
+          "stack-ledger",
+          "command-canvas"
+        ],
+        "archetypes": [
+          "inside-the-stack",
+          "framework-in-one-page",
+          "step-by-step-playbook"
+        ],
+        "motions": [
+          "sequential-highlight"
+        ]
+      },
+      "hook": "Open one system into nested functional layers while keeping the whole visible.",
+      "beats": [
+        "whole",
+        "outer-layer",
+        "inner-layers",
+        "core",
+        "implication"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "nested system cutaway",
+        "zones": [
+          "hook",
+          "whole-outline",
+          "layer-labels",
+          "core",
+          "implication"
+        ],
+        "proportions": "1:4:2:1",
+        "negative_space": "Keep labels outside the cutaway and connect them with short, non-crossing leaders."
+      },
+      "hierarchy": {
+        "primary": "core",
+        "secondary": "whole-outline",
+        "reading_order": [
+          "hook",
+          "whole-outline",
+          "outer-layer",
+          "inner-layers",
+          "core",
+          "implication"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "sans",
+          "mono"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "explain-system",
+        "target": "cutaway layer",
+        "sequence": [
+          "whole",
+          "outer-layer",
+          "inner-layer",
+          "core"
+        ],
+        "timing_family": "layer-peel",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "ping-pong",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Reset only after the complete state is readable."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with core."
+      ],
+      "implementation_hints": [
+        "Build nested system cutaway with semantic grid areas.",
+        "Keep core as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-014"
+      ],
+      "influence_axes": {
+        "REF-014": [
+          "structure"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "system layers with unequal functional weight",
+          "command tied to system response"
+        ],
+        "reject": [
+          "source commands",
+          "provider cards",
+          "exact palette"
+        ]
+      }
+    },
+    {
+      "slug": "evidence-ladder",
+      "name": "Evidence Ladder",
+      "origin": "new",
+      "story_jobs": [
+        "prove-result",
+        "show-progression"
+      ],
+      "content_shapes": [
+        "proof",
+        "ladder"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "medium"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "proof-mosaic",
+          "signal-sheet",
+          "sequence-board"
+        ],
+        "archetypes": [
+          "working-screen",
+          "build-once-reuse-often",
+          "thirty-day-breakdown",
+          "step-by-step-playbook"
+        ],
+        "motions": [
+          "sequential-highlight"
+        ]
+      },
+      "hook": "Order proof from weakest signal to strongest evidence so confidence has a visible basis.",
+      "beats": [
+        "claim",
+        "signal",
+        "correlation",
+        "demonstration",
+        "verified-outcome"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "ascending evidence ladder",
+        "zones": [
+          "hook",
+          "claim",
+          "evidence-rungs",
+          "threshold",
+          "verdict"
+        ],
+        "proportions": "1:1:4:1:1",
+        "negative_space": "Leave space above the threshold so verified evidence feels categorically different."
+      },
+      "hierarchy": {
+        "primary": "threshold",
+        "secondary": "evidence-rungs",
+        "reading_order": [
+          "hook",
+          "claim",
+          "signal",
+          "correlation",
+          "demonstration",
+          "verified-outcome"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "serif",
+          "sans",
+          "mono"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "show-progression",
+        "target": "evidence rung",
+        "sequence": [
+          "signal",
+          "correlation",
+          "demonstration",
+          "verified-outcome"
+        ],
+        "timing_family": "ascending-highlight",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "hold-reset",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Reset only after the complete state is readable."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with threshold."
+      ],
+      "implementation_hints": [
+        "Build ascending evidence ladder with semantic grid areas.",
+        "Keep threshold as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-030"
+      ],
+      "influence_axes": {
+        "REF-030": [
+          "structure"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "explicit evidence states",
+          "verdict separated from inputs"
+        ],
+        "reject": [
+          "source query",
+          "source product names",
+          "source verdict copy"
+        ]
+      }
+    },
+    {
+      "slug": "sequence-ribbon",
+      "name": "Sequence Ribbon",
+      "origin": "new",
+      "story_jobs": [
+        "show-process",
+        "teach-framework"
+      ],
+      "content_shapes": [
+        "sequence",
+        "timeline"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "medium"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "sequence-board"
+        ],
+        "archetypes": [
+          "step-by-step-playbook",
+          "raw-input-to-final-output",
+          "framework-in-one-page"
+        ],
+        "motions": [
+          "sequential-highlight",
+          "card-reveal"
+        ]
+      },
+      "hook": "Bind varied step modules with one continuous ribbon that carries order and handoffs.",
+      "beats": [
+        "start",
+        "steps",
+        "handoffs",
+        "finish"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "continuous sequence ribbon",
+        "zones": [
+          "hook",
+          "ribbon",
+          "step-modules",
+          "finish"
+        ],
+        "proportions": "1:1:5:1",
+        "negative_space": "Let modules vary in size while the ribbon preserves sequence."
+      },
+      "hierarchy": {
+        "primary": "ribbon",
+        "secondary": "step-modules",
+        "reading_order": [
+          "hook",
+          "start",
+          "steps",
+          "handoffs",
+          "finish"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "sans",
+          "mono"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "reveal-order",
+        "target": "sequence ribbon",
+        "sequence": [
+          "start",
+          "steps",
+          "finish"
+        ],
+        "timing_family": "route-draw",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "seamless-return",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Return through the same visual path."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with ribbon."
+      ],
+      "implementation_hints": [
+        "Build continuous sequence ribbon with semantic grid areas.",
+        "Keep ribbon as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-004"
+      ],
+      "influence_axes": {
+        "REF-004": [
+          "structure",
+          "motion"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "one ordering rail across varied modules",
+          "local diagrams within steps"
+        ],
+        "reject": [
+          "source examples",
+          "source platform logos",
+          "exact numbering"
+        ]
+      }
+    },
+    {
+      "slug": "decision-tree-with-cutoffs",
+      "name": "Decision Tree with Cutoffs",
+      "origin": "new",
+      "story_jobs": [
+        "trace-decision",
+        "compare-options"
+      ],
+      "content_shapes": [
+        "decision",
+        "tree"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "medium",
+          "high"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "funnel-board",
+          "comparison-grid"
+        ],
+        "archetypes": [
+          "decision-cards",
+          "what-each-piece-does"
+        ],
+        "motions": [
+          "connector-draw"
+        ]
+      },
+      "hook": "Make every branch earn its space by ending in an action or explicit cutoff.",
+      "beats": [
+        "question",
+        "branch-tests",
+        "cutoffs",
+        "actions"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "bounded decision tree",
+        "zones": [
+          "hook",
+          "root-question",
+          "branches",
+          "cutoff-leaves",
+          "action-leaves"
+        ],
+        "proportions": "1:1:4:1:1",
+        "negative_space": "Use open space between branch families and stop lines at rejected leaves."
+      },
+      "hierarchy": {
+        "primary": "root-question",
+        "secondary": "action-leaves",
+        "reading_order": [
+          "hook",
+          "root-question",
+          "branch-tests",
+          "cutoffs",
+          "actions"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "sans",
+          "mono"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "trace-decision",
+        "target": "active branch",
+        "sequence": [
+          "root",
+          "test",
+          "branch",
+          "action"
+        ],
+        "timing_family": "branch-trace",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "direct-reset",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Reset only after the complete state is readable."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with root-question."
+      ],
+      "implementation_hints": [
+        "Build bounded decision tree with semantic grid areas.",
+        "Keep root-question as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-009"
+      ],
+      "influence_axes": {
+        "REF-009": [
+          "structure",
+          "motion"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "connector-led reasoning",
+          "roles arranged by dependency"
+        ],
+        "reject": [
+          "source robot",
+          "source role names",
+          "circular topology"
+        ]
+      }
+    },
+    {
+      "slug": "metric-delta-strip",
+      "name": "Metric Delta Strip",
+      "origin": "new",
+      "story_jobs": [
+        "prove-result",
+        "show-transformation"
+      ],
+      "content_shapes": [
+        "metrics",
+        "before-after"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "low"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "proof-mosaic",
+          "story-strip"
+        ],
+        "archetypes": [
+          "working-screen",
+          "build-once-reuse-often",
+          "before-after-workflow"
+        ],
+        "motions": [
+          "card-reveal",
+          "soft-zoom-focus"
+        ]
+      },
+      "hook": "Anchor a transformation in one measured delta, then show only the causes needed to trust it.",
+      "beats": [
+        "baseline",
+        "change",
+        "delta",
+        "causes",
+        "qualification"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "single-delta proof strip",
+        "zones": [
+          "hook",
+          "baseline",
+          "delta",
+          "cause-row",
+          "qualification"
+        ],
+        "proportions": "1:1:2:2:1",
+        "negative_space": "Keep the delta isolated and avoid multiple competing KPI cards."
+      },
+      "hierarchy": {
+        "primary": "delta",
+        "secondary": "qualification",
+        "reading_order": [
+          "hook",
+          "baseline",
+          "delta",
+          "causes",
+          "qualification"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "serif",
+          "sans",
+          "mono"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "show-state-change",
+        "target": "delta numeral",
+        "sequence": [
+          "baseline",
+          "delta",
+          "qualification"
+        ],
+        "timing_family": "count-hold-reset",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "hold-reset",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Reset only after the complete state is readable."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with delta."
+      ],
+      "implementation_hints": [
+        "Build single-delta proof strip with semantic grid areas.",
+        "Keep delta as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-030"
+      ],
+      "influence_axes": {
+        "REF-030": [
+          "structure",
+          "typography"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "large claim with restrained evidence labels",
+          "one final verdict"
+        ],
+        "reject": [
+          "source metric",
+          "source query UI",
+          "product claims"
+        ]
+      }
+    },
+    {
+      "slug": "counterexample-flip",
+      "name": "Counterexample Flip",
+      "origin": "new",
+      "story_jobs": [
+        "reframe-belief",
+        "prove-result"
+      ],
+      "content_shapes": [
+        "argument",
+        "comparison"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "low",
+          "medium"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "story-strip",
+          "comparison-grid",
+          "signal-sheet"
+        ],
+        "archetypes": [
+          "before-after-workflow",
+          "working-screen",
+          "build-once-reuse-often"
+        ],
+        "motions": [
+          "card-reveal"
+        ]
+      },
+      "hook": "Use one concrete counterexample to overturn a broad but weak rule.",
+      "beats": [
+        "common-rule",
+        "counterexample",
+        "mechanism",
+        "better-rule"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "rule-counterexample flip",
+        "zones": [
+          "hook",
+          "common-rule",
+          "counterexample",
+          "mechanism",
+          "better-rule"
+        ],
+        "proportions": "1:2:2:2:1",
+        "negative_space": "Give the counterexample its own field so it reads as evidence, not decoration."
+      },
+      "hierarchy": {
+        "primary": "counterexample",
+        "secondary": "better-rule",
+        "reading_order": [
+          "hook",
+          "common-rule",
+          "counterexample",
+          "mechanism",
+          "better-rule"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "serif",
+          "sans"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "reframe-belief",
+        "target": "rule panels",
+        "sequence": [
+          "common-rule",
+          "counterexample",
+          "better-rule"
+        ],
+        "timing_family": "flip-hold-reset",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "ping-pong",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Reset only after the complete state is readable."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with counterexample."
+      ],
+      "implementation_hints": [
+        "Build rule-counterexample flip with semantic grid areas.",
+        "Keep counterexample as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-033"
+      ],
+      "influence_axes": {
+        "REF-033": [
+          "structure",
+          "typography"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "strong thesis hierarchy",
+          "decision questions support the thesis"
+        ],
+        "reject": [
+          "source actors",
+          "source diagram",
+          "source copy"
+        ]
+      }
+    },
+    {
+      "slug": "myth-mechanism-correction",
+      "name": "Myth Mechanism Correction",
+      "origin": "new",
+      "story_jobs": [
+        "reframe-belief",
+        "explain-system"
+      ],
+      "content_shapes": [
+        "argument",
+        "anatomy"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "medium"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "story-strip",
+          "field-guide",
+          "stack-ledger"
+        ],
+        "archetypes": [
+          "before-after-workflow",
+          "inside-the-stack",
+          "framework-in-one-page"
+        ],
+        "motions": [
+          "sequential-highlight"
+        ]
+      },
+      "hook": "Correct a myth by exposing the hidden mechanism it leaves out.",
+      "beats": [
+        "myth",
+        "missing-mechanism",
+        "causal-chain",
+        "corrected-model"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "myth-to-mechanism cutaway",
+        "zones": [
+          "hook",
+          "myth-card",
+          "mechanism-cutaway",
+          "corrected-model"
+        ],
+        "proportions": "1:1:4:2",
+        "negative_space": "Leave a visual gap between the myth and mechanism to signal a model change."
+      },
+      "hierarchy": {
+        "primary": "mechanism-cutaway",
+        "secondary": "myth-card",
+        "reading_order": [
+          "hook",
+          "myth",
+          "missing-mechanism",
+          "causal-chain",
+          "corrected-model"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "serif",
+          "sans",
+          "mono"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "explain-system",
+        "target": "causal layer",
+        "sequence": [
+          "myth",
+          "mechanism",
+          "corrected-model"
+        ],
+        "timing_family": "layer-reveal",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "hold-reset",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Reset only after the complete state is readable."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with mechanism-cutaway."
+      ],
+      "implementation_hints": [
+        "Build myth-to-mechanism cutaway with semantic grid areas.",
+        "Keep mechanism-cutaway as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-014"
+      ],
+      "influence_axes": {
+        "REF-014": [
+          "structure",
+          "typography"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "mechanism as visual proof",
+          "corrected model after causal explanation"
+        ],
+        "reject": [
+          "source stack labels",
+          "source headline",
+          "source products"
+        ]
+      }
+    },
+    {
+      "slug": "input-transform-output",
+      "name": "Input Transform Output",
+      "origin": "new",
+      "story_jobs": [
+        "explain-system",
+        "show-process"
+      ],
+      "content_shapes": [
+        "process",
+        "transformation"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "low",
+          "medium"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "sequence-board",
+          "command-canvas"
+        ],
+        "archetypes": [
+          "inside-the-stack",
+          "framework-in-one-page",
+          "step-by-step-playbook",
+          "raw-input-to-final-output"
+        ],
+        "motions": [
+          "type-on-terminal",
+          "sequential-highlight"
+        ]
+      },
+      "hook": "Compress a system to the input, the transformation that matters, and the observable output.",
+      "beats": [
+        "input",
+        "transform",
+        "output",
+        "feedback"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "three-stage transformation bridge",
+        "zones": [
+          "hook",
+          "input",
+          "transform",
+          "output",
+          "feedback"
+        ],
+        "proportions": "1:1:3:1:1",
+        "negative_space": "Make the transform wider than endpoints; it contains the explanatory value."
+      },
+      "hierarchy": {
+        "primary": "transform",
+        "secondary": "output",
+        "reading_order": [
+          "hook",
+          "input",
+          "transform",
+          "output",
+          "feedback"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "sans",
+          "mono"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "connect-command",
+        "target": "transform bridge",
+        "sequence": [
+          "input",
+          "transform",
+          "output",
+          "feedback"
+        ],
+        "timing_family": "bridge-flow",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "seamless-return",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Return through the same visual path."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with transform."
+      ],
+      "implementation_hints": [
+        "Build three-stage transformation bridge with semantic grid areas.",
+        "Keep transform as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-027"
+      ],
+      "influence_axes": {
+        "REF-027": [
+          "structure"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "clear production stages",
+          "proof output separated from execution"
+        ],
+        "reject": [
+          "source robot",
+          "source installation command",
+          "source output"
+        ]
+      }
+    },
+    {
+      "slug": "threshold-dial",
+      "name": "Threshold Dial",
+      "origin": "new",
+      "story_jobs": [
+        "compare-options",
+        "trace-decision"
+      ],
+      "content_shapes": [
+        "spectrum",
+        "decision"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "low",
+          "medium"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "comparison-grid",
+          "funnel-board"
+        ],
+        "archetypes": [
+          "decision-cards",
+          "what-each-piece-does"
+        ],
+        "motions": [
+          "active-route-swap"
+        ]
+      },
+      "hook": "Convert a vague tradeoff into one threshold that changes the recommended action.",
+      "beats": [
+        "low-zone",
+        "threshold",
+        "high-zone",
+        "decision-rule"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "threshold dial with option anchors",
+        "zones": [
+          "hook",
+          "low-option",
+          "dial",
+          "high-option",
+          "rule"
+        ],
+        "proportions": "1:2:2:2:1",
+        "negative_space": "Keep annotations outside the dial and allow only one active marker."
+      },
+      "hierarchy": {
+        "primary": "dial",
+        "secondary": "rule",
+        "reading_order": [
+          "hook",
+          "low-option",
+          "threshold",
+          "high-option",
+          "rule"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "sans",
+          "mono"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "compare-thresholds",
+        "target": "dial marker",
+        "sequence": [
+          "low",
+          "threshold",
+          "high"
+        ],
+        "timing_family": "dial-sweep",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "ping-pong",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Reset only after the complete state is readable."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with dial."
+      ],
+      "implementation_hints": [
+        "Build threshold dial with option anchors with semantic grid areas.",
+        "Keep dial as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-018"
+      ],
+      "influence_axes": {
+        "REF-018": [
+          "structure",
+          "motion"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "single shared decision scale",
+          "options anchored to effort zones"
+        ],
+        "reject": [
+          "source model names",
+          "source limits",
+          "signature symbol"
+        ]
+      }
+    },
+    {
+      "slug": "nested-scope-rings",
+      "name": "Nested Scope Rings",
+      "origin": "new",
+      "story_jobs": [
+        "explain-system",
+        "teach-framework"
+      ],
+      "content_shapes": [
+        "taxonomy",
+        "anatomy"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "medium"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "field-guide",
+          "stack-ledger"
+        ],
+        "archetypes": [
+          "inside-the-stack",
+          "framework-in-one-page",
+          "step-by-step-playbook"
+        ],
+        "motions": [
+          "sequential-highlight"
+        ]
+      },
+      "hook": "Clarify scope by nesting what belongs inside each boundary and what remains outside.",
+      "beats": [
+        "outer-context",
+        "system-boundary",
+        "subsystems",
+        "core",
+        "exclusions"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "nested scope rings",
+        "zones": [
+          "hook",
+          "outer-ring",
+          "system-ring",
+          "subsystem-ring",
+          "core",
+          "exclusions"
+        ],
+        "proportions": "1:5:1",
+        "negative_space": "Use labels at stable angles and a separate exclusion key to avoid radial clutter."
+      },
+      "hierarchy": {
+        "primary": "core",
+        "secondary": "system-ring",
+        "reading_order": [
+          "hook",
+          "outer-context",
+          "system-boundary",
+          "subsystems",
+          "core",
+          "exclusions"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "sans"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "explain-system",
+        "target": "scope ring",
+        "sequence": [
+          "outer",
+          "system",
+          "subsystem",
+          "core"
+        ],
+        "timing_family": "concentric-focus",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "ping-pong",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Reset only after the complete state is readable."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with core."
+      ],
+      "implementation_hints": [
+        "Build nested scope rings with semantic grid areas.",
+        "Keep core as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-021"
+      ],
+      "influence_axes": {
+        "REF-021": [
+          "structure"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "central operating core",
+          "relationships encoded by distance"
+        ],
+        "reject": [
+          "source logo",
+          "source tool names",
+          "radial spoke pattern"
+        ]
+      }
+    },
+    {
+      "slug": "role-swimlanes",
+      "name": "Role Swimlanes",
+      "origin": "new",
+      "story_jobs": [
+        "show-process",
+        "trace-decision"
+      ],
+      "content_shapes": [
+        "workflow",
+        "roles"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "high"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "sequence-board"
+        ],
+        "archetypes": [
+          "step-by-step-playbook",
+          "raw-input-to-final-output",
+          "decision-cards"
+        ],
+        "motions": [
+          "connector-draw",
+          "active-route-swap"
+        ]
+      },
+      "hook": "Expose ownership by keeping each action in a role lane and every handoff on a shared boundary.",
+      "beats": [
+        "roles",
+        "actions",
+        "handoffs",
+        "decision-gates",
+        "outcome"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "role-based swimlanes",
+        "zones": [
+          "hook",
+          "role-labels",
+          "lanes",
+          "decision-gates",
+          "outcome"
+        ],
+        "proportions": "1:1:5:1:1",
+        "negative_space": "Keep lane backgrounds quiet; emphasize handoffs and gates instead."
+      },
+      "hierarchy": {
+        "primary": "decision-gates",
+        "secondary": "lanes",
+        "reading_order": [
+          "hook",
+          "roles",
+          "actions",
+          "handoffs",
+          "decision-gates",
+          "outcome"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "sans",
+          "mono"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "trace-route",
+        "target": "handoff token",
+        "sequence": [
+          "lane-one",
+          "handoff",
+          "lane-two",
+          "outcome"
+        ],
+        "timing_family": "lane-trace",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "direct-reset",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Reset only after the complete state is readable."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with decision-gates."
+      ],
+      "implementation_hints": [
+        "Build role-based swimlanes with semantic grid areas.",
+        "Keep decision-gates as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-027"
+      ],
+      "influence_axes": {
+        "REF-027": [
+          "structure",
+          "motion"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "stage ownership made explicit",
+          "handoffs carry narrative order"
+        ],
+        "reject": [
+          "source stage names",
+          "source commands",
+          "source proof image"
+        ]
+      }
+    },
+    {
+      "slug": "checklist-exception-rail",
+      "name": "Checklist with Exception Rail",
+      "origin": "new",
+      "story_jobs": [
+        "teach-framework",
+        "catalog-reference"
+      ],
+      "content_shapes": [
+        "checklist",
+        "reference"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "medium",
+          "high"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "field-guide",
+          "signal-sheet"
+        ],
+        "archetypes": [
+          "framework-in-one-page",
+          "step-by-step-playbook",
+          "ecosystem-snapshot"
+        ],
+        "motions": [
+          "sequential-highlight"
+        ]
+      },
+      "hook": "Keep the main checklist fast to scan while routing edge cases to a narrow exception rail.",
+      "beats": [
+        "orientation",
+        "checklist",
+        "exceptions",
+        "stop-condition"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "checklist plus exception rail",
+        "zones": [
+          "hook",
+          "checklist",
+          "exception-rail",
+          "stop-condition"
+        ],
+        "proportions": "1:4:2:1",
+        "negative_space": "Use whitespace and alignment for the checklist; reserve color for exceptions."
+      },
+      "hierarchy": {
+        "primary": "checklist",
+        "secondary": "exception-rail",
+        "reading_order": [
+          "hook",
+          "checklist",
+          "exceptions",
+          "stop-condition"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "sans",
+          "mono"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "locate-item",
+        "target": "exception marker",
+        "sequence": [
+          "checklist",
+          "exception",
+          "stop-condition"
+        ],
+        "timing_family": "marker-scan",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "direct-reset",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Reset only after the complete state is readable."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with checklist."
+      ],
+      "implementation_hints": [
+        "Build checklist plus exception rail with semantic grid areas.",
+        "Keep checklist as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-022"
+      ],
+      "influence_axes": {
+        "REF-022": [
+          "structure"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "dense aligned index",
+          "category bands support lookup"
+        ],
+        "reject": [
+          "source commands",
+          "source category palette",
+          "source icon"
+        ]
+      }
+    },
+    {
+      "slug": "modular-recipe",
+      "name": "Modular Recipe",
+      "origin": "new",
+      "story_jobs": [
+        "teach-framework",
+        "show-process"
+      ],
+      "content_shapes": [
+        "recipe",
+        "framework"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "medium"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "sequence-board",
+          "signal-sheet",
+          "field-guide"
+        ],
+        "archetypes": [
+          "framework-in-one-page",
+          "step-by-step-playbook",
+          "raw-input-to-final-output"
+        ],
+        "motions": [
+          "sequential-highlight",
+          "card-reveal"
+        ]
+      },
+      "hook": "Separate required ingredients from optional modules and the order that makes them work.",
+      "beats": [
+        "outcome",
+        "required-parts",
+        "optional-parts",
+        "assembly",
+        "quality-check"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "recipe bench with assembly path",
+        "zones": [
+          "hook",
+          "required-bin",
+          "optional-bin",
+          "assembly",
+          "quality-check"
+        ],
+        "proportions": "1:2:2:3:1",
+        "negative_space": "Keep optional modules visually subordinate until the base recipe is complete."
+      },
+      "hierarchy": {
+        "primary": "assembly",
+        "secondary": "required-bin",
+        "reading_order": [
+          "hook",
+          "outcome",
+          "required-parts",
+          "optional-parts",
+          "assembly",
+          "quality-check"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "sans",
+          "mono"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "reveal-order",
+        "target": "assembly path",
+        "sequence": [
+          "required",
+          "assembly",
+          "optional",
+          "quality-check"
+        ],
+        "timing_family": "assembly-sequence",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "hold-reset",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Reset only after the complete state is readable."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with assembly."
+      ],
+      "implementation_hints": [
+        "Build recipe bench with assembly path with semantic grid areas.",
+        "Keep assembly as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-006"
+      ],
+      "influence_axes": {
+        "REF-006": [
+          "structure"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "paired jobs around a shared operating loop",
+          "quality check closes the process"
+        ],
+        "reject": [
+          "source mascot",
+          "source commands",
+          "source six-part framework"
+        ]
+      }
+    },
+    {
+      "slug": "cause-effect-chain",
+      "name": "Cause Effect Chain",
+      "origin": "new",
+      "story_jobs": [
+        "explain-system",
+        "reframe-belief"
+      ],
+      "content_shapes": [
+        "causal-chain",
+        "process"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "medium"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "sequence-board",
+          "command-canvas"
+        ],
+        "archetypes": [
+          "inside-the-stack",
+          "framework-in-one-page",
+          "before-after-workflow"
+        ],
+        "motions": [
+          "connector-draw",
+          "active-route-swap"
+        ]
+      },
+      "hook": "Make the claim travel through explicit causes, mediators, and an observable effect.",
+      "beats": [
+        "claim",
+        "cause",
+        "mediator",
+        "effect",
+        "boundary"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "causal chain with boundary notes",
+        "zones": [
+          "hook",
+          "cause",
+          "mediator",
+          "effect",
+          "boundary-rail"
+        ],
+        "proportions": "1:2:2:2:1",
+        "negative_space": "Keep arrows short and place qualifications in a separate rail."
+      },
+      "hierarchy": {
+        "primary": "mediator",
+        "secondary": "effect",
+        "reading_order": [
+          "hook",
+          "cause",
+          "mediator",
+          "effect",
+          "boundary"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "serif",
+          "sans",
+          "mono"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "trace-route",
+        "target": "causal connector",
+        "sequence": [
+          "cause",
+          "mediator",
+          "effect"
+        ],
+        "timing_family": "causal-draw",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "direct-reset",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Reset only after the complete state is readable."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with mediator."
+      ],
+      "implementation_hints": [
+        "Build causal chain with boundary notes with semantic grid areas.",
+        "Keep mediator as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-004"
+      ],
+      "influence_axes": {
+        "REF-004": [
+          "structure",
+          "motion"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "ordered connector rail",
+          "module-level evidence beside each step"
+        ],
+        "reject": [
+          "source examples",
+          "source claims",
+          "source platform marks"
+        ]
+      }
+    },
+    {
+      "slug": "glossary-landscape",
+      "name": "Glossary Landscape",
+      "origin": "new",
+      "story_jobs": [
+        "catalog-reference",
+        "compare-options"
+      ],
+      "content_shapes": [
+        "glossary",
+        "taxonomy"
+      ],
+      "compatibility": {
+        "output_modes": [
+          "gif",
+          "static"
+        ],
+        "languages": [
+          "*"
+        ],
+        "densities": [
+          "high"
+        ],
+        "evidence_modes": [
+          "documented",
+          "conceptual",
+          "attributed",
+          "product-proof"
+        ],
+        "styles": [
+          "field-guide"
+        ],
+        "archetypes": [
+          "ecosystem-snapshot",
+          "framework-in-one-page",
+          "decision-cards",
+          "what-each-piece-does"
+        ],
+        "motions": [
+          "sequential-highlight"
+        ]
+      },
+      "hook": "Turn related terms into neighborhoods so readers see both definitions and boundaries.",
+      "beats": [
+        "orientation",
+        "term-groups",
+        "definitions",
+        "boundary-cases",
+        "lookup-cue"
+      ],
+      "palette_roles": [
+        "neutral-base",
+        "semantic-accent",
+        "evidence-state"
+      ],
+      "layout": {
+        "topology": "semantic glossary landscape",
+        "zones": [
+          "hook",
+          "group-bands",
+          "term-cards",
+          "boundary-notes",
+          "index"
+        ],
+        "proportions": "1:2:5:1:1",
+        "negative_space": "Use group fields and baseline alignment; avoid a free-floating mind map."
+      },
+      "hierarchy": {
+        "primary": "group-bands",
+        "secondary": "boundary-notes",
+        "reading_order": [
+          "hook",
+          "orientation",
+          "term-groups",
+          "definitions",
+          "boundary-cases",
+          "index"
+        ]
+      },
+      "typography": {
+        "classes": [
+          "serif",
+          "sans",
+          "mono"
+        ],
+        "roles": [
+          "display",
+          "body",
+          "label"
+        ],
+        "language_policy": "Use a local stack with verified glyph coverage for the requested script."
+      },
+      "motion": {
+        "job": "locate-item",
+        "target": "term group",
+        "sequence": [
+          "group-one",
+          "group-two",
+          "boundary-case"
+        ],
+        "timing_family": "group-highlight",
+        "static_regions": [
+          "hook",
+          "source-note"
+        ]
+      },
+      "loop": {
+        "strategy": "seamless-return",
+        "hold": "Hold long enough to read the densest state.",
+        "reset": "Return through the same visual path."
+      },
+      "constraints": [
+        "Keep frame zero complete.",
+        "Use only evidence-backed copy and UI states."
+      ],
+      "anti_patterns": [
+        "Equal emphasis on every zone.",
+        "Decorative motion that competes with group-bands."
+      ],
+      "implementation_hints": [
+        "Build semantic glossary landscape with semantic grid areas.",
+        "Keep group-bands as the largest or highest-contrast reading target."
+      ],
+      "reference_ids": [
+        "REF-026"
+      ],
+      "influence_axes": {
+        "REF-026": [
+          "structure"
+        ]
+      },
+      "originality": {
+        "adopt": [
+          "fixed comparison labels",
+          "dense terms aligned into semantic groups"
+        ],
+        "reject": [
+          "source terms",
+          "source mascot",
+          "source verdict language"
+        ]
+      }
+    }
+  ]
+}
