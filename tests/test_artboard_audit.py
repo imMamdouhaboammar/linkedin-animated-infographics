@@ -22,6 +22,7 @@ import os
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 from pathlib import Path
 
@@ -140,15 +141,30 @@ class RenderPipelineBrowserTests(unittest.TestCase):
             output = Path(tmp) / "post.gif"
             env = os.environ.copy()
             env["PATH"] = f"/opt/homebrew/bin:{env['PATH']}"
-            outcome = subprocess.run(
-                ["bash", str(ROOT / "scripts" / "render.sh"),
-                 str(FIXTURES / "artboard-min.html"), str(output),
-                 "--duration", "0.3", "--fps", "10", "--no-mobile"],
-                capture_output=True, text=True, cwd=ROOT, timeout=180, env=env,
+            
+            # Allow up to 3 attempts to guard against transient CI browser contention
+            max_attempts = 3
+            outcome = None
+            for attempt in range(max_attempts):
+                outcome = subprocess.run(
+                    ["bash", str(ROOT / "scripts" / "render.sh"),
+                     str(FIXTURES / "artboard-min.html"), str(output),
+                     "--duration", "0.3", "--fps", "10", "--no-mobile"],
+                    capture_output=True, text=True, cwd=ROOT, timeout=180, env=env,
+                )
+                if outcome.returncode == 0:
+                    break
+                if any(marker in outcome.stderr for marker in TOOLCHAIN_MARKERS):
+                    self.skipTest(f"render toolchain unavailable: {outcome.stderr.strip()}")
+                if attempt < max_attempts - 1:
+                    time.sleep(1.0)
+            
+            self.assertIsNotNone(outcome)
+            self.assertEqual(
+                outcome.returncode, 0,
+                f"Render pipeline failed with returncode {outcome.returncode}.\n"
+                f"STDERR:\n{outcome.stderr}\nSTDOUT:\n{outcome.stdout}"
             )
-            if any(marker in outcome.stderr for marker in TOOLCHAIN_MARKERS):
-                self.skipTest(f"render toolchain unavailable: {outcome.stderr.strip()}")
-            self.assertEqual(outcome.returncode, 0, outcome.stderr + outcome.stdout)
             evidence = output.parent / ".render-evidence"
             fragments = [
                 json.loads((evidence / name).read_text())

@@ -497,7 +497,14 @@ def open_artboard(html_path, *, width=1080, height=1350, at=0.0, browser=None,
                 "settle_ms": settle,
             }
         finally:
-            instance.close()
+            try:
+                page.close()
+            except Exception:
+                pass
+            try:
+                instance.close()
+            except Exception:
+                pass
 
 
 def main(argv=None) -> int:

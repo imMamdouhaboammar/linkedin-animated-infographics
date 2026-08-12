@@ -176,55 +176,64 @@ def main():
             launch_kwargs["executable_path"] = exe
             log(f"browser  : {exe}")
         browser = p.chromium.launch(**launch_kwargs)
-
-        page = browser.new_page(
-            viewport={"width": args.width, "height": args.height},
-            device_scale_factor=args.scale,
-        )
-        page.add_init_script(RAF_TRAP)
-        page.goto(html_path.as_uri(), wait_until="load")
-        page.add_style_tag(content=PREP_CSS)
-
-        # Let webfonts and images settle before we freeze anything.
         try:
-            page.evaluate("() => document.fonts && document.fonts.ready")
-        except Exception:
-            pass
-        page.wait_for_timeout(args.settle)
+            page = browser.new_page(
+                viewport={"width": args.width, "height": args.height},
+                device_scale_factor=args.scale,
+            )
+            try:
+                page.add_init_script(RAF_TRAP)
+                page.goto(html_path.as_uri(), wait_until="load")
+                page.add_style_tag(content=PREP_CSS)
 
-        count = page.evaluate(PAUSE_ALL)
-        report = page.evaluate(AUDIT)
-        log(f"animations: {count} found, {report['infinite']} infinite")
+                # Let webfonts and images settle before we freeze anything.
+                try:
+                    page.evaluate("() => document.fonts && document.fonts.ready")
+                except Exception:
+                    pass
+                page.wait_for_timeout(args.settle)
 
-        if report["rafDetected"]:
-            log("  WARNING: requestAnimationFrame detected. rAF motion cannot be "
-                "seeked and will render frozen. Convert it to CSS keyframes.")
+                count = page.evaluate(PAUSE_ALL)
+                report = page.evaluate(AUDIT)
+                log(f"animations: {count} found, {report['infinite']} infinite")
 
-        durations = sorted(set(report["durations"]))
-        loop_ms = args.duration * 1000
-        odd = [d for d in durations
-               if d and abs((loop_ms / d) - round(loop_ms / d)) > 0.001]
-        if odd:
-            log(f"  WARNING: durations that do not divide the loop cleanly: {odd}ms")
-            log(f"           loop is {int(loop_ms)}ms. These will not close seamlessly.")
+                if report["rafDetected"]:
+                    log("  WARNING: requestAnimationFrame detected. rAF motion cannot be "
+                        "seeked and will render frozen. Convert it to CSS keyframes.")
 
-        target = page.query_selector(args.selector)
-        if target is None:
-            log(f"  NOTE: '{args.selector}' not found, capturing the full viewport")
+                durations = sorted(set(report["durations"]))
+                loop_ms = args.duration * 1000
+                odd = [d for d in durations
+                       if d and abs((loop_ms / d) - round(loop_ms / d)) > 0.001]
+                if odd:
+                    log(f"  WARNING: durations that do not divide the loop cleanly: {odd}ms")
+                    log(f"           loop is {int(loop_ms)}ms. These will not close seamlessly.")
 
-        step_ms = loop_ms / n_frames
-        for i in range(n_frames):
-            t = i * step_ms
-            page.evaluate(SEEK_ALL, t)
-            path = out_dir / f"f{i:04d}.png"
-            if target is not None:
-                target.screenshot(path=str(path))
-            else:
-                page.screenshot(path=str(path))
-            if not args.quiet and (i % 10 == 0 or i == n_frames - 1):
-                log(f"  frame {i + 1}/{n_frames}")
+                target = page.query_selector(args.selector)
+                if target is None:
+                    log(f"  NOTE: '{args.selector}' not found, capturing the full viewport")
 
-        browser.close()
+                step_ms = loop_ms / n_frames
+                for i in range(n_frames):
+                    t = i * step_ms
+                    page.evaluate(SEEK_ALL, t)
+                    path = out_dir / f"f{i:04d}.png"
+                    if target is not None:
+                        target.screenshot(path=str(path))
+                    else:
+                        page.screenshot(path=str(path))
+                    if not args.quiet and (i % 10 == 0 or i == n_frames - 1):
+                        log(f"  frame {i + 1}/{n_frames}")
+            finally:
+                try:
+                    page.close()
+                except Exception:
+                    pass
+        finally:
+            try:
+                browser.close()
+            except Exception:
+                pass
 
     meta = {
         "html": str(html_path),
