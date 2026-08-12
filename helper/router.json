@@ -54,7 +54,6 @@
       "evidence_field": "reference_evidence",
       "on_absent": "SKIP",
       "on_missing": "HOLD",
-      "adds_agents": ["design-study"],
       "adds_capabilities": ["design-taste", "structural-fingerprint"]
     }
   }

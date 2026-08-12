@@ -48,7 +48,8 @@ python3 tools/brand_icon.py list --query claude
 
 # fetch one, sanitise it, record where it came from
 python3 tools/brand_icon.py fetch claude --variant color
-python3 tools/brand_icon.py fetch openai            # falls back to the mono mark
+# falls back to the mono mark
+python3 tools/brand_icon.py fetch openai
 
 # verify nothing in the cache drifted
 python3 tools/brand_icon.py check
