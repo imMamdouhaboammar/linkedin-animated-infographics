@@ -17,9 +17,9 @@ from pathlib import Path
 from typing import Any
 
 try:
-    from scripts.demo_submit import scan_public_text
+    from scripts.demo_submit import restricted_media_findings, scan_public_text
 except ModuleNotFoundError:  # direct `python3 scripts/demo_gallery.py ...`
-    from demo_submit import scan_public_text
+    from demo_submit import restricted_media_findings, scan_public_text
 
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_FILES = {"demo.gif", "index.html", "demo.json"}
@@ -229,13 +229,21 @@ def validate_demo_dir(path: Path, root: Path = ROOT) -> list[str]:
             errors.append(f"{filename} must exist and be non-empty")
 
     html_path = path / "index.html"
+    html_text = ""
     if html_path.is_file():
+        html_text = html_path.read_text(encoding="utf-8", errors="replace")
         errors.extend(
             scan_public_text(
                 "index.html",
-                html_path.read_text(encoding="utf-8", errors="replace"),
+                html_text,
             )
         )
+    errors.extend(restricted_media_findings(
+        root,
+        gif_path=path / "demo.gif",
+        html_text=html_text,
+        metadata=data,
+    ))
 
     return errors
 

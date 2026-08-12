@@ -51,3 +51,4 @@ Own and execute `design-dials` for motion intensity. Preserve `structural-origin
 ## Outputs
 
 Return `build/motion-direction.json` to the parent workflow with ordered patterns, target elements, communication job, selected payoff relationship, loop-order expectation, deliberate static areas, and mascot communication job when present.
+Each motion job has one communication job, target, sequence, duration, easing family, hold, reset, and named static regions. If motion adds no comprehension, return a static direction.

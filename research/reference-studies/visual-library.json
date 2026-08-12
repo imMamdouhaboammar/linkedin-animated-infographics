@@ -1,0 +1,1907 @@
+{
+  "aliases": [
+    {
+      "alias_of": "REF-002",
+      "deprecated": true,
+      "id": "REF-003",
+      "sha256": "bb747adab23dd4e7dc03612473a2b3ae5cffd53aeacbab613bacbbd8e35a92b4",
+      "source_filename": "1780949340506_______LinkedIn.gif"
+    },
+    {
+      "alias_of": "REF-007",
+      "deprecated": true,
+      "id": "REF-008",
+      "sha256": "ce7b3bd1d07b4346f3a62190d309c776f0f4b2ecac77f86335557e6673f392c6",
+      "source_filename": "1782067745700__4___________Charlie_Hills______LinkedIn.gif"
+    },
+    {
+      "alias_of": "REF-030",
+      "deprecated": true,
+      "id": "REF-031",
+      "sha256": "bb0be12ad37b99043fa8952724ba72aada07b44c8470da1d2888180d9260cace",
+      "source_filename": "geo-aeo-linkedin.gif"
+    },
+    {
+      "alias_of": "REF-027",
+      "deprecated": true,
+      "id": "REF-032",
+      "sha256": "ea3fa24e024da50717fa3ed2550c518ee12b600e281fd734e97c33d58ecfe720",
+      "source_filename": "linkedin-animated-infographics.gif"
+    },
+    {
+      "alias_of": "REF-001",
+      "deprecated": false,
+      "sha256": "64daaa514c8324dbe5eaf1810ace4388de511d1178e3562c0c2491f023cd040e",
+      "source_filename": "1780130679897__4___________Charlie_Hills______LinkedIn.gif"
+    },
+    {
+      "alias_of": "REF-002",
+      "deprecated": false,
+      "sha256": "bb747adab23dd4e7dc03612473a2b3ae5cffd53aeacbab613bacbbd8e35a92b4",
+      "source_filename": "1780949340506__4___________Charlie_Hills______LinkedIn.gif"
+    }
+  ],
+  "references": [
+    {
+      "boundaries": {
+        "adapt": [],
+        "adopt": [],
+        "reject": []
+      },
+      "bytes": 2803844,
+      "changed_pixel_mean": 0.039192,
+      "confidence": "unreviewed",
+      "dimensions": [
+        1080,
+        1350
+      ],
+      "duration_ms": 7100,
+      "fps": 10.0,
+      "frame_completeness": 1.0,
+      "frame_count": 71,
+      "id": "REF-001",
+      "loop": 0,
+      "observations": [],
+      "palette_shares": [
+        {
+          "hex": "#0B1A35FF",
+          "share": 0.108984
+        },
+        {
+          "hex": "#09172EFF",
+          "share": 0.081641
+        },
+        {
+          "hex": "#00112DFF",
+          "share": 0.057471
+        },
+        {
+          "hex": "#0B1931FF",
+          "share": 0.052979
+        },
+        {
+          "hex": "#111D34FF",
+          "share": 0.051221
+        },
+        {
+          "hex": "#03132DFF",
+          "share": 0.041016
+        },
+        {
+          "hex": "#FCFDFDFF",
+          "share": 0.037695
+        },
+        {
+          "hex": "#000D26FF",
+          "share": 0.031201
+        }
+      ],
+      "provenance_state": "unverified",
+      "rights_state": "unverified",
+      "seam_ratio": 0.23833,
+      "sha256": "64daaa514c8324dbe5eaf1810ace4388de511d1178e3562c0c2491f023cd040e",
+      "source_filename": "1780130679897__1___________Charlie_Hills______LinkedIn.gif"
+    },
+    {
+      "boundaries": {
+        "adapt": [],
+        "adopt": [],
+        "reject": []
+      },
+      "bytes": 4820045,
+      "changed_pixel_mean": 0.012094,
+      "confidence": "unreviewed",
+      "dimensions": [
+        1080,
+        1350
+      ],
+      "duration_ms": 3600,
+      "fps": 8.333333,
+      "frame_completeness": 1.0,
+      "frame_count": 30,
+      "id": "REF-002",
+      "loop": 0,
+      "observations": [],
+      "palette_shares": [
+        {
+          "hex": "#FEFEFEFF",
+          "share": 0.720264
+        },
+        {
+          "hex": "#0A1A33FF",
+          "share": 0.041309
+        },
+        {
+          "hex": "#FCF5F3FF",
+          "share": 0.019531
+        },
+        {
+          "hex": "#DBE1ECFF",
+          "share": 0.014111
+        },
+        {
+          "hex": "#FDFDFDFF",
+          "share": 0.012451
+        },
+        {
+          "hex": "#FBFBFBFF",
+          "share": 0.01084
+        },
+        {
+          "hex": "#00132FFF",
+          "share": 0.010693
+        },
+        {
+          "hex": "#F4F5F6FF",
+          "share": 0.010254
+        }
+      ],
+      "provenance_state": "unverified",
+      "rights_state": "unverified",
+      "seam_ratio": 0.006055,
+      "sha256": "bb747adab23dd4e7dc03612473a2b3ae5cffd53aeacbab613bacbbd8e35a92b4",
+      "source_filename": "1780949340506_______LinkedIn (1).gif"
+    },
+    {
+      "boundaries": {
+        "adapt": [],
+        "adopt": [],
+        "reject": []
+      },
+      "bytes": 938707,
+      "changed_pixel_mean": 0.00863,
+      "confidence": "unreviewed",
+      "dimensions": [
+        1080,
+        1350
+      ],
+      "duration_ms": 6010,
+      "fps": 11.980033,
+      "frame_completeness": 1.0,
+      "frame_count": 72,
+      "id": "REF-004",
+      "loop": 0,
+      "observations": [],
+      "palette_shares": [
+        {
+          "hex": "#FFFFFFFF",
+          "share": 0.671191
+        },
+        {
+          "hex": "#F5F5F7FF",
+          "share": 0.083057
+        },
+        {
+          "hex": "#00132FFF",
+          "share": 0.046729
+        },
+        {
+          "hex": "#EDEEF0FF",
+          "share": 0.017041
+        },
+        {
+          "hex": "#F0F1F2FF",
+          "share": 0.00957
+        },
+        {
+          "hex": "#F2F3F4FF",
+          "share": 0.009082
+        },
+        {
+          "hex": "#F3FCF9FF",
+          "share": 0.008057
+        },
+        {
+          "hex": "#FDF8FFFF",
+          "share": 0.007324
+        }
+      ],
+      "provenance_state": "unverified",
+      "rights_state": "unverified",
+      "seam_ratio": 0.022607,
+      "sha256": "e1e8b859fec71c7b2ad4e70a8e0ae71a2ee12aba7feda0be18247ff951f819e0",
+      "source_filename": "1781112560824__4___________Charlie_Hills______LinkedIn.gif"
+    },
+    {
+      "boundaries": {
+        "adapt": [],
+        "adopt": [],
+        "reject": []
+      },
+      "bytes": 503704,
+      "changed_pixel_mean": 0.010595,
+      "confidence": "unreviewed",
+      "dimensions": [
+        1080,
+        1350
+      ],
+      "duration_ms": 3600,
+      "fps": 12.5,
+      "frame_completeness": 1.0,
+      "frame_count": 45,
+      "id": "REF-005",
+      "loop": 0,
+      "observations": [],
+      "palette_shares": [
+        {
+          "hex": "#FFFFFFFF",
+          "share": 0.722314
+        },
+        {
+          "hex": "#0A1A33FF",
+          "share": 0.035107
+        },
+        {
+          "hex": "#FAFAFAFF",
+          "share": 0.026123
+        },
+        {
+          "hex": "#FCFBFCFF",
+          "share": 0.017969
+        },
+        {
+          "hex": "#4A5568FF",
+          "share": 0.014453
+        },
+        {
+          "hex": "#EBECEEFF",
+          "share": 0.013086
+        },
+        {
+          "hex": "#00132FFF",
+          "share": 0.012598
+        },
+        {
+          "hex": "#FDFDFDFF",
+          "share": 0.012061
+        }
+      ],
+      "provenance_state": "unverified",
+      "rights_state": "unverified",
+      "seam_ratio": 0.000586,
+      "sha256": "7dfcd61cb3978d66901179a142118419050686d16e769f699a1cb834d160eecb",
+      "source_filename": "1781539047139__4___________Charlie_Hills______LinkedIn.gif"
+    },
+    {
+      "boundaries": {
+        "adapt": [],
+        "adopt": [],
+        "reject": []
+      },
+      "bytes": 2015876,
+      "changed_pixel_mean": 0.009084,
+      "confidence": "unreviewed",
+      "dimensions": [
+        1080,
+        1350
+      ],
+      "duration_ms": 9010,
+      "fps": 18.867925,
+      "frame_completeness": 1.0,
+      "frame_count": 170,
+      "id": "REF-006",
+      "loop": 0,
+      "observations": [],
+      "palette_shares": [
+        {
+          "hex": "#FFFFFFFF",
+          "share": 0.647266
+        },
+        {
+          "hex": "#F2F6FBFF",
+          "share": 0.054443
+        },
+        {
+          "hex": "#FEFDFDFF",
+          "share": 0.044775
+        },
+        {
+          "hex": "#0A1A33FF",
+          "share": 0.030811
+        },
+        {
+          "hex": "#F9F9FAFF",
+          "share": 0.012988
+        },
+        {
+          "hex": "#F2F3F4FF",
+          "share": 0.011475
+        },
+        {
+          "hex": "#F6F6F8FF",
+          "share": 0.0104
+        },
+        {
+          "hex": "#F0F0F2FF",
+          "share": 0.010352
+        }
+      ],
+      "provenance_state": "unverified",
+      "rights_state": "unverified",
+      "seam_ratio": 0.00293,
+      "sha256": "ea350a285e1fe5c143827935ad12e87605056f5437d14cf715d144e1b7ee1406",
+      "source_filename": "1781739750727__4___________Charlie_Hills______LinkedIn.gif"
+    },
+    {
+      "boundaries": {
+        "adapt": [],
+        "adopt": [],
+        "reject": []
+      },
+      "bytes": 1982883,
+      "changed_pixel_mean": 0.061821,
+      "confidence": "unreviewed",
+      "dimensions": [
+        1080,
+        1350
+      ],
+      "duration_ms": 7000,
+      "fps": 10.0,
+      "frame_completeness": 1.0,
+      "frame_count": 70,
+      "id": "REF-007",
+      "loop": 0,
+      "observations": [],
+      "palette_shares": [
+        {
+          "hex": "#031633FF",
+          "share": 0.30166
+        },
+        {
+          "hex": "#00132FFF",
+          "share": 0.237939
+        },
+        {
+          "hex": "#061A36FF",
+          "share": 0.088721
+        },
+        {
+          "hex": "#00132EFF",
+          "share": 0.060937
+        },
+        {
+          "hex": "#071627FF",
+          "share": 0.040967
+        },
+        {
+          "hex": "#123459FF",
+          "share": 0.02334
+        },
+        {
+          "hex": "#0A1C37FF",
+          "share": 0.01709
+        },
+        {
+          "hex": "#00122CFF",
+          "share": 0.01709
+        }
+      ],
+      "provenance_state": "unverified",
+      "rights_state": "unverified",
+      "seam_ratio": 0.721484,
+      "sha256": "ce7b3bd1d07b4346f3a62190d309c776f0f4b2ecac77f86335557e6673f392c6",
+      "source_filename": "1782067745700__1___________Charlie_Hills______LinkedIn.gif"
+    },
+    {
+      "boundaries": {
+        "adapt": [],
+        "adopt": [],
+        "reject": []
+      },
+      "bytes": 2390006,
+      "changed_pixel_mean": 0.005063,
+      "confidence": "unreviewed",
+      "dimensions": [
+        1080,
+        1350
+      ],
+      "duration_ms": 7670,
+      "fps": 29.986962,
+      "frame_completeness": 1.0,
+      "frame_count": 230,
+      "id": "REF-009",
+      "loop": 0,
+      "observations": [],
+      "palette_shares": [
+        {
+          "hex": "#FAF8F7FF",
+          "share": 0.101025
+        },
+        {
+          "hex": "#F2F2F2FF",
+          "share": 0.098779
+        },
+        {
+          "hex": "#F5F5F5FF",
+          "share": 0.098389
+        },
+        {
+          "hex": "#F3F3F3FF",
+          "share": 0.098389
+        },
+        {
+          "hex": "#F4F4F4FF",
+          "share": 0.096729
+        },
+        {
+          "hex": "#F6F6F6FF",
+          "share": 0.096045
+        },
+        {
+          "hex": "#F7F6F6FF",
+          "share": 0.095947
+        },
+        {
+          "hex": "#F1F1F1FF",
+          "share": 0.095361
+        }
+      ],
+      "provenance_state": "unverified",
+      "rights_state": "unverified",
+      "seam_ratio": 0.14292,
+      "sha256": "f3813982af5e7b8347ed2573747d1da19f3a879900ba84f74fd9d2b9fe11a091",
+      "source_filename": "1782739106474_______LinkedIn.gif"
+    },
+    {
+      "boundaries": {
+        "adapt": [],
+        "adopt": [],
+        "reject": []
+      },
+      "bytes": 4235090,
+      "changed_pixel_mean": 0.054839,
+      "confidence": "unreviewed",
+      "dimensions": [
+        1080,
+        1350
+      ],
+      "duration_ms": 3750,
+      "fps": 16.0,
+      "frame_completeness": 1.0,
+      "frame_count": 60,
+      "id": "REF-010",
+      "loop": 0,
+      "observations": [],
+      "palette_shares": [
+        {
+          "hex": "#000F2BFF",
+          "share": 0.093213
+        },
+        {
+          "hex": "#0A1A33FF",
+          "share": 0.052979
+        },
+        {
+          "hex": "#041C36FF",
+          "share": 0.049561
+        },
+        {
+          "hex": "#041735FF",
+          "share": 0.049512
+        },
+        {
+          "hex": "#051E37FF",
+          "share": 0.04707
+        },
+        {
+          "hex": "#0A1937FF",
+          "share": 0.044629
+        },
+        {
+          "hex": "#031732FF",
+          "share": 0.042529
+        },
+        {
+          "hex": "#021432FF",
+          "share": 0.041113
+        }
+      ],
+      "provenance_state": "unverified",
+      "rights_state": "unverified",
+      "seam_ratio": 0.670117,
+      "sha256": "d55bf74777713dd44d75c060f8663b8dd1471da079dfb426da91b9090701a458",
+      "source_filename": "1782828330685__4___________Charlie_Hills______LinkedIn.gif"
+    },
+    {
+      "boundaries": {
+        "adapt": [],
+        "adopt": [],
+        "reject": []
+      },
+      "bytes": 1498348,
+      "changed_pixel_mean": 0.008449,
+      "confidence": "unreviewed",
+      "dimensions": [
+        1080,
+        1350
+      ],
+      "duration_ms": 9010,
+      "fps": 18.867925,
+      "frame_completeness": 1.0,
+      "frame_count": 170,
+      "id": "REF-011",
+      "loop": 0,
+      "observations": [],
+      "palette_shares": [
+        {
+          "hex": "#FFFFFFFF",
+          "share": 0.898438
+        },
+        {
+          "hex": "#0A1A33FF",
+          "share": 0.037744
+        },
+        {
+          "hex": "#F4F5F6FF",
+          "share": 0.025146
+        },
+        {
+          "hex": "#F4F4F6FF",
+          "share": 0.015918
+        },
+        {
+          "hex": "#E4E9F0FF",
+          "share": 0.006201
+        },
+        {
+          "hex": "#F4F5F7FF",
+          "share": 0.002686
+        },
+        {
+          "hex": "#D97757FF",
+          "share": 0.002637
+        },
+        {
+          "hex": "#D97557FF",
+          "share": 0.001611
+        }
+      ],
+      "provenance_state": "unverified",
+      "rights_state": "unverified",
+      "seam_ratio": 0.0,
+      "sha256": "e6efc97e4d93554f8b81decd48cdb5cfbe1b7006ee0f34d24568d5a8871e119e",
+      "source_filename": "1782828971151__4___________Charlie_Hills______LinkedIn.gif"
+    },
+    {
+      "boundaries": {
+        "adapt": [],
+        "adopt": [],
+        "reject": []
+      },
+      "bytes": 1070582,
+      "changed_pixel_mean": 0.048677,
+      "confidence": "unreviewed",
+      "dimensions": [
+        800,
+        1000
+      ],
+      "duration_ms": 3900,
+      "fps": 10.0,
+      "frame_completeness": 1.0,
+      "frame_count": 39,
+      "id": "REF-012",
+      "loop": 0,
+      "observations": [],
+      "palette_shares": [
+        {
+          "hex": "#F1F1F1FF",
+          "share": 0.23916
+        },
+        {
+          "hex": "#F0EEEEFF",
+          "share": 0.228174
+        },
+        {
+          "hex": "#191815FF",
+          "share": 0.184229
+        },
+        {
+          "hex": "#E6E9EBFF",
+          "share": 0.0604
+        },
+        {
+          "hex": "#E5E5E5FF",
+          "share": 0.057861
+        },
+        {
+          "hex": "#E9E8E5FF",
+          "share": 0.011865
+        },
+        {
+          "hex": "#1C1E20FF",
+          "share": 0.010693
+        },
+        {
+          "hex": "#CDD1D4FF",
+          "share": 0.00625
+        }
+      ],
+      "provenance_state": "unverified",
+      "rights_state": "unverified",
+      "seam_ratio": 0.138965,
+      "sha256": "3a56d302cee5415fb2b751067f2964749beb7bd3bad4e24b1e13baf2135b816d",
+      "source_filename": "1783341409043__2___________Michel_Lieben______LinkedIn.gif"
+    },
+    {
+      "boundaries": {
+        "adapt": [],
+        "adopt": [],
+        "reject": []
+      },
+      "bytes": 2826031,
+      "changed_pixel_mean": 0.030006,
+      "confidence": "unreviewed",
+      "dimensions": [
+        1080,
+        1350
+      ],
+      "duration_ms": 6000,
+      "fps": 20.0,
+      "frame_completeness": 1.0,
+      "frame_count": 120,
+      "id": "REF-013",
+      "loop": 0,
+      "observations": [],
+      "palette_shares": [
+        {
+          "hex": "#FFFFFFFF",
+          "share": 0.704395
+        },
+        {
+          "hex": "#FEFAF8FF",
+          "share": 0.033936
+        },
+        {
+          "hex": "#FDFAFFFF",
+          "share": 0.029297
+        },
+        {
+          "hex": "#FEFEFEFF",
+          "share": 0.021191
+        },
+        {
+          "hex": "#F8FBFDFF",
+          "share": 0.01792
+        },
+        {
+          "hex": "#FAFCFFFF",
+          "share": 0.017285
+        },
+        {
+          "hex": "#F8F9F9FF",
+          "share": 0.016943
+        },
+        {
+          "hex": "#0A1A33FF",
+          "share": 0.015918
+        }
+      ],
+      "provenance_state": "unverified",
+      "rights_state": "unverified",
+      "seam_ratio": 0.02832,
+      "sha256": "a875d638253a35c4ee4f21c4a266cc4b8927e42e11136aa9d4191e2c5b07b101",
+      "source_filename": "1783628240893__4___________Charlie_Hills______LinkedIn.gif"
+    },
+    {
+      "boundaries": {
+        "adapt": [],
+        "adopt": [],
+        "reject": []
+      },
+      "bytes": 880690,
+      "changed_pixel_mean": 0.003962,
+      "confidence": "unreviewed",
+      "dimensions": [
+        800,
+        1000
+      ],
+      "duration_ms": 10000,
+      "fps": 10.0,
+      "frame_completeness": 1.0,
+      "frame_count": 100,
+      "id": "REF-014",
+      "loop": 0,
+      "observations": [],
+      "palette_shares": [
+        {
+          "hex": "#F2ECE7FF",
+          "share": 0.285107
+        },
+        {
+          "hex": "#FAF7F3FF",
+          "share": 0.212695
+        },
+        {
+          "hex": "#FDFDFDFF",
+          "share": 0.131445
+        },
+        {
+          "hex": "#241B19FF",
+          "share": 0.081836
+        },
+        {
+          "hex": "#ECD5D2FF",
+          "share": 0.043066
+        },
+        {
+          "hex": "#8C5B59FF",
+          "share": 0.011475
+        },
+        {
+          "hex": "#E3BCB2FF",
+          "share": 0.01084
+        },
+        {
+          "hex": "#E6C1B5FF",
+          "share": 0.009863
+        }
+      ],
+      "provenance_state": "unverified",
+      "rights_state": "unverified",
+      "seam_ratio": 0.140967,
+      "sha256": "48f4c10c7d6f2c108bdca4565cd1fe7bc7641f3ffcbe7230d63f4bbd6d5db0de",
+      "source_filename": "1784024406737__2___________Michel_Lieben______LinkedIn.gif"
+    },
+    {
+      "boundaries": {
+        "adapt": [],
+        "adopt": [],
+        "reject": []
+      },
+      "bytes": 3196632,
+      "changed_pixel_mean": 0.01328,
+      "confidence": "unreviewed",
+      "dimensions": [
+        1080,
+        1500
+      ],
+      "duration_ms": 10540,
+      "fps": 14.990512,
+      "frame_completeness": 1.0,
+      "frame_count": 158,
+      "id": "REF-015",
+      "loop": 0,
+      "observations": [],
+      "palette_shares": [
+        {
+          "hex": "#F7F6F4FF",
+          "share": 0.203424
+        },
+        {
+          "hex": "#FCFCFAFF",
+          "share": 0.19663
+        },
+        {
+          "hex": "#F9F7F5FF",
+          "share": 0.177446
+        },
+        {
+          "hex": "#FAF9F7FF",
+          "share": 0.111793
+        },
+        {
+          "hex": "#FBFAF9FF",
+          "share": 0.08538
+        },
+        {
+          "hex": "#FDF3EBFF",
+          "share": 0.051522
+        },
+        {
+          "hex": "#F9F6F1FF",
+          "share": 0.033696
+        },
+        {
+          "hex": "#F6F3EFFF",
+          "share": 0.018587
+        }
+      ],
+      "provenance_state": "unverified",
+      "rights_state": "unverified",
+      "seam_ratio": 0.543587,
+      "sha256": "a413dfade457657083a4d91691d023a5cae04a3d59405f1f4324d93f15a32580",
+      "source_filename": "1784713997178_______________LinkedIn.gif"
+    },
+    {
+      "boundaries": {
+        "adapt": [],
+        "adopt": [],
+        "reject": []
+      },
+      "bytes": 3670120,
+      "changed_pixel_mean": 0.017066,
+      "confidence": "unreviewed",
+      "dimensions": [
+        1080,
+        1350
+      ],
+      "duration_ms": 9510,
+      "fps": 18.927445,
+      "frame_completeness": 1.0,
+      "frame_count": 180,
+      "id": "REF-016",
+      "loop": 0,
+      "observations": [],
+      "palette_shares": [
+        {
+          "hex": "#FFFFFFFF",
+          "share": 0.733203
+        },
+        {
+          "hex": "#F4F5F6FF",
+          "share": 0.025
+        },
+        {
+          "hex": "#F3D6CCFF",
+          "share": 0.024463
+        },
+        {
+          "hex": "#0A1A33FF",
+          "share": 0.021289
+        },
+        {
+          "hex": "#FEFEFEFF",
+          "share": 0.017139
+        },
+        {
+          "hex": "#FCFDFDFF",
+          "share": 0.014648
+        },
+        {
+          "hex": "#F4F4F6FF",
+          "share": 0.014307
+        },
+        {
+          "hex": "#FEFCFBFF",
+          "share": 0.010303
+        }
+      ],
+      "provenance_state": "unverified",
+      "rights_state": "unverified",
+      "seam_ratio": 0.154395,
+      "sha256": "c749b113274ea01aed20566b189d21ee5b2b4e65697f9fdcb5a6c88877c83faa",
+      "source_filename": "1784899455439__4___________Charlie_Hills______LinkedIn.gif"
+    },
+    {
+      "boundaries": {
+        "adapt": [],
+        "adopt": [],
+        "reject": []
+      },
+      "bytes": 5436757,
+      "changed_pixel_mean": 0.025883,
+      "confidence": "unreviewed",
+      "dimensions": [
+        1080,
+        1350
+      ],
+      "duration_ms": 15010,
+      "fps": 13.32445,
+      "frame_completeness": 1.0,
+      "frame_count": 200,
+      "id": "REF-017",
+      "loop": 0,
+      "observations": [],
+      "palette_shares": [
+        {
+          "hex": "#FFFFFFFF",
+          "share": 0.408008
+        },
+        {
+          "hex": "#FBFCFDFF",
+          "share": 0.218066
+        },
+        {
+          "hex": "#FCFDFEFF",
+          "share": 0.092432
+        },
+        {
+          "hex": "#F7F9FCFF",
+          "share": 0.05376
+        },
+        {
+          "hex": "#FEFAF8FF",
+          "share": 0.027832
+        },
+        {
+          "hex": "#F6F7F9FF",
+          "share": 0.023242
+        },
+        {
+          "hex": "#FDF8F5FF",
+          "share": 0.016943
+        },
+        {
+          "hex": "#F6F6F8FF",
+          "share": 0.016504
+        }
+      ],
+      "provenance_state": "unverified",
+      "rights_state": "unverified",
+      "seam_ratio": 0.494092,
+      "sha256": "156242bd8dee13a7e21edf0d95fb1ea9fb1e62217c2b35f86c7fc954f5a73e0d",
+      "source_filename": "1785090336971_______________LinkedIn.gif"
+    },
+    {
+      "boundaries": {
+        "adapt": [],
+        "adopt": [],
+        "reject": []
+      },
+      "bytes": 1723796,
+      "changed_pixel_mean": 0.009201,
+      "confidence": "unreviewed",
+      "dimensions": [
+        1080,
+        1350
+      ],
+      "duration_ms": 4000,
+      "fps": 25.0,
+      "frame_completeness": 1.0,
+      "frame_count": 100,
+      "id": "REF-018",
+      "loop": 0,
+      "observations": [],
+      "palette_shares": [
+        {
+          "hex": "#00132FFF",
+          "share": 0.383301
+        },
+        {
+          "hex": "#0A1A33FF",
+          "share": 0.161133
+        },
+        {
+          "hex": "#101A32FF",
+          "share": 0.05708
+        },
+        {
+          "hex": "#061F3EFF",
+          "share": 0.055273
+        },
+        {
+          "hex": "#101C3EFF",
+          "share": 0.054395
+        },
+        {
+          "hex": "#08233AFF",
+          "share": 0.053613
+        },
+        {
+          "hex": "#091B36FF",
+          "share": 0.027734
+        },
+        {
+          "hex": "#081225FF",
+          "share": 0.026367
+        }
+      ],
+      "provenance_state": "unverified",
+      "rights_state": "unverified",
+      "seam_ratio": 0.000537,
+      "sha256": "8a80a290ffba1d1c9d38082ef9b005eda9694b199b8029c91372775743d4f7fb",
+      "source_filename": "1785232695815__4___________Charlie_Hills______LinkedIn.gif"
+    },
+    {
+      "boundaries": {
+        "adapt": [],
+        "adopt": [],
+        "reject": []
+      },
+      "bytes": 838839,
+      "changed_pixel_mean": 0.00849,
+      "confidence": "unreviewed",
+      "dimensions": [
+        1080,
+        1350
+      ],
+      "duration_ms": 3010,
+      "fps": 29.900332,
+      "frame_completeness": 1.0,
+      "frame_count": 90,
+      "id": "REF-019",
+      "loop": 0,
+      "observations": [],
+      "palette_shares": [
+        {
+          "hex": "#FFFFFFFF",
+          "share": 0.814258
+        },
+        {
+          "hex": "#FCFCFCFF",
+          "share": 0.017627
+        },
+        {
+          "hex": "#FEFEFEFF",
+          "share": 0.015967
+        },
+        {
+          "hex": "#0A1A33FF",
+          "share": 0.014941
+        },
+        {
+          "hex": "#F5F5F6FF",
+          "share": 0.011621
+        },
+        {
+          "hex": "#FDFDFDFF",
+          "share": 0.007373
+        },
+        {
+          "hex": "#B8D7F2FF",
+          "share": 0.006299
+        },
+        {
+          "hex": "#26364CFF",
+          "share": 0.00625
+        }
+      ],
+      "provenance_state": "unverified",
+      "rights_state": "unverified",
+      "seam_ratio": 0.007617,
+      "sha256": "adb7f6fdbceb75bcfded710887ced446db222c0f76e2652ecdb71d3381dffd1a",
+      "source_filename": "1785485110221__4___________Charlie_Hills______LinkedIn.gif"
+    },
+    {
+      "boundaries": {
+        "adapt": [],
+        "adopt": [],
+        "reject": []
+      },
+      "bytes": 1302583,
+      "changed_pixel_mean": 0.006677,
+      "confidence": "unreviewed",
+      "dimensions": [
+        1080,
+        1350
+      ],
+      "duration_ms": 10990,
+      "fps": 15.468608,
+      "frame_completeness": 1.0,
+      "frame_count": 170,
+      "id": "REF-020",
+      "loop": 0,
+      "observations": [],
+      "palette_shares": [
+        {
+          "hex": "#FFFFFFFF",
+          "share": 0.757471
+        },
+        {
+          "hex": "#FDFDFEFF",
+          "share": 0.069287
+        },
+        {
+          "hex": "#FAFBFBFF",
+          "share": 0.026367
+        },
+        {
+          "hex": "#F7F7F8FF",
+          "share": 0.01582
+        },
+        {
+          "hex": "#0A1A33FF",
+          "share": 0.014941
+        },
+        {
+          "hex": "#CCD0D5FF",
+          "share": 0.01123
+        },
+        {
+          "hex": "#F2F3F4FF",
+          "share": 0.008398
+        },
+        {
+          "hex": "#D2D4D9FF",
+          "share": 0.007861
+        }
+      ],
+      "provenance_state": "unverified",
+      "rights_state": "unverified",
+      "seam_ratio": 0.194922,
+      "sha256": "5bd5887bacd3ce9323c5349eb8561d80c069e1828be8dee752d896f5104a3bf9",
+      "source_filename": "1785538264233__4___________Charlie_Hills______LinkedIn.gif"
+    },
+    {
+      "boundaries": {
+        "adapt": [],
+        "adopt": [],
+        "reject": []
+      },
+      "bytes": 737699,
+      "changed_pixel_mean": 0.026399,
+      "confidence": "unreviewed",
+      "dimensions": [
+        800,
+        1000
+      ],
+      "duration_ms": 5400,
+      "fps": 5.555556,
+      "frame_completeness": 1.0,
+      "frame_count": 30,
+      "id": "REF-021",
+      "loop": 0,
+      "observations": [],
+      "palette_shares": [
+        {
+          "hex": "#FFFFFFFF",
+          "share": 0.781592
+        },
+        {
+          "hex": "#0A1A33FF",
+          "share": 0.040869
+        },
+        {
+          "hex": "#FEFEFEFF",
+          "share": 0.032666
+        },
+        {
+          "hex": "#F9F9FAFF",
+          "share": 0.032568
+        },
+        {
+          "hex": "#FDFDFDFF",
+          "share": 0.029736
+        },
+        {
+          "hex": "#FBFBFBFF",
+          "share": 0.028857
+        },
+        {
+          "hex": "#D97757FF",
+          "share": 0.010449
+        },
+        {
+          "hex": "#00132FFF",
+          "share": 0.007861
+        }
+      ],
+      "provenance_state": "unverified",
+      "rights_state": "unverified",
+      "seam_ratio": 0.092871,
+      "sha256": "8169e673845772f31a45be24aea20864fa2c8f16f25c8d1af8e49e3003aa46b3",
+      "source_filename": "1785753110467__4___________Charlie_Hills______LinkedIn.gif"
+    },
+    {
+      "boundaries": {
+        "adapt": [],
+        "adopt": [],
+        "reject": []
+      },
+      "bytes": 1615635,
+      "changed_pixel_mean": 0.054778,
+      "confidence": "unreviewed",
+      "dimensions": [
+        1080,
+        1350
+      ],
+      "duration_ms": 7200,
+      "fps": 6.666667,
+      "frame_completeness": 1.0,
+      "frame_count": 48,
+      "id": "REF-022",
+      "loop": 0,
+      "observations": [],
+      "palette_shares": [
+        {
+          "hex": "#FFFFFFFF",
+          "share": 0.765869
+        },
+        {
+          "hex": "#F5F6F7FF",
+          "share": 0.040576
+        },
+        {
+          "hex": "#0A1A33FF",
+          "share": 0.034619
+        },
+        {
+          "hex": "#00132FFF",
+          "share": 0.012549
+        },
+        {
+          "hex": "#55617AFF",
+          "share": 0.009619
+        },
+        {
+          "hex": "#FCFCFDFF",
+          "share": 0.007324
+        },
+        {
+          "hex": "#F4F2F5FF",
+          "share": 0.004639
+        },
+        {
+          "hex": "#D97557FF",
+          "share": 0.004004
+        }
+      ],
+      "provenance_state": "unverified",
+      "rights_state": "unverified",
+      "seam_ratio": 0.657031,
+      "sha256": "b55fff30ec2223f71ac9299b52feeed9c59228c0884f3a2584a6a84e9d8c995e",
+      "source_filename": "1785774700903__4___________Charlie_Hills______LinkedIn.gif"
+    },
+    {
+      "boundaries": {
+        "adapt": [],
+        "adopt": [],
+        "reject": []
+      },
+      "bytes": 8494604,
+      "changed_pixel_mean": 0.084492,
+      "confidence": "unreviewed",
+      "dimensions": [
+        1080,
+        1350
+      ],
+      "duration_ms": 8000,
+      "fps": 10.0,
+      "frame_completeness": 1.0,
+      "frame_count": 80,
+      "id": "REF-023",
+      "loop": 0,
+      "observations": [],
+      "palette_shares": [
+        {
+          "hex": "#000000FF",
+          "share": 0.246143
+        },
+        {
+          "hex": "#FDFDFDFF",
+          "share": 0.102832
+        },
+        {
+          "hex": "#FBFBFCFF",
+          "share": 0.053125
+        },
+        {
+          "hex": "#010101FF",
+          "share": 0.050928
+        },
+        {
+          "hex": "#030102FF",
+          "share": 0.048926
+        },
+        {
+          "hex": "#030304FF",
+          "share": 0.0479
+        },
+        {
+          "hex": "#FAF9F7FF",
+          "share": 0.036035
+        },
+        {
+          "hex": "#0D0D10FF",
+          "share": 0.030664
+        }
+      ],
+      "provenance_state": "unverified",
+      "rights_state": "unverified",
+      "seam_ratio": 0.216699,
+      "sha256": "86c0e1ac86c515bf384408632bea9f0851eb054e6ff5af2bc857823330ce0c3a",
+      "source_filename": "1785858879500_______________LinkedIn.gif"
+    },
+    {
+      "boundaries": {
+        "adapt": [],
+        "adopt": [],
+        "reject": []
+      },
+      "bytes": 670711,
+      "changed_pixel_mean": 0.002746,
+      "confidence": "unreviewed",
+      "dimensions": [
+        1080,
+        1350
+      ],
+      "duration_ms": 9010,
+      "fps": 18.867925,
+      "frame_completeness": 1.0,
+      "frame_count": 170,
+      "id": "REF-024",
+      "loop": 0,
+      "observations": [],
+      "palette_shares": [
+        {
+          "hex": "#FFFFFFFF",
+          "share": 0.642969
+        },
+        {
+          "hex": "#F6F8FBFF",
+          "share": 0.192578
+        },
+        {
+          "hex": "#F4F5F6FF",
+          "share": 0.023779
+        },
+        {
+          "hex": "#E3E5E8FF",
+          "share": 0.015869
+        },
+        {
+          "hex": "#00132FFF",
+          "share": 0.015088
+        },
+        {
+          "hex": "#0A1A33FF",
+          "share": 0.012012
+        },
+        {
+          "hex": "#F1F2F3FF",
+          "share": 0.011377
+        },
+        {
+          "hex": "#1A1A1AFF",
+          "share": 0.006104
+        }
+      ],
+      "provenance_state": "unverified",
+      "rights_state": "unverified",
+      "seam_ratio": 0.062988,
+      "sha256": "fae3c4539f4b2855168256b29ba5422b38e767c968af68db885eddd44a5fe87e",
+      "source_filename": "1785860748725__4___________Charlie_Hills______LinkedIn.gif"
+    },
+    {
+      "boundaries": {
+        "adapt": [],
+        "adopt": [],
+        "reject": []
+      },
+      "bytes": 2479563,
+      "changed_pixel_mean": 0.014013,
+      "confidence": "unreviewed",
+      "dimensions": [
+        1080,
+        1350
+      ],
+      "duration_ms": 6000,
+      "fps": 20.0,
+      "frame_completeness": 1.0,
+      "frame_count": 120,
+      "id": "REF-025",
+      "loop": 0,
+      "observations": [],
+      "palette_shares": [
+        {
+          "hex": "#061428FF",
+          "share": 0.345215
+        },
+        {
+          "hex": "#0A1D3BFF",
+          "share": 0.187158
+        },
+        {
+          "hex": "#00132FFF",
+          "share": 0.135449
+        },
+        {
+          "hex": "#001029FF",
+          "share": 0.04126
+        },
+        {
+          "hex": "#00122EFF",
+          "share": 0.034863
+        },
+        {
+          "hex": "#000F27FF",
+          "share": 0.028418
+        },
+        {
+          "hex": "#001028FF",
+          "share": 0.019824
+        },
+        {
+          "hex": "#091C3AFF",
+          "share": 0.019385
+        }
+      ],
+      "provenance_state": "unverified",
+      "rights_state": "unverified",
+      "seam_ratio": 0.056836,
+      "sha256": "592f3b1de5543b24e4320f0ded5f677ec8505a49f8f13140e0a8151d424f5593",
+      "source_filename": "1786020617080_______________LinkedIn.gif"
+    },
+    {
+      "boundaries": {
+        "adapt": [],
+        "adopt": [],
+        "reject": []
+      },
+      "bytes": 1199405,
+      "changed_pixel_mean": 0.020559,
+      "confidence": "unreviewed",
+      "dimensions": [
+        1080,
+        1350
+      ],
+      "duration_ms": 10990,
+      "fps": 15.468608,
+      "frame_completeness": 1.0,
+      "frame_count": 170,
+      "id": "REF-026",
+      "loop": 0,
+      "observations": [],
+      "palette_shares": [
+        {
+          "hex": "#00132FFF",
+          "share": 0.820801
+        },
+        {
+          "hex": "#08172FFF",
+          "share": 0.074414
+        },
+        {
+          "hex": "#071935FF",
+          "share": 0.041016
+        },
+        {
+          "hex": "#0A1A33FF",
+          "share": 0.012354
+        },
+        {
+          "hex": "#141C33FF",
+          "share": 0.012012
+        },
+        {
+          "hex": "#00132DFF",
+          "share": 0.006885
+        },
+        {
+          "hex": "#FFFFFFFF",
+          "share": 0.004248
+        },
+        {
+          "hex": "#00122BFF",
+          "share": 0.003125
+        }
+      ],
+      "provenance_state": "unverified",
+      "rights_state": "unverified",
+      "seam_ratio": 0.6625,
+      "sha256": "b9eabe98ae01f3dcd6f7a0a643c1f345d51fa84139787ea5bc04265f28dd2de1",
+      "source_filename": "1786102103352_______________LinkedIn.gif"
+    },
+    {
+      "boundaries": {
+        "adapt": [],
+        "adopt": [],
+        "reject": []
+      },
+      "bytes": 276217,
+      "changed_pixel_mean": 0.002744,
+      "confidence": "unreviewed",
+      "dimensions": [
+        1080,
+        1350
+      ],
+      "duration_ms": 6000,
+      "fps": 12.5,
+      "frame_completeness": 1.0,
+      "frame_count": 75,
+      "id": "REF-027",
+      "loop": 0,
+      "observations": [],
+      "palette_shares": [
+        {
+          "hex": "#FBF9F4FF",
+          "share": 0.271289
+        },
+        {
+          "hex": "#FDFAF5FF",
+          "share": 0.21333
+        },
+        {
+          "hex": "#FCFCF9FF",
+          "share": 0.181299
+        },
+        {
+          "hex": "#262220FF",
+          "share": 0.086133
+        },
+        {
+          "hex": "#2E2A26FF",
+          "share": 0.063232
+        },
+        {
+          "hex": "#F1F1F1FF",
+          "share": 0.031348
+        },
+        {
+          "hex": "#332D2AFF",
+          "share": 0.018408
+        },
+        {
+          "hex": "#BCBCBCFF",
+          "share": 0.014014
+        }
+      ],
+      "provenance_state": "unverified",
+      "rights_state": "unverified",
+      "seam_ratio": 0.000342,
+      "sha256": "ea3fa24e024da50717fa3ed2550c518ee12b600e281fd734e97c33d58ecfe720",
+      "source_filename": "44889c65-0ac4-48b3-9948-7ff086bb3db2_______animated_infographic____LinkedIn_plugin___Claude.gif"
+    },
+    {
+      "boundaries": {
+        "adapt": [],
+        "adopt": [],
+        "reject": []
+      },
+      "bytes": 4271272,
+      "changed_pixel_mean": 0.065117,
+      "confidence": "unreviewed",
+      "dimensions": [
+        880,
+        600
+      ],
+      "duration_ms": 10000,
+      "fps": 25.0,
+      "frame_completeness": 0.989982,
+      "frame_count": 250,
+      "id": "REF-028",
+      "loop": 0,
+      "observations": [],
+      "palette_shares": [
+        {
+          "hex": "#29215200",
+          "share": 0.745011
+        },
+        {
+          "hex": "#FFFFFFFF",
+          "share": 0.155906
+        },
+        {
+          "hex": "#000000FF",
+          "share": 0.057798
+        },
+        {
+          "hex": "#8473FFFF",
+          "share": 0.01617
+        },
+        {
+          "hex": "#7B6BEFFF",
+          "share": 0.006307
+        },
+        {
+          "hex": "#7B6BF7FF",
+          "share": 0.004243
+        },
+        {
+          "hex": "#846BF7FF",
+          "share": 0.002122
+        },
+        {
+          "hex": "#DEDEDEFF",
+          "share": 0.000573
+        }
+      ],
+      "provenance_state": "unverified",
+      "rights_state": "unverified",
+      "seam_ratio": 0.42328,
+      "sha256": "0ad3061e99aee9f2b8e8a662430b247c4bc1535269f73e77fb27073002a1f36b",
+      "source_filename": "68747470733a2f2f7777772e716f646f2e61692f77702d636f6e74656e742f75706c6f6164732f323032362f30312f616e7465617465722d6c6f6f6b696e672d61742d616e74732d30312d7472616e73706172656e742d62672d63726f7065642d657a6769662e636f6d2d6f7074696d697a652d312e6769.gif"
+    },
+    {
+      "boundaries": {
+        "adapt": [],
+        "adopt": [],
+        "reject": []
+      },
+      "bytes": 426847,
+      "changed_pixel_mean": 0.004625,
+      "confidence": "unreviewed",
+      "dimensions": [
+        1080,
+        1350
+      ],
+      "duration_ms": 6000,
+      "fps": 12.5,
+      "frame_completeness": 1.0,
+      "frame_count": 75,
+      "id": "REF-029",
+      "loop": 0,
+      "observations": [],
+      "palette_shares": [
+        {
+          "hex": "#F4F0E7FF",
+          "share": 0.315039
+        },
+        {
+          "hex": "#EEEAE2FF",
+          "share": 0.135937
+        },
+        {
+          "hex": "#FFFDF8FF",
+          "share": 0.104883
+        },
+        {
+          "hex": "#FDFAF5FF",
+          "share": 0.090381
+        },
+        {
+          "hex": "#FBF8F4FF",
+          "share": 0.074561
+        },
+        {
+          "hex": "#FAF3EFFF",
+          "share": 0.072754
+        },
+        {
+          "hex": "#171717FF",
+          "share": 0.054199
+        },
+        {
+          "hex": "#191919FF",
+          "share": 0.020654
+        }
+      ],
+      "provenance_state": "unverified",
+      "rights_state": "unverified",
+      "seam_ratio": 0.000586,
+      "sha256": "aed24367176331d17a9a15a88170f015bbaa0fc88c10ca97f778dcf2f2e73242",
+      "source_filename": "content_Cited_vs_Used_Infographic.gif"
+    },
+    {
+      "boundaries": {
+        "adapt": [],
+        "adopt": [],
+        "reject": []
+      },
+      "bytes": 336780,
+      "changed_pixel_mean": 0.009298,
+      "confidence": "unreviewed",
+      "dimensions": [
+        1080,
+        1350
+      ],
+      "duration_ms": 6400,
+      "fps": 20.0,
+      "frame_completeness": 1.0,
+      "frame_count": 128,
+      "id": "REF-030",
+      "loop": 0,
+      "observations": [],
+      "palette_shares": [
+        {
+          "hex": "#FFFFFFFF",
+          "share": 0.403711
+        },
+        {
+          "hex": "#FFFEFEFF",
+          "share": 0.202637
+        },
+        {
+          "hex": "#FDFDFEFF",
+          "share": 0.19917
+        },
+        {
+          "hex": "#F6F7FBFF",
+          "share": 0.047998
+        },
+        {
+          "hex": "#F7F8FBFF",
+          "share": 0.024219
+        },
+        {
+          "hex": "#F8F9FCFF",
+          "share": 0.024023
+        },
+        {
+          "hex": "#1F2430FF",
+          "share": 0.02168
+        },
+        {
+          "hex": "#ECFAF5FF",
+          "share": 0.01333
+        }
+      ],
+      "provenance_state": "unverified",
+      "rights_state": "unverified",
+      "seam_ratio": 0.0,
+      "sha256": "bb0be12ad37b99043fa8952724ba72aada07b44c8470da1d2888180d9260cace",
+      "source_filename": "geo-aeo-linkedin (1).gif"
+    },
+    {
+      "boundaries": {
+        "adapt": [],
+        "adopt": [],
+        "reject": []
+      },
+      "bytes": 573900,
+      "changed_pixel_mean": 0.003465,
+      "confidence": "unreviewed",
+      "dimensions": [
+        1080,
+        1350
+      ],
+      "duration_ms": 10000,
+      "fps": 10.0,
+      "frame_completeness": 1.0,
+      "frame_count": 100,
+      "id": "REF-033",
+      "loop": 0,
+      "observations": [],
+      "palette_shares": [
+        {
+          "hex": "#FFFFFFFF",
+          "share": 0.455029
+        },
+        {
+          "hex": "#FDFDFDFF",
+          "share": 0.285449
+        },
+        {
+          "hex": "#F7F7FBFF",
+          "share": 0.075928
+        },
+        {
+          "hex": "#111828FF",
+          "share": 0.050732
+        },
+        {
+          "hex": "#F3F3FBFF",
+          "share": 0.020947
+        },
+        {
+          "hex": "#F9F7F6FF",
+          "share": 0.017725
+        },
+        {
+          "hex": "#FF6B24FF",
+          "share": 0.010986
+        },
+        {
+          "hex": "#F0F1F3FF",
+          "share": 0.00708
+        }
+      ],
+      "provenance_state": "unverified",
+      "rights_state": "unverified",
+      "seam_ratio": 0.005225,
+      "sha256": "6bd03e4a636928b3b765f304ad3b552b3e4ef971c6be2d31bececabe0e584072",
+      "source_filename": "media-buyer-signal-decision.gif"
+    },
+    {
+      "boundaries": {
+        "adapt": [],
+        "adopt": [],
+        "reject": []
+      },
+      "bytes": 150185,
+      "changed_pixel_mean": 0.000126,
+      "confidence": "unreviewed",
+      "dimensions": [
+        1080,
+        1350
+      ],
+      "duration_ms": 6000,
+      "fps": 12.5,
+      "frame_completeness": 1.0,
+      "frame_count": 75,
+      "id": "REF-034",
+      "loop": 0,
+      "observations": [],
+      "palette_shares": [
+        {
+          "hex": "#FDFAF5FF",
+          "share": 0.386719
+        },
+        {
+          "hex": "#FCFCF9FF",
+          "share": 0.273926
+        },
+        {
+          "hex": "#F9F7F4FF",
+          "share": 0.107861
+        },
+        {
+          "hex": "#2E2A26FF",
+          "share": 0.054053
+        },
+        {
+          "hex": "#FFFFFFFF",
+          "share": 0.036426
+        },
+        {
+          "hex": "#3A342FFF",
+          "share": 0.019336
+        },
+        {
+          "hex": "#F7EAE1FF",
+          "share": 0.011377
+        },
+        {
+          "hex": "#909090FF",
+          "share": 0.010254
+        }
+      ],
+      "provenance_state": "unverified",
+      "rights_state": "unverified",
+      "seam_ratio": 0.000293,
+      "sha256": "4d6895479d6d4e9882161e9be0aa92a13e91d282acb344f48f9f7ccfb79d542b",
+      "source_filename": "prepilot-for-copywriters-house0.gif"
+    },
+    {
+      "boundaries": {
+        "adapt": [],
+        "adopt": [],
+        "reject": []
+      },
+      "bytes": 4630881,
+      "changed_pixel_mean": 0.023618,
+      "confidence": "unreviewed",
+      "dimensions": [
+        1080,
+        1350
+      ],
+      "duration_ms": 11000,
+      "fps": 20.0,
+      "frame_completeness": 1.0,
+      "frame_count": 220,
+      "id": "REF-035",
+      "loop": 0,
+      "observations": [],
+      "palette_shares": [
+        {
+          "hex": "#081A35FF",
+          "share": 0.381836
+        },
+        {
+          "hex": "#060D18FF",
+          "share": 0.079883
+        },
+        {
+          "hex": "#00142FFF",
+          "share": 0.050537
+        },
+        {
+          "hex": "#0A1A33FF",
+          "share": 0.040527
+        },
+        {
+          "hex": "#001128FF",
+          "share": 0.037256
+        },
+        {
+          "hex": "#171F34FF",
+          "share": 0.031543
+        },
+        {
+          "hex": "#12243DFF",
+          "share": 0.027393
+        },
+        {
+          "hex": "#00122CFF",
+          "share": 0.024463
+        }
+      ],
+      "provenance_state": "unverified",
+      "rights_state": "unverified",
+      "seam_ratio": 0.835205,
+      "sha256": "b85fc81ddfc49384c85f58e08a748c6005555c84c16670eba0fd30a3fab26cc2",
+      "source_filename": "1781897930400__4___________Charlie_Hills______LinkedIn.gif"
+    }
+  ],
+  "schema_version": 1
+}

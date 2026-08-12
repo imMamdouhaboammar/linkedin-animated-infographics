@@ -2,6 +2,10 @@
 
 The active skill inventory is declared in `helper/modules.json`. Every public skill follows the v3 contract: Purpose, Use when, Inputs, Outputs, Procedure, HOLD conditions, Related components, and Research gates.
 
+## Visual intelligence contracts
+
+`tools/story_retrieve.py` returns deterministic, stage-specific, bounded UTF-8 capsules. References influence only selected structure/motion/typography IDs; screenshot fonts are never treated as exact identification.
+
 ## Workflow and routing skills
 
 ### `post`

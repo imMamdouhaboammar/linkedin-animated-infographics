@@ -28,8 +28,8 @@ Read `helper/GUIDE.md` before running QA.
 
 ```bash
 bash ${CLAUDE_PLUGIN_ROOT}/scripts/lint_artboard.sh <path>
-python3 ${CLAUDE_PLUGIN_ROOT}/scripts/check_render.py <path> --out /tmp/qa-still.png
-python3 ${CLAUDE_PLUGIN_ROOT}/scripts/check_render.py <path> --mobile
+python3 ${CLAUDE_PLUGIN_ROOT}/scripts/artboard_audit.py <path> --json /tmp/artboard-audit.json
+python3 ${CLAUDE_PLUGIN_ROOT}/scripts/check_render.py <path> --out /tmp/qa-still.png --mobile --json /tmp/still-audit.json
 bash ${CLAUDE_PLUGIN_ROOT}/scripts/render.sh <path> <out.gif> --duration <d> --fps <f>
 ```
 
@@ -39,7 +39,8 @@ bash ${CLAUDE_PLUGIN_ROOT}/scripts/render.sh <path> <out.gif> --duration <d> --f
 6. For animated output, record changed-pixel motion, loop seam, duration/fps, safe-zone behavior, and final file size.
 7. Apply `bounded-verification`: report a specific failure and evidence so the parent workflow can run a targeted fix/re-check rather than an open-ended rewrite.
 8. Treat known SVG `<defs>` zero-size safe-zone reports as potential false positives and verify the actual element before failing.
-9. Return evidence to the parent workflow. Never self-approve changes you did not inspect.
+9. Read the merged `render-report.json`; missing or `NA` blocking evidence is a HOLD.
+10. Return evidence to the parent workflow. Never self-approve changes you did not inspect.
 
 ## HOLD conditions
 

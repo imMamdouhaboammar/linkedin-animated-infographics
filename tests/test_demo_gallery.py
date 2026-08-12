@@ -1,4 +1,6 @@
 import json
+import hashlib
+import base64
 import tempfile
 import unittest
 from pathlib import Path
@@ -12,12 +14,15 @@ except ModuleNotFoundError:
 
 
 class DemoGalleryContractTests(unittest.TestCase):
+    REFERENCE_GIF = b"GIF89a-reference-private-payload"
+
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.root = Path(self.tmp.name)
         (self.root / "demos" / "owned").mkdir(parents=True)
         (self.root / "demos" / "community").mkdir(parents=True)
         (self.root / "demos" / "catalog.json").write_text('{"schema_version":1,"demos":[]}\n')
+        self.write_reference_library_for_gif(b"canonical-reference-that-is-not-demo")
 
     def tearDown(self):
         self.tmp.cleanup()
@@ -50,6 +55,24 @@ class DemoGalleryContractTests(unittest.TestCase):
 
     def require_module(self):
         self.assertIsNotNone(validate_demo_dir, "scripts.demo_gallery must exist")
+
+    def write_reference_library_for_gif(self, payload=b"GIF89a"):
+        path = self.root / "research" / "reference-studies"
+        path.mkdir(parents=True, exist_ok=True)
+        (path / "visual-library.json").write_text(json.dumps({
+            "schema_version": 1,
+            "references": [{"id": "REF-001", "sha256": hashlib.sha256(payload).hexdigest()}],
+            "aliases": [],
+        }))
+
+    def write_canonical_library_state(self, state):
+        path = self.root / "research" / "reference-studies" / "visual-library.json"
+        if state == "missing":
+            path.unlink(missing_ok=True)
+        elif state == "malformed":
+            path.write_text("{not-json")
+        elif state == "empty":
+            path.write_text(json.dumps({"schema_version": 1, "references": [], "aliases": []}))
 
     def test_demo_directory_is_exactly_three_public_files(self):
         self.require_module()
@@ -104,6 +127,59 @@ class DemoGalleryContractTests(unittest.TestCase):
         demo = self.make_demo(notes="Authorization: Bearer placeholder-credential-value")
         errors = validate_demo_dir(demo, self.root)
         self.assertTrue(any("bearer credential" in error for error in errors), errors)
+
+    def test_direct_demo_rejects_reference_source_digest(self):
+        self.require_module()
+        self.write_reference_library_for_gif()
+        demo = self.make_demo()
+        errors = validate_demo_dir(demo, self.root)
+        self.assertTrue(any("reference source media digest" in error for error in errors), errors)
+
+    def test_direct_demo_rejects_contact_sheet_reference(self):
+        self.require_module()
+        demo = self.make_demo()
+        (demo / "index.html").write_text('<img src="contact_sheet.png">')
+        errors = validate_demo_dir(demo, self.root)
+        self.assertTrue(any("reference study media" in error for error in errors), errors)
+
+    def test_direct_demo_rejects_embedded_reference_gif_data_uri(self):
+        self.require_module()
+        self.write_reference_library_for_gif(self.REFERENCE_GIF)
+        demo = self.make_demo()
+        encoded = base64.b64encode(self.REFERENCE_GIF).decode("ascii")
+        (demo / "index.html").write_text(f'<img src="data:image/gif;base64,{encoded}">')
+        errors = validate_demo_dir(demo, self.root)
+        self.assertTrue(any("embedded reference source media digest" in error for error in errors), errors)
+
+    def test_direct_demo_rejects_unquoted_src_srcset_and_css_absolute_media(self):
+        self.require_module()
+        cases = (
+            '<img src=/var/tmp/private.png>',
+            '<a href=/var/tmp/private.html>private</a>',
+            '<img srcset="/var/tmp/a.png 1x, /var/tmp/b.png 2x">',
+            '<img srcset=/var/tmp/a.png>',
+            '<style>.hero{background:url(/var/tmp/private.png)}</style>',
+            '<style>.hero{background:url("/var/tmp/private.png")}</style>',
+        )
+        for index, html in enumerate(cases):
+            with self.subTest(html=html):
+                demo = self.make_demo(f"demos/community/alice/media-{index}", id=f"alice-media-{index}")
+                (demo / "index.html").write_text(html)
+                errors = validate_demo_dir(demo, self.root)
+                self.assertTrue(any("absolute media path" in error for error in errors), errors)
+
+    def test_gallery_fails_closed_without_valid_canonical_digest_authority(self):
+        self.require_module()
+        for state in ("missing", "malformed", "empty"):
+            with self.subTest(state=state):
+                self.write_reference_library_for_gif(b"canonical-reference-that-is-not-demo")
+                demo = self.make_demo(f"demos/community/alice/{state}", id=f"alice-{state}")
+                self.write_canonical_library_state(state)
+                errors = validate_demo_dir(demo, self.root)
+                self.assertTrue(
+                    any("canonical reference digest authority" in error for error in errors),
+                    errors,
+                )
 
     def test_catalog_order_is_deterministic(self):
         self.require_module()

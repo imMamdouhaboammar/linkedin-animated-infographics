@@ -3,9 +3,14 @@
 # Safe to re-run. Prints a final readiness report.
 set -uo pipefail
 
+if ! python3 -c 'import sys; raise SystemExit(0 if sys.version_info >= (3, 11) else 1)'; then
+  echo "Python 3.11 or newer is required (resolved: $(python3 --version 2>&1))." >&2
+  exit 1
+fi
+
 echo "── python deps ──────────────────────────────"
-pip install --quiet --break-system-packages playwright pillow 2>/dev/null \
-  || pip install --quiet playwright pillow
+python3 -m pip install --quiet --break-system-packages playwright pillow 2>/dev/null \
+  || python3 -m pip install --quiet playwright pillow
 
 echo "── browser ──────────────────────────────────"
 BROWSER=""

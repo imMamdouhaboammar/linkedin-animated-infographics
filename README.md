@@ -32,7 +32,7 @@ If the effect looks good but adds no meaning, it is decoration
 
 ## Install
 
-Version 3.3.0 keeps host execution isolated on purpose
+Version 3.3.0 adds deterministic visual-reference retrieval and measured render evidence while keeping host execution isolated
 
 - Claude uses the existing `skills/` + `agents/` runtime and native worker graph
 - ChatGPT and Codex use the self-contained `openai-skills/` distribution
@@ -263,6 +263,10 @@ Programmatic repository routing:
 ```bash
 python3 tools/route_request.py --request "Create an animated LinkedIn infographic"
 ```
+
+## Visual intelligence
+
+Python 3.11 or newer is required. Run `python3 scripts/reference_intelligence.py ingest --library /path/to/gifs` then `python3 scripts/reference_intelligence.py check`; state is ignored under `.plugin-state/reference-studies/`. Use `python3 tools/story_retrieve.py --query query.json` for deterministic UTF-8 byte-budgeted capsules. Provenance and reuse rights remain unverified unless explicitly supplied.
 
 ## Strict validation
 

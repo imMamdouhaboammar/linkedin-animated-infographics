@@ -31,9 +31,18 @@ The value at `0%` and at `100%` must be identical, and the state at `t = --loop`
 equal the state at `t = 0`. `capture_frames.py` samples `[0, loop)` exclusive of the
 endpoint, so a keyframe set that ends where it started loops seamlessly.
 
-`build_gif.py` prints the pixel delta between the first and last captured frame. Above
-0.5% means something does not close. Usual culprit: a `transform` that ends at a
-different value, or an `animation-delay` that is not a clean fraction of the loop.
+`build_gif.py` reports the seam as a multiplier against the loop's own biggest frame-to-frame
+step, printed as `x<n>`. At or below `x1.25` the seam is indistinguishable from any other
+frame boundary. Above `x2.0` something does not close. Usual culprit: a `transform` that
+ends at a different value, or an `animation-delay` that is not a clean fraction of the loop.
+
+Judge the multiplier, not the raw seam percentage — the last captured frame sits one step
+before the loop point, so a raw percentage flags clean fast loops and passes broken slow
+ones. `helper/visual-contract.json` holds the authoritative thresholds.
+
+Pass `--json <path>` to `build_gif.py` when running it directly. The JSON carries the
+changed-pixel and seam measurements beside their contract thresholds; `render.sh` creates
+that fragment automatically and merges it into `build/render-report.json`.
 
 ### 3. Motion budget: measure changed pixels, not area
 

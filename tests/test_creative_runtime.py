@@ -13,6 +13,7 @@ CREATIVE_AGENT = ROOT / "agents" / "creative-director.md"
 HOOK_DOC = ROOT / "skills" / "info-stories" / "references" / "hook-driven-design-copy.md"
 
 EXPECTED_QUALITY_GATES = {
+    "reference-evidence-readiness",
     "hooked-design-copy",
     "creative-payoff",
     "clean-creative-structure",

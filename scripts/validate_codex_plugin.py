@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import tomllib
@@ -38,13 +39,22 @@ EXPECTED_CANONICAL = {
     "modules": "helper/modules.json",
     "research_gates": "research/capability-notes/gates.json",
     "worker_graph": "architecture/plugin-graph.json",
+    "visual_mechanisms": "skills/info-stories/extensions/idea-mechanisms.json",
+    "reference_library": "research/reference-studies/visual-library.json",
 }
+OPENAI_VISUAL_CAPSULE_PATHS = (
+    Path("openai-skills/linkedin-infographic-studio/references/visual-intelligence-capsule.json"),
+    Path("openai-skills/linkedin-infographic-autopilot/references/visual-intelligence-capsule.json"),
+)
+OPENAI_VISUAL_CAPSULE_MAX_BYTES = 65536
+VISUAL_RANK_WEIGHTS = {"story_jobs": 8, "content_shapes": 5, "reference_ids": 3}
 REQUIRED_OPENAI_SKILL_FILES = (
     "SKILL.md",
     "references/openai-runtime.md",
     "references/role-passes.md",
     "references/visual-quality-contract.md",
     "references/motion-quality-contract.md",
+    "references/visual-intelligence-capsule.json",
 )
 REQUIRED_AUTOPILOT_FILES = (
     "SKILL.md",
@@ -55,6 +65,7 @@ REQUIRED_AUTOPILOT_FILES = (
     "references/tool-usage-policy.md",
     "references/autopilot-failure-policy.md",
     "references/workspace-agents-bridge.md",
+    "references/visual-intelligence-capsule.json",
 )
 FORBIDDEN_OPENAI_RUNTIME_REFERENCES = (
     ".claude-plugin/",
@@ -122,6 +133,207 @@ REQUIRED_NEGATIVE_CASE_FIELDS = {
     "why_not_complete",
 }
 POLICY_FILES = ("PRIVACY.md", "TERMS.md", "SUPPORT.md")
+
+
+def _canonical_json_bytes(value: Any) -> bytes:
+    return json.dumps(
+        value,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+
+
+def _read_visual_sources(root: Path) -> tuple[dict[str, Any], dict[str, Any]]:
+    mechanisms = json.loads((root / EXPECTED_CANONICAL["visual_mechanisms"]).read_text(encoding="utf-8"))
+    references = json.loads((root / EXPECTED_CANONICAL["reference_library"]).read_text(encoding="utf-8"))
+    if not isinstance(mechanisms, dict) or not isinstance(references, dict):
+        raise ValueError("canonical visual sources must be JSON objects")
+    return mechanisms, references
+
+
+def canonical_visual_sources_sha256(root: Path = ROOT) -> str:
+    """Return the stable digest of both canonical visual-intelligence documents."""
+    mechanisms, references = _read_visual_sources(root)
+    payload = {"mechanisms": mechanisms, "reference_library": references}
+    return hashlib.sha256(_canonical_json_bytes(payload)).hexdigest()
+
+
+def build_openai_visual_capsule(root: Path = ROOT) -> dict[str, Any]:
+    """Project canonical mechanism guidance into the self-contained OpenAI runtime."""
+    mechanisms_doc, references_doc = _read_visual_sources(root)
+    canonical_reference_ids = {
+        row.get("id")
+        for row in references_doc.get("references", [])
+        if isinstance(row, dict) and isinstance(row.get("id"), str)
+    }
+    mechanisms = mechanisms_doc.get("mechanisms", [])
+    if not isinstance(mechanisms, list):
+        raise ValueError("canonical mechanisms must be a list")
+
+    selection_index = []
+    guidance = []
+    for row in sorted(mechanisms, key=lambda item: item["slug"]):
+        reference_ids = list(row["reference_ids"])
+        unknown = sorted(set(reference_ids) - canonical_reference_ids)
+        if unknown:
+            raise ValueError(f"{row['slug']}: unknown canonical references: {', '.join(unknown)}")
+        compatibility = row["compatibility"]
+        selection_index.append({
+            "slug": row["slug"],
+            "story_jobs": row["story_jobs"],
+            "content_shapes": row["content_shapes"],
+            "compatibility": {
+                "output_modes": compatibility["output_modes"],
+                "languages": compatibility["languages"],
+                "densities": compatibility["densities"],
+                "evidence_modes": compatibility["evidence_modes"],
+            },
+            "reference_ids": reference_ids,
+            "influence_axes": row["influence_axes"],
+        })
+        guidance.append({
+            "slug": row["slug"],
+            "hook": row["hook"],
+            "layout": {
+                "topology": row["layout"]["topology"],
+                "zones": row["layout"]["zones"],
+            },
+            "hierarchy": {"primary": row["hierarchy"]["primary"]},
+            "type": {
+                "classes": row["typography"]["classes"],
+                "policy": row["typography"]["language_policy"],
+            },
+            "motion": {
+                "job": row["motion"]["job"],
+                "timing": row["motion"]["timing_family"],
+                "static_regions": row["motion"]["static_regions"],
+            },
+            "loop": {"strategy": row["loop"]["strategy"]},
+            "originality": {
+                "adopt": row["originality"]["adopt"],
+                "reject": row["originality"]["reject"],
+            },
+            "anti_patterns": row["anti_patterns"],
+        })
+
+    return {
+        "schema_version": 1,
+        "canonical_sha256": canonical_visual_sources_sha256(root),
+        "selection_contract": {
+            "hard_filters": ["output_mode", "language", "density", "evidence_mode", "content_shape"],
+            "weights": VISUAL_RANK_WEIGHTS,
+            "tie_break": "slug",
+        },
+        "selection_index": selection_index,
+        "guidance": guidance,
+        "capability_boundary": {
+            "persistent_ingestion": "unavailable",
+            "source_media": "not-packaged",
+            "reference_guidance": "abstract-local-guidance-only",
+        },
+    }
+
+
+def serialize_openai_visual_capsule(capsule: dict[str, Any]) -> bytes:
+    return _canonical_json_bytes(capsule) + b"\n"
+
+
+def write_openai_visual_capsules(root: Path = ROOT) -> tuple[Path, ...]:
+    payload = serialize_openai_visual_capsule(build_openai_visual_capsule(root))
+    written = []
+    for relative in OPENAI_VISUAL_CAPSULE_PATHS:
+        path = root / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(payload)
+        written.append(path)
+    return tuple(written)
+
+
+def _query_list(query: dict[str, Any], singular: str, plural: str | None = None) -> list[str]:
+    value = query.get(plural, query.get(singular, [])) if plural else query.get(singular, [])
+    if isinstance(value, str):
+        return [value]
+    if not isinstance(value, list):
+        raise ValueError(f"{singular} must be a string or list")
+    return value
+
+
+def rank_openai_visual_capsule(
+    capsule: dict[str, Any],
+    query: dict[str, Any],
+) -> list[dict[str, Any]]:
+    """Apply the same fixed hard filters, weights, and slug tie-break as canonical retrieval."""
+    required = ("story_jobs", "output_mode", "language", "density", "evidence_mode")
+    missing = [field for field in required if query.get(field) in (None, "", [])]
+    if "content_shape" not in query and "content_shapes" not in query:
+        missing.append("content_shape")
+    if missing:
+        raise ValueError("query missing " + ", ".join(missing))
+    top_k = query.get("top_k", 5)
+    if not isinstance(top_k, int) or not 1 <= top_k <= 150:
+        raise ValueError("top_k must be an integer from 1 to 150")
+
+    requested = {
+        "story_jobs": _query_list(query, "story_jobs"),
+        "content_shapes": _query_list(query, "content_shape", "content_shapes"),
+        "reference_ids": _query_list(query, "reference_ids"),
+    }
+    hard_fields = {
+        "output_mode": "output_modes",
+        "language": "languages",
+        "density": "densities",
+        "evidence_mode": "evidence_modes",
+    }
+    ranked = []
+    for row in capsule["selection_index"]:
+        compatible = all(
+            query[field] in row["compatibility"][axis] or "*" in row["compatibility"][axis]
+            for field, axis in hard_fields.items()
+        )
+        shape_matches = sorted(set(requested["content_shapes"]) & set(row["content_shapes"]))
+        if not compatible or (requested["content_shapes"] and not shape_matches):
+            continue
+        score = 0
+        reasons = []
+        for axis in ("story_jobs", "content_shapes", "reference_ids"):
+            matches = sorted(set(requested[axis]) & set(row[axis]))
+            if matches:
+                points = len(matches) * VISUAL_RANK_WEIGHTS[axis]
+                score += points
+                reasons.append({
+                    "axis": axis,
+                    "matches": matches,
+                    "weight": VISUAL_RANK_WEIGHTS[axis],
+                    "points": points,
+                })
+        ranked.append({"slug": row["slug"], "score": score, "score_reasons": reasons})
+    return sorted(ranked, key=lambda item: (-item["score"], item["slug"]))[:top_k]
+
+
+def selected_openai_references(
+    capsule: dict[str, Any],
+    ranked: list[dict[str, Any]],
+) -> list[dict[str, str]]:
+    by_slug = {row["slug"]: row for row in capsule["selection_index"]}
+    rows = [by_slug[item["slug"]] for item in ranked]
+    selected = []
+    used: set[str] = set()
+    for axis in ("structure", "motion", "typography"):
+        for row in rows:
+            reference_id = next((
+                candidate for candidate in row["reference_ids"]
+                if candidate not in used and axis in row["influence_axes"].get(candidate, [])
+            ), None)
+            if reference_id:
+                selected.append({
+                    "id": reference_id,
+                    "role": "primary" if axis == "structure" else "secondary",
+                    "influence_axis": axis,
+                })
+                used.add(reference_id)
+                break
+    return selected
 
 
 def _load_json(path: Path, errors: list[str], label: str) -> dict[str, Any] | None:
@@ -243,6 +455,42 @@ def _validate_openai_skill_bundle(root: Path, errors: list[str]) -> None:
         errors.append("OpenAI autopilot must state that Workspace Agents are not automatically registered")
     if "Never claim" not in combined:
         errors.append("OpenAI autopilot must forbid fabricated tool or agent execution claims")
+
+
+def _validate_openai_visual_capsules(root: Path, errors: list[str]) -> None:
+    try:
+        expected = serialize_openai_visual_capsule(build_openai_visual_capsule(root))
+    except (KeyError, OSError, TypeError, ValueError, json.JSONDecodeError) as exc:
+        errors.append(f"cannot generate OpenAI visual intelligence capsule: {exc}")
+        return
+    if len(expected) > OPENAI_VISUAL_CAPSULE_MAX_BYTES:
+        errors.append(
+            f"generated OpenAI visual intelligence capsule exceeds {OPENAI_VISUAL_CAPSULE_MAX_BYTES} bytes"
+        )
+
+    observed: list[bytes] = []
+    for relative in OPENAI_VISUAL_CAPSULE_PATHS:
+        path = root / relative
+        if not path.is_file():
+            errors.append(f"missing OpenAI visual intelligence capsule: {relative.as_posix()}")
+            continue
+        payload = path.read_bytes()
+        observed.append(payload)
+        if len(payload) > OPENAI_VISUAL_CAPSULE_MAX_BYTES:
+            errors.append(f"OpenAI visual intelligence capsule exceeds byte ceiling: {relative.as_posix()}")
+        if payload != expected:
+            errors.append(f"OpenAI visual intelligence capsule drift: {relative.as_posix()}")
+        lowered = payload.decode("utf-8", errors="replace").lower()
+        for forbidden in (
+            "source_filename", "asset_path", "frame_paths", "contact-sheet", "contact_sheet",
+            ".plugin-state/reference-studies", ".gif", ".png", "/users/", "c:\\users\\",
+        ):
+            if forbidden in lowered:
+                errors.append(
+                    f"OpenAI visual intelligence capsule contains forbidden source media/path marker {forbidden}: {relative.as_posix()}"
+                )
+    if len(observed) == len(OPENAI_VISUAL_CAPSULE_PATHS) and len(set(observed)) != 1:
+        errors.append("OpenAI visual intelligence capsules must be byte-identical")
 
 
 def _validate_openai_manifest(root: Path, manifest: dict[str, Any], errors: list[str]) -> None:
@@ -410,6 +658,12 @@ def _validate_compatibility(root: Path, registry: dict[str, Any], errors: list[s
             errors.append("OpenAI distribution must enable sandbox artifact and side-job contracts")
         elif openai_dist.get("workspace_agents") != "optional":
             errors.append("OpenAI Workspace Agents support must remain optional")
+        elif openai_dist.get("reference_context") != "generated-compact-capsule":
+            errors.append("OpenAI distribution reference context must be generated-compact-capsule")
+        elif openai_dist.get("persistent_reference_ingestion") is not False:
+            errors.append("OpenAI distribution must disable persistent reference ingestion")
+        elif openai_dist.get("visual_intelligence_capsules") != [path.as_posix() for path in OPENAI_VISUAL_CAPSULE_PATHS]:
+            errors.append("OpenAI distribution visual intelligence capsule paths drift")
 
     canonical = registry.get("canonical")
     if not isinstance(canonical, dict):
@@ -431,6 +685,15 @@ def _validate_compatibility(root: Path, registry: dict[str, Any], errors: list[s
         errors.append("compatibility public submission type must be skills-only")
     elif submission.get("skills_root") != EXPECTED_OPENAI_SKILLS_ROOT:
         errors.append("compatibility public submission must use the OpenAI skills root")
+
+    invariants = registry.get("parity_invariants", [])
+    for invariant in (
+        "canonical-reference-capsule-digest",
+        "deterministic-reference-selection",
+        "no-source-reference-media-export",
+    ):
+        if invariant not in invariants:
+            errors.append(f"compatibility parity invariant missing: {invariant}")
 
 
 def _validate_codex_config(root: Path, errors: list[str]) -> None:
@@ -591,6 +854,7 @@ def validate_codex_plugin(root: Path = ROOT) -> list[str]:
     if openai_manifest:
         _validate_openai_manifest(root, openai_manifest, errors)
     _validate_openai_skill_bundle(root, errors)
+    _validate_openai_visual_capsules(root, errors)
     if codex_marketplace:
         _validate_codex_marketplace(root, codex_marketplace, errors)
     if registry:
@@ -603,8 +867,12 @@ def validate_codex_plugin(root: Path = ROOT) -> list[str]:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", nargs="?", default="check", choices=("check",))
-    parser.parse_args(argv)
+    parser.add_argument("command", nargs="?", default="check", choices=("check", "sync-visual-capsule"))
+    args = parser.parse_args(argv)
+    if args.command == "sync-visual-capsule":
+        for path in write_openai_visual_capsules(ROOT):
+            print(path.relative_to(ROOT))
+        return 0
     errors = validate_codex_plugin(ROOT)
     if errors:
         for error in errors:

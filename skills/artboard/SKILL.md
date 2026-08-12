@@ -58,8 +58,8 @@ The set covers AI and LLM brands only. When a named platform is not in it, that 
 ```bash
 python3 tools/asset_policy_check.py build/asset-plan.json
 python3 tools/type_spec_check.py build/type-spec.json
-python3 ${CLAUDE_PLUGIN_ROOT}/scripts/check_render.py build/post.html --out build/still.png
-python3 ${CLAUDE_PLUGIN_ROOT}/scripts/check_render.py build/post.html --mobile
+python3 ${CLAUDE_PLUGIN_ROOT}/scripts/artboard_audit.py build/post.html --json build/artboard-audit.json
+python3 ${CLAUDE_PLUGIN_ROOT}/scripts/check_render.py build/post.html --out build/still.png --mobile --json build/still-audit.json
 ```
 
 15. Inspect the rendered still at feed width. Confirm visual anchor, clean structure, identity fidelity, typography, alignment decision, structural fingerprint, footer clearance, UI readability, and restrained palette character.

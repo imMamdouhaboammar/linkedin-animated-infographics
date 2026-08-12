@@ -65,3 +65,4 @@ Own and execute `design-dials`, `structural-originality`, and `reference-dna` wh
 ## Outputs
 
 Return `build/layout-spec.json` to the parent workflow with zone order, approximate proportions, component counts, visual anchor, hierarchy, alignment mode and exception reason, structural fingerprint, clean-structure confirmation, identity asset placements, exact type roles, UI/mascot reservations, and asset requirements.
+Typography zones declare role, stack ID, scripts, weights, and `exact-required` versus `fallback-accepted` policy. Never infer an exact font from pixels; unresolved script coverage is a HOLD.

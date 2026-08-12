@@ -21,6 +21,9 @@ Read these local references before execution:
 - `references/autopilot-failure-policy.md`
 - `references/workspace-agents-bridge.md`
 - `references/visual-quality-contract.md`
+- `references/visual-intelligence-capsule.json`
+
+Read the generated visual-intelligence capsule before creative selection. It is the only packaged reference context: apply its hard filters, fixed weights, and slug tie-break, then pass only selected mechanism guidance into production. No visual reference is `SKIP`. Explicit reference intent with evidence that cannot be inspected is `HOLD: reference evidence unavailable` before evidence research. Persistent reference ingestion and source reference media are unavailable in this distribution; never claim they were loaded. The capsule is abstract local guidance only.
 
 The complete blocking visual gate in `references/visual-quality-contract.md` is authoritative for Autopilot. The summary below never replaces or weakens it.
 

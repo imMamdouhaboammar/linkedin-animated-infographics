@@ -16,6 +16,8 @@ VALIDATOR = ROOT / "scripts" / "validate_codex_plugin.py"
 CODEX_CONFIG = ROOT / ".codex" / "config.toml"
 CODEX_AGENT_DIR = ROOT / ".codex" / "agents"
 OPENAI_SKILL = ROOT / "openai-skills" / "linkedin-infographic-studio"
+OPENAI_AUTOPILOT = ROOT / "openai-skills" / "linkedin-infographic-autopilot"
+SELECTION_FIXTURE = ROOT / "tests" / "fixtures" / "openai-selection-parity.json"
 EXPECTED_CODEX_AGENTS = {
     "explorer": "read-only",
     "reviewer": "read-only",
@@ -182,6 +184,24 @@ class CodexPluginParityTests(unittest.TestCase):
         self.assertIn("chatgpt", data["surfaces"])
         self.assertIn("verified-identity-source-before-concept", data["parity_invariants"])
         self.assertIn("intentional-render-safe-typography", data["parity_invariants"])
+        self.assertEqual(
+            "skills/info-stories/extensions/idea-mechanisms.json",
+            data["canonical"]["visual_mechanisms"],
+        )
+        self.assertEqual(
+            "research/reference-studies/visual-library.json",
+            data["canonical"]["reference_library"],
+        )
+        openai = data["distributions"]["openai"]
+        self.assertEqual("generated-compact-capsule", openai["reference_context"])
+        self.assertFalse(openai["persistent_reference_ingestion"])
+        self.assertEqual(2, len(openai["visual_intelligence_capsules"]))
+        for invariant in (
+            "canonical-reference-capsule-digest",
+            "deterministic-reference-selection",
+            "no-source-reference-media-export",
+        ):
+            self.assertIn(invariant, data["parity_invariants"])
 
     def test_validator_reports_clean_repository(self):
         module = self.require_validator()
@@ -278,6 +298,72 @@ class CodexPluginParityTests(unittest.TestCase):
             path.write_text(json.dumps(data))
             errors = module.validate_codex_plugin(root)
             self.assertTrue(any("compatibility" in error.lower() and "router" in error.lower() for error in errors), errors)
+
+    def test_generated_visual_capsules_are_identical_exact_and_compact(self):
+        module = self.require_validator()
+        expected = module.serialize_openai_visual_capsule(module.build_openai_visual_capsule(ROOT))
+        paths = (
+            OPENAI_SKILL / "references" / "visual-intelligence-capsule.json",
+            OPENAI_AUTOPILOT / "references" / "visual-intelligence-capsule.json",
+        )
+        payloads = [path.read_bytes() for path in paths]
+        self.assertEqual(payloads[0], payloads[1])
+        self.assertEqual(expected, payloads[0])
+        self.assertLessEqual(len(payloads[0]), module.OPENAI_VISUAL_CAPSULE_MAX_BYTES)
+
+    def test_validator_rejects_canonical_source_mutation_as_capsule_drift(self):
+        module = self.require_validator()
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            copy_fixture(root)
+            path = root / "skills" / "info-stories" / "extensions" / "idea-mechanisms.json"
+            data = json.loads(path.read_text())
+            data["mechanisms"][0]["hook"] += " Changed."
+            path.write_text(json.dumps(data))
+            errors = module.validate_codex_plugin(root)
+            self.assertTrue(any("visual intelligence capsule drift" in error.lower() for error in errors), errors)
+
+    def test_validator_rejects_capsule_mutation_even_with_fresh_digest(self):
+        module = self.require_validator()
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            copy_fixture(root)
+            path = root / "openai-skills" / "linkedin-infographic-studio" / "references" / "visual-intelligence-capsule.json"
+            data = json.loads(path.read_text())
+            data["guidance"][0]["hook"] += " Mutated."
+            data["canonical_sha256"] = module.canonical_visual_sources_sha256(root)
+            path.write_text(json.dumps(data, sort_keys=True, separators=(",", ":")) + "\n")
+            errors = module.validate_codex_plugin(root)
+            self.assertTrue(any("visual intelligence capsule drift" in error.lower() for error in errors), errors)
+
+    def test_openai_selection_matches_canonical_ranking_and_reference_roles(self):
+        module = self.require_validator()
+        from scripts.info_stories import build_context_capsule, load_catalog, rank_mechanisms
+
+        capsule = module.build_openai_visual_capsule(ROOT)
+        catalog = load_catalog()
+        fixture = json.loads(SELECTION_FIXTURE.read_text())
+        for case in fixture["cases"]:
+            with self.subTest(case=case["id"]):
+                canonical = rank_mechanisms(catalog, case["query"])
+                openai = module.rank_openai_visual_capsule(capsule, case["query"])
+                self.assertEqual(case["expected_ranked"], openai)
+                self.assertEqual(canonical, openai)
+                context = build_context_capsule(catalog, canonical, "review", 100000)
+                self.assertEqual(case["expected_references"], context["references"])
+                self.assertEqual(
+                    context["references"],
+                    module.selected_openai_references(capsule, openai),
+                )
+
+    def test_capsule_excludes_source_media_and_private_paths(self):
+        module = self.require_validator()
+        text = module.serialize_openai_visual_capsule(module.build_openai_visual_capsule(ROOT)).decode()
+        for forbidden in (
+            "source_filename", "asset_path", "frame_paths", "contact-sheet",
+            "contact_sheet", ".gif", ".png", "/Users/", "C:\\Users\\",
+        ):
+            self.assertNotIn(forbidden, text)
 
 
 class CodexRepositoryAgentTests(unittest.TestCase):

@@ -21,6 +21,19 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from scripts.visual_contract import (
+    ContractError,
+    VisualContract,
+    exit_code,
+    file_sha256,
+    finding,
+    render_lines,
+    skipped,
+    summarize,
+)
+
 
 def run(cmd):
     return subprocess.run(cmd, capture_output=True, text=True)
@@ -31,7 +44,7 @@ def require(binary):
         sys.exit(f"{binary} not found on PATH. Run: bash scripts/setup.sh")
 
 
-def loop_delta(frames_dir, sample=64):
+def loop_delta(frames_dir):
     """Check whether the loop closes.
 
     Comparing frame 0 to the last frame on its own is misleading. The last frame
@@ -110,20 +123,87 @@ def encode(frames_dir, out, fps, colors, scale, dither):
     return Path(out).stat().st_size
 
 
-def main():
+def motion_findings(contract, delta):
+    if delta is None:
+        reason = "fewer than three frames or Pillow unavailable"
+        return [
+            skipped(contract, "motion.mean_step_warn_pct", reason),
+            skipped(contract, "motion.mean_step_max_pct", reason),
+            skipped(contract, "loop.seam_ratio_warn", reason),
+            skipped(contract, "loop.seam_ratio_max", reason),
+        ]
+    max_step, mean_step, seam, ratio = delta
+    seam_evidence = [f"largest step {max_step:.2f}%; seam {seam:.2f}%"]
+    return [
+        finding(contract, "motion.mean_step_warn_pct",
+                ok=mean_step <= contract.value("motion.mean_step_warn_pct"),
+                measured=round(mean_step, 2),
+                detail="" if mean_step <= contract.value("motion.mean_step_warn_pct")
+                else "motion cost needs a dark flat ground"),
+        finding(contract, "motion.mean_step_max_pct",
+                ok=mean_step <= contract.value("motion.mean_step_max_pct"),
+                measured=round(mean_step, 2),
+                detail="" if mean_step <= contract.value("motion.mean_step_max_pct")
+                else "full-bleed motion exceeds the changed-pixel budget"),
+        finding(contract, "loop.seam_ratio_warn",
+                ok=ratio <= contract.value("loop.seam_ratio_warn"),
+                measured=round(ratio, 2),
+                detail="" if ratio <= contract.value("loop.seam_ratio_warn")
+                else "watch the loop seam", evidence=seam_evidence),
+        finding(contract, "loop.seam_ratio_max",
+                ok=ratio <= contract.value("loop.seam_ratio_max"),
+                measured=round(ratio, 2),
+                detail="" if ratio <= contract.value("loop.seam_ratio_max")
+                else "loop does not close", evidence=seam_evidence),
+    ]
+
+
+def write_report(path, report):
+    target = Path(path)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
+
+
+def file_budget_finding(contract, *, size, requested_mb):
+    contract_limit = contract.value("gif.max_bytes")
+    requested_limit = int(requested_mb * 1024 * 1024)
+    effective_limit = min(contract_limit, requested_limit)
+    row = finding(
+        contract,
+        "gif.max_bytes",
+        ok=size <= effective_limit,
+        measured=size,
+        detail="" if size <= effective_limit else
+        "GIF remains over the effective delivery budget after the reduction ladder",
+    )
+    row["requested_threshold"] = requested_limit
+    row["effective_threshold"] = effective_limit
+    return row
+
+
+def main(argv=None):
+    try:
+        contract = VisualContract()
+    except ContractError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
+
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("frames", help="directory of f0000.png frames")
     ap.add_argument("--out", default="post.gif")
     ap.add_argument("--fps", type=float, default=None,
                     help="defaults to the fps recorded in capture.json")
-    ap.add_argument("--max-mb", type=float, default=5.0, help="size budget")
+    default_mb = contract.value("gif.max_bytes") / 1024 / 1024
+    ap.add_argument("--max-mb", type=float, default=default_mb, help="size budget")
     ap.add_argument("--colors", type=int, default=128, help="starting palette size")
     ap.add_argument("--dither", default="bayer:bayer_scale=4",
                     help="bayer:bayer_scale=N (flat art) or sierra2_4a (photos)")
     ap.add_argument("--no-ladder", action="store_true",
                     help="do a single encode and stop, even if oversized")
-    args = ap.parse_args()
+    ap.add_argument("--json", dest="json_out", default=None,
+                    help="write the machine-readable GIF audit")
+    args = ap.parse_args(argv)
 
     require("ffmpeg")
 
@@ -141,28 +221,33 @@ def main():
     n = len(list(frames_dir.glob("f*.png")))
     print(f"frames   : {n} @ {fps} fps ({n / fps:.2f}s)")
 
-    d = loop_delta(frames_dir)
-    if d is not None:
-        max_step, mean_step, seam, ratio = d
+    delta = loop_delta(frames_dir)
+    findings = motion_findings(contract, delta)
+    if delta is not None:
+        max_step, mean_step, seam, ratio = delta
+        mean_warn = contract.value("motion.mean_step_warn_pct")
+        mean_max = contract.value("motion.mean_step_max_pct")
+        seam_warn = contract.value("loop.seam_ratio_warn")
+        seam_max = contract.value("loop.seam_ratio_max")
         if mean_step < 0.5:
             m = "cheap, room to add motion"
-        elif mean_step < 2.0:
+        elif mean_step < mean_warn:
             m = "healthy"
-        elif mean_step < 5.0:
+        elif mean_step < mean_max:
             m = "high — only viable on a dark flat ground"
         else:
             m = "TOO HIGH — something full-bleed is animating"
         print(f"motion   : {mean_step:.2f}% of pixels change per frame — {m}")
-        if ratio <= 1.25:
+        if ratio <= seam_warn:
             verdict = "closes cleanly"
-        elif ratio <= 2.0:
+        elif ratio <= seam_max:
             verdict = "CHECK — watch the seam"
         else:
             verdict = "DOES NOT CLOSE — see animation-recipes.md"
         print(f"loop     : biggest frame-to-frame change {max_step:.2f}%, "
               f"seam {seam:.2f}% (x{ratio:.2f}) — {verdict}")
 
-    budget = args.max_mb * 1024 * 1024
+    budget = min(args.max_mb * 1024 * 1024, contract.value("gif.max_bytes"))
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
 
@@ -188,16 +273,52 @@ def main():
         status = "FITS" if size <= budget else "over budget"
         print(f"encode   : {tag:<28} {mb:5.2f} MB   {status}")
         if size <= budget:
-            print(f"\noutput   : {out}  ({mb:.2f} MB)")
-            if scale:
-                print("  Note: the image was downscaled to fit. Consider cutting the "
-                      "moving area or the frame rate instead, and re-rendering.")
-            return
+            break
+    else:
+        size = Path(out).stat().st_size if Path(out).is_file() else 0
+        mb = size / 1024 / 1024
+        scale = ladder[-1][1]
 
-    print("\nStill over budget after the full ladder. The moving area is too large.")
-    print("Read references/animation-recipes.md, section 'Motion budget'.")
-    sys.exit(1)
+    findings.append(file_budget_finding(
+        contract, size=size, requested_mb=args.max_mb))
+    summary = summarize(findings)
+    report = {
+        "schema_version": 1,
+        "stage": "gif",
+        "artifact": str(out.resolve()),
+        "artifact_sha256": file_sha256(out),
+        "source": str(frames_dir.resolve()),
+        "capture": json.loads(meta_path.read_text()) if meta_path.exists() else {},
+        "verdict": summary["verdict"],
+        "summary": summary,
+        "findings": findings,
+        "measurements": {
+            "frames": n,
+            "fps": fps,
+            "duration_s": n / fps,
+            "encoded_bytes": size,
+            "encoded_mb": round(mb, 3),
+            "scale": scale,
+        },
+    }
+    if args.json_out:
+        write_report(args.json_out, report)
+
+    print("── GIF audit ────────────────────────────────")
+    print("\n".join(render_lines(findings)))
+    print(f"── verdict: {summary['verdict']}")
+    if size <= budget:
+        print(f"\noutput   : {out}  ({mb:.2f} MB)")
+        if scale:
+            print("  Note: the image was downscaled to fit. Consider cutting the "
+                  "moving area or the frame rate instead, and re-rendering.")
+    else:
+        print("\nStill over budget after the full ladder. The moving area is too large.")
+        print("Read references/animation-recipes.md, section 'Motion budget'.")
+    if args.json_out:
+        print(f"report   : {args.json_out}")
+    return exit_code(findings)
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

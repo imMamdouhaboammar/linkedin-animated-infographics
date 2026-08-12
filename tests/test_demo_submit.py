@@ -1,15 +1,19 @@
 import json
+import hashlib
+import base64
 import tempfile
 import unittest
 from pathlib import Path
 
 try:
-    from scripts.demo_submit import prepare_submission, scan_public_text
+    from scripts.demo_submit import check_submission, prepare_submission, scan_public_text
 except ModuleNotFoundError:
-    prepare_submission = scan_public_text = None
+    check_submission = prepare_submission = scan_public_text = None
 
 
 class DemoSubmitTests(unittest.TestCase):
+    REFERENCE_GIF = b"GIF89a-reference-private-payload"
+
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.root = Path(self.tmp.name)
@@ -47,6 +51,27 @@ class DemoSubmitTests(unittest.TestCase):
 
     def require_module(self):
         self.assertIsNotNone(prepare_submission, "scripts.demo_submit must exist")
+
+    def write_reference_library_for_gif(self, payload=b"GIF89a"):
+        path = self.root / "research" / "reference-studies"
+        path.mkdir(parents=True, exist_ok=True)
+        (path / "visual-library.json").write_text(json.dumps({
+            "schema_version": 1,
+            "references": [{"id": "REF-001", "sha256": hashlib.sha256(payload).hexdigest()}],
+            "aliases": [],
+        }))
+
+    def write_canonical_library_state(self, state):
+        path = self.root / "research" / "reference-studies" / "visual-library.json"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        if state == "missing":
+            path.unlink(missing_ok=True)
+        elif state == "malformed":
+            path.write_text("{not-json")
+        elif state == "empty":
+            path.write_text(json.dumps({"schema_version": 1, "references": [], "aliases": []}))
+        else:
+            self.write_reference_library_for_gif(b"canonical-reference-that-is-not-demo")
 
     def test_prepare_requires_verification_pass(self):
         self.require_module()
@@ -109,6 +134,123 @@ class DemoSubmitTests(unittest.TestCase):
         (self.build / "post.html").write_text('<img src="file:///Users/alice/private.png">')
         with self.assertRaisesRegex(ValueError, "public export scan"):
             prepare_submission(self.build, self.stage, self.metadata())
+
+    def test_reference_source_digest_is_rejected_even_with_rights_confirmation(self):
+        self.require_module()
+        self.write_reference_library_for_gif()
+        with self.assertRaisesRegex(ValueError, "reference source media digest"):
+            prepare_submission(self.build, self.stage, self.metadata(), repo_root=self.root)
+
+    def test_embedded_reference_gif_data_uri_is_rejected(self):
+        self.require_module()
+        self.write_reference_library_for_gif(self.REFERENCE_GIF)
+        encoded = base64.b64encode(self.REFERENCE_GIF).decode("ascii")
+        (self.build / "post.html").write_text(f'<img src="data:image/gif;base64,{encoded}">')
+        with self.assertRaisesRegex(ValueError, "embedded reference source media digest"):
+            prepare_submission(self.build, self.stage, self.metadata(), repo_root=self.root)
+
+    def test_malformed_embedded_gif_data_uri_is_rejected(self):
+        self.require_module()
+        self.write_reference_library_for_gif(b"other-reference")
+        (self.build / "post.html").write_text('<img src="data:image/gif;base64,%%%not-base64%%%">')
+        with self.assertRaisesRegex(ValueError, "malformed embedded media"):
+            prepare_submission(self.build, self.stage, self.metadata(), repo_root=self.root)
+
+    def test_contact_sheet_and_reference_study_paths_are_rejected(self):
+        self.require_module()
+        cases = (
+            '<img src="contact-sheet.png">',
+            '<img src=".plugin-state/reference-studies/contact_sheet.png">',
+            '<img src="frames/REF-001/frame-0001.png">',
+            '<img src="assets/REF-001.gif">',
+        )
+        for index, html in enumerate(cases):
+            with self.subTest(html=html):
+                (self.build / "post.html").write_text(html)
+                with self.assertRaisesRegex(ValueError, "reference study media"):
+                    prepare_submission(self.build, self.stage / str(index), self.metadata())
+
+    def test_posix_and_windows_absolute_media_attributes_are_rejected(self):
+        self.require_module()
+        cases = ('<img src="/var/tmp/private.png">', '<a href="D:\\work\\private.png">x</a>')
+        for index, html in enumerate(cases):
+            with self.subTest(html=html):
+                (self.build / "post.html").write_text(html)
+                with self.assertRaisesRegex(ValueError, "absolute media path"):
+                    prepare_submission(self.build, self.stage / str(index), self.metadata())
+
+    def test_unquoted_src_srcset_and_css_absolute_media_are_rejected(self):
+        self.require_module()
+        cases = (
+            '<img src=/var/tmp/private.png>',
+            '<a href=/var/tmp/private.html>private</a>',
+            '<img srcset="/var/tmp/a.png 1x, /var/tmp/b.png 2x">',
+            '<img srcset=/var/tmp/a.png>',
+            '<style>.hero{background-image:url(/var/tmp/private.png)}</style>',
+            '<style>.hero{background-image:url("/var/tmp/private.png")}</style>',
+        )
+        for index, html in enumerate(cases):
+            with self.subTest(html=html):
+                (self.build / "post.html").write_text(html)
+                with self.assertRaisesRegex(ValueError, "absolute media path"):
+                    prepare_submission(self.build, self.stage / f"media-{index}", self.metadata())
+
+    def test_prepare_fails_closed_without_valid_canonical_digest_authority(self):
+        self.require_module()
+        for state in ("missing", "malformed", "empty"):
+            with self.subTest(state=state):
+                self.write_canonical_library_state(state)
+                with self.assertRaisesRegex(ValueError, "canonical reference digest authority"):
+                    prepare_submission(
+                        self.build,
+                        self.stage / f"prepare-{state}",
+                        self.metadata(),
+                        repo_root=self.root,
+                    )
+
+    def test_check_fails_closed_without_valid_canonical_digest_authority(self):
+        self.require_module()
+        for state in ("missing", "malformed", "empty"):
+            with self.subTest(state=state):
+                self.write_canonical_library_state("valid")
+                out = prepare_submission(
+                    self.build,
+                    self.stage / f"check-{state}",
+                    self.metadata(),
+                    repo_root=self.root,
+                )
+                self.write_canonical_library_state(state)
+                errors = check_submission(out, self.root)
+                self.assertTrue(
+                    any("canonical reference digest authority" in error for error in errors),
+                    errors,
+                )
+
+    def test_prepare_fails_closed_on_malformed_optional_local_digest_authority(self):
+        self.require_module()
+        self.write_canonical_library_state("valid")
+        manifest = self.root / ".plugin-state" / "reference-studies" / "manifest.json"
+        manifest.parent.mkdir(parents=True)
+        manifest.write_text("{not-json")
+        with self.assertRaisesRegex(ValueError, "local reference digest authority"):
+            prepare_submission(
+                self.build,
+                self.stage,
+                self.metadata(),
+                repo_root=self.root,
+            )
+
+    def test_plain_route_text_is_not_misclassified_as_absolute_media_path(self):
+        self.require_module()
+        (self.build / "post.html").write_text("Open /pricing to compare plans.")
+        out = prepare_submission(self.build, self.stage, self.metadata())
+        self.assertTrue((out / "index.html").is_file())
+
+    def test_unverified_media_rights_record_is_rejected(self):
+        self.require_module()
+        metadata = self.metadata(media=[{"path": "diagram.svg", "rights_state": "unresolved"}])
+        with self.assertRaisesRegex(ValueError, "rights_state"):
+            prepare_submission(self.build, self.stage, metadata)
 
     def test_signed_urls_are_rejected(self):
         self.require_module()

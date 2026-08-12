@@ -190,6 +190,27 @@ class EcosystemDoctorTests(unittest.TestCase):
         errors = module.validate_ecosystem_doctor(ROOT)
         self.assertFalse(any("critical shipping worker" in error.lower() for error in errors), errors)
 
+    def test_reference_readiness_quality_gate_is_first_class(self):
+        gate = json.loads((ROOT / "helper" / "quality-gates.json").read_text())["gates"]["reference-evidence-readiness"]
+        self.assertEqual("reference-diagnosis", gate["stage"])
+        self.assertEqual("blocking", gate["severity"])
+        self.assertEqual(["design-study"], gate["owners"])
+        self.assertEqual({"create-post", "design-study", "info-story"}, set(gate["applies_to_intents"]))
+        self.assertIn("SKIP", gate["behavior"])
+        self.assertIn("HOLD", gate["behavior"])
+
+    def test_doctor_rejects_reference_quality_gate_owner_drift(self):
+        module = load_module()
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            copy_repo_fixture(root)
+            path = root / "helper" / "quality-gates.json"
+            data = json.loads(path.read_text())
+            data["gates"]["reference-evidence-readiness"]["owners"] = ["not-a-worker"]
+            path.write_text(json.dumps(data))
+            errors = module.validate_ecosystem_doctor(root)
+            self.assertTrue(any("reference-evidence-readiness" in error and "undeclared owners" in error for error in errors), errors)
+
     def test_active_modules_are_not_placeholder_stubs(self):
         self.assertTrue(MANIFEST.exists())
         modules = json.loads(MANIFEST.read_text())["modules"]

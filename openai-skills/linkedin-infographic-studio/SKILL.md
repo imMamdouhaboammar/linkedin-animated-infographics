@@ -21,6 +21,9 @@ Before production, read these local references completely:
 - `references/copy-quality-contract.md`
 - `references/visual-quality-contract.md`
 - `references/motion-quality-contract.md`
+- `references/visual-intelligence-capsule.json`
+
+Read the generated visual-intelligence capsule before creative selection. It is the only packaged reference context: apply its hard filters, fixed weights, and slug tie-break to choose mechanisms, then use only the selected mechanism guidance. With no visual reference, treat reference diagnosis as `SKIP`. If reference intent is explicit but the supplied evidence cannot be inspected, return `HOLD: reference evidence unavailable` before evidence work. Persistent reference ingestion and source reference media are unavailable in this distribution; do not claim otherwise. The capsule provides abstract local guidance only.
 
 ## Use when
 

@@ -50,7 +50,7 @@ class OpenAISubmissionContractTests(unittest.TestCase):
             self.assertTrue(path.is_file(), f"missing {path.name}")
             self.assertGreater(len(path.read_text().strip()), 200, path.name)
 
-    def test_submission_metadata_is_skills_only_3_2_2(self):
+    def test_submission_metadata_is_skills_only_3_3_0(self):
         self.assertTrue(SUBMISSION.is_file(), "missing submission/openai-plugin.json")
         data = json.loads(SUBMISSION.read_text())
         self.assertEqual("linkedin-animated-infographics", data["name"])

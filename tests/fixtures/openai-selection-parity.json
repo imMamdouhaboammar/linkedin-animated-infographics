@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "reference-weighted-process",
+      "query": {
+        "story_jobs": ["show-process"],
+        "content_shape": "process",
+        "output_mode": "gif",
+        "language": "en",
+        "density": "medium",
+        "evidence_mode": "documented",
+        "reference_ids": ["REF-001"],
+        "top_k": 4
+      },
+      "expected_ranked": [
+        {"slug": "progressive-proof-board", "score": 16, "score_reasons": [{"axis": "story_jobs", "matches": ["show-process"], "weight": 8, "points": 8}, {"axis": "content_shapes", "matches": ["process"], "weight": 5, "points": 5}, {"axis": "reference_ids", "matches": ["REF-001"], "weight": 3, "points": 3}]},
+        {"slug": "input-transform-output", "score": 13, "score_reasons": [{"axis": "story_jobs", "matches": ["show-process"], "weight": 8, "points": 8}, {"axis": "content_shapes", "matches": ["process"], "weight": 5, "points": 5}]},
+        {"slug": "local-setup-command-rail", "score": 13, "score_reasons": [{"axis": "story_jobs", "matches": ["show-process"], "weight": 8, "points": 8}, {"axis": "content_shapes", "matches": ["process"], "weight": 5, "points": 5}]},
+        {"slug": "skill-pipeline-cards", "score": 13, "score_reasons": [{"axis": "story_jobs", "matches": ["show-process"], "weight": 8, "points": 8}, {"axis": "content_shapes", "matches": ["process"], "weight": 5, "points": 5}]}
+      ],
+      "expected_references": [
+        {"id": "REF-001", "role": "primary", "influence_axis": "structure"},
+        {"id": "REF-035", "role": "secondary", "influence_axis": "motion"},
+        {"id": "REF-027", "role": "secondary", "influence_axis": "typography"}
+      ]
+    },
+    {
+      "id": "slug-tie-comparison",
+      "query": {
+        "story_jobs": ["compare-options"],
+        "content_shape": "comparison",
+        "output_mode": "static",
+        "language": "ar",
+        "density": "medium",
+        "evidence_mode": "conceptual",
+        "reference_ids": [],
+        "top_k": 4
+      },
+      "expected_ranked": [
+        {"slug": "advisor-convergence", "score": 13, "score_reasons": [{"axis": "story_jobs", "matches": ["compare-options"], "weight": 8, "points": 8}, {"axis": "content_shapes", "matches": ["comparison"], "weight": 5, "points": 5}]},
+        {"slug": "decision-spectrum", "score": 13, "score_reasons": [{"axis": "story_jobs", "matches": ["compare-options"], "weight": 8, "points": 8}, {"axis": "content_shapes", "matches": ["comparison"], "weight": 5, "points": 5}]},
+        {"slug": "editorial-thesis-contrast", "score": 13, "score_reasons": [{"axis": "story_jobs", "matches": ["compare-options"], "weight": 8, "points": 8}, {"axis": "content_shapes", "matches": ["comparison"], "weight": 5, "points": 5}]},
+        {"slug": "counterexample-flip", "score": 5, "score_reasons": [{"axis": "content_shapes", "matches": ["comparison"], "weight": 5, "points": 5}]}
+      ],
+      "expected_references": [
+        {"id": "REF-002", "role": "primary", "influence_axis": "structure"},
+        {"id": "REF-018", "role": "secondary", "influence_axis": "motion"},
+        {"id": "REF-029", "role": "secondary", "influence_axis": "typography"}
+      ]
+    },
+    {
+      "id": "hard-filter-and-reference-roles",
+      "query": {
+        "story_jobs": ["prove-result"],
+        "content_shape": "proof",
+        "output_mode": "gif",
+        "language": "en",
+        "density": "medium",
+        "evidence_mode": "product-proof",
+        "reference_ids": ["REF-030"],
+        "top_k": 4
+      },
+      "expected_ranked": [
+        {"slug": "claim-evidence-verdict", "score": 16, "score_reasons": [{"axis": "story_jobs", "matches": ["prove-result"], "weight": 8, "points": 8}, {"axis": "content_shapes", "matches": ["proof"], "weight": 5, "points": 5}, {"axis": "reference_ids", "matches": ["REF-030"], "weight": 3, "points": 3}]},
+        {"slug": "evidence-ladder", "score": 16, "score_reasons": [{"axis": "story_jobs", "matches": ["prove-result"], "weight": 8, "points": 8}, {"axis": "content_shapes", "matches": ["proof"], "weight": 5, "points": 5}, {"axis": "reference_ids", "matches": ["REF-030"], "weight": 3, "points": 3}]},
+        {"slug": "progressive-proof-board", "score": 13, "score_reasons": [{"axis": "story_jobs", "matches": ["prove-result"], "weight": 8, "points": 8}, {"axis": "content_shapes", "matches": ["proof"], "weight": 5, "points": 5}]},
+        {"slug": "proof-mosaic", "score": 13, "score_reasons": [{"axis": "story_jobs", "matches": ["prove-result"], "weight": 8, "points": 8}, {"axis": "content_shapes", "matches": ["proof"], "weight": 5, "points": 5}]}
+      ],
+      "expected_references": [
+        {"id": "REF-030", "role": "primary", "influence_axis": "structure"},
+        {"id": "REF-001", "role": "secondary", "influence_axis": "motion"}
+      ]
+    }
+  ]
+}

@@ -38,7 +38,7 @@ Return or support creation of story, asset, and type artifacts that feed the fin
 python3 ${CLAUDE_PLUGIN_ROOT}/scripts/info_stories.py check
 ```
 
-2. Base options live in `catalog.json`; first-party extension families live in `extensions/*.json`. They are merged deterministically by filename.
+2. Base options live in `catalog.json`; first-party extension families and curated visual mechanisms live in `extensions/*.json`. They are merged deterministically by filename. Retrieve ranked mechanisms with `tools/story_retrieve.py`.
 3. For named official AI/tool identities, read `references/asset-source-policy.md`. Exact user-supplied official assets win, then verified Lobe assets for supported identities, then HOLD. Validate the asset plan with `tools/asset_policy_check.py`.
 4. When a complete workflow is running, consume the selected concept from `creative-director` after asset resolution and before resolving the story. Preserve its visual hook, copy hook, relationship, dominant anchor, containment strategy, negative-space strategy, and aha mechanic unless evidence or compatibility gates require a change.
 5. Resolve Story Archetype from the narrative job using `references/story-archetypes.md`.
@@ -52,6 +52,18 @@ python3 ${CLAUDE_PLUGIN_ROOT}/scripts/info_stories.py check
 13. UI Mockup Stories are first-class. Use `UI Storyboard` or `Interface Cutaway` with `references/ui-mockup-rules.md`. Dedicated archetypes include `Screen to Outcome`, `Inside the Interface`, and `State Change Story`; dedicated motion includes `Cursor Focus` and `State Transition`.
 14. When visual references exist, `design-study` uses `references/study-protocol.md` to extract reusable design DNA without cloning distinctive work.
 15. A named official mascot follows the verified identity path. Exact user/task SVG has priority; supported named AI/tool mascot identities may use an approved Lobe SVG copied locally. Unresolved identities HOLD.
+
+## Deterministic mechanism retrieval
+
+Use the public retrieval tool when a stage needs focused visual reference context:
+
+```bash
+python3 ${CLAUDE_PLUGIN_ROOT}/tools/story_retrieve.py --query path/to/query.json
+```
+
+The query object accepts `story_jobs`, `content_shape` (or `content_shapes` for multiple shapes), `output_mode`, `language`, `density`, `evidence_mode`, optional `reference_ids`, `top_k`, `byte_budget`, and one stage: `concept`, `story`, `palette-type`, `layout`, `motion`, or `review`. Output mode, language, density, evidence mode, and content shape are hard filters. Ranking then uses fixed weighted overlap with slug tie-breaking; it does not use embeddings or model ranking.
+
+The tool writes one compact JSON capsule within the measured UTF-8 byte budget. Each stage receives only its relevant mechanism fields. Reference selection is bounded to one structural primary plus at most one motion and one typography secondary, each with an explicit influence axis. Treat adopted traits as abstract guidance; rejected traits, source copy, logos, people, screenshots, and signature illustrations remain blocked unless separately verified for the current brief.
 
 ## HOLD conditions
 
@@ -71,7 +83,7 @@ Unknown choices should fail with valid alternatives rather than silently substit
 - reference study: `references/study-protocol.md`
 - verification: `references/verification-loop.md`
 - executable graph: `architecture/plugin-graph.json`
-- deterministic tools: `scripts/info_stories.py`, `tools/story_scaffold.py`, `tools/composition_check.py`, `tools/palette_preview.py`, `tools/contrast_check.py`, `tools/fingerprint_check.py`, `tools/copy_slop_check.py`, `tools/asset_policy_check.py`, `tools/type_spec_check.py`
+- deterministic tools: `scripts/info_stories.py`, `tools/story_retrieve.py`, `tools/story_scaffold.py`, `tools/composition_check.py`, `tools/palette_preview.py`, `tools/contrast_check.py`, `tools/fingerprint_check.py`, `tools/copy_slop_check.py`, `tools/asset_policy_check.py`, `tools/type_spec_check.py`
 
 Capability owners include `asset-curator`, `creative-director`, `evidence-checker`, `story-architect`, `palette-curator`, `type-curator`, `copy-compressor`, `layout-composer`, `caption-writer`, `artboard-builder`, `motion-director`, `mascot-animator`, `motion-engineer`, `render-qa`, `post-critic`, and `story-verifier` through the parent workflow.
 

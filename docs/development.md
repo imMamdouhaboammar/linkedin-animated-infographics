@@ -2,6 +2,8 @@
 
 The repository uses contract-first development. Public behavior is represented in machine-readable helper, graph, gate, module, demo, and host-packaging files and protected by regression tests.
 
+The Python tools require Python 3.11 or newer. CI uses Python 3.12 and installs Pillow, Playwright, and Chromium before running the render and reference fixtures. The real user-supplied GIF corpus is local-only; CI validates the same ingestion contract with tracked synthetic fixtures.
+
 ## Core development loop
 
 1. Add or update a failing test for the intended behavior
@@ -39,6 +41,10 @@ claude plugin validate .
 ```
 
 CI also performs the same-repository Claude Marketplace add/list/install smoke. OpenAI packaging is validated structurally and for host-isolation contracts by `scripts/validate_codex_plugin.py`; any Codex CLI marketplace smoke must use documented non-interactive behavior rather than a fabricated install command.
+
+## Visual intelligence contracts
+
+Run `python3 scripts/reference_intelligence.py ingest --library /path/to/gifs`, `python3 scripts/reference_intelligence.py check`, and `python3 tools/story_retrieve.py --query query.json`. Ingest writes ignored `.plugin-state/reference-studies/{manifest.json,assets/,frames/}`; duplicate SHA inputs become aliases and cache reuse is SHA-based. Retrieval stages are `concept|story|palette-type|layout|motion|review` and output is UTF-8 byte-budgeted. Study status is READY/HOLD/SKIP; quality axes are Purpose, Hierarchy, Execution, Specificity, Restraint, Variety, with applicable scores below 3 blocking.
 
 ## Validator responsibilities
 
@@ -130,7 +136,7 @@ Update `scripts/validate_codex_plugin.py` and `tests/test_codex_plugin.py` when 
 
 ## Release work
 
-The current release is `3.2.1`.
+The current release is `3.3.0`.
 
 A public release requires the same plugin version across the Claude plugin manifest, Claude marketplace plugin entry, OpenAI plugin manifest, Codex compatibility registry, and OpenAI submission metadata.
 

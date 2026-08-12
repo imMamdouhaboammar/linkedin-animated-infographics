@@ -2,6 +2,10 @@
 
 The active worker inventory is declared in `helper/modules.json` and the executable order is declared in `architecture/plugin-graph.json`. Every agent returns a bounded artifact or verdict to the parent workflow. Agents do not coordinate peer agents directly.
 
+## Visual study contract
+
+`design-study` reports ranked evidence, confidence, provenance/rights, focused contexts, and explicit READY/HOLD/SKIP status.
+
 ## Complete workflow agents
 
 ### `design-study`

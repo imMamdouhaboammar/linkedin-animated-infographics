@@ -59,3 +59,4 @@ Own and execute `evidence-traceability` and `bounded-verification`. Preserve cri
 ## Outputs
 
 Return `build/verification-report.json` to the parent workflow with verdict, attempt number, criterion rows, identity provenance findings, typography findings, evidence references, unresolved critic findings, and only the targeted fix direction for failed criteria. Never make the third fix yourself.
+Verify reference `HOLD`/no-reference `SKIP`, selected study IDs only, typography policy, complete motion jobs/static regions, and evidence-backed six-axis quality scoring.

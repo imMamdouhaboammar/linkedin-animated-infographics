@@ -4,6 +4,8 @@ import os
 import shutil
 import tempfile
 import unittest
+from contextlib import redirect_stdout
+from io import StringIO
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -67,6 +69,10 @@ class EcosystemRouterTests(unittest.TestCase):
             ("arabic", "adds_skills", None),
             ("ui_mockup", "adds_agents", "not-a-list"),
             ("visual_reference", "adds_capabilities", None),
+            ("visual_reference", "stage", None),
+            ("visual_reference", "evidence_field", None),
+            ("visual_reference", "on_absent", None),
+            ("visual_reference", "on_missing", None),
             ("official_mascot", "asset_gate", 42),
             ("official_mascot", "adds_skills", None),
         )
@@ -89,6 +95,27 @@ class EcosystemRouterTests(unittest.TestCase):
                     errors,
                 )
 
+    def test_validator_rejects_graph_reference_stage_condition_drift(self):
+        module = load_module()
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            root.mkdir()
+            copy_router_fixture(root)
+            path = root / "architecture" / "plugin-graph.json"
+            graph = json.loads(path.read_text())
+            graph["workflows"]["new-post"]["stage_conditions"]["design-study"]["on_missing"] = "SKIP"
+            path.write_text(json.dumps(graph))
+            errors = module.validate_ecosystem(root)
+            self.assertTrue(any("graph stage condition drift" in error for error in errors), errors)
+
+    def test_reference_condition_declares_conditional_stage_contract(self):
+        condition = json.loads((HELPER / "router.json").read_text())["conditions"]["visual_reference"]
+        self.assertEqual("design-study", condition["stage"])
+        self.assertEqual("reference_evidence", condition["evidence_field"])
+        self.assertEqual("SKIP", condition["on_absent"])
+        self.assertEqual("HOLD", condition["on_missing"])
+        self.assertNotIn("adds_agents", condition)
+
     def test_route_request_fails_fast_with_value_error_for_malformed_required_condition(self):
         module = load_module()
         self.assertIsNotNone(module)
@@ -110,6 +137,64 @@ class EcosystemRouterTests(unittest.TestCase):
         self.assertIn("story-architect", route["agents"])
         self.assertIn("render-qa", route["agents"])
         self.assertIn("story-verifier", route["agents"])
+
+    def test_create_post_without_reference_skips_design_study(self):
+        module = load_module()
+        route = module.route_request({"request": "Create an animated LinkedIn infographic"}, ROOT)
+        self.assertEqual("READY", route["status"])
+        self.assertNotIn("design-study", route["agents"])
+        self.assertEqual(
+            {"status": "SKIP", "reason": "no reference supplied"},
+            route["reference_diagnosis"],
+        )
+
+    def test_explicit_reference_without_evidence_holds_before_evidence_checker(self):
+        module = load_module()
+        for request in (
+            {"request": "Create from this reference", "visual_reference": True},
+            {"request": "Study this reference", "intent": "design-study"},
+        ):
+            with self.subTest(request=request):
+                route = module.route_request(request, ROOT)
+                self.assertEqual("HOLD", route["status"])
+                self.assertEqual("reference evidence unavailable", route["reason"])
+                self.assertEqual("HOLD", route["reference_diagnosis"]["status"])
+                self.assertEqual("design-study", route["agents"][0])
+
+    def test_explicit_reference_with_evidence_runs_design_study_first(self):
+        module = load_module()
+        route = module.route_request(
+            {
+                "request": "Create from this reference",
+                "visual_reference": True,
+                "reference_evidence": ["uploaded-reference.gif"],
+            },
+            ROOT,
+        )
+        self.assertEqual("READY", route["status"])
+        self.assertEqual("READY", route["reference_diagnosis"]["status"])
+        self.assertEqual("design-study", route["agents"][0])
+        self.assertIn("reference-dna", route["research_gates"])
+
+    def test_repeatable_reference_evidence_cli_matches_library_route(self):
+        module = load_module()
+        stdout = StringIO()
+        with redirect_stdout(stdout):
+            exit_code = module.main([
+                "route", "--request", "Create from references", "--visual-reference",
+                "--reference-evidence", "one.gif", "--reference-evidence", "two.png",
+            ])
+        routed = json.loads(stdout.getvalue())
+        direct = module.route_request(
+            {
+                "request": "Create from references",
+                "visual_reference": True,
+                "reference_evidence": ["one.gif", "two.png"],
+            },
+            ROOT,
+        )
+        self.assertEqual(0, exit_code)
+        self.assertEqual(direct, routed)
 
     def test_named_mascot_without_svg_holds(self):
         module = load_module()
