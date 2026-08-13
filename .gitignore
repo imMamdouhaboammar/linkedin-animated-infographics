@@ -6,3 +6,6 @@ node_modules/
 .DS_Store
 research/upstreams/
 .plugin-state/reference-studies/
+
+# Ignore VS Code AI rules
+.github/instructions/codacy.instructions.md
