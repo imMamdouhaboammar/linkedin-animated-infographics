@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   validate:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - name: Checkout
@@ -33,8 +33,11 @@ jobs:
           python3 -m pip install --disable-pip-version-check -r requirements-runtime.txt
           python3 -m pip check
 
-      - name: Install render browser
-        run: python3 -m playwright install --with-deps chromium
+      - name: Install render browser dependencies
+        run: |
+          python3 -m playwright install --with-deps chromium
+          sudo apt-get install -y ffmpeg
+          ffmpeg -version | head -1
 
       - name: Python unit tests
         run: python3 -m unittest discover -s tests -v
