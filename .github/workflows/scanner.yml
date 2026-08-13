@@ -1,0 +1,25 @@
+name: Plugin Scanner
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    name: HOL AI Plugin Scanner
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.4.0
+
+      - name: Run HOL AI Plugin Scanner
+        uses: hashgraph-online/ai-plugin-scanner-action@v1
+        with:
+          path: '.'
+          min-score: 80
+          fail-on-severity: 'high'
