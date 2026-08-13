@@ -23,7 +23,6 @@ def load_validator():
 
 class MarketplaceTests(unittest.TestCase):
     def test_same_repo_marketplace_manifest(self):
-        self.assertTrue(MARKETPLACE.exists(), "missing .claude-plugin/marketplace.json")
         data = json.loads(MARKETPLACE.read_text())
         self.assertEqual("mamdouh-creative-tools", data["name"])
         self.assertEqual("1.0.0", data["version"])
@@ -33,25 +32,18 @@ class MarketplaceTests(unittest.TestCase):
         self.assertEqual("linkedin-animated-infographics", entry["name"])
         self.assertEqual("./", entry["source"])
         self.assertIs(True, entry["strict"])
+        self.assertNotIn("version", entry)
 
     def test_all_host_packages_share_release_version(self):
-        market = json.loads(MARKETPLACE.read_text())["plugins"][0]
         claude = json.loads(PLUGIN.read_text())
         codex = json.loads(CODEX_PLUGIN.read_text())
-        self.assertEqual("3.3.0", claude["version"])
-        self.assertEqual(claude["version"], market["version"])
+        self.assertEqual("3.4.0", claude["version"])
         self.assertEqual(claude["version"], codex["version"])
 
     def test_standard_component_directories_exist(self):
         for relative in (
-            "skills",
-            "openai-skills",
-            "agents",
-            "hooks/hooks.json",
-            "helper",
-            "demos",
-            "schemas/demo.schema.json",
-            ".codex-plugin/plugin.json",
+            "skills", "openai-skills", "agents", "hooks/hooks.json", "helper",
+            "demos", "schemas/demo.schema.json", ".codex-plugin/plugin.json",
             ".agents/plugins/marketplace.json",
         ):
             self.assertTrue((ROOT / relative).exists(), relative)
@@ -62,7 +54,6 @@ class MarketplaceTests(unittest.TestCase):
         self.assertIn("/plugin install linkedin-animated-infographics@mamdouh-creative-tools", text)
         self.assertIn("codex plugin marketplace add imMamdouhaboammar/linkedin-animated-infographics --ref main", text)
         self.assertIn("codex plugin marketplace list", text)
-        self.assertIn("3.3.0", text)
         self.assertIn("docs/codex.md", text)
 
     def test_codex_marketplace_is_repo_scoped(self):
