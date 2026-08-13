@@ -1,6 +1,6 @@
 # Claude Code Guide
 
-This repository is a same-repository Claude Marketplace plugin. Treat its helper registries, agents, skills, research gates, and validators as one executable contract.
+This repository is a same-repository Claude Marketplace plugin. Treat its helper registries, agents, skills, research gates, runtime contracts, and validators as one executable contract.
 
 ## First read
 
@@ -13,6 +13,11 @@ The authoritative machine-readable files are:
 - `helper/quality-gates.json`
 - `helper/artifacts.json`
 - `helper/modules.json`
+- `helper/runtime-contract.json`
+- `helper/artifact-views.json`
+- `helper/cache-policy.json`
+- `helper/model-policy.json`
+- `helper/token-budgets.json`
 - `research/capability-notes/gates.json`
 - `architecture/plugin-graph.json`
 - merged Info-stories registry from `scripts.info_stories.py::load_catalog()`
@@ -26,9 +31,10 @@ Run:
 
 ```bash
 python3 scripts/ecosystem_doctor.py check
+python3 scripts/runtime_context.py check
 ```
 
-after changing skills, agents, tools, routes, capabilities, artifacts, gates, or module inventory.
+after changing skills, agents, tools, routes, capabilities, artifacts, gates, runtime policies, or module inventory.
 
 ## Claude orchestration rule
 
@@ -38,7 +44,28 @@ For complete post creation, use `new-post` and follow the graph:
 
 `design-study -> evidence-checker -> asset-curator -> creative-director -> story-architect -> palette-curator -> type-curator -> copy-compressor -> layout-composer -> caption-writer -> artboard-builder -> motion-director -> optional mascot-animator -> motion-engineer -> render-qa -> post-critic -> story-verifier`
 
-Required skill knowledge is preloaded through each agent's `skills:` frontmatter.
+Required skill knowledge is preloaded through each agent's `skills:` frontmatter. Runtime capsules add focused state; they do not weaken skill, evidence, quality-gate, or HOLD contracts.
+
+## Token-efficient runtime protocol
+
+For a complete production run, write the normalized request once to `build/runtime-context/request.json`. Include the topic or source identity, audience, language, output mode, CTA, and approved constraints that can change stage output.
+
+Before spawning a stage that `helper/cache-policy.json` marks cacheable, run:
+
+```bash
+python3 scripts/runtime_context.py prepare --intent create-post --stage <agent> --workspace .
+```
+
+- If the result has `cache_hit=true`, treat it as `CACHE HIT`: use the restored registered output and do not spawn that worker.
+- If the request record is missing or invalid, cache reuse is disabled for that stage.
+- On a miss, spawn the worker normally. The generated `build/runtime-context/<agent>.json` is the focused runtime capsule for that stage.
+- After the worker output passes its blocking stage gates, store the exact result with:
+
+```bash
+python3 scripts/runtime_context.py store --intent create-post --stage <agent> --workspace .
+```
+
+The cache is exact, content-addressed, request-bound, local-only, and never semantic. `post-critic` and `story-verifier` always run fresh. A cache hit never overrides a HOLD, approval requirement, evidence rule, or final verification.
 
 ## Creative behavior
 
@@ -65,6 +92,7 @@ python3 scripts/ecosystem_router.py check
 python3 scripts/research_gates.py check
 python3 scripts/plugin_graph.py check
 python3 scripts/ecosystem_doctor.py check
+python3 scripts/runtime_context.py check
 python3 scripts/validate_marketplace.py
 claude plugin validate .
 ```

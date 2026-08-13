@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "mode": "soft-budget",
+  "defaults": {
+    "capsule_max_bytes": 16000,
+    "result_summary_max_tokens": 600,
+    "overflow": "preserve-required-context"
+  },
+  "stages": {
+    "creative-director": {"capsule_max_bytes": 24000, "result_summary_max_tokens": 1200},
+    "post-critic": {"capsule_max_bytes": 32000, "result_summary_max_tokens": 1200},
+    "story-verifier": {"capsule_max_bytes": 32000, "result_summary_max_tokens": 1200}
+  }
+}

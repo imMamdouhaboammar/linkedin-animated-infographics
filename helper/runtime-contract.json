@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "runtime_version": "1",
+  "strategy": "compiled-stage-context",
+  "capsule_root": "build/runtime-context",
+  "session_file": "build/runtime-context/run.json",
+  "source_registries": ["helper/router.json", "helper/capabilities.json", "helper/quality-gates.json", "helper/artifacts.json", "research/capability-notes/gates.json", "architecture/plugin-graph.json"],
+  "runtime_registries": ["helper/artifact-views.json", "helper/cache-policy.json", "helper/model-policy.json", "helper/token-budgets.json"],
+  "projection_fallback": "full-artifact",
+  "cache_match": "exact-only",
+  "fresh_acceptance_stages": ["post-critic", "story-verifier"]
+}

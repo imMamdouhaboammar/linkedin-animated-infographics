@@ -1,0 +1,14 @@
+{
+  "extraKnownMarketplaces": {
+    "mamdouh-creative-tools": {
+      "source": {
+        "source": "github",
+        "repo": "imMamdouhaboammar/linkedin-animated-infographics"
+      },
+      "autoUpdate": true
+    }
+  },
+  "enabledPlugins": {
+    "linkedin-animated-infographics@mamdouh-creative-tools": true
+  }
+}

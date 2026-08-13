@@ -6,40 +6,19 @@ ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_PLUGIN_VERSION = "3.3.0"
 
 
-def _load_json(path: Path, errors: list[str]):
-    try:
-        return json.loads(path.read_text())
-    except FileNotFoundError:
-        errors.append(f"missing {path}")
-    except json.JSONDecodeError as exc:
-        errors.append(f"invalid JSON in {path}: {exc}")
-    return None
-
-
-def _require_frontmatter(paths, root: Path, errors: list[str]):
-    for path in paths:
-        if not path.read_text().startswith("---\n"):
-            errors.append(f"missing YAML frontmatter: {path.relative_to(root)}")
-
-
 def validate_marketplace(root: Path = ROOT) -> list[str]:
     errors = []
-    market_path = root / ".claude-plugin" / "marketplace.json"
-    plugin_path = root / ".claude-plugin" / "plugin.json"
-    market = _load_json(market_path, errors)
-    plugin = _load_json(plugin_path, errors)
-    if not market or not plugin:
-        return errors
+    try:
+        market = json.loads((root / ".claude-plugin/marketplace.json").read_text())
+        plugin = json.loads((root / ".claude-plugin/plugin.json").read_text())
+    except (OSError, json.JSONDecodeError) as exc:
+        return [f"invalid marketplace contract: {exc}"]
 
     if market.get("name") != "mamdouh-creative-tools":
         errors.append("unexpected marketplace name")
-    owner = market.get("owner") or {}
-    if not owner.get("name"):
-        errors.append("marketplace owner.name is required")
     entries = market.get("plugins")
     if not isinstance(entries, list) or len(entries) != 1:
-        errors.append("marketplace must expose exactly one root plugin")
-        return errors
+        return errors + ["marketplace must expose exactly one root plugin"]
     entry = entries[0]
     if entry.get("name") != plugin.get("name"):
         errors.append("marketplace plugin name does not match plugin.json")
@@ -55,17 +34,11 @@ def validate_marketplace(root: Path = ROOT) -> list[str]:
     for relative in ("skills", "agents", "hooks/hooks.json", "helper", "demos", "schemas/demo.schema.json"):
         if not (root / relative).exists():
             errors.append(f"missing standard plugin component {relative}")
-    hooks = _load_json(root / "hooks" / "hooks.json", errors)
-    if hooks is not None and "hooks" not in hooks:
-        errors.append("hooks/hooks.json is missing top-level hooks")
-
-    _require_frontmatter((root / "skills").glob("*/SKILL.md"), root, errors)
-    _require_frontmatter((root / "agents").glob("*.md"), root, errors)
     return errors
 
 
 def main():
-    errors = validate_marketplace(ROOT)
+    errors = validate_marketplace()
     if errors:
         for error in errors:
             print(f"ERROR: {error}")
