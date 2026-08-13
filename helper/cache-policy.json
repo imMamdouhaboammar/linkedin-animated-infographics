@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "strategy": "content-addressed",
+  "semantic_reuse": false,
+  "scope": "local-only",
+  "storage_root": ".plugin-state/runtime-cache/",
+  "stages": {}
+}
