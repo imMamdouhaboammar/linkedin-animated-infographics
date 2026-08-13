@@ -4,6 +4,9 @@ from pathlib import Path
 
 
 def directory_descriptor(path):
+    path = Path(path)
+    if path.is_symlink():
+        raise ValueError(f"directory artifact contains symlink: {path}")
     digest = hashlib.sha256()
     files = 0
     total = 0
