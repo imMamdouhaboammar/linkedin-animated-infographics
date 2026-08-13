@@ -1,12 +1,29 @@
 {
   "name": "linkedin-animated-infographics",
   "version": "3.4.0",
-  "description": "Create animated LinkedIn visual stories with verified identity sourcing, intentional typography, brand icons, Signal Desk house, capability-aware autopilot execution, visual intelligence, strong visual hooks, sandbox artifacts, disciplined motion, and strict QA.",
-  "author": {"name": "Mamdouh Aboammar", "url": "https://github.com/imMamdouhaboammar"},
+  "description": "Create animated LinkedIn visual stories with MasterOne onboarding and routing, verified identity sourcing, intentional typography, capability-aware execution, visual intelligence, disciplined motion, and strict QA.",
+  "author": {
+    "name": "Mamdouh Aboammar",
+    "url": "https://github.com/imMamdouhaboammar"
+  },
   "homepage": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics",
   "repository": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics",
   "license": "MIT",
-  "keywords": ["linkedin", "infographic", "animation", "visual-storytelling", "autopilot", "multi-agent", "creative-direction", "visual-qa", "lobe-icons", "typography", "signal-desk", "arabic", "rtl"],
+  "keywords": [
+    "linkedin",
+    "infographic",
+    "animation",
+    "visual-storytelling",
+    "autopilot",
+    "multi-agent",
+    "creative-direction",
+    "visual-qa",
+    "lobe-icons",
+    "typography",
+    "signal-desk",
+    "arabic",
+    "rtl"
+  ],
   "skills": "./openai-skills/",
   "interface": {
     "displayName": "LinkedIn Animated Infographics",
@@ -14,12 +31,15 @@
     "longDescription": "Build feed-ready LinkedIn infographics through verified identity sourcing, intentional typography, evidence checks, concept exploration, macro-layout planning, still-first critique, disciplined motion, and final verification.",
     "developerName": "Mamdouh Aboammar",
     "category": "Productivity",
-    "capabilities": ["Read", "Write"],
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
     "websiteURL": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics",
     "privacyPolicyURL": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics/blob/main/PRIVACY.md",
     "termsOfServiceURL": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics/blob/main/TERMS.md",
     "defaultPrompt": [
-      "Run this in autopilot and turn the idea into an animated LinkedIn infographic with a strong visual hook and useful aha moment.",
+      "Start with MasterOne, reuse my project preferences, then run this in autopilot and turn the idea into an animated LinkedIn infographic.",
       "Create an Info-story from this material and choose the best story shape before designing it.",
       "Review this finished LinkedIn infographic and tell me what must be fixed before publishing."
     ],
