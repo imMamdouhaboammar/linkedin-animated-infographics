@@ -1,7 +1,7 @@
 {
   "name": "linkedin-animated-infographics",
   "description": "Claude Code package for animated LinkedIn visual stories with shared LLM routing, verified identity sourcing, intentional typography, brand icons, Signal Desk house, Info-stories, creative direction, visual intelligence, research gates, request-bound runtime caching, deterministic rendering, strict QA, and opt-in community demo publishing.",
-  "version": "3.4.0",
+  "version": "3.3.0",
   "author": {
     "name": "Mamdouh Aboammar",
     "url": "https://github.com/imMamdouhaboammar"
@@ -9,25 +9,5 @@
   "homepage": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics",
   "repository": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics",
   "license": "MIT",
-  "keywords": [
-    "linkedin",
-    "infographic",
-    "gif",
-    "animation",
-    "marketing",
-    "creative-direction",
-    "llm-router",
-    "research-gates",
-    "community-demos",
-    "arabic",
-    "rtl",
-    "svg",
-    "mascot",
-    "info-stories",
-    "ui-mockup",
-    "lobe-icons",
-    "typography",
-    "signal-desk",
-    "runtime-cache"
-  ]
+  "keywords": ["linkedin", "infographic", "gif", "animation", "marketing", "creative-direction", "llm-router", "research-gates", "community-demos", "arabic", "rtl", "svg", "mascot", "info-stories", "ui-mockup", "lobe-icons", "typography", "signal-desk", "runtime-cache"]
 }
