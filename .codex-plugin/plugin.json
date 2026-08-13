@@ -1,11 +1,8 @@
 {
   "name": "linkedin-animated-infographics",
-  "version": "3.4.0",
+  "version": "3.3.0",
   "description": "Create animated LinkedIn visual stories with verified identity sourcing, intentional typography, brand icons, Signal Desk house, capability-aware autopilot execution, visual intelligence, strong visual hooks, sandbox artifacts, disciplined motion, and strict QA.",
-  "author": {
-    "name": "Mamdouh Aboammar",
-    "url": "https://github.com/imMamdouhaboammar"
-  },
+  "author": {"name": "Mamdouh Aboammar", "url": "https://github.com/imMamdouhaboammar"},
   "homepage": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics",
   "repository": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics",
   "license": "MIT",
