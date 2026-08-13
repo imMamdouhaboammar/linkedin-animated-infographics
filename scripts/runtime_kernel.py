@@ -40,11 +40,11 @@ def projection(value, view):
     picked = {k: value[k] for k in view.get("keys", []) if k in value}
     return value if not picked and view.get("on_empty") == "full" else picked
 
+TEXT_ARTIFACT_SUFFIXES = {".html", ".md"}
+
 def artifact_value(path):
-    raw = path.read_bytes()
-    try: return raw.decode("utf-8")
-    except UnicodeDecodeError:
-        return {"$binary_sha256": hashlib.sha256(raw).hexdigest(), "$size": len(raw)}
+    if path.suffix in TEXT_ARTIFACT_SUFFIXES: return path.read_text()
+    return {"$binary_sha256": file_sha(path), "$size": path.stat().st_size}
 
 def inputs(stage, workspace, data):
     default = data["views"].get("default", {"mode": "full"})
