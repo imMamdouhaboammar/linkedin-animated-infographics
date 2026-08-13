@@ -40,6 +40,12 @@ def projection(value, view):
     picked = {k: value[k] for k in view.get("keys", []) if k in value}
     return value if not picked and view.get("on_empty") == "full" else picked
 
+TEXT_ARTIFACT_SUFFIXES = {".html", ".md"}
+
+def artifact_value(path):
+    if path.suffix in TEXT_ARTIFACT_SUFFIXES: return path.read_text()
+    return {"$binary_sha256": file_sha(path), "$size": path.stat().st_size}
+
 def inputs(stage, workspace, data):
     default = data["views"].get("default", {"mode": "full"})
     stage_views = data["views"].get("stages", {}).get(stage, {})
@@ -49,7 +55,7 @@ def inputs(stage, workspace, data):
         path = workspace / rel
         if not path.exists(): value = {"$state": "missing"}
         elif path.suffix == ".json": value = load(path)
-        else: value = path.read_text()
+        else: value = artifact_value(path)
         result[rel] = projection(value, stage_views.get(rel, default))
     return result
 
