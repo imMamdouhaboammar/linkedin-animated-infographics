@@ -12,7 +12,7 @@
     "type-curator": {"cacheable": true},
     "copy-compressor": {"cacheable": true},
     "layout-composer": {"cacheable": true},
-    "caption-writer": {"cacheable": true},
+    "caption-writer": {"cacheable": false},
     "motion-director": {"cacheable": true},
     "render-qa": {"cacheable": false},
     "post-critic": {"cacheable": false},
