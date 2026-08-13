@@ -37,7 +37,7 @@ class MarketplaceTests(unittest.TestCase):
     def test_all_host_packages_share_release_version(self):
         claude = json.loads(PLUGIN.read_text())
         codex = json.loads(CODEX_PLUGIN.read_text())
-        self.assertEqual("3.4.0", claude["version"])
+        self.assertEqual("3.3.0", claude["version"])
         self.assertEqual(claude["version"], codex["version"])
 
     def test_standard_component_directories_exist(self):
