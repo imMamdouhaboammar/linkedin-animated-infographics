@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "project": {
+    "name": null,
+    "brand": null
+  },
+  "content": {
+    "default_language": null,
+    "audience": null,
+    "primary_topics": [],
+    "preferred_tone": null,
+    "cta_style": null
+  },
+  "copyright": {
+    "owner_name": null,
+    "copyright_text": null,
+    "attribution": null,
+    "footer_text": null,
+    "footer_required": false
+  },
+  "branding": {
+    "logo_paths": [],
+    "brand_assets": [],
+    "prohibited_logo_treatments": []
+  },
+  "typography": {
+    "primary_font": null,
+    "secondary_font": null,
+    "arabic_font": null,
+    "fallback_fonts": [],
+    "font_paths": []
+  },
+  "visual": {
+    "references": [],
+    "reference_directories": [],
+    "preferred_styles": [],
+    "disliked_styles": [],
+    "palette_preferences": [],
+    "reference_policy": null
+  },
+  "mascots": {
+    "enabled": "ask",
+    "identities": [],
+    "asset_paths": [],
+    "automatic_use": false
+  },
+  "linkedin": {
+    "canvas": "1080x1350",
+    "output_mode": null,
+    "footer_safe_area": null
+  },
+  "motion": {
+    "default_intensity": "medium",
+    "looping": true,
+    "duration_seconds": null
+  },
+  "production": {
+    "require_user_approval": true,
+    "output_directory": "build"
+  }
+}

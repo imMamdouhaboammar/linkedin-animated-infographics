@@ -8,6 +8,10 @@ The active skill inventory is declared in `helper/modules.json`. Every public sk
 
 ## Workflow and routing skills
 
+### `masterone`
+
+User-facing front-door skill for first-run onboarding, persistent project preferences, and intent selection. It reads `.linkedin-infographics/profile.json`, asks only for materially missing reusable inputs, treats discovered files as unconfirmed candidates, and transfers ready requests to the existing canonical route. It does not replace `new-post` or let a worker coordinate peer workers.
+
 ### `post`
 
 Public routing entrypoint. It reads `helper/GUIDE.md`, resolves the request, and routes complete creation to `new-post` or focused work to QA, render, design-study, mascot-animation, Info-stories, or verified community publishing.

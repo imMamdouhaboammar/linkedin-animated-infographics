@@ -98,3 +98,18 @@ claude plugin validate .
 ```
 
 The CI also registers this repository as marketplace `mamdouh-creative-tools` and installs `linkedin-animated-infographics@mamdouh-creative-tools` from a clean checkout.
+
+<!-- MASTERONE:START -->
+## MasterOne project profile
+
+Before LinkedIn infographic production:
+
+1. Read `.linkedin-infographics/profile.json` when present
+2. Use `masterone` for first-run onboarding and profile readiness
+3. Ask only for materially missing inputs
+4. Treat discovered assets as candidates until confirmed
+5. Preserve the canonical downstream workflows from `helper/router.json`
+6. Never invent copyright, attribution, fonts, official logos, mascot identity, or reference intent
+
+MasterOne manages only this bounded section. `new-post` remains the complete-production parent workflow.
+<!-- MASTERONE:END -->

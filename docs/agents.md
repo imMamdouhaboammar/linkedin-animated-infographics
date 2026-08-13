@@ -103,3 +103,7 @@ python3 scripts/plugin_graph.py check
 python3 scripts/ecosystem_doctor.py check
 python3 -m unittest tests.test_agent_contracts -v
 ```
+
+## MasterOne
+
+`masterone` is the onboarding/profile worker used by the front-door `masterone` skill. It normalizes persistent preferences, reports missing blocking fields, separates discovered asset candidates from confirmed user choices, and recommends a canonical route back to the parent workflow. It does not orchestrate peer agents.

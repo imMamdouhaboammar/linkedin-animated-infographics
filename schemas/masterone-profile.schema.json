@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics/schemas/masterone-profile.schema.json",
+  "title": "MasterOne Project Profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "project", "content", "copyright", "branding", "typography", "visual", "mascots", "linkedin", "motion", "production"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "brand"],
+      "properties": {
+        "name": {"type": ["string", "null"]},
+        "brand": {"type": ["string", "null"]}
+      }
+    },
+    "content": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["default_language", "audience", "primary_topics", "preferred_tone", "cta_style"],
+      "properties": {
+        "default_language": {"type": ["string", "null"]},
+        "audience": {"type": ["string", "null"]},
+        "primary_topics": {"type": "array", "items": {"type": "string"}},
+        "preferred_tone": {"type": ["string", "null"]},
+        "cta_style": {"type": ["string", "null"]}
+      }
+    },
+    "copyright": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["owner_name", "copyright_text", "attribution", "footer_text", "footer_required"],
+      "properties": {
+        "owner_name": {"type": ["string", "null"]},
+        "copyright_text": {"type": ["string", "null"]},
+        "attribution": {"type": ["string", "null"]},
+        "footer_text": {"type": ["string", "null"]},
+        "footer_required": {"type": "boolean"}
+      }
+    },
+    "branding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["logo_paths", "brand_assets", "prohibited_logo_treatments"],
+      "properties": {
+        "logo_paths": {"type": "array", "items": {"type": "string"}},
+        "brand_assets": {"type": "array", "items": {"type": "string"}},
+        "prohibited_logo_treatments": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "typography": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["primary_font", "secondary_font", "arabic_font", "fallback_fonts", "font_paths"],
+      "properties": {
+        "primary_font": {"type": ["string", "null"]},
+        "secondary_font": {"type": ["string", "null"]},
+        "arabic_font": {"type": ["string", "null"]},
+        "fallback_fonts": {"type": "array", "items": {"type": "string"}},
+        "font_paths": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "visual": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["references", "reference_directories", "preferred_styles", "disliked_styles", "palette_preferences", "reference_policy"],
+      "properties": {
+        "references": {"type": "array", "items": {"type": "string"}},
+        "reference_directories": {"type": "array", "items": {"type": "string"}},
+        "preferred_styles": {"type": "array", "items": {"type": "string"}},
+        "disliked_styles": {"type": "array", "items": {"type": "string"}},
+        "palette_preferences": {"type": "array", "items": {"type": "string"}},
+        "reference_policy": {"enum": ["inspiration", "strict-direction", "ask", null]}
+      }
+    },
+    "mascots": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "identities", "asset_paths", "automatic_use"],
+      "properties": {
+        "enabled": {"enum": ["yes", "no", "ask"]},
+        "identities": {"type": "array", "items": {"type": "string"}},
+        "asset_paths": {"type": "array", "items": {"type": "string"}},
+        "automatic_use": {"type": "boolean"}
+      }
+    },
+    "linkedin": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["canvas", "output_mode", "footer_safe_area"],
+      "properties": {
+        "canvas": {"type": "string", "pattern": "^[0-9]+x[0-9]+$"},
+        "output_mode": {"enum": ["static", "animated", null]},
+        "footer_safe_area": {"type": ["string", "null"]}
+      }
+    },
+    "motion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["default_intensity", "looping", "duration_seconds"],
+      "properties": {
+        "default_intensity": {"enum": ["low", "medium", "high"]},
+        "looping": {"type": "boolean"},
+        "duration_seconds": {"type": ["number", "null"], "exclusiveMinimum": 0}
+      }
+    },
+    "production": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["require_user_approval", "output_directory"],
+      "properties": {
+        "require_user_approval": {"type": "boolean"},
+        "output_directory": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

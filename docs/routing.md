@@ -107,3 +107,9 @@ python3 scripts/research_gates.py check
 python3 scripts/ecosystem_doctor.py check
 python3 scripts/demo_gallery.py check
 ```
+
+## MasterOne front door
+
+The plugin exposes `helper/router.json::front_door` for the first interaction. `masterone` performs project-profile readiness and then hands the request to one of the existing intents: `create-post`, `qa`, `render`, `design-study`, `mascot-animation`, `info-story`, or `share-demo`.
+
+`create-post` still resolves to `new-post`; its worker sequence is unchanged. Persistent preferences live in `.linkedin-infographics/profile.json`. Request-specific topic, source, CTA, output mode, and one-off references remain request context unless the user explicitly makes them reusable defaults.

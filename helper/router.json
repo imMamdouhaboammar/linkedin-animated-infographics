@@ -1,9 +1,18 @@
 {
   "schema_version": 1,
   "default_intent": "create-post",
+  "front_door": {
+    "route": "masterone",
+    "agent": "masterone",
+    "skill": "masterone",
+    "profile": ".linkedin-infographics/profile.json",
+    "profile_schema": "schemas/masterone-profile.schema.json",
+    "profile_template": "templates/masterone-profile.json",
+    "downstream_intents": ["create-post", "qa", "render", "design-study", "mascot-animation", "info-story", "share-demo"]
+  },
   "routes": {
     "masterone": {
-      "workflow": "focused",
+      "workflow": "masterone",
       "skills": ["masterone", "post"],
       "agents": ["masterone"],
       "capabilities": []

@@ -98,3 +98,9 @@ python3 scripts/validate_codex_plugin.py
 ## Safety
 
 Never commit credentials, private MCP data, or user secrets. Do not fabricate claims, metrics, logos, UI states, testimonials, product behavior, or identity assets to satisfy a visual slot. Report browser/render environment blockers separately from non-browser validation. Do not claim OpenAI public-directory publication until the external submission, review, and publication steps have actually completed.
+
+## MasterOne front door
+
+Use `masterone` as the first user-facing entry for LinkedIn infographic work. It owns first-run onboarding, persistent project preferences, and route selection. The persistent profile lives at `.linkedin-infographics/profile.json` and may include copyright/footer text, typography, references, logos, mascots, language, audience, and reusable production preferences.
+
+Do not make the `masterone` worker coordinate peer workers. The parent/client transfers a ready request to the route in `helper/router.json`; `new-post` remains the canonical complete-production parent workflow. Ask only for materially missing inputs and never invent copyright, attribution, fonts, official identity assets, mascot identities, or reference intent.
