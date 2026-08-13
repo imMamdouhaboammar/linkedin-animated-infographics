@@ -2,6 +2,12 @@
   "schema_version": 1,
   "default_intent": "create-post",
   "routes": {
+    "masterone": {
+      "workflow": "focused",
+      "skills": ["masterone", "post"],
+      "agents": ["masterone"],
+      "capabilities": []
+    },
     "create-post": {
       "workflow": "new-post",
       "skills": ["post", "new-post", "info-stories", "caption", "artboard", "motion", "render"],
