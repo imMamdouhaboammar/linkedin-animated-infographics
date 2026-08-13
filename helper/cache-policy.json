@@ -4,5 +4,10 @@
   "semantic_reuse": false,
   "scope": "local-only",
   "storage_root": ".plugin-state/runtime-cache/",
-  "stages": {}
+  "default_cacheable": false,
+  "stages": {
+    "creative-director": {"cacheable": true},
+    "post-critic": {"cacheable": false},
+    "story-verifier": {"cacheable": false}
+  }
 }
