@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
   "plugin_name": "linkedin-animated-infographics",
-  "plugin_version": "3.4.0",
+  "plugin_version": "3.3.0",
   "surfaces": ["codex", "chatgpt"],
   "manifests": {
     "openai": ".codex-plugin/plugin.json",
@@ -10,11 +10,7 @@
     "claude_marketplace": ".claude-plugin/marketplace.json"
   },
   "distributions": {
-    "claude": {
-      "skills_root": "skills",
-      "agents_root": "agents",
-      "execution": "native-worker-graph"
-    },
+    "claude": {"skills_root": "skills", "agents_root": "agents", "execution": "native-worker-graph"},
     "openai": {
       "skills_root": "openai-skills",
       "execution": "capability-negotiated-autopilot",
@@ -31,52 +27,24 @@
     }
   },
   "canonical": {
-    "skills_root": "skills",
-    "agents_root": "agents",
-    "router": "helper/router.json",
-    "capabilities": "helper/capabilities.json",
-    "quality_gates": "helper/quality-gates.json",
-    "artifacts": "helper/artifacts.json",
-    "modules": "helper/modules.json",
-    "research_gates": "research/capability-notes/gates.json",
-    "worker_graph": "architecture/plugin-graph.json",
+    "skills_root": "skills", "agents_root": "agents", "router": "helper/router.json",
+    "capabilities": "helper/capabilities.json", "quality_gates": "helper/quality-gates.json",
+    "artifacts": "helper/artifacts.json", "modules": "helper/modules.json",
+    "research_gates": "research/capability-notes/gates.json", "worker_graph": "architecture/plugin-graph.json",
     "identity_policy": "skills/info-stories/references/asset-source-policy.md",
     "typography_policy": "skills/info-stories/references/typography-direction.md",
     "visual_mechanisms": "skills/info-stories/extensions/idea-mechanisms.json",
     "reference_library": "research/reference-studies/visual-library.json"
   },
-  "repo_development": {
-    "codex_guide": ".codex/AGENTS.md",
-    "codex_config": ".codex/config.toml",
-    "real_subagents": true
-  },
-  "public_submission": {
-    "type": "skills-only",
-    "skills_root": "openai-skills",
-    "metadata": "submission/openai-plugin.json",
-    "test_cases": "submission/test-cases.json"
-  },
+  "repo_development": {"codex_guide": ".codex/AGENTS.md", "codex_config": ".codex/config.toml", "real_subagents": true},
+  "public_submission": {"type": "skills-only", "skills_root": "openai-skills", "metadata": "submission/openai-plugin.json", "test_cases": "submission/test-cases.json"},
   "parity_invariants": [
-    "same-plugin-name",
-    "same-release-version",
-    "quality-process-parity-not-visual-identity",
-    "claude-behavior-regression-protected",
-    "openai-self-contained-runtime",
-    "capability-negotiation-before-execution",
-    "no-fake-tool-or-agent-claims",
-    "sandbox-artifact-persistence-when-available",
-    "workspace-agents-optional-not-auto-installed",
-    "evidence-integrity",
-    "verified-identity-source-before-concept",
-    "lobe-first-supported-ai-tool-identities",
-    "intentional-render-safe-typography",
-    "clean-creative-structure",
-    "still-before-motion",
-    "bounded-visual-repair",
-    "verified-svg-mascot-rule",
-    "exact-svg-mascot-rule",
-    "canonical-reference-capsule-digest",
-    "deterministic-reference-selection",
-    "no-source-reference-media-export"
+    "same-plugin-name", "same-release-version", "quality-process-parity-not-visual-identity",
+    "claude-behavior-regression-protected", "openai-self-contained-runtime", "capability-negotiation-before-execution",
+    "no-fake-tool-or-agent-claims", "sandbox-artifact-persistence-when-available", "workspace-agents-optional-not-auto-installed",
+    "evidence-integrity", "verified-identity-source-before-concept", "lobe-first-supported-ai-tool-identities",
+    "intentional-render-safe-typography", "clean-creative-structure", "still-before-motion", "bounded-visual-repair",
+    "verified-svg-mascot-rule", "exact-svg-mascot-rule", "canonical-reference-capsule-digest",
+    "deterministic-reference-selection", "no-source-reference-media-export"
   ]
 }
