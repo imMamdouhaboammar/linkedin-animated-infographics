@@ -2,6 +2,8 @@
 import argparse, hashlib, json, shutil
 from pathlib import Path
 
+from runtime_directory_digest import directory_descriptor
+
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -43,6 +45,7 @@ def projection(value, view):
 TEXT_ARTIFACT_SUFFIXES = {".html", ".md"}
 
 def artifact_value(path):
+    if path.is_dir(): return directory_descriptor(path)
     if path.suffix in TEXT_ARTIFACT_SUFFIXES: return path.read_text()
     return {"$binary_sha256": file_sha(path), "$size": path.stat().st_size}
 
