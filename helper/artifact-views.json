@@ -3,7 +3,11 @@
   "default": {"mode": "full"},
   "stages": {
     "creative-director": {
-      "build/evidence.json": {"mode": "keys", "keys": ["protected_claims", "exact_labels", "qualifiers"], "on_empty": "full"},
+      "build/evidence.json": {
+        "mode": "keys",
+        "keys": ["protected_claims", "metrics", "product_states", "named_identities", "logos", "proof", "unsupported_slots", "blocked_proof_slots", "exact_labels", "qualifiers"],
+        "on_empty": "full"
+      },
       "build/asset-plan.json": {"mode": "full"},
       "build/design-study.json": {"mode": "keys", "keys": ["selected_mechanisms", "focused_contexts", "status"], "on_empty": "full"}
     }
