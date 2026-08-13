@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-EXPECTED_PLUGIN_VERSION = "3.3.0"
+EXPECTED_PLUGIN_VERSION = "3.4.0"
 
 
 def _load_json(path: Path, errors: list[str]):
@@ -47,8 +47,8 @@ def validate_marketplace(root: Path = ROOT) -> list[str]:
         errors.append("root plugin source must be ./")
     if entry.get("strict") is not True:
         errors.append("root plugin must use strict mode")
-    if entry.get("version") != plugin.get("version"):
-        errors.append("marketplace plugin version does not match plugin.json")
+    if "version" in entry:
+        errors.append("marketplace plugin entry must omit version; plugin.json is authoritative")
     if plugin.get("version") != EXPECTED_PLUGIN_VERSION:
         errors.append(f"plugin release version must be {EXPECTED_PLUGIN_VERSION}")
 
