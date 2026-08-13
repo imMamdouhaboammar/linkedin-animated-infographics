@@ -26,7 +26,7 @@ class RuntimeBinaryArtifactTests(unittest.TestCase):
             (build / "creative-concepts.json").write_text("{}")
             (build / "story-brief.json").write_text("{}")
             (build / "layout-spec.json").write_text("{}")
-            first_bytes = b"valid-utf8-binary-fixture"
+            first_bytes = b"\x89PNG\r\n\x1a\n\xff\xfe\x00valid-binary-fixture"
             (build / "still.png").write_bytes(first_bytes)
 
             first = subprocess.run(
