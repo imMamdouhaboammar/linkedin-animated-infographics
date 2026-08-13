@@ -7,6 +7,14 @@
   "default_cacheable": false,
   "stages": {
     "creative-director": {"cacheable": true},
+    "story-architect": {"cacheable": true},
+    "palette-curator": {"cacheable": true},
+    "type-curator": {"cacheable": true},
+    "copy-compressor": {"cacheable": true},
+    "layout-composer": {"cacheable": true},
+    "caption-writer": {"cacheable": true},
+    "motion-director": {"cacheable": true},
+    "render-qa": {"cacheable": false},
     "post-critic": {"cacheable": false},
     "story-verifier": {"cacheable": false}
   }
