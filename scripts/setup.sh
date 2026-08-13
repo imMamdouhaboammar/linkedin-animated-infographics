@@ -8,9 +8,18 @@ if ! python3 -c 'import sys; raise SystemExit(0 if sys.version_info >= (3, 11) e
   exit 1
 fi
 
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+REPO_ROOT="$(cd -- "$SCRIPT_DIR/.." >/dev/null 2>&1 && pwd)"
+RUNTIME_REQUIREMENTS="$REPO_ROOT/requirements-runtime.txt"
+
+if [[ ! -f "$RUNTIME_REQUIREMENTS" ]]; then
+  echo "Missing runtime dependency lock: $RUNTIME_REQUIREMENTS" >&2
+  exit 1
+fi
+
 echo "── python deps ──────────────────────────────"
-python3 -m pip install --quiet --break-system-packages playwright pillow 2>/dev/null \
-  || python3 -m pip install --quiet playwright pillow
+python3 -m pip install --quiet --break-system-packages -r "$RUNTIME_REQUIREMENTS" 2>/dev/null \
+  || python3 -m pip install --quiet -r "$RUNTIME_REQUIREMENTS"
 
 echo "── browser ──────────────────────────────────"
 BROWSER=""

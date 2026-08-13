@@ -1,0 +1,3 @@
+# Security tooling used by GitHub Actions.
+# Keep exact pins reviewed through Dependabot PRs.
+pip-audit==2.10.1

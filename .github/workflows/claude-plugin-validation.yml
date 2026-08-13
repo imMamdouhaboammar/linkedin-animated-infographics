@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   validate:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - name: Checkout
@@ -28,11 +28,16 @@ jobs:
         with:
           node-version: "24"
 
-      - name: Install Python runtime dependencies
-        run: python3 -m pip install Pillow playwright
+      - name: Install pinned Python runtime dependencies
+        run: |
+          python3 -m pip install --disable-pip-version-check -r requirements-runtime.txt
+          python3 -m pip check
 
-      - name: Install render browser
-        run: python3 -m playwright install --with-deps chromium
+      - name: Install render browser dependencies
+        run: |
+          python3 -m playwright install --with-deps chromium
+          sudo apt-get install -y ffmpeg
+          ffmpeg -version | head -1
 
       - name: Python unit tests
         run: python3 -m unittest discover -s tests -v
@@ -88,8 +93,8 @@ jobs:
       - name: Whitespace integrity
         run: git diff --check HEAD^ HEAD
 
-      - name: Install current Claude Code
-        run: npm install -g @anthropic-ai/claude-code@latest
+      - name: Install pinned Claude Code validator
+        run: npm install -g @anthropic-ai/claude-code@2.1.220
 
       - name: Run official Claude plugin validator
         run: claude plugin validate .
