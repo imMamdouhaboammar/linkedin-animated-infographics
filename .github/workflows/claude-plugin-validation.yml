@@ -51,6 +51,9 @@ jobs:
       - name: Validate reference cache contract
         run: python3 -m unittest -v tests.test_reference_intelligence
 
+      - name: Validate token-efficient runtime
+        run: python3 scripts/runtime_context.py check
+
       - name: Validate ecosystem router
         run: python3 scripts/ecosystem_router.py check
 
@@ -80,6 +83,12 @@ jobs:
           python3 -m json.tool helper/artifacts.json >/dev/null
           python3 -m json.tool helper/quality-gates.json >/dev/null
           python3 -m json.tool helper/modules.json >/dev/null
+          python3 -m json.tool helper/runtime-contract.json >/dev/null
+          python3 -m json.tool helper/artifact-views.json >/dev/null
+          python3 -m json.tool helper/cache-policy.json >/dev/null
+          python3 -m json.tool helper/model-policy.json >/dev/null
+          python3 -m json.tool helper/token-budgets.json >/dev/null
+          python3 -m json.tool .claude/settings.json >/dev/null
           python3 -m json.tool research/capability-notes/gates.json >/dev/null
           python3 -m json.tool schemas/demo.schema.json >/dev/null
           python3 -m json.tool .codex-plugin/plugin.json >/dev/null
