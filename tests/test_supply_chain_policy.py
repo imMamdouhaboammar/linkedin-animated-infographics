@@ -36,6 +36,8 @@ class SupplyChainPolicyTests(unittest.TestCase):
         self.assertIn('-r "$RUNTIME_REQUIREMENTS"', setup)
         self.assertIn("-r requirements-runtime.txt", workflow)
         self.assertIn("python3 -m pip check", workflow)
+        self.assertIn("runs-on: ubuntu-24.04", workflow)
+        self.assertIn("sudo apt-get install -y ffmpeg", workflow)
         self.assertNotIn("pip install Pillow playwright", workflow)
         self.assertNotIn("@latest", workflow)
 
@@ -44,6 +46,7 @@ class SupplyChainPolicyTests(unittest.TestCase):
         self.assertIn("-r requirements-security.txt", workflow)
         self.assertIn("python3 -m pip_audit -r requirements-runtime.txt", workflow)
         self.assertIn("queries: security-extended", workflow)
+        self.assertEqual(2, workflow.count("runs-on: ubuntu-24.04"))
         action_refs = re.findall(r"uses:\s+[^@\s]+@([^\s]+)", workflow)
         self.assertGreaterEqual(len(action_refs), 5)
         for ref in action_refs:
