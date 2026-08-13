@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-EXPECTED_PLUGIN_VERSION = "3.4.0"
+EXPECTED_PLUGIN_VERSION = "3.3.0"
 
 
 def _load_json(path: Path, errors: list[str]):
@@ -24,17 +24,13 @@ def _require_frontmatter(paths, root: Path, errors: list[str]):
 
 def validate_marketplace(root: Path = ROOT) -> list[str]:
     errors = []
-    market_path = root / ".claude-plugin" / "marketplace.json"
-    plugin_path = root / ".claude-plugin" / "plugin.json"
-    market = _load_json(market_path, errors)
-    plugin = _load_json(plugin_path, errors)
+    market = _load_json(root / ".claude-plugin" / "marketplace.json", errors)
+    plugin = _load_json(root / ".claude-plugin" / "plugin.json", errors)
     if not market or not plugin:
         return errors
-
     if market.get("name") != "mamdouh-creative-tools":
         errors.append("unexpected marketplace name")
-    owner = market.get("owner") or {}
-    if not owner.get("name"):
+    if not (market.get("owner") or {}).get("name"):
         errors.append("marketplace owner.name is required")
     entries = market.get("plugins")
     if not isinstance(entries, list) or len(entries) != 1:
@@ -51,14 +47,12 @@ def validate_marketplace(root: Path = ROOT) -> list[str]:
         errors.append("marketplace plugin entry must omit version; plugin.json is authoritative")
     if plugin.get("version") != EXPECTED_PLUGIN_VERSION:
         errors.append(f"plugin release version must be {EXPECTED_PLUGIN_VERSION}")
-
     for relative in ("skills", "agents", "hooks/hooks.json", "helper", "demos", "schemas/demo.schema.json"):
         if not (root / relative).exists():
             errors.append(f"missing standard plugin component {relative}")
     hooks = _load_json(root / "hooks" / "hooks.json", errors)
     if hooks is not None and "hooks" not in hooks:
         errors.append("hooks/hooks.json is missing top-level hooks")
-
     _require_frontmatter((root / "skills").glob("*/SKILL.md"), root, errors)
     _require_frontmatter((root / "agents").glob("*.md"), root, errors)
     return errors
