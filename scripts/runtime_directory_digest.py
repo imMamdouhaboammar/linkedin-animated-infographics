@@ -10,6 +10,11 @@ def directory_descriptor(path):
     for root, directories, filenames in os.walk(path, followlinks=False):
         directories.sort()
         filenames.sort()
+        for directory in directories:
+            current = Path(root) / directory
+            if current.is_symlink():
+                relative = current.relative_to(path).as_posix()
+                raise ValueError(f"directory artifact contains symlink: {relative}")
         for filename in filenames:
             current = Path(root) / filename
             relative = current.relative_to(path).as_posix().encode()
