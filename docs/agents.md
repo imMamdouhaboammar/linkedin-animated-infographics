@@ -80,6 +80,10 @@ Read-only independent acceptance worker. It inspects artifact evidence directly,
 
 ## Focused publication agent
 
+### `masterone`
+
+Front-door onboarding and routing specialist. It diagnoses workspace profile state, identifies missing persistent preferences, and returns a routing-ready profile assessment to the parent workflow.
+
 ### `community-publisher`
 
 Runs only after the `share-demo` parent workflow has explicit consent, final verification PASS, rights confirmation, and a validated three-file export. It handles the contributor fork, fresh `community/<user>/<slug>` branch, scoped commit, push, and pull request against upstream `main`. It never merges, enables auto-merge, pushes to upstream `main`, or claims success without a real PR URL. Every contribution remains pending maintainer manual review and merge.

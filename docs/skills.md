@@ -12,6 +12,10 @@ The active skill inventory is declared in `helper/modules.json`. Every public sk
 
 Public routing entrypoint. It reads `helper/GUIDE.md`, resolves the request, and routes complete creation to `new-post` or focused work to QA, render, design-study, mascot-animation, Info-stories, or verified community publishing.
 
+### `masterone`
+
+Front-door onboarding and routing parent workflow. It establishes project preferences once, asks only for materially missing inputs, then delegates to the canonical focused or production workflow.
+
 ### `new-post`
 
 Canonical complete parent workflow. It owns evidence, creative concept approval, story, copy, layout, still, motion, mascot condition, render QA, adversarial review, independent verification, HOLD resolution, and final delivery.

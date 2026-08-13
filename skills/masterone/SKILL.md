@@ -8,77 +8,54 @@ argument-hint: "[request, topic, URL, or setup instruction]"
 
 Request: **$ARGUMENTS**
 
-## Role
+## Purpose
 
-MasterOne is the user-facing front door for this plugin. It does not replace specialist production workers and it does not make a subagent orchestrate peer subagents. The parent/client remains responsible for routing and delegation.
+Act as the front-door onboarding and routing entrypoint for the plugin. Make user/project preferences explicit, reusable, and machine-readable in `.linkedin-infographics/profile.json`, then hand control to the existing route selected from `helper/router.json`.
 
-Use MasterOne before production to make the user's persistent project choices explicit, reusable, and machine-readable. After preflight, hand control to the existing route selected from `helper/router.json`.
+## Use when
 
-## Authority
+Use MasterOne before production to establish reusable project defaults (project name, default language, audience, footer/copyright text, primary font) or to route onboarding requests before delegating to specialist workflows.
 
-Read `helper/GUIDE.md`, `helper/router.json`, and `.linkedin-infographics/profile.json` when present. Treat the profile as user/project preference data, not as evidence for factual claims.
+## Inputs
 
-The project profile schema is `schemas/masterone-profile.schema.json`.
+- user request, topic, URL, or setup instruction
+- optional `.linkedin-infographics/profile.json`
+- `helper/GUIDE.md`
+- `helper/router.json`
 
-## First-run protocol
+## Outputs
 
-1. Run `python3 scripts/masterone_profile.py check --workspace .`.
-2. If no profile exists, run `python3 scripts/masterone_profile.py init --workspace .`.
-3. Run `python3 scripts/masterone_profile.py discover --workspace .` before asking the user for asset paths.
+- resolved or updated project profile `.linkedin-infographics/profile.json`
+- compact routing capsule containing profile state, missing blocking fields, confirmed preferences, discovered candidates, classified intent, and recommended route
+
+## Procedure
+
+1. Inspect `.linkedin-infographics/profile.json` when present in the workspace.
+2. Read `helper/GUIDE.md` and `helper/router.json`.
+3. Resolve request classification and recommended route with the deterministic router:
+
+```bash
+python3 ${CLAUDE_PLUGIN_ROOT}/tools/route_request.py --request "$ARGUMENTS"
+```
+
 4. Delegate profile diagnosis to the `masterone` agent when a compact assessment is useful.
 5. Ask only for blocking fields that cannot be inferred safely from explicit user input or discovered files.
 6. Never invent copyright text, ownership, attribution, fonts, official logos, mascot identities, or reference intent.
-7. Persist approved answers with `python3 scripts/masterone_profile.py merge --workspace . --input <json-file>`.
-8. Run `python3 scripts/masterone_profile.py sync-claude --workspace .` to maintain the bounded MasterOne section in the workspace `CLAUDE.md`.
-9. Re-run `check`. Do not start a production route while blocking profile fields remain unresolved.
+7. Route to the selected workflow from `helper/router.json`.
 
-## Blocking project fields
+## HOLD conditions
 
-- `project.name`
-- `content.default_language`
-- `content.audience`
-- `copyright.footer_text`
-- `typography.primary_font`
+Return a HOLD when blocking project fields (`project.name`, `content.default_language`, `content.audience`, `copyright.footer_text`, `typography.primary_font`) remain unresolved and cannot be safely inferred. Do not start a production route while blocking profile fields remain unresolved.
 
-Request-specific inputs such as topic, source, CTA, output mode, or one-off references remain request context. Store them in the project profile only when the user states they are reusable preferences.
+## Related components
 
-## Asset discovery
+- router guide: `helper/GUIDE.md`
+- router registry: `helper/router.json`
+- profile schema: `schemas/masterone-profile.schema.json`
+- deterministic router CLI: `tools/route_request.py`
+- masterone agent: `agents/masterone.md`
+- public router skill: `skills/post/SKILL.md`
 
-Discovery is advisory. It may identify likely logos, mascots, fonts, and reference files from conventional workspace locations, but filenames are not proof of identity or rights.
+## Research gates
 
-Exact user-supplied assets still have priority. Named identity and mascot production remains subject to the existing verified-identity path.
-
-## Routing protocol
-
-After profile readiness:
-
-1. Classify the current request using `helper/GUIDE.md`.
-2. Use `helper/router.json` as the routing authority.
-3. Route complete creation or substantial redesign to `new-post`.
-4. Route finished-artifact inspection to `qa-post`.
-5. Route approved HTML/GIF mechanics to `render-gif`.
-6. Route visual-reference study to `design-study`.
-7. Route a focused Info-story request to `info-story`.
-8. Route mascot-only animation to `mascot-animation`.
-9. Route verified community publication to `share-demo` only after its existing consent and PASS requirements.
-
-MasterOne never bypasses HOLD semantics, evidence gates, typography rules, identity provenance, render QA, critique, or final verification.
-
-## Interaction rules
-
-- Do not repeat questions already answered in the profile or current request.
-- Prefer one compact onboarding batch containing only unresolved blocking inputs.
-- State discovered assets separately from confirmed user choices.
-- If the profile is ready, do not perform ceremonial onboarding. Route immediately.
-- If an existing profile conflicts with an explicit current instruction, the current instruction wins for the current request.
-- Keep the profile free of secrets, credentials, access tokens, and signed URLs.
-
-## CLAUDE.md contract
-
-`sync-claude` owns only the text between `<!-- MASTERONE:START -->` and `<!-- MASTERONE:END -->`. Never rewrite unrelated `CLAUDE.md` instructions.
-
-## Output
-
-Before delegation, produce a compact routing capsule containing profile state, unresolved blocking fields, confirmed reusable preferences, discovered-but-unconfirmed assets, classified intent, selected canonical workflow or focused route, and request-specific constraints that must be passed downstream.
-
-Do not generate the final infographic, caption, HTML, or GIF inside MasterOne. Those remain owned by the existing production workflows.
+MasterOne enforces preference clarity and identity safety. It inherits `voice-preservation`, `evidence-traceability`, and `bounded-verification` without replacing production quality gates.
