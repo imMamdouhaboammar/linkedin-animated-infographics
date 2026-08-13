@@ -1,3 +1,4 @@
+import hashlib
 import json
 import subprocess
 import sys
@@ -25,9 +26,10 @@ class RuntimeBinaryArtifactTests(unittest.TestCase):
             (build / "creative-concepts.json").write_text("{}")
             (build / "story-brief.json").write_text("{}")
             (build / "layout-spec.json").write_text("{}")
-            (build / "still.png").write_bytes(b"\x89PNG\r\n\x1a\n\xff\xfe\x00")
+            first_bytes = b"\x89PNG\r\n\x1a\n\xff\xfe\x00"
+            (build / "still.png").write_bytes(first_bytes)
 
-            result = subprocess.run(
+            first = subprocess.run(
                 [sys.executable, str(RUNTIME), "prepare", "--intent", "create-post", "--stage", "motion-director", "--workspace", str(workspace)],
                 cwd=ROOT,
                 text=True,
@@ -35,12 +37,23 @@ class RuntimeBinaryArtifactTests(unittest.TestCase):
                 check=False,
             )
 
-            self.assertEqual(0, result.returncode, result.stderr)
-            response = json.loads(result.stdout)
-            capsule = json.loads(Path(response["capsule_path"]).read_text())
+            self.assertEqual(0, first.returncode, first.stderr)
+            first_response = json.loads(first.stdout)
+            capsule = json.loads(Path(first_response["capsule_path"]).read_text())
             still = capsule["inputs"]["build/still.png"]
-            self.assertEqual(11, still["$size"])
-            self.assertEqual(64, len(still["$binary_sha256"]))
+            self.assertEqual(len(first_bytes), still["$size"])
+            self.assertEqual(hashlib.sha256(first_bytes).hexdigest(), still["$binary_sha256"])
+
+            (build / "still.png").write_bytes(first_bytes + b"changed")
+            second = subprocess.run(
+                [sys.executable, str(RUNTIME), "prepare", "--intent", "create-post", "--stage", "motion-director", "--workspace", str(workspace)],
+                cwd=ROOT,
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            self.assertEqual(0, second.returncode, second.stderr)
+            self.assertNotEqual(first_response["cache_key"], json.loads(second.stdout)["cache_key"])
 
 
 if __name__ == "__main__":
