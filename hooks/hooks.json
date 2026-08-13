@@ -1,5 +1,16 @@
 {
   "hooks": {
+    "SubagentStart": [
+      {
+        "matcher": "^linkedin-animated-infographics:.*$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${PLUGIN_ROOT:-${CLAUDE_PLUGIN_ROOT:-.}}/scripts/runtime_subagent_context.py\""
+          }
+        ]
+      }
+    ],
     "PostToolUse": [
       {
         "matcher": "Write|Edit",
