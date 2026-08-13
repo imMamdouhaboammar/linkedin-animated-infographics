@@ -3,7 +3,7 @@
   "strategy": "content-addressed",
   "semantic_reuse": false,
   "scope": "local-only",
-  "storage_root": ".plugin-state/runtime-cache/",
+  "storage_root": "build/runtime-cache/",
   "default_cacheable": false,
   "stages": {
     "creative-director": {"cacheable": true},
