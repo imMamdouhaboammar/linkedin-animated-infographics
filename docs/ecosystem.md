@@ -2,7 +2,7 @@
 
 Version 3 organizes the repository around a central routing helper and explicit worker contracts. Skills, agents, research, tools, artifacts, host packaging, and the demo gallery are validated as one connected product.
 
-Claude Code, Codex, and ChatGPT are package adapters over the same canonical runtime. Host compatibility must not fork product Skills, routes, gates, or worker contracts.
+Claude Code, Google Antigravity, Codex, and ChatGPT are package adapters over the same canonical runtime. Host compatibility must not fork product Skills, routes, gates, or worker contracts.
 
 ## Authority
 
@@ -21,20 +21,22 @@ Machine-readable contracts:
 - `schemas/demo.schema.json`: public demo metadata contract
 - `scripts/demo_gallery.py`: owned/community demo validation and deterministic catalog
 - `compatibility/codex.json`: OpenAI host-parity declaration
+- `compatibility/antigravity.json`: Antigravity host-parity declaration
 
 ## Host packaging
 
-Claude Code packaging lives under `.claude-plugin/`.
+- Claude Code packaging lives under `.claude-plugin/`.
+- Google Antigravity packaging lives under root `plugin.json` and `.agents/` (`plugins/`, `plugins.json`, `skills.json`, `hooks.json`, `rules/`, `agents/catalog.json`).
+- OpenAI packaging lives under `.codex-plugin/`, while the repository marketplace for Codex/ChatGPT lives at `.agents/plugins/marketplace.json`.
 
-OpenAI packaging lives under `.codex-plugin/`, while the repository marketplace for Codex/ChatGPT lives at `.agents/plugins/marketplace.json`.
-
-Both packages consume the same `skills/` tree. `.codex/config.toml` and `.codex/agents/*.toml` are repository-development helpers and are not dependencies of the installed OpenAI plugin.
+All packages consume the same `skills/` tree. `.codex/config.toml` and `.codex/agents/*.toml` are repository-development helpers and are not dependencies of the installed OpenAI plugin.
 
 Host packaging is validated separately from runtime topology:
 
 ```bash
 python3 scripts/validate_marketplace.py
 python3 scripts/validate_codex_plugin.py
+python3 scripts/validate_antigravity_plugin.py
 ```
 
 ## Complete shipping path
@@ -116,7 +118,7 @@ The registry is the deterministic result of `load_catalog()`, merging the base c
 
 Research-derived gates have source provenance and local independently-worded behavior. Plugin-local behavior such as exact mascot identity, hook-led design copy, restrained palettes, center-first composition, creative payoff, and opt-in public demo export is kept separate from upstream attribution.
 
-See [`research.md`](research.md) for the provenance chain, [`community-demos.md`](community-demos.md) for the public-export contract, and [`codex.md`](codex.md) for OpenAI packaging.
+See [`research.md`](research.md) for the provenance chain, [`community-demos.md`](community-demos.md) for the public-export contract, [`antigravity.md`](antigravity.md) for Google Antigravity packaging, and [`codex.md`](codex.md) for OpenAI packaging.
 
 ## Strict reality gate
 
@@ -127,6 +129,7 @@ python3 scripts/ecosystem_doctor.py check
 python3 scripts/demo_gallery.py check
 python3 scripts/validate_marketplace.py
 python3 scripts/validate_codex_plugin.py
+python3 scripts/validate_antigravity_plugin.py
 ```
 
 A module, host package, or demo contract that exists only in documentation does not pass these gates.

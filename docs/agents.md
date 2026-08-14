@@ -107,3 +107,7 @@ python3 -m unittest tests.test_agent_contracts -v
 ## MasterOne
 
 `masterone` is the onboarding/profile worker used by the front-door `masterone` skill. It normalizes persistent preferences, reports missing blocking fields, separates discovered asset candidates from confirmed user choices, and recommends a canonical route back to the parent workflow. It does not orchestrate peer agents.
+
+## Antigravity Subagents Catalog
+
+For Google Antigravity and Gemini CLI, all 19 canonical agents are declared in `.agents/agents/catalog.json` and managed via `scripts/antigravity_agents.py`. Each agent definition configures explicit write permissions, model tiers, and detailed system instructions matching the canonical contracts. See [`antigravity.md`](antigravity.md) for full details.

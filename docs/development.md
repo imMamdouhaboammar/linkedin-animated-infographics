@@ -27,6 +27,7 @@ python3 scripts/ecosystem_doctor.py check
 python3 scripts/demo_gallery.py check
 python3 scripts/validate_marketplace.py
 python3 scripts/validate_codex_plugin.py
+python3 scripts/validate_antigravity_plugin.py
 python3 -m json.tool hooks/hooks.json >/dev/null
 python3 -m json.tool schemas/demo.schema.json >/dev/null
 bash -n scripts/lint_artboard.sh
@@ -85,6 +86,10 @@ Validates the Claude Marketplace/plugin manifests, same-repository source, stric
 Validates `.codex-plugin/plugin.json`, `.agents/plugins/marketplace.json`, the isolated `openai-skills/` distribution, directory compliance, square icon/logo references, absence of unsupported screenshots, OpenAI/Claude identity and version parity, `compatibility/codex.json`, current repository Codex subagent configuration, public policy files, and the tracked OpenAI submission package.
 
 It also rejects OpenAI runtime references to Claude-only paths and requires the blocking visual quality markers for vertical occupancy, dead space, containment depth, still-before-motion behavior, visual failure taxonomy, and bounded repair.
+
+### `scripts/validate_antigravity_plugin.py`
+
+Validates top-level `plugin.json`, `.agents/` plugin manifests and JSON configs (`plugins.json`, `skills.json`, `hooks.json`, `rules/`), the 19 specialized subagents in `.agents/agents/catalog.json`, and the `compatibility/antigravity.json` host parity contract.
 
 ## Community demo changes
 

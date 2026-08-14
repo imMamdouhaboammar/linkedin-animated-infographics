@@ -85,9 +85,14 @@ These defaults are blocking unless an approved brief or valid comprehension/fide
 
 Skills name the research gates they own or consume. The runtime gate registry lives in `research/capability-notes/gates.json`; research notes do not independently redefine production behavior. `share-demo` inherits `bounded-verification` as a publication prerequisite and does not create new claims.
 
+## Antigravity skills registration
+
+Google Antigravity discovers and registers the canonical `skills/` directly via `.agents/skills.json` without duplicating code files.
+
 Validate skill contracts with:
 
 ```bash
 python3 -m unittest tests.test_skill_contracts -v
+python3 scripts/validate_antigravity_plugin.py check
 python3 scripts/ecosystem_doctor.py check
 ```

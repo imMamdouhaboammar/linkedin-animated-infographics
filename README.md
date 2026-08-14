@@ -4,7 +4,7 @@
 
 **Turn imagination into visual stories that stop the scroll and make the idea click**
 
-`Claude Code + Codex + ChatGPT · 3.4.0` · `1080×1350` · `Info-stories` · `Exact-SVG mascots` · `Arabic / RTL`
+`Claude Code + Google Antigravity + Codex + ChatGPT · 3.4.0` · `1080×1350` · `Info-stories` · `Exact-SVG mascots` · `Arabic / RTL`
 
 <br>
 
@@ -28,17 +28,30 @@ The plugin aims for both
 
 If the effect looks good but adds no meaning, it is decoration
 
-`creative-director` develops the concept before layout starts in the Claude runtime. The OpenAI package uses capability negotiation: real side jobs and sandbox artifacts when the host exposes them, then truthful sequential or skill-only fallbacks when it does not
+`creative-director` develops the concept before layout starts in the Claude and Antigravity runtimes. The OpenAI package uses capability negotiation: real side jobs and sandbox artifacts when the host exposes them, then truthful sequential or skill-only fallbacks when it does not
 
 ## Install
 
-Version 3.4.0 adds deterministic visual-reference retrieval and measured render evidence while keeping host execution isolated
+Version 3.4.0 adds deterministic visual-reference retrieval, Antigravity subagent catalog integration, and measured render evidence while keeping host execution isolated
 
 - Claude uses the existing `skills/` + `agents/` runtime and native worker graph
+- Google Antigravity uses `plugin.json`, `.agents/`, and the 19 specialized subagents catalog
 - ChatGPT and Codex use the self-contained `openai-skills/` distribution
 - repository-development Codex can use real project-scoped subagents from `.codex/agents/`
 - the public OpenAI skill never assumes those repo agents exist after installation
 - quality parity means equivalent discipline and acceptance criteria, not identical visual output
+
+### Google Antigravity & Gemini CLI
+
+The repository exposes native Antigravity discovery via `.agents/` and top-level `plugin.json`:
+
+```bash
+# Validate Antigravity plugin contract and 19 subagents
+python3 scripts/validate_antigravity_plugin.py check
+python3 scripts/antigravity_agents.py check
+```
+
+[Antigravity architecture guide](docs/antigravity.md)
 
 ### Claude Code
 
