@@ -41,7 +41,7 @@ python3 ${CLAUDE_PLUGIN_ROOT}/scripts/capture_frames.py build/post.html --out bu
 python3 ${CLAUDE_PLUGIN_ROOT}/scripts/build_gif.py build/frames --out build/post.gif --fps 12.5 --max-mb 5 --colors 128
 ```
 
-3. Read `references/qa-gates.md` and `references/production-pipeline.md`.
+3. Read `references/qa-gates.md`, `references/production-pipeline.md`, and `references/pixel-perfect-browser-inspection.md`.
 4. Inspect three core measurements: mean changed-pixel `motion:`, loop seam relative to normal frame deltas, and file size.
 5. Treat frame 0 as a complete poster frame. It must remain readable before autoplay.
 6. Inspect the 350px feed downscale honestly. Render success without feed-scale legibility is not acceptance.
@@ -58,7 +58,7 @@ Return a HOLD when capture fails, frame 0 is incomplete, the seam does not close
 - routing authority: `helper/GUIDE.md`
 - focused render workflow: `skills/render-gif/SKILL.md`
 - motion skill: `skills/motion/SKILL.md`
-- QA gates: `references/qa-gates.md`
+- QA gates: `references/qa-gates.md` and `references/pixel-perfect-browser-inspection.md`
 - production setup: `references/production-pipeline.md`
 - render worker: `agents/render-qa.md`
 - independent verifier: `agents/story-verifier.md`

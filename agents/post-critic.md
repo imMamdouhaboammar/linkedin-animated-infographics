@@ -38,7 +38,7 @@ Act as the last adversarial reader before independent verification. Inspect the 
 10. Apply `restrained-palette`. The palette should read as `creative-attractive-restrained`, memorable and intentional without exaggerated saturation, unnecessary neon, or several competing accents unless the brief explicitly calls for them.
 11. Apply `center-first-composition`. Confirm the visual anchor and major zones are centered by default or that `build/layout-spec.json` records a valid alignment exception.
 12. For UI stories, read `skills/info-stories/references/ui-mockup-rules.md`. Check feed-width legibility, evidence-qualified product states, concept labeling, story-critical controls, and whether the visual implies unsupported product behavior.
-13. For motion, check whether animation serves reading order, state change, hierarchy, reveal, or route direction. Flag decorative competition or incomplete frame 0.
+13. For motion, check whether animation serves reading order, state change, hierarchy, reveal, or route direction. Apply animation craft gates: flag `scale(0)` entrances (use `scale(0.95)`+opacity), sluggish `ease-in` on UI, layout-property animations (`width`/`height`/`top`/`left`), misaligned `transform-origin`, excessive group stagger (>400ms), or incomplete frame 0.
 14. For a named mascot, compare the animated component with its verified asset-plan record and untouched source. Any unexplained substitution, redraw, altered marks/colors, or identity-changing deformation is a must-fix failure.
 15. Verify visible factual claims against the approved evidence table. Do not invent critique just to produce output.
 

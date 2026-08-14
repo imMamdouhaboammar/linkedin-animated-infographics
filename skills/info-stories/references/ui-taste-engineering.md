@@ -95,3 +95,35 @@ Any score below 3 requires an immediate targeted revision pass before final deli
 - Prohibit fake chrome: Avoid drawing simulated browser bars, fake phone bezels, or artificial traffic light dots
 - Bento Grid Integrity: Ensure bento containers have exact cell counts corresponding to real content items with zero empty placeholder tiles
 - Logo Wall Restraint: Display authentic SVG logos only without redundant industry subtitle labels
+
+---
+
+## 7 DOM Bounding Box & Collision Prevention
+
+- **Programmatic Geometry Audit**: Always measure computed bounding boxes (`top`, `bottom`, `height`) of major vertical containers via Headless Chrome / Playwright (`getBoundingClientRect()`).
+- **Inter-Section Breathing Room**: Maintain a minimum 20px clean gap between the Header bottom and the Main Stage top.
+- **Zero Dead-Space Container Sizing**: Avoid oversized hardcoded container heights. Use `display: flex; flex-direction: column; justify-content: space-between;` and exact content-hugging heights to eliminate empty white bands.
+
+---
+
+## 8 Progressive Narrative Motion & Opacity Flow
+
+- **Progressive Opacity Sequencing**: Pipeline and funnel steps start in a resting dimmed state (`opacity: 0.45`). As the traveler puck docks at Step $N$, Step $N$ illuminates to `opacity: 1.0` with active borders and subtle elevation.
+- **Elimination of Obscuring Floating Badges**: Never attach floating text badges to a moving puck that can hop across lines and obscure readable copy. Keep moving indicators clean and symbolic (e.g. crisp brand glyphs with pulse rings).
+- **Hero Deliverable Ignition**: After the final step completes its transition, the hero deliverable card pulses with accent glow.
+
+---
+
+## 9 Headline Baseline & Asset Self-Containment
+
+- **Baseline Integrity**: Avoid inline boxed button pills inside `h1` sentences. Use seamless inline editorial highlights (`border-bottom` accents with harmonious background tints) to maintain continuous reading rhythm.
+- **Deterministic Offline Assets**: Base64-encode all local author portraits and brand marks as Data URIs directly in HTML to ensure 100% offline frame capture without network latency or render flickering.
+
+---
+
+## 10 Ultra-High Quality Render & Visual Crispness
+
+- **High-Fidelity Visual Priority**: Always prioritize crispness, deep contrast, and smooth gradients in final GIF renders. File size allocations up to 5 MB or 6 MB are fully justified to maintain crystal-clear typography on high-DPI LinkedIn feeds.
+- **Palette Quantization**: Use 128 to 256 color depth ladders. Avoid aggressive lossy compression or unnecessary downscaling when visual clarity can be preserved within the platform ceiling.
+
+

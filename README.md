@@ -4,9 +4,16 @@
 
 **Turn imagination into visual stories that stop the scroll and make the idea click**
 
-`Claude Code + Google Antigravity + Codex + ChatGPT · 3.5.0` · `1080×1350` · `Info-stories` · `Exact-SVG mascots` · `Arabic / RTL`
-
 <br>
+
+[![Version](https://img.shields.io/badge/version-3.6.0-18181b?style=flat-square)](https://github.com/imMamdouhaboammar/linkedin-animated-infographics/releases)
+[![Hosts](https://img.shields.io/badge/hosts-Claude%20%7C%20Antigravity%20%7C%20Codex%20%7C%20ChatGPT-18181b?style=flat-square)](#install)
+[![Viewport](https://img.shields.io/badge/viewport-1080%C3%971350%20Vertical-18181b?style=flat-square)](#)
+[![Engine](https://img.shields.io/badge/engine-Info--stories-18181b?style=flat-square)](#)
+[![Mascots](https://img.shields.io/badge/mascots-Exact--SVG-18181b?style=flat-square)](#)
+[![Language](https://img.shields.io/badge/i18n-Arabic%20%2F%20RTL%20%2B%20Bilingual-18181b?style=flat-square)](#)
+
+<br><br>
 
 <a href="./assets/demo_artboard_v4.gif">
   <img src="./assets/demo_artboard_v4.gif" alt="Animated LinkedIn infographic demo generated with the plugin" width="720">
@@ -32,7 +39,7 @@ If the effect looks good but adds no meaning, it is decoration
 
 ## Install
 
-Version 3.5.0 adds unified UI taste engineering, 3 design dials, 8-state interactive completeness, 6-axis pre-emit self-critique, and multi-pass anti-slop gates while keeping host execution isolated
+Version 3.6.0 adds Emil Kowalski fluid motion recipes, Apple design interface physics, Paul Bakaus Impeccable motion craft standards, HeyGen HyperFrames CSS keyframe mechanisms, Mblode transition engines, and a mandatory browser pixel-by-pixel inspection and auto-repair gate while keeping host execution isolated
 
 - Claude uses the existing `skills/` + `agents/` runtime and native worker graph
 - Google Antigravity uses `plugin.json`, `.agents/`, and the 19 specialized subagents catalog
@@ -317,7 +324,7 @@ claude plugin validate .
 
 ## Public Plugins Directory
 
-The 3.5.0 OpenAI package is prepared as a skills-only update using `openai-skills/`
+The 3.6.0 OpenAI package is prepared as a skills-only update using `openai-skills/`
 
 `submission/` tracks listing metadata, five positive reviewer cases, three negative cases, and the manual OpenAI Platform handoff
 

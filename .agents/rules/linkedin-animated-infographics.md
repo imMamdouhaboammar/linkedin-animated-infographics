@@ -38,3 +38,8 @@ These rules govern all autonomous subagents, workers, and workflows when creatin
 - Prohibited Terms: Avoid `system`, `layer`, `machine`, `gear`, `occupy`, `difference` and Arabic equivalents; use operational nouns instead.
 - Punctuation & Formatting: No trailing periods on bullets/headings, no quotes unless strictly required, no em dashes (`—`).
 
+## 8. Ultra-High Quality Render & Resolution Priority
+- **Quality-First Rendering**: Always render animated GIFs in ultra-high fidelity and maximum visual clarity. File budgets up to 5 MB or 6 MB are fully supported and encouraged to maintain razor-sharp typography and crisp gradients on LinkedIn high-DPI screens.
+- **Color Depth & Crispness**: Use 128 to 256 color quantization ladders with clean palette optimization. Never aggressively downsample or blur fine UI details to artificially reduce file size.
+
+

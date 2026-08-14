@@ -13,7 +13,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_NAME = "linkedin-animated-infographics"
-EXPECTED_VERSION = "3.5.0"
+EXPECTED_VERSION = "3.6.0"
 EXPECTED_OPENAI_SKILLS_ROOT = "openai-skills"
 EXPECTED_OPENAI_SKILL = Path("openai-skills/linkedin-infographic-studio")
 EXPECTED_OPENAI_AUTOPILOT = Path("openai-skills/linkedin-infographic-autopilot")

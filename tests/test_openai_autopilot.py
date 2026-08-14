@@ -68,7 +68,7 @@ class OpenAIAutopilotPackagingTests(unittest.TestCase):
 
     def test_openai_manifest_points_to_distribution_and_release_3_3_0(self):
         data = json.loads(PLUGIN.read_text())
-        self.assertEqual("3.5.0", data["version"])
+        self.assertEqual("3.6.0", data["version"])
         self.assertEqual("./openai-skills/", data["skills"])
         prompts = data["interface"]["defaultPrompt"]
         self.assertGreaterEqual(len(prompts), 1)

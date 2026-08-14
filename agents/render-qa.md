@@ -23,8 +23,8 @@ Read `helper/GUIDE.md` before running QA.
 
 ## Method
 
-1. Use the preloaded `render` skill and walk its QA references.
-2. Run lint, static render, mobile downscale, and GIF render when applicable:
+1. Use the preloaded `render` skill and walk its QA references, including `references/pixel-perfect-browser-inspection.md`.
+2. Run lint, browser DOM audit, pixel-by-pixel still render, mobile downscale, and deterministic GIF render:
 
 ```bash
 bash ${CLAUDE_PLUGIN_ROOT}/scripts/lint_artboard.sh <path>

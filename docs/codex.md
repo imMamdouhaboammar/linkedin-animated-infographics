@@ -1,6 +1,6 @@
 # Codex and ChatGPT
 
-Version 3.5.0 gives Codex and ChatGPT a capability-negotiated OpenAI autopilot distribution while preserving the existing Claude execution path.
+Version 3.6.0 gives Codex and ChatGPT a capability-negotiated OpenAI autopilot distribution while preserving the existing Claude execution path.
 
 The target is quality and process parity, not identical visual output. Claude and OpenAI may choose different creative directions, layouts, palettes, and motion treatments, but both must follow disciplined evidence, concept, layout, still QA, motion, and verification stages.
 

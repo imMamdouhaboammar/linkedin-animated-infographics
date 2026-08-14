@@ -24,7 +24,7 @@ Read `helper/GUIDE.md` before implementation.
 
 ## Method
 
-1. Use the preloaded `motion` and `info-stories` skills plus `references/animation-recipes.md` and Info-stories motion references.
+1. Use the preloaded `motion` and `info-stories` skills plus `references/animation-recipes.md`, `references/hyperframes-motion-recipes.md`, `references/emil-craft-animation-rules.md`, and Info-stories motion references.
 2. Treat the resolved story brief as authoritative. Implement its selected Motion Patterns in the declared order and preserve each communication job.
 3. Translate Info-stories Motion Patterns to existing seekable primitives without changing story meaning.
 4. Use at most two motion patterns. A mascot pointer replaces another pointer pattern rather than adding a third.
