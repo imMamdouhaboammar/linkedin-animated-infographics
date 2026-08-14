@@ -16,10 +16,11 @@
 <br><br>
 
 <a href="./assets/demo_artboard_v4.gif">
-  <img src="./assets/demo_artboard_v4.gif" alt="Animated LinkedIn infographic demo generated with the plugin" width="720">
+  <img src="./assets/demo_artboard_v4.gif" alt="Animated LinkedIn infographic demo generated with the plugin" width="420" style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 12px 36px rgba(0,0,0,0.12);">
 </a>
 
-<sub>Live 1080×1350 demo · click to open full size</sub>
+<br>
+<sub>Live 1080×1350 vertical demo · click to inspect at full native resolution</sub>
 
 </div>
 
