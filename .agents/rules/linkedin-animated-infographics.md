@@ -30,3 +30,11 @@ These rules govern all autonomous subagents, workers, and workflows when creatin
 ## 6. Research Gates & Bounded Repair
 - Respect all active research gates in `research/capability-notes/gates.json`.
 - A maximum of 2 targeted repair loops is permitted for QA before escalation.
+
+## 7. Anti-Slop, Direct Writing & Punctuation Invariants
+- Adhere strictly to `.agents/rules/anti-slop-standards.md` across all copy, design, and annotations.
+- Four-Part Sequence: Always state what it is, who it serves, when it is used, and what decision/action it produces.
+- Hard Ban on Binary Contrast: Never write negative setup followed by positive reveal (`not X, but Y`, `ده مش ... ده ...`, `هذا ليس ... بل ...`).
+- Prohibited Terms: Avoid `system`, `layer`, `machine`, `gear`, `occupy`, `difference` and Arabic equivalents; use operational nouns instead.
+- Punctuation & Formatting: No trailing periods on bullets/headings, no quotes unless strictly required, no em dashes (`—`).
+

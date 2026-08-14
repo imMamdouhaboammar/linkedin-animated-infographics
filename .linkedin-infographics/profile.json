@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "project": {
+    "name": "Campaign Brief to Creative Direction",
+    "brand": null
+  },
+  "content": {
+    "default_language": "en",
+    "audience": "Brand strategists, creative directors, and campaign marketers",
+    "primary_topics": [
+      "Campaign Brainstorming",
+      "Creative Direction",
+      "AI Strategy",
+      "ChatGPT Workflow"
+    ],
+    "preferred_tone": "editorial, strategic, high-trust, systematic",
+    "cta_style": "value-first"
+  },
+  "copyright": {
+    "owner_name": null,
+    "copyright_text": null,
+    "attribution": null,
+    "footer_text": null,
+    "footer_required": false
+  },
+  "branding": {
+    "logo_paths": [],
+    "brand_assets": [],
+    "prohibited_logo_treatments": []
+  },
+  "typography": {
+    "primary_font": "Geist Mono",
+    "secondary_font": "Geist",
+    "arabic_font": null,
+    "fallback_fonts": [
+      "ui-monospace",
+      "SFMono-Regular",
+      "Menlo",
+      "Monaco",
+      "Consolas",
+      "system-ui",
+      "-apple-system",
+      "sans-serif"
+    ],
+    "font_paths": []
+  },
+  "visual": {
+    "references": [
+      "user_attached_workflow_reference"
+    ],
+    "reference_directories": [],
+    "preferred_styles": [
+      "editorial",
+      "diagram-like",
+      "minimal",
+      "technical-grid",
+      "restrained-warm-accent"
+    ],
+    "disliked_styles": [
+      "loud gradients",
+      "neon colors",
+      "glassmorphism",
+      "generic AI art",
+      "busy dashboards"
+    ],
+    "palette_preferences": [
+      "#FAF8F5",
+      "#0F172A",
+      "#E05A36",
+      "#3B82F6",
+      "#10B981"
+    ],
+    "reference_policy": "inspiration"
+  },
+  "mascots": {
+    "enabled": "no",
+    "identities": [],
+    "asset_paths": [],
+    "automatic_use": false
+  },
+  "linkedin": {
+    "canvas": "1080x1350",
+    "output_mode": "animated",
+    "footer_safe_area": null
+  },
+  "motion": {
+    "default_intensity": "medium",
+    "looping": true,
+    "duration_seconds": 10.5
+  },
+  "production": {
+    "require_user_approval": true,
+    "output_directory": "build"
+  }
+}

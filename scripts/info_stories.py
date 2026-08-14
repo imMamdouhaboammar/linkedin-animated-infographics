@@ -411,7 +411,7 @@ def _find(catalog, singular, slug):
 
 COPY_SLOP_PATTERNS = [
     ("throat-clearing", re.compile(r"\b(here(?:'|’)s the thing|let(?:'|’)s be clear|the truth is|it(?:'|’)s important to note)\b", re.I)),
-    ("binary-contrast", re.compile(r"\bnot\s+(?:just\s+|only\s+)?[^.!?]{1,120}?,\s*(?:but\s+)?it(?:'|’)s\b", re.I)),
+    ("binary-contrast", re.compile(r"(\bnot\s+(?:just\s+|only\s+)?[^.!?]{1,120}?,\s*(?:but\s+)?it(?:'|’)s\b|\bnot\s+a\b[^.!?]{1,60}?\bbut\s+a\b|\bthis\s+is\s+not\b[^.!?]{1,60}?\bthis\s+is\b|ده\s+مش|هذا\s+ليس|مش\s+مجرد|ليس\s+فقط|الفرق\s+مش)", re.I)),
     ("faux-insight", re.compile(r"\b(what most people get wrong|the real lesson|the deeper truth|here(?:'|’)s what nobody tells you)\b", re.I)),
     ("importance-puffery", re.compile(r"\b(revolution(?:ary)?|game[- ]changing|groundbreaking|changes everything|transformative)\b", re.I)),
     ("recap-ending", re.compile(r"\b(in conclusion|to sum up|in summary)\b", re.I)),

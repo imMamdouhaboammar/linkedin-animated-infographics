@@ -89,6 +89,7 @@ max_concurrent_threads_per_session = 6
 default_subagent_model = "{model}"
 default_subagent_reasoning_effort = "high"
 """
+    config_file = home_dir / "config.toml"
     config_file.write_text(config_content, encoding="utf-8")
     config_file.chmod(0o600)
 

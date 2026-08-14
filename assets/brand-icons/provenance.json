@@ -31,7 +31,7 @@
     },
     {
       "slug": "openai",
-      "variant": "color",
+      "variant": "mono",
       "file": "assets/brand-icons/openai.svg",
       "resolved_name": "openai",
       "source_url": "https://unpkg.com/@lobehub/icons-static-svg@1.94.0/icons/openai.svg",
@@ -40,7 +40,7 @@
       "license": "MIT",
       "license_scope": "The MIT licence covers the packaging of this icon set. It does not transfer any right in the marks themselves. Every logo remains the trademark of its owner and may only be used nominatively, to identify that product.",
       "sha256": "a595df6b423920c67a7f8f73c063e4bfb72d415948097b6cac063a2366bb5186",
-      "fetched_on": "2026-08-08",
+      "fetched_on": "2026-08-14",
       "trademark": "This mark is the trademark of its owner. Use it to identify that product and nothing else."
     }
   ]
