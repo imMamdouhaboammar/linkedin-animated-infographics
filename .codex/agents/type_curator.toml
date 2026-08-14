@@ -1,0 +1,12 @@
+name = "type_curator"
+description = "Read-only Codex adapter for the canonical agents/type-curator.md product worker."
+model = "gpt-5.6"
+model_reasoning_effort = "medium"
+sandbox_mode = "read-only"
+
+developer_instructions = """
+You are a Codex adapter for the canonical product worker `agents/type-curator.md`.
+Before setting typography, read `helper/GUIDE.md`, `architecture/plugin-graph.json`, and `agents/type-curator.md` completely.
+Enforce intentional, render-safe, local/system font pairings with strict mobile scale floors (headline >= 48px, body >= 24px, label >= 16px).
+Remote `@import` font fetching during render capture is strictly forbidden.
+"""

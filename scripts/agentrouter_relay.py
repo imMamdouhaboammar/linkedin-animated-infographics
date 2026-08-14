@@ -68,7 +68,6 @@ def ensure_codex_home(token: str, base_url: str, model: str) -> Path:
     home_dir = Path.home() / ".codex-agentrouter"
     home_dir.mkdir(mode=0o700, parents=True, exist_ok=True)
 
-    config_file = home_dir / "config.toml"
     config_content = f"""model = "{model}"
 model_provider = "openai-chat-completions"
 preferred_auth_method = "apikey"
@@ -83,6 +82,12 @@ env_key = "AGENT_ROUTER_TOKEN"
 wire_api = "responses"
 query_params = {{}}
 stream_idle_timeout_ms = 300000
+
+[agents]
+enabled = true
+max_concurrent_threads_per_session = 6
+default_subagent_model = "{model}"
+default_subagent_reasoning_effort = "high"
 """
     config_file.write_text(config_content, encoding="utf-8")
     config_file.chmod(0o600)

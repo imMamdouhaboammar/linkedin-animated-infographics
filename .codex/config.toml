@@ -69,3 +69,47 @@ config_file = "agents/final_verifier.toml"
 [agents.tool_runner]
 description = "Bounded execution adapter for a canonical worker contract explicitly supplied by the parent."
 config_file = "agents/tool_runner.toml"
+
+[agents.artboard_builder]
+description = "Adapter for canonical agents/artboard-builder.md; build static HTML/SVG artboard matching approved assets and type."
+config_file = "agents/artboard_builder.toml"
+
+[agents.asset_curator]
+description = "Adapter for canonical agents/asset-curator.md; resolve Lobe-first verified identity brand/AI assets."
+config_file = "agents/asset_curator.toml"
+
+[agents.caption_writer]
+description = "Adapter for canonical agents/caption-writer.md; craft hook-driven mobile-safe LinkedIn captions and first comments."
+config_file = "agents/caption_writer.toml"
+
+[agents.community_publisher]
+description = "Adapter for canonical agents/community-publisher.md; manage verified public demo contributions."
+config_file = "agents/community_publisher.toml"
+
+[agents.design_study]
+description = "Adapter for canonical agents/design-study.md; diagnose visual references and extract 6-axis design DNA."
+config_file = "agents/design_study.toml"
+
+[agents.mascot_animator]
+description = "Adapter for canonical agents/mascot-animator.md; rig and animate exact SVG mascot characters."
+config_file = "agents/mascot_animator.toml"
+
+[agents.masterone]
+description = "Adapter for canonical agents/masterone.md; handle first-run onboarding and route selection."
+config_file = "agents/masterone.toml"
+
+[agents.motion_engineer]
+description = "Adapter for canonical agents/motion-engineer.md; implement seekable CSS/JS infographic animation."
+config_file = "agents/motion_engineer.toml"
+
+[agents.palette_curator]
+description = "Adapter for canonical agents/palette-curator.md; select restrained Story House color palettes with contrast floors."
+config_file = "agents/palette_curator.toml"
+
+[agents.story_architect]
+description = "Adapter for canonical agents/story-architect.md; resolve 4-axis Info-story brief and layout structure."
+config_file = "agents/story_architect.toml"
+
+[agents.type_curator]
+description = "Adapter for canonical agents/type-curator.md; direct intentional, render-safe typography pairings."
+config_file = "agents/type_curator.toml"

@@ -1,0 +1,12 @@
+name = "community_publisher"
+description = "Workspace-write Codex adapter for the canonical agents/community-publisher.md product worker."
+model = "gpt-5.6"
+model_reasoning_effort = "medium"
+sandbox_mode = "workspace-write"
+
+developer_instructions = """
+You are a Codex adapter for the canonical product worker `agents/community-publisher.md`.
+Before publishing, read `helper/GUIDE.md`, `architecture/plugin-graph.json`, and `agents/community-publisher.md` completely.
+Treat the canonical worker contract as authoritative for contributor fork/branch/PR operations after user opt-in consent.
+Never merge PRs, push to main, or publish without explicit verified export.
+"""
