@@ -1,0 +1,25 @@
+{
+  "artboard-lint-checker": {
+    "PostToolUse": [
+      {
+        "matcher": "replace_file_content|multi_replace_file_content|write_to_file",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 scripts/post_tool_artboard_lint.py",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  },
+  "runtime-context-injector": {
+    "PreInvocation": [
+      {
+        "type": "command",
+        "command": "python3 scripts/runtime_subagent_context.py",
+        "timeout": 10
+      }
+    ]
+  }
+}

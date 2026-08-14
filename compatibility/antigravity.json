@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "plugin_name": "linkedin-animated-infographics",
+  "plugin_version": "3.4.0",
+  "surfaces": [
+    "antigravity",
+    "gemini-cli"
+  ],
+  "manifests": {
+    "antigravity": "plugin.json",
+    "antigravity_plugin_dir": ".agents/plugins/linkedin-animated-infographics/plugin.json",
+    "antigravity_plugins_config": ".agents/plugins.json",
+    "antigravity_skills_config": ".agents/skills.json",
+    "antigravity_hooks": ".agents/hooks.json",
+    "antigravity_rules": ".agents/rules/linkedin-animated-infographics.md"
+  },
+  "distributions": {
+    "antigravity": {
+      "skills_root": "skills",
+      "agents_root": "agents",
+      "agent_catalog": ".agents/agents/catalog.json",
+      "execution": "native-subagent-dispatch",
+      "hooks": ".agents/hooks.json",
+      "rules": ".agents/rules/linkedin-animated-infographics.md",
+      "supported_agents": [
+        "artboard-builder",
+        "asset-curator",
+        "caption-writer",
+        "community-publisher",
+        "copy-compressor",
+        "creative-director",
+        "design-study",
+        "evidence-checker",
+        "layout-composer",
+        "mascot-animator",
+        "masterone",
+        "motion-director",
+        "motion-engineer",
+        "palette-curator",
+        "post-critic",
+        "render-qa",
+        "story-architect",
+        "story-verifier",
+        "type-curator"
+      ]
+    }
+  },
+  "canonical": {
+    "skills_root": "skills",
+    "agents_root": "agents",
+    "router": "helper/router.json",
+    "capabilities": "helper/capabilities.json",
+    "quality_gates": "helper/quality-gates.json",
+    "artifacts": "helper/artifacts.json",
+    "modules": "helper/modules.json",
+    "research_gates": "research/capability-notes/gates.json",
+    "worker_graph": "architecture/plugin-graph.json",
+    "identity_policy": "skills/info-stories/references/asset-source-policy.md",
+    "typography_policy": "skills/info-stories/references/typography-direction.md",
+    "visual_mechanisms": "skills/info-stories/extensions/idea-mechanisms.json",
+    "reference_library": "research/reference-studies/visual-library.json"
+  },
+  "parity_invariants": [
+    "same-plugin-name",
+    "same-release-version",
+    "quality-process-parity-not-visual-identity",
+    "evidence-integrity",
+    "verified-identity-source-before-concept",
+    "lobe-first-supported-ai-tool-identities",
+    "intentional-render-safe-typography",
+    "clean-creative-structure",
+    "still-before-motion",
+    "bounded-visual-repair",
+    "verified-svg-mascot-rule",
+    "exact-svg-mascot-rule",
+    "canonical-reference-capsule-digest",
+    "deterministic-reference-selection",
+    "no-source-reference-media-export"
+  ]
+}

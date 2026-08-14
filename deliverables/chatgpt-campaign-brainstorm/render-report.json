@@ -1,0 +1,306 @@
+{
+  "digests": {
+    "fragments": {
+      "artboard": {
+        "path": "/Users/mamdouhaboammar/Documents/Claude Agents/linkedin-animated-infographics/deliverables/chatgpt-campaign-brainstorm/.render-evidence/artboard.json",
+        "sha256": "b40ed72d336d6edb8bbcb1df8880a1888c967248d00a2723a4d0a92ffe7889c3"
+      },
+      "gif": {
+        "path": "/Users/mamdouhaboammar/Documents/Claude Agents/linkedin-animated-infographics/deliverables/chatgpt-campaign-brainstorm/.render-evidence/gif.json",
+        "sha256": "4dabf54ea3a09e01ae594682a152deaf9eb368de6040ede4dff35c22df9b4860"
+      },
+      "still": {
+        "path": "/Users/mamdouhaboammar/Documents/Claude Agents/linkedin-animated-infographics/deliverables/chatgpt-campaign-brainstorm/.render-evidence/still.json",
+        "sha256": "e4b606cb887c46e715e38e1a0974ea0c5d6f5c78b8474845a793aafef5c3e429"
+      }
+    },
+    "input": {
+      "path": "/Users/mamdouhaboammar/Documents/Claude Agents/linkedin-animated-infographics/deliverables/chatgpt-campaign-brainstorm/post.html",
+      "sha256": "f9fb5bc6e66a24e6f483b2b6db277a2c414ff0713f6dd1eac53ba76fd28f5f2a"
+    },
+    "output": {
+      "path": "/Users/mamdouhaboammar/Documents/Claude Agents/linkedin-animated-infographics/deliverables/chatgpt-campaign-brainstorm/post.gif",
+      "sha256": "e3dc9e6099c7ec9b0988c73a5af1eebdb4f014d389d2639b7c03767996698dc3"
+    }
+  },
+  "findings": [
+    {
+      "detail": "",
+      "evidence": [],
+      "gate": "artboard-integrity",
+      "measured": 1080,
+      "severity": "blocking",
+      "status": "PASS",
+      "threshold": 1080,
+      "threshold_id": "artboard.width",
+      "unit": "px"
+    },
+    {
+      "detail": "",
+      "evidence": [],
+      "gate": "artboard-integrity",
+      "measured": 1350,
+      "severity": "blocking",
+      "status": "PASS",
+      "threshold": 1350,
+      "threshold_id": "artboard.height",
+      "unit": "px"
+    },
+    {
+      "detail": "",
+      "evidence": [
+        "content spans y=52..1350"
+      ],
+      "gate": "bottom-dead-zone",
+      "measured": 96.1,
+      "severity": "advisory",
+      "status": "PASS",
+      "threshold": 82,
+      "threshold_id": "occupancy.min_pct",
+      "unit": "percent"
+    },
+    {
+      "detail": "composition is crowding its own margins",
+      "evidence": [],
+      "gate": "bottom-dead-zone",
+      "measured": 96.1,
+      "severity": "advisory",
+      "status": "WARN",
+      "threshold": 92,
+      "threshold_id": "occupancy.max_pct",
+      "unit": "percent"
+    },
+    {
+      "detail": "",
+      "evidence": [
+        "footer <span class=\"footer-dot\"> top y=1309"
+      ],
+      "exception_applied": false,
+      "gate": "footer-detachment",
+      "measured": -41,
+      "severity": "blocking",
+      "status": "PASS",
+      "threshold": 120,
+      "threshold_id": "footer.max_gap_px",
+      "unit": "px"
+    },
+    {
+      "detail": "",
+      "evidence": [
+        "div.hub > div.hub-prompt"
+      ],
+      "gate": "nested-card-density",
+      "measured": 2,
+      "severity": "blocking",
+      "status": "PASS",
+      "threshold": 2,
+      "threshold_id": "containment.max_border_depth",
+      "unit": "levels"
+    },
+    {
+      "detail": "",
+      "evidence": [],
+      "gate": "feed-scale-legibility",
+      "measured": 10,
+      "severity": "blocking",
+      "status": "PASS",
+      "threshold": 10,
+      "threshold_id": "type.absolute_floor_px",
+      "unit": "px"
+    },
+    {
+      "detail": "",
+      "evidence": [],
+      "gate": "weak-visual-anchor",
+      "measured": 42,
+      "severity": "blocking",
+      "status": "PASS",
+      "threshold": 40,
+      "threshold_id": "type.min_headline_px",
+      "unit": "px"
+    },
+    {
+      "detail": "89 node(s) below the feed floor, 11 in a load-bearing role \u2014 micro labels and card body may stay, load-bearing text may not",
+      "evidence": [
+        "10px <div class=\"ib-num\"> '01 \u00b7 THE DECISION'",
+        "10px <span class=\"prompt-chip\"> '\"Define the decision first\"'",
+        "10px <div class=\"ib-num\"> '02 \u00b7 CONTEXT'",
+        "10px <div class=\"ib-num\"> '03 \u00b7 REAL SIGNALS'",
+        "10px <div class=\"ib-note\"> 'Facts first. Ideas second'",
+        "10px <div class=\"ib-num\"> '04 \u00b7 BRAINSTORM BRIEF'",
+        "10px <span class=\"prompt-chip\"> '\"Ask me questions first\"'",
+        "10px <div class=\"hub-eyebrow\"> 'THINKING PARTNER'"
+      ],
+      "gate": "feed-scale-legibility",
+      "measured": 10,
+      "severity": "advisory",
+      "status": "WARN",
+      "threshold": 22,
+      "threshold_id": "type.feed_floor_px",
+      "unit": "px"
+    },
+    {
+      "detail": "5 text node(s) below the rendered contrast floor",
+      "evidence": [
+        "4.29:1 #3b7a6e on #e7efee (10px 'FINAL TERRITORY')",
+        "4.41:1 #3b7a6e on #ebf2f1 (10px 'DESIRE-LED \u2014 start with aspiration')",
+        "4.43:1 #6e7480 on #faf8f5 (12px '\u2193')",
+        "4.43:1 #6e7480 on #faf8f5 (12px '\u2193')",
+        "4.43:1 #6e7480 on #faf8f5 (12px '\u2193')"
+      ],
+      "gate": "contrast-floor",
+      "measured": 4.29,
+      "severity": "blocking",
+      "status": "FAIL",
+      "threshold": 4.5,
+      "threshold_id": "contrast.text_min_ratio",
+      "unit": "ratio"
+    },
+    {
+      "detail": "",
+      "evidence": [],
+      "gate": "font-determinism",
+      "measured": 15,
+      "severity": "advisory",
+      "status": "PASS",
+      "threshold": 1,
+      "threshold_id": "fonts.first_choice_available",
+      "unit": "stacks"
+    },
+    {
+      "detail": "animated bounding boxes exceed the advisory area budget",
+      "evidence": [],
+      "gate": "motion-budget",
+      "measured": 84.91,
+      "severity": "advisory",
+      "status": "WARN",
+      "threshold": 20,
+      "threshold_id": "motion.max_moving_area_pct",
+      "unit": "percent"
+    },
+    {
+      "detail": "6 animated element(s) enter the safe margin",
+      "evidence": [
+        "<div class=\"eyebrow\">",
+        "<div class=\"stage-card sc1\">",
+        "<div class=\"stage-card sc2\">",
+        "<div class=\"stage-card sc3\">",
+        "<div class=\"stage-card sc4\">",
+        "<div class=\"stage-card sc5\">"
+      ],
+      "gate": "safe-zone-violation",
+      "measured": 40,
+      "severity": "blocking",
+      "status": "FAIL",
+      "threshold": 48,
+      "threshold_id": "safe_margin_px",
+      "unit": "px"
+    },
+    {
+      "detail": "",
+      "evidence": [],
+      "gate": "feed-scale-legibility",
+      "measured": 350,
+      "severity": "advisory",
+      "status": "PASS",
+      "threshold": 350,
+      "threshold_id": "type.feed_width_px",
+      "unit": "px"
+    },
+    {
+      "detail": "",
+      "evidence": [],
+      "gate": "motion-budget",
+      "measured": 1.19,
+      "severity": "advisory",
+      "status": "PASS",
+      "threshold": 2.0,
+      "threshold_id": "motion.mean_step_warn_pct",
+      "unit": "percent"
+    },
+    {
+      "detail": "",
+      "evidence": [],
+      "gate": "motion-budget",
+      "measured": 1.19,
+      "severity": "blocking",
+      "status": "PASS",
+      "threshold": 5.0,
+      "threshold_id": "motion.mean_step_max_pct",
+      "unit": "percent"
+    },
+    {
+      "detail": "",
+      "evidence": [
+        "largest step 6.01%; seam 5.45%"
+      ],
+      "gate": "loop-close",
+      "measured": 0.91,
+      "severity": "advisory",
+      "status": "PASS",
+      "threshold": 1.25,
+      "threshold_id": "loop.seam_ratio_warn",
+      "unit": "ratio"
+    },
+    {
+      "detail": "",
+      "evidence": [
+        "largest step 6.01%; seam 5.45%"
+      ],
+      "gate": "loop-close",
+      "measured": 0.91,
+      "severity": "blocking",
+      "status": "PASS",
+      "threshold": 2.0,
+      "threshold_id": "loop.seam_ratio_max",
+      "unit": "ratio"
+    },
+    {
+      "detail": "",
+      "effective_threshold": 5242880,
+      "evidence": [],
+      "gate": "file-budget",
+      "measured": 2190655,
+      "requested_threshold": 8388608,
+      "severity": "blocking",
+      "status": "PASS",
+      "threshold": 5242880,
+      "threshold_id": "gif.max_bytes",
+      "unit": "bytes"
+    }
+  ],
+  "schema_version": 1,
+  "sources": {
+    "artboard": {
+      "path": "/Users/mamdouhaboammar/Documents/Claude Agents/linkedin-animated-infographics/deliverables/chatgpt-campaign-brainstorm/.render-evidence/artboard.json",
+      "verdict": "FAIL"
+    },
+    "gif": {
+      "path": "/Users/mamdouhaboammar/Documents/Claude Agents/linkedin-animated-infographics/deliverables/chatgpt-campaign-brainstorm/.render-evidence/gif.json",
+      "verdict": "PASS"
+    },
+    "still": {
+      "path": "/Users/mamdouhaboammar/Documents/Claude Agents/linkedin-animated-infographics/deliverables/chatgpt-campaign-brainstorm/.render-evidence/still.json",
+      "verdict": "FAIL"
+    }
+  },
+  "summary": {
+    "counts": {
+      "FAIL": 2,
+      "NA": 0,
+      "PASS": 14,
+      "WARN": 3
+    },
+    "failed_gates": [
+      "contrast-floor",
+      "safe-zone-violation"
+    ],
+    "verdict": "FAIL",
+    "warned_gates": [
+      "bottom-dead-zone",
+      "feed-scale-legibility",
+      "motion-budget"
+    ]
+  },
+  "verdict": "FAIL"
+}

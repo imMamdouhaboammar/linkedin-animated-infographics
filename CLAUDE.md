@@ -94,6 +94,8 @@ python3 scripts/plugin_graph.py check
 python3 scripts/ecosystem_doctor.py check
 python3 scripts/runtime_context.py check
 python3 scripts/validate_marketplace.py
+python3 scripts/validate_codex_plugin.py
+python3 scripts/validate_antigravity_plugin.py
 claude plugin validate .
 ```
 

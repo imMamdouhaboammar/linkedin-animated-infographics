@@ -1,0 +1,101 @@
+{
+  "artifact": "/Users/mamdouhaboammar/Documents/Claude Agents/linkedin-animated-infographics/deliverables/chatgpt-campaign-brainstorm/post.gif",
+  "artifact_sha256": "e3dc9e6099c7ec9b0988c73a5af1eebdb4f014d389d2639b7c03767996698dc3",
+  "capture": {
+    "browser": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    "browser_version": "151.0.7922.110",
+    "duration": 10.5,
+    "fps": 12.0,
+    "frames": 126,
+    "height": 1350,
+    "html": "/Users/mamdouhaboammar/Documents/Claude Agents/linkedin-animated-infographics/deliverables/chatgpt-campaign-brainstorm/post.html",
+    "scale": 1.0,
+    "width": 1080
+  },
+  "findings": [
+    {
+      "detail": "",
+      "evidence": [],
+      "gate": "motion-budget",
+      "measured": 1.19,
+      "severity": "advisory",
+      "status": "PASS",
+      "threshold": 2.0,
+      "threshold_id": "motion.mean_step_warn_pct",
+      "unit": "percent"
+    },
+    {
+      "detail": "",
+      "evidence": [],
+      "gate": "motion-budget",
+      "measured": 1.19,
+      "severity": "blocking",
+      "status": "PASS",
+      "threshold": 5.0,
+      "threshold_id": "motion.mean_step_max_pct",
+      "unit": "percent"
+    },
+    {
+      "detail": "",
+      "evidence": [
+        "largest step 6.01%; seam 5.45%"
+      ],
+      "gate": "loop-close",
+      "measured": 0.91,
+      "severity": "advisory",
+      "status": "PASS",
+      "threshold": 1.25,
+      "threshold_id": "loop.seam_ratio_warn",
+      "unit": "ratio"
+    },
+    {
+      "detail": "",
+      "evidence": [
+        "largest step 6.01%; seam 5.45%"
+      ],
+      "gate": "loop-close",
+      "measured": 0.91,
+      "severity": "blocking",
+      "status": "PASS",
+      "threshold": 2.0,
+      "threshold_id": "loop.seam_ratio_max",
+      "unit": "ratio"
+    },
+    {
+      "detail": "",
+      "effective_threshold": 5242880,
+      "evidence": [],
+      "gate": "file-budget",
+      "measured": 2190655,
+      "requested_threshold": 8388608,
+      "severity": "blocking",
+      "status": "PASS",
+      "threshold": 5242880,
+      "threshold_id": "gif.max_bytes",
+      "unit": "bytes"
+    }
+  ],
+  "measurements": {
+    "duration_s": 10.5,
+    "encoded_bytes": 2190655,
+    "encoded_mb": 2.089,
+    "fps": 12.0,
+    "frames": 126,
+    "scale": null
+  },
+  "schema_version": 1,
+  "source": "/Users/mamdouhaboammar/Documents/Claude Agents/linkedin-animated-infographics/deliverables/chatgpt-campaign-brainstorm/.render-evidence/frames",
+  "stage": "gif",
+  "summary": {
+    "counts": {
+      "FAIL": 0,
+      "NA": 0,
+      "PASS": 5,
+      "WARN": 0
+    },
+    "failed_gates": [],
+    "verdict": "PASS",
+    "warned_gates": []
+  },
+  "verdict": "PASS"
+}

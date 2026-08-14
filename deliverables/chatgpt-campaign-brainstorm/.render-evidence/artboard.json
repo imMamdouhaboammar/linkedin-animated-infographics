@@ -1,0 +1,310 @@
+{
+  "artifact": "/Users/mamdouhaboammar/Documents/Claude Agents/linkedin-animated-infographics/deliverables/chatgpt-campaign-brainstorm/post.html",
+  "artifact_sha256": "f9fb5bc6e66a24e6f483b2b6db277a2c414ff0713f6dd1eac53ba76fd28f5f2a",
+  "capture": {
+    "browser": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    "browser_version": "151.0.7922.110",
+    "launch_mode": "standard",
+    "seeked_at_s": 0.0,
+    "settle_ms": 600,
+    "viewport": {
+      "height": 1350,
+      "width": 1080
+    }
+  },
+  "findings": [
+    {
+      "detail": "",
+      "evidence": [],
+      "gate": "artboard-integrity",
+      "measured": 1080,
+      "severity": "blocking",
+      "status": "PASS",
+      "threshold": 1080,
+      "threshold_id": "artboard.width",
+      "unit": "px"
+    },
+    {
+      "detail": "",
+      "evidence": [],
+      "gate": "artboard-integrity",
+      "measured": 1350,
+      "severity": "blocking",
+      "status": "PASS",
+      "threshold": 1350,
+      "threshold_id": "artboard.height",
+      "unit": "px"
+    },
+    {
+      "detail": "",
+      "evidence": [
+        "content spans y=52..1350"
+      ],
+      "gate": "bottom-dead-zone",
+      "measured": 96.1,
+      "severity": "advisory",
+      "status": "PASS",
+      "threshold": 82,
+      "threshold_id": "occupancy.min_pct",
+      "unit": "percent"
+    },
+    {
+      "detail": "composition is crowding its own margins",
+      "evidence": [],
+      "gate": "bottom-dead-zone",
+      "measured": 96.1,
+      "severity": "advisory",
+      "status": "WARN",
+      "threshold": 92,
+      "threshold_id": "occupancy.max_pct",
+      "unit": "percent"
+    },
+    {
+      "detail": "",
+      "evidence": [
+        "footer <span class=\"footer-dot\"> top y=1309"
+      ],
+      "exception_applied": false,
+      "gate": "footer-detachment",
+      "measured": -41,
+      "severity": "blocking",
+      "status": "PASS",
+      "threshold": 120,
+      "threshold_id": "footer.max_gap_px",
+      "unit": "px"
+    },
+    {
+      "detail": "",
+      "evidence": [
+        "div.hub > div.hub-prompt"
+      ],
+      "gate": "nested-card-density",
+      "measured": 2,
+      "severity": "blocking",
+      "status": "PASS",
+      "threshold": 2,
+      "threshold_id": "containment.max_border_depth",
+      "unit": "levels"
+    },
+    {
+      "detail": "",
+      "evidence": [],
+      "gate": "feed-scale-legibility",
+      "measured": 10,
+      "severity": "blocking",
+      "status": "PASS",
+      "threshold": 10,
+      "threshold_id": "type.absolute_floor_px",
+      "unit": "px"
+    },
+    {
+      "detail": "",
+      "evidence": [],
+      "gate": "weak-visual-anchor",
+      "measured": 42,
+      "severity": "blocking",
+      "status": "PASS",
+      "threshold": 40,
+      "threshold_id": "type.min_headline_px",
+      "unit": "px"
+    },
+    {
+      "detail": "89 node(s) below the feed floor, 11 in a load-bearing role \u2014 micro labels and card body may stay, load-bearing text may not",
+      "evidence": [
+        "10px <div class=\"ib-num\"> '01 \u00b7 THE DECISION'",
+        "10px <span class=\"prompt-chip\"> '\"Define the decision first\"'",
+        "10px <div class=\"ib-num\"> '02 \u00b7 CONTEXT'",
+        "10px <div class=\"ib-num\"> '03 \u00b7 REAL SIGNALS'",
+        "10px <div class=\"ib-note\"> 'Facts first. Ideas second'",
+        "10px <div class=\"ib-num\"> '04 \u00b7 BRAINSTORM BRIEF'",
+        "10px <span class=\"prompt-chip\"> '\"Ask me questions first\"'",
+        "10px <div class=\"hub-eyebrow\"> 'THINKING PARTNER'"
+      ],
+      "gate": "feed-scale-legibility",
+      "measured": 10,
+      "severity": "advisory",
+      "status": "WARN",
+      "threshold": 22,
+      "threshold_id": "type.feed_floor_px",
+      "unit": "px"
+    },
+    {
+      "detail": "5 text node(s) below the rendered contrast floor",
+      "evidence": [
+        "4.29:1 #3b7a6e on #e7efee (10px 'FINAL TERRITORY')",
+        "4.41:1 #3b7a6e on #ebf2f1 (10px 'DESIRE-LED \u2014 start with aspiration')",
+        "4.43:1 #6e7480 on #faf8f5 (12px '\u2193')",
+        "4.43:1 #6e7480 on #faf8f5 (12px '\u2193')",
+        "4.43:1 #6e7480 on #faf8f5 (12px '\u2193')"
+      ],
+      "gate": "contrast-floor",
+      "measured": 4.29,
+      "severity": "blocking",
+      "status": "FAIL",
+      "threshold": 4.5,
+      "threshold_id": "contrast.text_min_ratio",
+      "unit": "ratio"
+    },
+    {
+      "detail": "",
+      "evidence": [],
+      "gate": "font-determinism",
+      "measured": 15,
+      "severity": "advisory",
+      "status": "PASS",
+      "threshold": 1,
+      "threshold_id": "fonts.first_choice_available",
+      "unit": "stacks"
+    }
+  ],
+  "measurements": {
+    "board": {
+      "h": 1350,
+      "w": 1080
+    },
+    "containment_depth": 2,
+    "containment_path": "div.hub > div.hub-prompt",
+    "content": {
+      "bottom": 1350,
+      "occupancy_pct": 96.1,
+      "span": 1298,
+      "top": 52
+    },
+    "font_stacks": [
+      {
+        "first": "-apple-system",
+        "first_available": true,
+        "resolved": "-apple-system",
+        "stack": "-apple-system, \"system-ui\", \"Segoe UI\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+        "weight": "400"
+      },
+      {
+        "first": "-apple-system",
+        "first_available": true,
+        "resolved": "-apple-system",
+        "stack": "-apple-system, \"system-ui\", \"Segoe UI\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+        "weight": "800"
+      },
+      {
+        "first": "-apple-system",
+        "first_available": true,
+        "resolved": "-apple-system",
+        "stack": "-apple-system, \"system-ui\", \"Segoe UI\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+        "weight": "500"
+      },
+      {
+        "first": "ui-monospace",
+        "first_available": true,
+        "resolved": "ui-monospace",
+        "stack": "ui-monospace, \"SF Mono\", \"Cascadia Mono\", Menlo, Consolas, \"Liberation Mono\", monospace",
+        "weight": "800"
+      },
+      {
+        "first": "-apple-system",
+        "first_available": true,
+        "resolved": "-apple-system",
+        "stack": "-apple-system, \"system-ui\", \"Segoe UI\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+        "weight": "760"
+      },
+      {
+        "first": "ui-monospace",
+        "first_available": true,
+        "resolved": "ui-monospace",
+        "stack": "ui-monospace, \"SF Mono\", \"Cascadia Mono\", Menlo, Consolas, \"Liberation Mono\", monospace",
+        "weight": "600"
+      },
+      {
+        "first": "-apple-system",
+        "first_available": true,
+        "resolved": "-apple-system",
+        "stack": "-apple-system, \"system-ui\", \"Segoe UI\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+        "weight": "700"
+      },
+      {
+        "first": "-apple-system",
+        "first_available": true,
+        "resolved": "-apple-system",
+        "stack": "-apple-system, \"system-ui\", \"Segoe UI\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+        "weight": "600"
+      },
+      {
+        "first": "ui-monospace",
+        "first_available": true,
+        "resolved": "ui-monospace",
+        "stack": "ui-monospace, \"SF Mono\", \"Cascadia Mono\", Menlo, Consolas, \"Liberation Mono\", monospace",
+        "weight": "700"
+      },
+      {
+        "first": "ui-monospace",
+        "first_available": true,
+        "resolved": "ui-monospace",
+        "stack": "ui-monospace, \"SF Mono\", \"Cascadia Mono\", Menlo, Consolas, \"Liberation Mono\", monospace",
+        "weight": "400"
+      },
+      {
+        "first": "-apple-system",
+        "first_available": true,
+        "resolved": "-apple-system",
+        "stack": "-apple-system, \"system-ui\", \"Segoe UI\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+        "weight": "640"
+      },
+      {
+        "first": "-apple-system",
+        "first_available": true,
+        "resolved": "-apple-system",
+        "stack": "-apple-system, \"system-ui\", \"Segoe UI\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+        "weight": "560"
+      },
+      {
+        "first": "-apple-system",
+        "first_available": true,
+        "resolved": "-apple-system",
+        "stack": "-apple-system, \"system-ui\", Arial, sans-serif",
+        "weight": "700"
+      },
+      {
+        "first": "-apple-system",
+        "first_available": true,
+        "resolved": "-apple-system",
+        "stack": "-apple-system, Arial, sans-serif",
+        "weight": "700"
+      },
+      {
+        "first": "-apple-system",
+        "first_available": true,
+        "resolved": "-apple-system",
+        "stack": "-apple-system, Arial, sans-serif",
+        "weight": "580"
+      }
+    ],
+    "footer": {
+      "below_footer_px": 17,
+      "bottom": 1333,
+      "cls": "footer-dot",
+      "gap_px": -41,
+      "tag": "span",
+      "top": 1309
+    },
+    "text_nodes": 92
+  },
+  "schema_version": 1,
+  "seeked_at_s": 0.0,
+  "stage": "artboard",
+  "summary": {
+    "counts": {
+      "FAIL": 1,
+      "NA": 0,
+      "PASS": 8,
+      "WARN": 2
+    },
+    "failed_gates": [
+      "contrast-floor"
+    ],
+    "verdict": "FAIL",
+    "warned_gates": [
+      "bottom-dead-zone",
+      "feed-scale-legibility"
+    ]
+  },
+  "verdict": "FAIL"
+}

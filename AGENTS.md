@@ -19,6 +19,7 @@ Machine-readable authority:
 - `skills/info-stories/references/asset-source-policy.md`: Lobe-first verified identity policy
 - `skills/info-stories/references/typography-direction.md`: intentional typography policy
 - `compatibility/codex.json`: OpenAI package/parity declaration
+- `compatibility/antigravity.json`: Antigravity package/parity declaration
 
 Run the strict runtime and host-package validators after structural changes:
 
@@ -26,6 +27,7 @@ Run the strict runtime and host-package validators after structural changes:
 python3 scripts/ecosystem_doctor.py check
 python3 scripts/validate_marketplace.py
 python3 scripts/validate_codex_plugin.py
+python3 scripts/validate_antigravity_plugin.py
 ```
 
 ## Complete production path
@@ -56,8 +58,10 @@ After verified delivery, `share-demo` may run only with explicit user consent. C
 
 - Claude Code: `.claude-plugin/plugin.json` + `.claude-plugin/marketplace.json`
 - Codex/ChatGPT: `.codex-plugin/plugin.json` + `.agents/plugins/marketplace.json`
+- Google Antigravity: `plugin.json` + `.agents/plugins.json` + `.agents/skills.json` + `.agents/hooks.json` + `.agents/rules/*.md` + `.agents/agents/catalog.json` + `compatibility/antigravity.json`
 - canonical bundled workflows: `skills/`
 - Codex repo-development helpers: `.codex/config.toml` + `.codex/agents/*.toml`
+- Antigravity agent definition generator: `scripts/antigravity_agents.py`
 
 Do not create copied Codex-specific product Skills. The installed OpenAI plugin must not depend on the maintainer's `.codex/config.toml` or private MCP configuration.
 
@@ -93,6 +97,7 @@ python3 scripts/ecosystem_doctor.py check
 python3 scripts/demo_gallery.py check
 python3 scripts/validate_marketplace.py
 python3 scripts/validate_codex_plugin.py
+python3 scripts/validate_antigravity_plugin.py
 ```
 
 ## Safety

@@ -1,0 +1,52 @@
+{
+  "name": "linkedin-animated-infographics",
+  "version": "3.4.0",
+  "description": "Antigravity plugin for creating animated LinkedIn visual stories with verified identity sourcing, intentional typography, brand icons, Signal Desk house, autonomous subagent execution, visual intelligence, strong visual hooks, disciplined motion, and strict QA.",
+  "author": {
+    "name": "Mamdouh Aboammar",
+    "url": "https://github.com/imMamdouhaboammar"
+  },
+  "homepage": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics",
+  "repository": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics",
+  "license": "MIT",
+  "keywords": [
+    "linkedin",
+    "infographic",
+    "animation",
+    "visual-storytelling",
+    "autopilot",
+    "multi-agent",
+    "creative-direction",
+    "visual-qa",
+    "lobe-icons",
+    "typography",
+    "signal-desk",
+    "arabic",
+    "rtl",
+    "svg",
+    "mascot",
+    "info-stories",
+    "ui-mockup"
+  ],
+  "interface": {
+    "displayName": "LinkedIn Animated Infographics",
+    "shortDescription": "Create animated LinkedIn visual stories with verified assets and intentional type",
+    "longDescription": "Build feed-ready LinkedIn infographics through verified identity sourcing, intentional typography, evidence checks, concept exploration, macro-layout planning, still-first critique, disciplined motion, and final verification.",
+    "developerName": "Mamdouh Aboammar",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics",
+    "privacyPolicyURL": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics/blob/main/TERMS.md",
+    "defaultPrompt": [
+      "Run this in autopilot and turn the idea into an animated LinkedIn infographic with a strong visual hook and useful aha moment.",
+      "Create an Info-story from this material and choose the best story shape before designing it.",
+      "Review this finished LinkedIn infographic and tell me what must be fixed before publishing."
+    ],
+    "composerIcon": "./assets/plugin-mark.svg",
+    "logo": "./assets/plugin-mark.svg"
+  }
+}

@@ -1,0 +1,137 @@
+{
+  "artifact": "/Users/mamdouhaboammar/Documents/Claude Agents/linkedin-animated-infographics/deliverables/chatgpt-campaign-brainstorm/post.html",
+  "artifact_sha256": "f9fb5bc6e66a24e6f483b2b6db277a2c414ff0713f6dd1eac53ba76fd28f5f2a",
+  "capture": {
+    "browser": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    "browser_version": "151.0.7922.110",
+    "launch_mode": "standard",
+    "seeked_at_s": 0.0,
+    "settle_ms": 600,
+    "viewport": {
+      "height": 1350,
+      "width": 1080
+    }
+  },
+  "findings": [
+    {
+      "detail": "animated bounding boxes exceed the advisory area budget",
+      "evidence": [],
+      "gate": "motion-budget",
+      "measured": 84.91,
+      "severity": "advisory",
+      "status": "WARN",
+      "threshold": 20,
+      "threshold_id": "motion.max_moving_area_pct",
+      "unit": "percent"
+    },
+    {
+      "detail": "6 animated element(s) enter the safe margin",
+      "evidence": [
+        "<div class=\"eyebrow\">",
+        "<div class=\"stage-card sc1\">",
+        "<div class=\"stage-card sc2\">",
+        "<div class=\"stage-card sc3\">",
+        "<div class=\"stage-card sc4\">",
+        "<div class=\"stage-card sc5\">"
+      ],
+      "gate": "safe-zone-violation",
+      "measured": 40,
+      "severity": "blocking",
+      "status": "FAIL",
+      "threshold": 48,
+      "threshold_id": "safe_margin_px",
+      "unit": "px"
+    },
+    {
+      "detail": "",
+      "evidence": [],
+      "gate": "feed-scale-legibility",
+      "measured": 350,
+      "severity": "advisory",
+      "status": "PASS",
+      "threshold": 350,
+      "threshold_id": "type.feed_width_px",
+      "unit": "px"
+    }
+  ],
+  "measurements": {
+    "geometry": {
+      "board": {
+        "h": 1350,
+        "w": 1080
+      },
+      "containment": 2,
+      "content": {
+        "bottom": 1350,
+        "occupancy_pct": 96.1,
+        "span": 1298,
+        "top": 52
+      },
+      "deepest": "div.hub > div.hub-prompt",
+      "error": null,
+      "footer": {
+        "below_footer_px": 17,
+        "bottom": 1333,
+        "cls": "footer-dot",
+        "gap_px": -41,
+        "tag": "span",
+        "top": 1309
+      },
+      "surfaces": 22
+    },
+    "motion": {
+      "anims": 44,
+      "error": null,
+      "marginMotion": [
+        {
+          "cls": "eyebrow",
+          "tag": "div"
+        },
+        {
+          "cls": "stage-card sc1",
+          "tag": "div"
+        },
+        {
+          "cls": "stage-card sc2",
+          "tag": "div"
+        },
+        {
+          "cls": "stage-card sc3",
+          "tag": "div"
+        },
+        {
+          "cls": "stage-card sc4",
+          "tag": "div"
+        },
+        {
+          "cls": "stage-card sc5",
+          "tag": "div"
+        }
+      ],
+      "minClearance": 40,
+      "motionArea": 1238017.5737591228
+    }
+  },
+  "outputs": {
+    "mobile": "/Users/mamdouhaboammar/Documents/Claude Agents/linkedin-animated-infographics/deliverables/chatgpt-campaign-brainstorm/still_mobile350.png",
+    "still": "/Users/mamdouhaboammar/Documents/Claude Agents/linkedin-animated-infographics/deliverables/chatgpt-campaign-brainstorm/still.png"
+  },
+  "schema_version": 1,
+  "stage": "still",
+  "summary": {
+    "counts": {
+      "FAIL": 1,
+      "NA": 0,
+      "PASS": 1,
+      "WARN": 1
+    },
+    "failed_gates": [
+      "safe-zone-violation"
+    ],
+    "verdict": "FAIL",
+    "warned_gates": [
+      "motion-budget"
+    ]
+  },
+  "verdict": "FAIL"
+}
