@@ -30,13 +30,13 @@ class MarketplaceTests(unittest.TestCase):
         self.assertEqual("linkedin-animated-infographics", entry["name"])
         self.assertEqual("./", entry["source"])
         self.assertIs(True, entry["strict"])
-        self.assertEqual("3.4.0", entry["version"])
+        self.assertEqual("3.5.0", entry["version"])
 
     def test_all_host_packages_share_release_version(self):
         market = json.loads(MARKETPLACE.read_text())["plugins"][0]
         claude = json.loads(PLUGIN.read_text())
         codex = json.loads(CODEX_PLUGIN.read_text())
-        self.assertEqual("3.4.0", claude["version"])
+        self.assertEqual("3.5.0", claude["version"])
         self.assertEqual(claude["version"], market["version"])
         self.assertEqual(claude["version"], codex["version"])
 
@@ -46,7 +46,7 @@ class MarketplaceTests(unittest.TestCase):
 
     def test_readme_documents_both_install_surfaces(self):
         text = README.read_text()
-        for needle in ("mamdouh-creative-tools", "linkedin-animated-infographics", "docs/codex.md", "3.4.0"):
+        for needle in ("mamdouh-creative-tools", "linkedin-animated-infographics", "docs/codex.md", "3.5.0"):
             self.assertIn(needle, text)
 
     def test_codex_marketplace_is_repo_scoped(self):

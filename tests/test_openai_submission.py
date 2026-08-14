@@ -54,7 +54,7 @@ class OpenAISubmissionContractTests(unittest.TestCase):
         self.assertTrue(SUBMISSION.is_file(), "missing submission/openai-plugin.json")
         data = json.loads(SUBMISSION.read_text())
         self.assertEqual("linkedin-animated-infographics", data["name"])
-        self.assertEqual("3.4.0", data["version"])
+        self.assertEqual("3.5.0", data["version"])
         self.assertEqual("skills-only", data["submission_type"])
         self.assertEqual("Productivity", data["category"])
         self.assertEqual("./openai-skills/", data["skills_bundle"])

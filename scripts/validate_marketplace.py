@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-EXPECTED_PLUGIN_VERSION = "3.4.0"
+EXPECTED_PLUGIN_VERSION = "3.5.0"
 
 
 def validate_marketplace(root: Path = ROOT) -> list[str]:

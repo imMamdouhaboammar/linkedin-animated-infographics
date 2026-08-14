@@ -14,7 +14,7 @@ The repository does not submit or publish a new plugin version automatically. Fi
 - terms: `../TERMS.md`
 - support: `../SUPPORT.md`
 
-Version 3.4.0 is a skills-only OpenAI package.
+Version 3.5.0 is a skills-only OpenAI package.
 
 The public package is self-contained and does not depend on the Claude worker runtime or repository-development `.codex/` configuration. Claude continues to use the existing `skills/`, `agents/`, and native orchestration path.
 

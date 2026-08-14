@@ -9,7 +9,7 @@ This document describes the native **Google Antigravity** and **Gemini CLI** hos
 The Google Antigravity distribution packages the same canonical product core (`skills/`, `agents/`, `helper/`, `tools/`, `research/`) through native Antigravity discovery conventions without forking business logic.
 
 ### Manifests & Configurations
-- **Root Manifest**: [`plugin.json`](../plugin.json) declares plugin metadata, version `3.4.0`, capabilities, and chat UI actions.
+- **Root Manifest**: [`plugin.json`](../plugin.json) declares plugin metadata, version `3.5.0`, capabilities, and chat UI actions.
 - **Local Directory Manifest**: [`.agents/plugins/linkedin-animated-infographics/plugin.json`](../.agents/plugins/linkedin-animated-infographics/plugin.json) enables local project discovery.
 - **Plugin Registration**: [`.agents/plugins.json`](../.agents/plugins.json) registers project-level plugin entries.
 - **Skill Registration**: [`.agents/skills.json`](../.agents/skills.json) maps Antigravity skills directly to canonical `skills/`.

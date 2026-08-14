@@ -4,7 +4,7 @@
 
 **Turn imagination into visual stories that stop the scroll and make the idea click**
 
-`Claude Code + Google Antigravity + Codex + ChatGPT · 3.4.0` · `1080×1350` · `Info-stories` · `Exact-SVG mascots` · `Arabic / RTL`
+`Claude Code + Google Antigravity + Codex + ChatGPT · 3.5.0` · `1080×1350` · `Info-stories` · `Exact-SVG mascots` · `Arabic / RTL`
 
 <br>
 
@@ -32,7 +32,7 @@ If the effect looks good but adds no meaning, it is decoration
 
 ## Install
 
-Version 3.4.0 adds deterministic visual-reference retrieval, Antigravity subagent catalog integration, and measured render evidence while keeping host execution isolated
+Version 3.5.0 adds unified UI taste engineering, 3 design dials, 8-state interactive completeness, 6-axis pre-emit self-critique, and multi-pass anti-slop gates while keeping host execution isolated
 
 - Claude uses the existing `skills/` + `agents/` runtime and native worker graph
 - Google Antigravity uses `plugin.json`, `.agents/`, and the 19 specialized subagents catalog
@@ -317,7 +317,7 @@ claude plugin validate .
 
 ## Public Plugins Directory
 
-The 3.4.0 OpenAI package is prepared as a skills-only update using `openai-skills/`
+The 3.5.0 OpenAI package is prepared as a skills-only update using `openai-skills/`
 
 `submission/` tracks listing metadata, five positive reviewer cases, three negative cases, and the manual OpenAI Platform handoff
 
