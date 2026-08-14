@@ -1,5 +1,5 @@
 {
-  "artifact": "/Users/mamdouhaboammar/Documents/Claude Agents/linkedin-animated-infographics/deliverables/chatgpt-campaign-brainstorm/post.html",
+  "artifact": "deliverables/chatgpt-campaign-brainstorm/post.html",
   "artifact_sha256": "f9fb5bc6e66a24e6f483b2b6db277a2c414ff0713f6dd1eac53ba76fd28f5f2a",
   "capture": {
     "browser": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
@@ -113,8 +113,8 @@
     }
   },
   "outputs": {
-    "mobile": "/Users/mamdouhaboammar/Documents/Claude Agents/linkedin-animated-infographics/deliverables/chatgpt-campaign-brainstorm/still_mobile350.png",
-    "still": "/Users/mamdouhaboammar/Documents/Claude Agents/linkedin-animated-infographics/deliverables/chatgpt-campaign-brainstorm/still.png"
+    "mobile": "deliverables/chatgpt-campaign-brainstorm/still_mobile350.png",
+    "still": "deliverables/chatgpt-campaign-brainstorm/still.png"
   },
   "schema_version": 1,
   "stage": "still",

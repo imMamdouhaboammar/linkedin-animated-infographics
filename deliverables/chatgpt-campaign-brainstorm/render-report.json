@@ -2,24 +2,24 @@
   "digests": {
     "fragments": {
       "artboard": {
-        "path": "/Users/mamdouhaboammar/Documents/Claude Agents/linkedin-animated-infographics/deliverables/chatgpt-campaign-brainstorm/.render-evidence/artboard.json",
+        "path": "deliverables/chatgpt-campaign-brainstorm/.render-evidence/artboard.json",
         "sha256": "b40ed72d336d6edb8bbcb1df8880a1888c967248d00a2723a4d0a92ffe7889c3"
       },
       "gif": {
-        "path": "/Users/mamdouhaboammar/Documents/Claude Agents/linkedin-animated-infographics/deliverables/chatgpt-campaign-brainstorm/.render-evidence/gif.json",
+        "path": "deliverables/chatgpt-campaign-brainstorm/.render-evidence/gif.json",
         "sha256": "4dabf54ea3a09e01ae594682a152deaf9eb368de6040ede4dff35c22df9b4860"
       },
       "still": {
-        "path": "/Users/mamdouhaboammar/Documents/Claude Agents/linkedin-animated-infographics/deliverables/chatgpt-campaign-brainstorm/.render-evidence/still.json",
+        "path": "deliverables/chatgpt-campaign-brainstorm/.render-evidence/still.json",
         "sha256": "e4b606cb887c46e715e38e1a0974ea0c5d6f5c78b8474845a793aafef5c3e429"
       }
     },
     "input": {
-      "path": "/Users/mamdouhaboammar/Documents/Claude Agents/linkedin-animated-infographics/deliverables/chatgpt-campaign-brainstorm/post.html",
+      "path": "deliverables/chatgpt-campaign-brainstorm/post.html",
       "sha256": "f9fb5bc6e66a24e6f483b2b6db277a2c414ff0713f6dd1eac53ba76fd28f5f2a"
     },
     "output": {
-      "path": "/Users/mamdouhaboammar/Documents/Claude Agents/linkedin-animated-infographics/deliverables/chatgpt-campaign-brainstorm/post.gif",
+      "path": "deliverables/chatgpt-campaign-brainstorm/post.gif",
       "sha256": "e3dc9e6099c7ec9b0988c73a5af1eebdb4f014d389d2639b7c03767996698dc3"
     }
   },
@@ -272,15 +272,15 @@
   "schema_version": 1,
   "sources": {
     "artboard": {
-      "path": "/Users/mamdouhaboammar/Documents/Claude Agents/linkedin-animated-infographics/deliverables/chatgpt-campaign-brainstorm/.render-evidence/artboard.json",
+      "path": "deliverables/chatgpt-campaign-brainstorm/.render-evidence/artboard.json",
       "verdict": "FAIL"
     },
     "gif": {
-      "path": "/Users/mamdouhaboammar/Documents/Claude Agents/linkedin-animated-infographics/deliverables/chatgpt-campaign-brainstorm/.render-evidence/gif.json",
+      "path": "deliverables/chatgpt-campaign-brainstorm/.render-evidence/gif.json",
       "verdict": "PASS"
     },
     "still": {
-      "path": "/Users/mamdouhaboammar/Documents/Claude Agents/linkedin-animated-infographics/deliverables/chatgpt-campaign-brainstorm/.render-evidence/still.json",
+      "path": "deliverables/chatgpt-campaign-brainstorm/.render-evidence/still.json",
       "verdict": "FAIL"
     }
   },

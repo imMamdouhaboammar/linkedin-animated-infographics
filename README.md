@@ -79,6 +79,18 @@ The OpenAI package is `.codex-plugin/plugin.json`; the repo marketplace is `.age
 
 [Codex / ChatGPT guide](docs/codex.md) · [Marketplace details](docs/marketplace.md)
 
+### [Beta] AgentRouter Codex Relay
+
+For multi-agent orchestrators (Antigravity/Claude) delegating creative concepting and coding to Codex via AgentRouter (`gpt-5.6-sol`):
+
+```bash
+# Set your token in environment or ~/.agentrouter/.env
+export AGENT_ROUTER_TOKEN="your-token"
+
+# Dispatch a creative brief
+python3 scripts/agentrouter_relay.py --brief brief.txt --cd .
+```
+
 ## OpenAI autopilot
 
 `linkedin-infographic-autopilot` begins by observing the capabilities actually exposed by the current host
