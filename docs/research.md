@@ -4,9 +4,10 @@ Research under `research/` is an active input to production quality, not a passi
 
 ## Provenance sources
 
-The tracked snapshot in `research/capability-notes/sources.json` records five inspected MIT repositories and exact commits:
+The tracked snapshot in `research/capability-notes/sources.json` records six inspected MIT repositories and exact commits:
 
 - COG-second-brain
+- desloppify
 - hallmark
 - no-ai-slop
 - stop-slop
@@ -48,7 +49,7 @@ Informed by COG-second-brain, hallmark, and no-ai-slop. Trace factual claims, pr
 
 ### `bounded-verification`
 
-Informed by COG-second-brain. Keep verification independent, evidence-backed, read-only, and limited to two targeted repair attempts before escalation.
+Informed by COG-second-brain and desloppify. Keep verification independent, evidence-backed, read-only, and limited to two targeted repair attempts before escalation.
 
 ## Adoption chain
 

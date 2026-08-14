@@ -47,3 +47,11 @@ When the visual depicts an existing product, keep documented names, states, cont
 ## Accessibility and composition
 
 Use semantic HTML/CSS/SVG where possible. Keep text contrast at the selected Story House floor. Do not rely on colour alone for state meaning. The normal Info-stories attribution/footer contract remains mandatory.
+
+## Design taste and UI standards
+
+Apply the taste-skill guidelines in `ui-taste-engineering.md`:
+- Configure the three dials (`DESIGN_VARIANCE`, `MOTION_INTENSITY`, `VISUAL_DENSITY`) based on the UI scenario
+- Avoid AI default clichés: no purple glow meshes, no multi-line wrapped buttons, no generic bento placeholders
+- Enforce single-accent palette consistency and WCAG AA contrast on all buttons and inputs
+

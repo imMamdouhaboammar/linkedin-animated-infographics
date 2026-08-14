@@ -12,6 +12,7 @@ EXPECTED = {
     "hallmark": "https://github.com/Nutlope/hallmark",
     "no-ai-slop": "https://github.com/petergyang/no-ai-slop",
     "COG-second-brain": "https://github.com/huytieu/COG-second-brain",
+    "desloppify": "https://github.com/peteromallet/desloppify",
 }
 
 
