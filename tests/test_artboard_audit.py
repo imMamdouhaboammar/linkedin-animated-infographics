@@ -11,7 +11,7 @@ exactly what CI and `render-qa` depend on:
 The violations fixture carries one defect per blocking gate, so a regression here says
 which gate stopped working rather than only that something did.
 
-Requires Chromium. Skipped — never silently passed — when the browser is unavailable,
+Requires Chromium. Skipped, never silently passed, when the browser is unavailable,
 so a machine without the render toolchain cannot report these gates as verified.
 """
 
@@ -36,6 +36,7 @@ EXPECTED_FAILURES = {
     "containment.max_border_depth": "nested-card-density",
     "type.absolute_floor_px": "feed-scale-legibility",
     "type.min_headline_px": "weak-visual-anchor",
+    "type.max_clipped_load_bearing_nodes": "text-clipping",
     "contrast.text_min_ratio": "contrast-floor",
 }
 
@@ -87,6 +88,11 @@ class CompliantArtboardTests(unittest.TestCase):
             self.assertIn(key, capture)
         self.assertEqual(capture["viewport"], {"width": 1080, "height": 1350})
 
+    def test_compliant_fixture_has_no_clipped_text(self):
+        self.assertEqual(self.report["measurements"]["clipped_text_nodes"], 0)
+        self.assertEqual(
+            self.report["measurements"]["clipped_load_bearing_text_nodes"], 0)
+
 
 class ViolatingArtboardTests(unittest.TestCase):
     @classmethod
@@ -134,6 +140,17 @@ class ViolatingArtboardTests(unittest.TestCase):
         self.assertIn("div.panel", row["evidence"][0])
         self.assertIn("div.inner", row["evidence"][0])
 
+    def test_clipping_failure_names_rendered_box_dimensions(self):
+        row = next(r for r in self.report["findings"]
+                   if r["threshold_id"] == "type.max_clipped_load_bearing_nodes")
+        self.assertGreaterEqual(row["measured"], 1)
+        evidence = "\n".join(row["evidence"])
+        self.assertIn("headline", evidence)
+        self.assertIn("client=", evidence)
+        self.assertIn("scroll=", evidence)
+        self.assertGreaterEqual(
+            self.report["measurements"]["clipped_load_bearing_text_nodes"], 1)
+
 
 class RenderPipelineBrowserTests(unittest.TestCase):
     def test_all_render_stages_record_one_browser_identity(self):
@@ -141,8 +158,8 @@ class RenderPipelineBrowserTests(unittest.TestCase):
             output = Path(tmp) / "post.gif"
             env = os.environ.copy()
             env["PATH"] = f"/opt/homebrew/bin:{env['PATH']}"
-            
-            # Allow up to 3 attempts to guard against transient CI browser contention
+
+            # Allow up to 3 attempts to guard against transient CI browser contention.
             max_attempts = 3
             outcome = None
             for attempt in range(max_attempts):
@@ -158,7 +175,7 @@ class RenderPipelineBrowserTests(unittest.TestCase):
                     self.skipTest(f"render toolchain unavailable: {outcome.stderr.strip()}")
                 if attempt < max_attempts - 1:
                     time.sleep(1.0)
-            
+
             self.assertIsNotNone(outcome)
             self.assertEqual(
                 outcome.returncode, 0,
