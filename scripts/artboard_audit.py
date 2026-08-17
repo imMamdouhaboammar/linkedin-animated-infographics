@@ -49,15 +49,13 @@ from scripts.visual_contract import (
     summarize,
 )
 
-# Roles whose text is load-bearing by convention. Text in these is judged against the
-# feed floor and must never be clipped even when generic micro-copy is allowed to truncate.
 LOAD_BEARING_HINTS = ("headline", "hero", "title", "takeaway", "subline", "lede", "kicker")
 
-# Browser-only clipping probe. Source CSS cannot prove clipping because the final result
-# depends on font fallback, line breaking, the cascade, the actual client box, and the
-# computed overflow policy. One pixel of tolerance absorbs Chromium rounding. Content
-# that extends beyond a client box with overflow:visible is not called clipped here; a
-# separate overlap/edge gate can judge whether that visible spill is compositionally safe.
+# Browser-only clipping probe. For ordinary text leaves, inspect direct text so wrapper
+# geometry from unrelated children cannot create false positives. For load-bearing roles,
+# inspect descendant text too because real headings commonly wrap words in spans for
+# styling or motion. One pixel of tolerance absorbs Chromium rounding. Content extending
+# through overflow:visible is not clipping; overlap and edge intrusion are separate gates.
 CLIPPING_JS = """
 (hints) => {
   const board = document.querySelector('#artboard');
@@ -71,8 +69,10 @@ CLIPPING_JS = """
   };
 
   board.querySelectorAll('*').forEach(el => {
-    const text = [...el.childNodes]
+    const directText = [...el.childNodes]
       .filter(n => n.nodeType === 3).map(n => n.textContent).join('').trim();
+    const isLoadBearing = loadBearing(el);
+    const text = directText || (isLoadBearing ? (el.textContent || '').trim() : '');
     if (!text) return;
     const cs = getComputedStyle(el);
     if (cs.display === 'none' || cs.visibility === 'hidden') return;
@@ -91,7 +91,7 @@ CLIPPING_JS = """
       cls: (el.className && el.className.baseVal !== undefined
             ? el.className.baseVal : el.className || '').toString().slice(0, 60),
       sample: text.slice(0, 72),
-      load_bearing: loadBearing(el),
+      load_bearing: isLoadBearing,
       client_width: el.clientWidth,
       client_height: el.clientHeight,
       scroll_width: el.scrollWidth,
@@ -164,8 +164,7 @@ def audit(page, contract: VisualContract, *, exception_reason: str = "") -> tupl
 
     footer = geometry.get("footer")
     if not footer or footer.get("gap_px") is None:
-        findings.append(skipped(contract, "footer.max_gap_px",
-                                "no footer block identified"))
+        findings.append(skipped(contract, "footer.max_gap_px", "no footer block identified"))
     else:
         gap = footer["gap_px"]
         limit = contract.value("footer.max_gap_px")
@@ -199,8 +198,7 @@ def audit(page, contract: VisualContract, *, exception_reason: str = "") -> tupl
         findings.append(_contrast_finding(contract, nodes))
 
     if clipping.get("error"):
-        findings.append(skipped(contract, "type.max_clipped_load_bearing_nodes",
-                                clipping["error"]))
+        findings.append(skipped(contract, "type.max_clipped_load_bearing_nodes", clipping["error"]))
         findings.append(skipped(contract, "type.max_clipped_nodes", clipping["error"]))
     else:
         findings.extend(_clipping_findings(contract, clipping.get("nodes", [])))
@@ -220,8 +218,7 @@ def _type_findings(contract: VisualContract, nodes: list[dict]) -> list[dict]:
     rows = [finding(
         contract, "type.absolute_floor_px", ok=not below_absolute,
         measured=min(n["size"] for n in nodes),
-        detail="" if not below_absolute else
-        f"{len(below_absolute)} text node(s) below the absolute floor",
+        detail="" if not below_absolute else f"{len(below_absolute)} text node(s) below the absolute floor",
         evidence=[f"{n['size']}px {n['sample']!r}" for n in below_absolute[:6]],
     )]
 
@@ -318,11 +315,6 @@ def _contrast_finding(contract: VisualContract, nodes: list[dict]) -> dict:
 
 
 def _font_finding(contract: VisualContract, fonts: dict) -> dict:
-    """Record which font stacks actually resolved to their first choice.
-
-    Advisory by contract: a fallback face can be acceptable, but a silent substitution
-    invalidates every type measurement above it, so the resolved family is always named.
-    """
     stacks = fonts.get("stacks", [])
     if not stacks:
         return skipped(contract, "fonts.first_choice_available", "no font stacks found")
@@ -339,8 +331,7 @@ def _font_finding(contract: VisualContract, fonts: dict) -> dict:
 
 
 def main(argv=None) -> int:
-    ap = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("html")
     ap.add_argument("--json", dest="json_out", default=None,
                     help="write the machine-readable audit to this path")
@@ -348,12 +339,10 @@ def main(argv=None) -> int:
                     help="seek every animation to this time before measuring")
     ap.add_argument("--width", type=int, default=None)
     ap.add_argument("--height", type=int, default=None)
-    ap.add_argument("--browser", default=None,
-                    help="path to a Chrome/Chromium binary")
+    ap.add_argument("--browser", default=None, help="path to a Chrome/Chromium binary")
     ap.add_argument("--exception-reason", default="",
                     help="documented reason that excuses a footer gap over the limit")
-    ap.add_argument("--quiet", action="store_true",
-                    help="suppress the human-readable audit")
+    ap.add_argument("--quiet", action="store_true", help="suppress the human-readable audit")
     args = ap.parse_args(argv)
 
     try:
