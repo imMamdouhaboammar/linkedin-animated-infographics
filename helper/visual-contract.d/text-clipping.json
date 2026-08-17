@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "thresholds": {
+    "type.max_clipped_load_bearing_nodes": {
+      "value": 0,
+      "comparison": "max",
+      "unit": "nodes",
+      "severity": "blocking",
+      "gate": "text-clipping",
+      "measured_by": "scripts/artboard_audit.py",
+      "rationale": "A headline, title, takeaway, lede, kicker, hero, or subline that exceeds its rendered client box has lost content. Browser scroll dimensions make this mechanically testable after font fallback and line breaking have happened.",
+      "doc_assertions": {
+        "skills/render/references/qa-gates.md": ["No content clipped at any edge"]
+      }
+    },
+    "type.max_clipped_nodes": {
+      "value": 0,
+      "comparison": "max",
+      "unit": "nodes",
+      "severity": "advisory",
+      "gate": "text-clipping",
+      "measured_by": "scripts/artboard_audit.py",
+      "rationale": "Any rendered text overflow is worth surfacing, but arbitrary micro-copy may be deliberately constrained. The audit reports every clipped node while only load-bearing roles block export.",
+      "doc_assertions": {}
+    }
+  },
+  "gates": {
+    "text-clipping": "Load-bearing text fits inside its rendered client box without truncation."
+  }
+}
