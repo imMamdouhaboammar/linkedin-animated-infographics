@@ -13,12 +13,13 @@ What it measures, and why each one needs a browser rather than a grep:
   footer detachment  gap between the end of the primary composition and the footer
   containment depth  nested bordered surfaces, counted from every leaf upward
   type floors        rendered font sizes, after cascade and fallback
+  text clipping      rendered text boxes whose content exceeds their visible client box
   rendered contrast  text against its composited background, including alpha
   fonts              whether each stack's first choice actually resolved
 
 Gate ids match the failure taxonomy already used by the OpenAI runtime
-(`bottom-dead-zone`, `footer-detachment`, `nested-card-density`, `feed-scale-legibility`),
-so both hosts speak one vocabulary.
+(`bottom-dead-zone`, `footer-detachment`, `nested-card-density`, `feed-scale-legibility`,
+`text-clipping`), so both hosts speak one vocabulary.
 
 Usage:
     python3 artboard_audit.py build/post.html
@@ -49,13 +50,66 @@ from scripts.visual_contract import (
 )
 
 # Roles whose text is load-bearing by convention. Text in these is judged against the
-# feed floor even when the script cannot otherwise tell load-bearing from decorative.
+# feed floor and must never be clipped even when generic micro-copy is allowed to truncate.
 LOAD_BEARING_HINTS = ("headline", "hero", "title", "takeaway", "subline", "lede", "kicker")
+
+# Browser-only clipping probe. Source CSS cannot prove clipping because the final result
+# depends on font fallback, line breaking, the cascade, and the actual client box. A one
+# pixel tolerance absorbs Chromium rounding without hiding a real truncation.
+CLIPPING_JS = """
+(hints) => {
+  const board = document.querySelector('#artboard');
+  const out = { nodes: [], error: null };
+  if (!board) { out.error = 'no #artboard element'; return out; }
+  const br = board.getBoundingClientRect();
+  const loadBearing = el => {
+    const role = ((el.className && el.className.baseVal !== undefined
+      ? el.className.baseVal : el.className || '') + ' ' + el.tagName).toLowerCase();
+    return hints.some(hint => role.includes(hint));
+  };
+
+  board.querySelectorAll('*').forEach(el => {
+    const text = [...el.childNodes]
+      .filter(n => n.nodeType === 3).map(n => n.textContent).join('').trim();
+    if (!text) return;
+    const cs = getComputedStyle(el);
+    if (cs.display === 'none' || cs.visibility === 'hidden') return;
+    if (parseFloat(cs.opacity || '1') <= 0.01) return;
+    const r = el.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+
+    const overflowX = el.scrollWidth - el.clientWidth;
+    const overflowY = el.scrollHeight - el.clientHeight;
+    const clippedX = overflowX > 1;
+    const clippedY = overflowY > 1;
+    if (!clippedX && !clippedY) return;
+
+    out.nodes.push({
+      tag: el.tagName.toLowerCase(),
+      cls: (el.className && el.className.baseVal !== undefined
+            ? el.className.baseVal : el.className || '').toString().slice(0, 60),
+      sample: text.slice(0, 72),
+      load_bearing: loadBearing(el),
+      client_width: el.clientWidth,
+      client_height: el.clientHeight,
+      scroll_width: el.scrollWidth,
+      scroll_height: el.scrollHeight,
+      overflow_x_px: Math.max(0, Math.round(overflowX)),
+      overflow_y_px: Math.max(0, Math.round(overflowY)),
+      overflow_x: cs.overflowX,
+      overflow_y: cs.overflowY,
+      top: Math.round(r.top - br.top),
+    });
+  });
+  return out;
+}
+"""
 
 
 def audit(page, contract: VisualContract, *, exception_reason: str = "") -> tuple[list[dict], dict]:
     geometry = page.evaluate(GEOMETRY_JS)
     typography = page.evaluate(TYPE_JS)
+    clipping = page.evaluate(CLIPPING_JS, list(LOAD_BEARING_HINTS))
     fonts = page.evaluate(FONT_JS)
 
     findings: list[dict] = []
@@ -64,7 +118,12 @@ def audit(page, contract: VisualContract, *, exception_reason: str = "") -> tupl
                     "occupancy.max_pct", "footer.max_gap_px",
                     "containment.max_border_depth"):
             findings.append(skipped(contract, tid, geometry["error"]))
-        return findings, {"geometry": geometry, "typography": typography, "fonts": fonts}
+        return findings, {
+            "geometry": geometry,
+            "typography": typography,
+            "clipping": clipping,
+            "fonts": fonts,
+        }
 
     board = geometry["board"]
 
@@ -137,8 +196,20 @@ def audit(page, contract: VisualContract, *, exception_reason: str = "") -> tupl
         findings.extend(_type_findings(contract, nodes))
         findings.append(_contrast_finding(contract, nodes))
 
+    if clipping.get("error"):
+        findings.append(skipped(contract, "type.max_clipped_load_bearing_nodes",
+                                clipping["error"]))
+        findings.append(skipped(contract, "type.max_clipped_nodes", clipping["error"]))
+    else:
+        findings.extend(_clipping_findings(contract, clipping.get("nodes", [])))
+
     findings.append(_font_finding(contract, fonts))
-    return findings, {"geometry": geometry, "typography": typography, "fonts": fonts}
+    return findings, {
+        "geometry": geometry,
+        "typography": typography,
+        "clipping": clipping,
+        "fonts": fonts,
+    }
 
 
 def _type_findings(contract: VisualContract, nodes: list[dict]) -> list[dict]:
@@ -178,6 +249,43 @@ def _type_findings(contract: VisualContract, nodes: list[dict]) -> list[dict]:
                   for n in sorted(below_floor, key=lambda n: n["size"])[:8]],
     ))
     return rows
+
+
+def _clipping_evidence(node: dict) -> str:
+    overflow = []
+    if node["overflow_x_px"]:
+        overflow.append(f"x+{node['overflow_x_px']}px")
+    if node["overflow_y_px"]:
+        overflow.append(f"y+{node['overflow_y_px']}px")
+    amount = ", ".join(overflow) or "overflow"
+    return (
+        f"<{node['tag']} class=\"{node['cls']}\"> {amount}; "
+        f"client={node['client_width']}x{node['client_height']} "
+        f"scroll={node['scroll_width']}x{node['scroll_height']} "
+        f"overflow={node['overflow_x']}/{node['overflow_y']} {node['sample']!r}"
+    )
+
+
+def _clipping_findings(contract: VisualContract, nodes: list[dict]) -> list[dict]:
+    load_bearing = [node for node in nodes if node.get("load_bearing")]
+    return [
+        finding(
+            contract, "type.max_clipped_load_bearing_nodes",
+            ok=len(load_bearing) <= contract.value("type.max_clipped_load_bearing_nodes"),
+            measured=len(load_bearing),
+            detail="" if not load_bearing else
+            f"{len(load_bearing)} load-bearing text node(s) are clipped in the rendered browser",
+            evidence=[_clipping_evidence(node) for node in load_bearing[:8]],
+        ),
+        finding(
+            contract, "type.max_clipped_nodes",
+            ok=len(nodes) <= contract.value("type.max_clipped_nodes"),
+            measured=len(nodes),
+            detail="" if not nodes else
+            f"{len(nodes)} rendered text node(s) exceed their visible client box",
+            evidence=[_clipping_evidence(node) for node in nodes[:8]],
+        ),
+    ]
 
 
 def _contrast_finding(contract: VisualContract, nodes: list[dict]) -> dict:
@@ -261,6 +369,7 @@ def main(argv=None) -> int:
         findings, raw = audit(page, contract, exception_reason=args.exception_reason)
 
     summary = summarize(findings)
+    clipped_nodes = raw["clipping"].get("nodes", [])
     report = {
         "schema_version": 1,
         "stage": "artboard",
@@ -278,6 +387,10 @@ def main(argv=None) -> int:
             "containment_depth": raw["geometry"].get("containment"),
             "containment_path": raw["geometry"].get("deepest"),
             "text_nodes": len(raw["typography"].get("nodes", [])),
+            "clipped_text_nodes": len(clipped_nodes),
+            "clipped_load_bearing_text_nodes": len(
+                [node for node in clipped_nodes if node.get("load_bearing")]
+            ),
             "font_stacks": raw["fonts"].get("stacks", []),
         },
     }
