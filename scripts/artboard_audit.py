@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-artboard_audit.py — measure the visual quality contract on a built artboard.
+artboard_audit.py: measure the visual quality contract on a built artboard.
 
 This is the gate that `check_render.py` never was. `check_render.py` prints an audit and
 always exits 0, so its numbers are advice. This script compares measurements against
-`helper/visual-contract.json` and exits non-zero when a blocking threshold fails, which
-is what lets `render-qa` return a real HOLD instead of a narrated one.
+the merged visual contract and exits non-zero when a blocking threshold fails, which is
+what lets `render-qa` return a real HOLD instead of a narrated one.
 
 What it measures, and why each one needs a browser rather than a grep:
 
@@ -13,7 +13,7 @@ What it measures, and why each one needs a browser rather than a grep:
   footer detachment  gap between the end of the primary composition and the footer
   containment depth  nested bordered surfaces, counted from every leaf upward
   type floors        rendered font sizes, after cascade and fallback
-  text clipping      rendered text boxes whose content exceeds their visible client box
+  text clipping      rendered text boxes whose content is actually clipped
   rendered contrast  text against its composited background, including alpha
   fonts              whether each stack's first choice actually resolved
 
@@ -54,8 +54,10 @@ from scripts.visual_contract import (
 LOAD_BEARING_HINTS = ("headline", "hero", "title", "takeaway", "subline", "lede", "kicker")
 
 # Browser-only clipping probe. Source CSS cannot prove clipping because the final result
-# depends on font fallback, line breaking, the cascade, and the actual client box. A one
-# pixel tolerance absorbs Chromium rounding without hiding a real truncation.
+# depends on font fallback, line breaking, the cascade, the actual client box, and the
+# computed overflow policy. One pixel of tolerance absorbs Chromium rounding. Content
+# that extends beyond a client box with overflow:visible is not called clipped here; a
+# separate overlap/edge gate can judge whether that visible spill is compositionally safe.
 CLIPPING_JS = """
 (hints) => {
   const board = document.querySelector('#artboard');
@@ -80,8 +82,8 @@ CLIPPING_JS = """
 
     const overflowX = el.scrollWidth - el.clientWidth;
     const overflowY = el.scrollHeight - el.clientHeight;
-    const clippedX = overflowX > 1;
-    const clippedY = overflowY > 1;
+    const clippedX = overflowX > 1 && cs.overflowX !== 'visible';
+    const clippedY = overflowY > 1 && cs.overflowY !== 'visible';
     if (!clippedX && !clippedY) return;
 
     out.nodes.push({
@@ -94,8 +96,8 @@ CLIPPING_JS = """
       client_height: el.clientHeight,
       scroll_width: el.scrollWidth,
       scroll_height: el.scrollHeight,
-      overflow_x_px: Math.max(0, Math.round(overflowX)),
-      overflow_y_px: Math.max(0, Math.round(overflowY)),
+      overflow_x_px: clippedX ? Math.max(0, Math.round(overflowX)) : 0,
+      overflow_y_px: clippedY ? Math.max(0, Math.round(overflowY)) : 0,
       overflow_x: cs.overflowX,
       overflow_y: cs.overflowY,
       top: Math.round(r.top - br.top),
@@ -243,7 +245,7 @@ def _type_findings(contract: VisualContract, nodes: list[dict]) -> list[dict]:
         measured=min(n["size"] for n in nodes),
         detail=(f"{len(below_floor)} node(s) below the feed floor"
                 + (f", {len(load_bearing)} in a load-bearing role" if load_bearing else "")
-                + " — micro labels and card body may stay, load-bearing text may not")
+                + " - micro labels and card body may stay, load-bearing text may not")
         if below_floor else "",
         evidence=[f"{n['size']}px <{n['tag']} class=\"{n['cls']}\"> {n['sample']!r}"
                   for n in sorted(below_floor, key=lambda n: n["size"])[:8]],
@@ -282,7 +284,7 @@ def _clipping_findings(contract: VisualContract, nodes: list[dict]) -> list[dict
             ok=len(nodes) <= contract.value("type.max_clipped_nodes"),
             measured=len(nodes),
             detail="" if not nodes else
-            f"{len(nodes)} rendered text node(s) exceed their visible client box",
+            f"{len(nodes)} rendered text node(s) are clipped by their visible client box",
             evidence=[_clipping_evidence(node) for node in nodes[:8]],
         ),
     ]
@@ -325,7 +327,7 @@ def _font_finding(contract: VisualContract, fonts: dict) -> dict:
     if not stacks:
         return skipped(contract, "fonts.first_choice_available", "no font stacks found")
     missing = [s for s in stacks if s.get("first_available") is False]
-    row = finding(
+    return finding(
         contract, "fonts.first_choice_available", ok=not missing,
         measured=len(stacks) - len(missing),
         detail="" if not missing else
@@ -334,7 +336,6 @@ def _font_finding(contract: VisualContract, fonts: dict) -> dict:
         evidence=[f"{s['first']!r} unavailable, resolved to {s['resolved']!r}"
                   for s in missing[:6]],
     )
-    return row
 
 
 def main(argv=None) -> int:
@@ -401,16 +402,16 @@ def main(argv=None) -> int:
         out.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
 
     if not args.quiet:
-        print("── artboard audit ───────────────────────────")
+        print("-- artboard audit ---------------------------")
         print(f"  browser         {info['browser']} ({info['browser_version']})")
         print(f"  seeked at       {args.at}s")
         print("\n".join(render_lines(findings)))
-        print(f"── verdict: {summary['verdict']} "
+        print(f"-- verdict: {summary['verdict']} "
               f"({summary['counts']['PASS']} pass, {summary['counts']['FAIL']} fail, "
               f"{summary['counts']['WARN']} warn, {summary['counts']['NA']} n/a)")
         for row in findings:
             if row["status"] in ("FAIL", "WARN") and row["evidence"]:
-                print(f"\n  {row['status']} {row['threshold_id']} — {row['detail']}")
+                print(f"\n  {row['status']} {row['threshold_id']} - {row['detail']}")
                 for item in row["evidence"]:
                     print(f"    {item}")
         if args.json_out:
