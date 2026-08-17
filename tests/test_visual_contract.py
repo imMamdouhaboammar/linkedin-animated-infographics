@@ -1,17 +1,16 @@
-"""The visual contract is the single source of truth for measurable thresholds.
+"""The merged visual contract is the source of truth for measurable thresholds.
 
 These tests lock it in both directions:
 
-* contract -> prose: every ``doc_assertions`` string must still appear in the named
-  file, so editing a number in the JSON without updating the docs fails, and editing
-  the number in a doc makes its assertion string disappear and fails the same test.
-* contract -> code: the thresholds must equal the constants the scripts actually use,
-  so an implementation default can never quietly diverge from the published number.
+* contract -> prose: every ``doc_assertions`` string must still appear in the named file
+* contract -> code: implementation defaults cannot quietly diverge from published numbers
+* fragments -> contract: feature-scoped fragments are merged and duplicate ids are rejected
 """
 
 import argparse
 import importlib.util
 import json
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -22,7 +21,8 @@ REQUIRED_FIELDS = ("value", "comparison", "unit", "severity", "gate", "measured_
 
 
 def load_contract():
-    return json.loads(CONTRACT.read_text())
+    from scripts.visual_contract import load_contract as load_runtime_contract
+    return load_runtime_contract()
 
 
 def _argparse_defaults(script_relpath):
@@ -84,7 +84,6 @@ class VisualContractStructureTests(unittest.TestCase):
         self.assertEqual([], missing)
 
     def test_advisory_thresholds_explain_why_they_do_not_block(self):
-        """An advisory threshold is a deliberate choice and must justify itself."""
         contract = load_contract()
         thin = [
             tid
@@ -92,6 +91,25 @@ class VisualContractStructureTests(unittest.TestCase):
             if threshold["severity"] == "advisory" and len(threshold["rationale"]) < 60
         ]
         self.assertEqual([], thin)
+
+    def test_text_clipping_fragment_is_merged(self):
+        contract = load_contract()
+        self.assertIn("text-clipping", contract["gates"])
+        self.assertEqual(
+            0, contract["thresholds"]["type.max_clipped_load_bearing_nodes"]["value"]
+        )
+        self.assertEqual(
+            "blocking",
+            contract["thresholds"]["type.max_clipped_load_bearing_nodes"]["severity"],
+        )
+
+    def test_fragment_merge_rejects_duplicate_thresholds(self):
+        from scripts.visual_contract import ContractError, _merge_fragment
+
+        document = {"schema_version": 1, "thresholds": {"same": {}}, "gates": {}}
+        fragment = {"schema_version": 1, "thresholds": {"same": {}}, "gates": {}}
+        with self.assertRaises(ContractError):
+            _merge_fragment(document, fragment, Path("duplicate.json"))
 
 
 class ContractMatchesProseTests(unittest.TestCase):
@@ -121,7 +139,6 @@ class ContractMatchesProseTests(unittest.TestCase):
         self.assertEqual([], undocumented)
 
     def test_superseded_loop_metrics_stay_out_of_the_docs(self):
-        """The absolute seam percentages were replaced by the ratio; keep them gone."""
         contract = load_contract()
         self.assertEqual(2.0, contract["thresholds"]["loop.seam_ratio_max"]["value"])
         offenders = []
@@ -169,7 +186,6 @@ class ContractMatchesCodeTests(unittest.TestCase):
         self.assertEqual(row["threshold"], contract_limit)
 
     def test_contrast_floors_match_the_catalog_validator(self):
-        """info_stories.validate_catalog enforces these; the contract must agree."""
         contract = load_contract()["thresholds"]
         source = (ROOT / "scripts" / "info_stories.py").read_text()
         self.assertIn(f"< {contract['contrast.text_min_ratio']['value']}", source)
