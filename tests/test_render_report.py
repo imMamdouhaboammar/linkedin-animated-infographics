@@ -11,9 +11,11 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from scripts.visual_contract import load_contract
+
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "scripts" / "render_report.py"
-CONTRACT = json.loads((ROOT / "helper" / "visual-contract.json").read_text())
+CONTRACT = load_contract()
 KINDS = {
     "artboard": "scripts/artboard_audit.py",
     "still": "scripts/check_render.py",
