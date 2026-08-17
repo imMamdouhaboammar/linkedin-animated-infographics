@@ -5,13 +5,13 @@
 <title>Fixture: violating artboard</title>
 <!--
   Deliberately defective artboard. Each defect targets exactly one blocking gate in
-  helper/visual-contract.json, so a CI failure names the gate that regressed:
+  the merged visual contract, so a CI failure names the gate that regressed:
 
     nested-card-density     .panel > .card > .inner  = containment depth 3 (limit 2)
     footer-detachment       footer top y=1000, composition ends y=700 = 300px gap (limit 120)
     feed-scale-legibility   .micro renders at 8px (absolute floor 10px)
     weak-visual-anchor      largest type is 32px (headline floor 40px)
-    text-clipping           .headline is constrained to 220px and clips horizontally
+    text-clipping           .headline clips a descendant span horizontally
     contrast-floor          .faint is #c9c9c9 on #ffffff = 1.6:1 (floor 4.5:1)
     bottom-dead-zone        content spans y=200..1030 = 61.5% occupancy (band 82-92%) [advisory]
 
@@ -72,7 +72,7 @@
   <div class="panel">
     <div class="card">
       <div class="inner">
-        <p class="headline">Three bordered surfaces deep</p>
+        <p class="headline"><span>Three bordered surfaces deep</span></p>
         <p class="body">Every number in this block was chosen to trip one named gate.</p>
         <p class="faint">This line sits at 1.6 to 1 against its own background.</p>
         <p class="micro">Eight pixel legal text nobody can read in a feed.</p>
