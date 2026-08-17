@@ -1,4 +1,4 @@
 # Runtime dependencies used by the render pipeline.
 # Keep exact pins in sync with CI and update them through reviewed dependency PRs.
 Pillow==12.3.0
-playwright==1.61.0
+playwright==1.62.0
