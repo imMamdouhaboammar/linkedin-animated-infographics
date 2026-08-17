@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
-"""Load and apply helper/visual-contract.json.
+"""Load and apply the repository's measurable visual contract.
 
-The contract is the single source of truth for every measurable visual threshold.
-Scripts must not hardcode a number that appears there; they look it up, compare a
-measured value against it, and record a finding carrying both numbers so the render
+``helper/visual-contract.json`` is the base contract. Small feature-scoped additions can
+live in ``helper/visual-contract.d/*.json``; they are merged deterministically and may not
+replace an existing threshold or gate. The result is one logical contract consumed by all
+render stages and tests.
+
+Scripts must not hardcode a number that appears in the contract. They look it up, compare
+a measured value against it, and record a finding carrying both numbers so the render
 report can show the measurement beside the threshold that judged it.
 
 Severity is part of the contract, not the caller's choice:
@@ -25,6 +29,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACT_PATH = ROOT / "helper" / "visual-contract.json"
+CONTRACT_FRAGMENTS = ROOT / "helper" / "visual-contract.d"
 
 BLOCKING = "blocking"
 ADVISORY = "advisory"
@@ -35,7 +40,7 @@ NA = "NA"
 
 
 class ContractError(RuntimeError):
-    """The contract is missing, unparseable, or lacks a requested threshold."""
+    """The contract is missing, unparseable, internally conflicting, or incomplete."""
 
 
 def file_sha256(path: Path) -> str:
@@ -46,14 +51,51 @@ def file_sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _read_json(path: Path) -> dict:
+    try:
+        return json.loads(path.read_text())
+    except json.JSONDecodeError as exc:
+        raise ContractError(f"invalid JSON in {path}: {exc}") from exc
+
+
+def _merge_fragment(document: dict, fragment: dict, source: Path) -> None:
+    if fragment.get("schema_version") != document.get("schema_version"):
+        raise ContractError(
+            f"contract fragment schema mismatch in {source}: "
+            f"{fragment.get('schema_version')} != {document.get('schema_version')}"
+        )
+
+    thresholds = document.setdefault("thresholds", {})
+    for threshold_id, spec in fragment.get("thresholds", {}).items():
+        if threshold_id in thresholds:
+            raise ContractError(
+                f"duplicate threshold {threshold_id!r} in contract fragment {source}"
+            )
+        thresholds[threshold_id] = spec
+
+    gates = document.setdefault("gates", {})
+    for gate_id, description in fragment.get("gates", {}).items():
+        if gate_id in gates and gates[gate_id] != description:
+            raise ContractError(f"conflicting gate {gate_id!r} in contract fragment {source}")
+        gates[gate_id] = description
+
+
 def load_contract(path: Path | None = None) -> dict:
+    """Return the merged logical visual contract.
+
+    Passing ``path`` intentionally loads only that document, which keeps unit tests and
+    callers able to validate an isolated contract. The default repository load also merges
+    sorted fragments from ``helper/visual-contract.d``.
+    """
     target = Path(path) if path else CONTRACT_PATH
     if not target.is_file():
         raise ContractError(f"missing visual contract: {target}")
-    try:
-        return json.loads(target.read_text())
-    except json.JSONDecodeError as exc:
-        raise ContractError(f"invalid JSON in {target}: {exc}") from exc
+    document = _read_json(target)
+
+    if path is None and CONTRACT_FRAGMENTS.is_dir():
+        for fragment_path in sorted(CONTRACT_FRAGMENTS.glob("*.json")):
+            _merge_fragment(document, _read_json(fragment_path), fragment_path)
+    return document
 
 
 class VisualContract:
