@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Fixture: clipped text</title>
+<style>
+* { box-sizing: border-box; }
+html, body { margin: 0; background: #222; }
+#artboard { position: relative; width: 1080px; height: 1350px; overflow: hidden; background: #fff; color: #111; font-family: sans-serif; }
+.card { position: absolute; left: 96px; top: 180px; width: 520px; height: 120px; overflow: hidden; border: 1px solid #ddd; }
+.headline { width: 500px; height: 48px; overflow: hidden; white-space: nowrap; font-size: 40px; line-height: 48px; font-weight: 700; }
+.safe { position: absolute; left: 96px; top: 420px; width: 760px; font-size: 28px; line-height: 36px; }
+</style>
+</head>
+<body>
+<div id="artboard">
+  <div class="card"><div class="headline">This intentionally long headline must be detected when clipped inside its box</div></div>
+  <div class="safe">This line fits and should not be reported.</div>
+</div>
+</body>
+</html>
