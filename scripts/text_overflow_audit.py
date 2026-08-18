@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fail when rendered text is clipped or overflows a bounded container."""
+"""Fail when rendered text is clipped or escapes the artboard."""
 
 from __future__ import annotations
 
@@ -25,30 +25,55 @@ PROBE_JS = r"""
   const label = el => `<${el.tagName.toLowerCase()} class="${
     (el.className && el.className.baseVal !== undefined ? el.className.baseVal : el.className || '')
       .toString().slice(0, 50)}">`;
+  const clips = (el, axis) => {
+    const cs = getComputedStyle(el);
+    const value = axis === 'x' ? cs.overflowX : cs.overflowY;
+    return value === 'hidden' || value === 'clip';
+  };
+  const outside = (inner, outer, axis) => axis === 'x'
+    ? inner.left < outer.left - 1 || inner.right > outer.right + 1
+    : inner.top < outer.top - 1 || inner.bottom > outer.bottom + 1;
 
   board.querySelectorAll('*').forEach(el => {
     if (!visible(el)) return;
-    const text = [...el.childNodes]
-      .filter(n => n.nodeType === 3).map(n => n.textContent).join('').trim();
-    if (!text) return;
-    const cs = getComputedStyle(el);
-    const r = el.getBoundingClientRect();
-    if (!r.width || !r.height) return;
+    const textNodes = [...el.childNodes]
+      .filter(n => n.nodeType === 3 && n.textContent.trim().length > 0);
+    if (!textNodes.length) return;
 
-    const horizontal = el.scrollWidth > el.clientWidth + 1;
-    const vertical = el.scrollHeight > el.clientHeight + 1;
-    const clipsX = ['hidden', 'clip'].includes(cs.overflowX);
-    const clipsY = ['hidden', 'clip'].includes(cs.overflowY);
-    const outsideBoard = r.left < br.left - 1 || r.right > br.right + 1 ||
-                         r.top < br.top - 1 || r.bottom > br.bottom + 1;
+    const range = document.createRange();
+    range.setStartBefore(textNodes[0]);
+    range.setEndAfter(textNodes[textNodes.length - 1]);
+    const tr = range.getBoundingClientRect();
+    if (!tr.width || !tr.height) return;
 
-    if ((horizontal && clipsX) || (vertical && clipsY) || outsideBoard) {
+    const reasons = [];
+    if (outside(tr, br, 'x') || outside(tr, br, 'y')) reasons.push('outside-artboard');
+
+    for (let ancestor = el; ancestor && ancestor !== board.parentElement;
+         ancestor = ancestor.parentElement) {
+      if (!visible(ancestor)) continue;
+      const ar = ancestor.getBoundingClientRect();
+      if (clips(ancestor, 'x') && outside(tr, ar, 'x')) {
+        reasons.push(`clipped-x:${label(ancestor)}`);
+      }
+      if (clips(ancestor, 'y') && outside(tr, ar, 'y')) {
+        reasons.push(`clipped-y:${label(ancestor)}`);
+      }
+      if (ancestor === board) break;
+    }
+
+    if (reasons.length) {
+      const text = textNodes.map(n => n.textContent).join('').trim();
       violations.push({
         element: label(el),
         sample: text.slice(0, 70),
-        horizontal, vertical, outsideBoard,
-        client: [el.clientWidth, el.clientHeight],
-        scroll: [el.scrollWidth, el.scrollHeight],
+        reasons: [...new Set(reasons)],
+        text_rect: {
+          left: Math.round((tr.left - br.left) * 10) / 10,
+          top: Math.round((tr.top - br.top) * 10) / 10,
+          right: Math.round((tr.right - br.left) * 10) / 10,
+          bottom: Math.round((tr.bottom - br.top) * 10) / 10,
+        },
       });
     }
   });
@@ -93,7 +118,7 @@ def main(argv=None) -> int:
         return 0
     print(f'  FAIL  {len(violations)} text node(s) clipped or outside the artboard')
     for row in violations[:8]:
-        print(f"        {row['element']} {row['sample']!r}")
+        print(f"        {row['element']} {row['sample']!r}: {', '.join(row['reasons'])}")
     return 1
 
 
