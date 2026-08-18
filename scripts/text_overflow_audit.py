@@ -10,6 +10,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from scripts.render_probe import open_artboard
+from scripts.visual_contract import ContractError, VisualContract, file_sha256
 
 PROBE_JS = r"""
 () => {
@@ -90,8 +91,20 @@ def main(argv=None) -> int:
     ap.add_argument('--at', type=float, default=0.0)
     args = ap.parse_args(argv)
 
-    with open_artboard(args.html, width=1080, height=1350, at=args.at,
-                       browser=args.browser) as (page, capture):
+    try:
+        contract = VisualContract()
+    except ContractError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
+
+    artifact = Path(args.html)
+    with open_artboard(
+        args.html,
+        width=contract.int_value('artboard.width'),
+        height=contract.int_value('artboard.height'),
+        at=args.at,
+        browser=args.browser,
+    ) as (page, capture):
         result = page.evaluate(PROBE_JS)
 
     if result.get('error'):
@@ -102,7 +115,8 @@ def main(argv=None) -> int:
     report = {
         'schema_version': 1,
         'stage': 'text-overflow',
-        'artifact': str(Path(args.html).resolve()),
+        'artifact': str(artifact.resolve()),
+        'artifact_sha256': file_sha256(artifact),
         'capture': capture,
         'verdict': 'FAIL' if violations else 'PASS',
         'violations': violations,
