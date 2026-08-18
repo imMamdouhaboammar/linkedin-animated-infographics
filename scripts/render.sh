@@ -41,6 +41,7 @@ FRAMES="$EVIDENCE/frames"
 STILL="$OUT_DIR/still.png"
 REPORT="$OUT_DIR/render-report.json"
 ARTBOARD_JSON="$EVIDENCE/artboard.json"
+OVERFLOW_JSON="$EVIDENCE/text-overflow.json"
 STILL_JSON="$EVIDENCE/still.json"
 GIF_JSON="$EVIDENCE/gif.json"
 mkdir -p "$EVIDENCE"
@@ -62,6 +63,16 @@ ARTBOARD_CMD+=(--browser "$BROWSER")
 ARTBOARD_STATUS=$?
 set -e
 [[ "$ARTBOARD_STATUS" -le 1 ]] || exit "$ARTBOARD_STATUS"
+
+echo
+echo "── text overflow audit ──────────────────────"
+set +e
+OVERFLOW_CMD=(python3 "$HERE/text_overflow_audit.py" "$HTML" --json "$OVERFLOW_JSON")
+OVERFLOW_CMD+=(--browser "$BROWSER")
+"${OVERFLOW_CMD[@]}"
+OVERFLOW_STATUS=$?
+set -e
+[[ "$OVERFLOW_STATUS" -le 1 ]] || exit "$OVERFLOW_STATUS"
 
 echo
 echo "── still ────────────────────────────────────"
@@ -98,3 +109,5 @@ echo "── merge evidence ─────────────────�
 python3 "$HERE/render_report.py" merge \
   --artboard "$ARTBOARD_JSON" --still "$STILL_JSON" --gif "$GIF_JSON" \
   --input "$HTML" --output "$OUT" --out "$REPORT"
+
+[[ "$ARTBOARD_STATUS" -eq 0 && "$OVERFLOW_STATUS" -eq 0 && "$STILL_STATUS" -eq 0 && "$GIF_STATUS" -eq 0 ]]
