@@ -118,12 +118,6 @@ def sanitise(data: bytes, name: str) -> str:
 def fetch(slug, variant="color", out=None, manifest_path=MANIFEST, timeout=30):
     manifest = load_manifest(manifest_path)
     name = resolve_name(manifest, slug, variant)
-    url = manifest["url_template"].format(version=manifest["version"], name=name)
-    request = urllib.request.Request(url, headers={"User-Agent": "linkedin-animated-infographics/brand-icon"})
-    with urllib.request.urlopen(request, timeout=timeout) as response:  # noqa: S310 - pinned https host
-        data = response.read(MAX_BYTES + 1)
-    text = sanitise(data, name)
-    digest = hashlib.sha256(text.encode("utf-8")).hexdigest()
     if out:
         candidate = Path(out)
         target = (candidate if candidate.is_absolute() else ROOT / candidate).resolve()
@@ -133,6 +127,12 @@ def fetch(slug, variant="color", out=None, manifest_path=MANIFEST, timeout=30):
         raise ValueError(
             f"--out must stay inside the repository so check() can verify it; {target} does not"
         )
+    url = manifest["url_template"].format(version=manifest["version"], name=name)
+    request = urllib.request.Request(url, headers={"User-Agent": "linkedin-animated-infographics/brand-icon"})
+    with urllib.request.urlopen(request, timeout=timeout) as response:  # noqa: S310 - pinned https host
+        data = response.read(MAX_BYTES + 1)
+    text = sanitise(data, name)
+    digest = hashlib.sha256(text.encode("utf-8")).hexdigest()
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(text)
     record = {

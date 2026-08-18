@@ -16,6 +16,20 @@
       "trademark": "This mark is the trademark of its owner. Use it to identify that product and nothing else."
     },
     {
+      "slug": "claudecode",
+      "variant": "color",
+      "file": "assets/brand-icons/claudecode-color.svg",
+      "resolved_name": "claudecode-color",
+      "source_url": "https://unpkg.com/@lobehub/icons-static-svg@1.94.0/icons/claudecode-color.svg",
+      "package": "@lobehub/icons-static-svg",
+      "package_version": "1.94.0",
+      "license": "MIT",
+      "license_scope": "The MIT licence covers the packaging of this icon set. It does not transfer any right in the marks themselves. Every logo remains the trademark of its owner and may only be used nominatively, to identify that product.",
+      "sha256": "670b3d8d749d0815ad8f7e62a59d51cb5e2053cb19403f3541a8aed7036a877f",
+      "fetched_on": "2026-08-14",
+      "trademark": "This mark is the trademark of its owner. Use it to identify that product and nothing else."
+    },
+    {
       "slug": "gemini",
       "variant": "color",
       "file": "assets/brand-icons/gemini-color.svg",
@@ -30,6 +44,34 @@
       "trademark": "This mark is the trademark of its owner. Use it to identify that product and nothing else."
     },
     {
+      "slug": "github",
+      "variant": "color",
+      "file": "assets/brand-icons/github.svg",
+      "resolved_name": "github",
+      "source_url": "https://unpkg.com/@lobehub/icons-static-svg@1.94.0/icons/github.svg",
+      "package": "@lobehub/icons-static-svg",
+      "package_version": "1.94.0",
+      "license": "MIT",
+      "license_scope": "The MIT licence covers the packaging of this icon set. It does not transfer any right in the marks themselves. Every logo remains the trademark of its owner and may only be used nominatively, to identify that product.",
+      "sha256": "1bd763b5d53ab1618e0afce72aacffc7e93d1249c395f713b3b055c087526625",
+      "fetched_on": "2026-08-14",
+      "trademark": "This mark is the trademark of its owner. Use it to identify that product and nothing else."
+    },
+    {
+      "slug": "lobehub",
+      "variant": "color",
+      "file": "assets/brand-icons/lobehub-color.svg",
+      "resolved_name": "lobehub-color",
+      "source_url": "https://unpkg.com/@lobehub/icons-static-svg@1.94.0/icons/lobehub-color.svg",
+      "package": "@lobehub/icons-static-svg",
+      "package_version": "1.94.0",
+      "license": "MIT",
+      "license_scope": "The MIT licence covers the packaging of this icon set. It does not transfer any right in the marks themselves. Every logo remains the trademark of its owner and may only be used nominatively, to identify that product.",
+      "sha256": "13953f9e8520daea7c06119e824a946946bbfa1232e998cefdd71467bb54d835",
+      "fetched_on": "2026-08-14",
+      "trademark": "This mark is the trademark of its owner. Use it to identify that product and nothing else."
+    },
+    {
       "slug": "openai",
       "variant": "mono",
       "file": "assets/brand-icons/openai.svg",
@@ -40,6 +82,20 @@
       "license": "MIT",
       "license_scope": "The MIT licence covers the packaging of this icon set. It does not transfer any right in the marks themselves. Every logo remains the trademark of its owner and may only be used nominatively, to identify that product.",
       "sha256": "a595df6b423920c67a7f8f73c063e4bfb72d415948097b6cac063a2366bb5186",
+      "fetched_on": "2026-08-14",
+      "trademark": "This mark is the trademark of its owner. Use it to identify that product and nothing else."
+    },
+    {
+      "slug": "perplexity",
+      "variant": "color",
+      "file": "assets/brand-icons/perplexity-color.svg",
+      "resolved_name": "perplexity-color",
+      "source_url": "https://unpkg.com/@lobehub/icons-static-svg@1.94.0/icons/perplexity-color.svg",
+      "package": "@lobehub/icons-static-svg",
+      "package_version": "1.94.0",
+      "license": "MIT",
+      "license_scope": "The MIT licence covers the packaging of this icon set. It does not transfer any right in the marks themselves. Every logo remains the trademark of its owner and may only be used nominatively, to identify that product.",
+      "sha256": "8353f3ab20822f1a933224b0ea32cc39f0c32d5740f4af8c254b0f418e0a3a70",
       "fetched_on": "2026-08-14",
       "trademark": "This mark is the trademark of its owner. Use it to identify that product and nothing else."
     }

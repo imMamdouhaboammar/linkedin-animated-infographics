@@ -28,3 +28,7 @@ updates:
     target-branch: "main"
     commit-message:
       prefix: "chore(actions)"
+    groups:
+      github-actions:
+        patterns:
+          - "*"

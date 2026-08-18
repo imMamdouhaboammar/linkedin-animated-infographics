@@ -18,7 +18,7 @@ class SupplyChainPolicyTests(unittest.TestCase):
             for line in RUNTIME_REQUIREMENTS.read_text().splitlines()
             if line.strip() and not line.lstrip().startswith("#")
         ]
-        self.assertEqual(["Pillow==12.3.0", "playwright==1.61.0"], dependencies)
+        self.assertEqual(["Pillow==12.3.0", "playwright==1.62.0"], dependencies)
         self.assertTrue(all("==" in dependency for dependency in dependencies))
 
     def test_security_tooling_is_exactly_pinned(self):

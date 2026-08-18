@@ -9,3 +9,4 @@ research/upstreams/
 
 # Ignore VS Code AI rules
 .github/instructions/codacy.instructions.md
+.linkedin-infographics/
