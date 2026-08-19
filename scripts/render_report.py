@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Merge measured artboard, still, and GIF evidence into one fail-closed report."""
+"""Merge measured render evidence into one fail-closed report."""
 
 from __future__ import annotations
 
@@ -29,6 +29,7 @@ FRAGMENT_PRODUCERS = {
     "still": "scripts/check_render.py",
     "gif": "scripts/build_gif.py",
 }
+OVERFLOW_KIND = "text-overflow"
 ROW_FIELDS = {
     "threshold_id", "gate", "severity", "status", "measured", "threshold",
     "unit", "detail", "evidence",
@@ -115,11 +116,67 @@ def read_fragment(path: Path, kind: str, contract: VisualContract) -> dict:
     return fragment
 
 
-def merge_fragments(paths: dict[str, Path], input_path: Path, output_path: Path) -> dict:
+def read_overflow_fragment(path: Path) -> dict:
+    if not path.is_file():
+        raise ValueError(f"missing render fragment: {path}")
+    try:
+        fragment = json.loads(path.read_text())
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"invalid render fragment {path}: {exc}") from exc
+    if fragment.get("schema_version") != 1:
+        raise ValueError(f"unsupported render fragment schema: {path}")
+    if fragment.get("stage") != OVERFLOW_KIND:
+        raise ValueError(f"render fragment stage is not {OVERFLOW_KIND}: {path}")
+    if not isinstance(fragment.get("artifact"), str) or not fragment["artifact"]:
+        raise ValueError(f"render fragment has no artifact metadata: {path}")
+    artifact_sha256 = fragment.get("artifact_sha256")
+    if not isinstance(artifact_sha256, str) or len(artifact_sha256) != 64:
+        raise ValueError(f"render fragment has no artifact digest: {path}")
+    violations = fragment.get("violations")
+    if not isinstance(violations, list):
+        raise ValueError(f"text-overflow fragment has no violations list: {path}")
+    expected = FAIL if violations else PASS
+    if fragment.get("verdict") != expected:
+        raise ValueError("text-overflow verdict does not match violations")
+    return fragment
+
+
+def overflow_finding(fragment: dict) -> dict:
+    violations = fragment["violations"]
+    evidence = [
+        {
+            "element": row.get("element"),
+            "sample": row.get("sample"),
+            "reasons": row.get("reasons", []),
+            "text_rect": row.get("text_rect"),
+        }
+        for row in violations[:8]
+        if isinstance(row, dict)
+    ]
+    return {
+        "threshold_id": "text.visible_nodes",
+        "gate": "text-overflow",
+        "severity": BLOCKING,
+        "status": FAIL if violations else PASS,
+        "measured": len(violations),
+        "threshold": 0,
+        "unit": "violations",
+        "detail": (
+            f"{len(violations)} rendered text node(s) clipped or outside the artboard"
+            if violations else "no clipped or overflowing rendered text detected"
+        ),
+        "evidence": evidence,
+    }
+
+
+def merge_fragments(
+    paths: dict[str, Path], overflow_path: Path, input_path: Path, output_path: Path
+) -> dict:
     contract = VisualContract()
     fragments = {
         kind: read_fragment(path, kind, contract) for kind, path in paths.items()
     }
+    overflow = read_overflow_fragment(overflow_path)
     expected_artifacts = {
         "artboard": input_path.resolve(),
         "still": input_path.resolve(),
@@ -130,6 +187,11 @@ def merge_fragments(paths: dict[str, Path], input_path: Path, output_path: Path)
             raise ValueError(f"stale artifact metadata in {kind} render fragment")
         if fragment["artifact_sha256"] != file_sha256(expected_artifacts[kind]):
             raise ValueError(f"stale artifact digest in {kind} render fragment")
+    if Path(overflow["artifact"]).resolve() != input_path.resolve():
+        raise ValueError("stale artifact metadata in text-overflow render fragment")
+    if overflow["artifact_sha256"] != file_sha256(input_path):
+        raise ValueError("stale artifact digest in text-overflow render fragment")
+
     findings = [row for fragment in fragments.values() for row in fragment["findings"]]
     for kind, producer in FRAGMENT_PRODUCERS.items():
         present = {row["threshold_id"] for row in fragments[kind]["findings"]}
@@ -137,21 +199,24 @@ def merge_fragments(paths: dict[str, Path], input_path: Path, output_path: Path)
             if threshold["measured_by"] == producer and threshold_id not in present:
                 findings.append(skipped(
                     contract, threshold_id, f"missing from {kind} render fragment"))
+    findings.append(overflow_finding(overflow))
 
     summary = summarize(findings)
+    all_sources = {**fragments, OVERFLOW_KIND: overflow}
+    all_paths = {**paths, OVERFLOW_KIND: overflow_path}
     return {
         "schema_version": 1,
         "verdict": summary["verdict"],
         "summary": summary,
         "findings": findings,
         "sources": {
-            kind: {"path": str(paths[kind].resolve()), "verdict": fragment.get("verdict")}
-            for kind, fragment in fragments.items()
+            kind: {"path": str(all_paths[kind].resolve()), "verdict": fragment.get("verdict")}
+            for kind, fragment in all_sources.items()
         },
         "digests": {
             "input": digest(input_path),
             "output": digest(output_path),
-            "fragments": {kind: digest(path) for kind, path in paths.items()},
+            "fragments": {kind: digest(path) for kind, path in all_paths.items()},
         },
     }
 
@@ -162,18 +227,20 @@ def main(argv=None) -> int:
     merge = commands.add_parser("merge")
     for kind in FRAGMENT_PRODUCERS:
         merge.add_argument(f"--{kind}", required=True)
+    merge.add_argument("--text-overflow", required=True)
     merge.add_argument("--input", required=True)
     merge.add_argument("--output", required=True)
     merge.add_argument("--out", default="build/render-report.json")
     args = parser.parse_args(argv)
 
     paths = {kind: Path(getattr(args, kind)) for kind in FRAGMENT_PRODUCERS}
+    overflow_path = Path(args.text_overflow)
     input_path, output_path = Path(args.input), Path(args.output)
     try:
         if not input_path.is_file() or not output_path.is_file():
             missing = input_path if not input_path.is_file() else output_path
             raise ValueError(f"missing render artifact: {missing}")
-        report = merge_fragments(paths, input_path, output_path)
+        report = merge_fragments(paths, overflow_path, input_path, output_path)
     except ValueError as exc:
         print(str(exc), file=sys.stderr)
         return 2

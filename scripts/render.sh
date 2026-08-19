@@ -106,8 +106,13 @@ set -e
 
 echo
 echo "── merge evidence ───────────────────────────"
+set +e
 python3 "$HERE/render_report.py" merge \
-  --artboard "$ARTBOARD_JSON" --still "$STILL_JSON" --gif "$GIF_JSON" \
+  --artboard "$ARTBOARD_JSON" --text-overflow "$OVERFLOW_JSON" \
+  --still "$STILL_JSON" --gif "$GIF_JSON" \
   --input "$HTML" --output "$OUT" --out "$REPORT"
+REPORT_STATUS=$?
+set -e
+[[ "$REPORT_STATUS" -le 1 ]] || exit "$REPORT_STATUS"
 
-[[ "$ARTBOARD_STATUS" -eq 0 && "$OVERFLOW_STATUS" -eq 0 && "$STILL_STATUS" -eq 0 && "$GIF_STATUS" -eq 0 ]]
+[[ "$ARTBOARD_STATUS" -eq 0 && "$OVERFLOW_STATUS" -eq 0 && "$STILL_STATUS" -eq 0 && "$GIF_STATUS" -eq 0 && "$REPORT_STATUS" -eq 0 ]]

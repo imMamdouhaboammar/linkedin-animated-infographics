@@ -46,6 +46,17 @@ def passing_fragment(kind: str) -> dict:
     }
 
 
+def overflow_fragment(violations: list | None = None) -> dict:
+    violations = violations or []
+    return {
+        "schema_version": 1,
+        "stage": "text-overflow",
+        "artifact": "overflow.artifact",
+        "verdict": "FAIL" if violations else "PASS",
+        "violations": violations,
+    }
+
+
 def bind_fragment(fragment: dict, artifact: Path) -> dict:
     fragment["artifact"] = str(artifact)
     fragment["artifact_sha256"] = hashlib.sha256(artifact.read_bytes()).hexdigest()
@@ -68,6 +79,8 @@ class RenderReportMergeTests(unittest.TestCase):
             )
             path.write_text(json.dumps(fragment))
             self.fragments[kind] = path
+        self.overflow = self.root / "text-overflow.json"
+        self.overflow.write_text(json.dumps(bind_fragment(overflow_fragment(), self.html)))
         self.report = self.root / "render-report.json"
 
     def tearDown(self):
@@ -80,6 +93,7 @@ class RenderReportMergeTests(unittest.TestCase):
                 str(SCRIPT),
                 "merge",
                 "--artboard", str(self.fragments["artboard"]),
+                "--text-overflow", str(self.overflow),
                 "--still", str(self.fragments["still"]),
                 "--gif", str(self.fragments["gif"]),
                 "--input", str(self.html),
@@ -105,7 +119,43 @@ class RenderReportMergeTests(unittest.TestCase):
             hashlib.sha256(self.gif.read_bytes()).hexdigest(),
         )
         self.assertEqual(
-            set(report["digests"]["fragments"]), {"artboard", "still", "gif"})
+            set(report["digests"]["fragments"]),
+            {"artboard", "still", "gif", "text-overflow"},
+        )
+        overflow = next(row for row in report["findings"] if row["gate"] == "text-overflow")
+        self.assertEqual(overflow["status"], "PASS")
+        self.assertEqual(overflow["measured"], 0)
+
+    def test_text_overflow_is_a_blocking_final_report_failure(self):
+        violation = {
+            "element": '<div class="headline">',
+            "sample": "A clipped headline",
+            "reasons": ["clipped-x:<div class=\"card\">"],
+            "text_rect": {"left": 90, "top": 100, "right": 900, "bottom": 160},
+        }
+        self.overflow.write_text(json.dumps(bind_fragment(overflow_fragment([violation]), self.html)))
+
+        outcome = self.run_merge()
+
+        self.assertEqual(outcome.returncode, 1, outcome.stderr)
+        report = json.loads(self.report.read_text())
+        self.assertEqual(report["verdict"], "FAIL")
+        self.assertIn("text-overflow", report["summary"]["failed_gates"])
+        finding = next(row for row in report["findings"] if row["gate"] == "text-overflow")
+        self.assertEqual(finding["severity"], "blocking")
+        self.assertEqual(finding["measured"], 1)
+        self.assertEqual(finding["evidence"][0]["sample"], "A clipped headline")
+
+    def test_text_overflow_verdict_must_match_violations(self):
+        fragment = bind_fragment(overflow_fragment(), self.html)
+        fragment["verdict"] = "FAIL"
+        self.overflow.write_text(json.dumps(fragment))
+
+        outcome = self.run_merge()
+
+        self.assertEqual(outcome.returncode, 2)
+        self.assertIn("verdict does not match violations", outcome.stderr)
+        self.assertFalse(self.report.exists())
 
     def test_na_blocking_evidence_writes_a_failing_report(self):
         fragment = bind_fragment(passing_fragment("gif"), self.gif)
@@ -145,6 +195,14 @@ class RenderReportMergeTests(unittest.TestCase):
 
     def test_missing_fragment_stops_without_claiming_a_report(self):
         self.fragments["still"] = self.root / "missing.json"
+
+        outcome = self.run_merge()
+
+        self.assertEqual(outcome.returncode, 2)
+        self.assertFalse(self.report.exists())
+
+    def test_missing_overflow_fragment_stops_without_claiming_a_report(self):
+        self.overflow = self.root / "missing-overflow.json"
 
         outcome = self.run_merge()
 
@@ -209,6 +267,21 @@ class RenderReportMergeTests(unittest.TestCase):
 
         self.assertEqual(outcome.returncode, 2)
         self.assertIn("artifact digest", outcome.stderr)
+        self.assertFalse(self.report.exists())
+
+    def test_overflow_digest_must_match_current_artifact(self):
+        fragment = bind_fragment(overflow_fragment(), self.html)
+        self.html.write_bytes(b"<html>changed after overflow measurement</html>")
+        self.overflow.write_text(json.dumps(fragment))
+        for kind in ("artboard", "still"):
+            current = json.loads(self.fragments[kind].read_text())
+            bind_fragment(current, self.html)
+            self.fragments[kind].write_text(json.dumps(current))
+
+        outcome = self.run_merge()
+
+        self.assertEqual(outcome.returncode, 2)
+        self.assertIn("text-overflow render fragment", outcome.stderr)
         self.assertFalse(self.report.exists())
 
 
