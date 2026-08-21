@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>Fixture: RTL text fits</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #222; }
+  #artboard {
+    position: relative;
+    width: 1080px;
+    height: 1350px;
+    overflow: hidden;
+    background: #faf8f4;
+    color: #171717;
+    font-family: Arial, "Noto Sans Arabic", sans-serif;
+    direction: rtl;
+  }
+  .headline {
+    position: absolute;
+    top: 110px;
+    right: 96px;
+    width: 888px;
+    font-size: 60px;
+    line-height: 1.35;
+    font-weight: 700;
+    text-align: right;
+  }
+  .body {
+    position: absolute;
+    top: 330px;
+    right: 96px;
+    width: 888px;
+    font-size: 30px;
+    line-height: 1.7;
+    text-align: right;
+  }
+  .metric {
+    position: absolute;
+    top: 690px;
+    right: 96px;
+    width: 888px;
+    font-size: 42px;
+    line-height: 1.5;
+    text-align: right;
+  }
+</style>
+</head>
+<body>
+<div id="artboard">
+  <div class="headline">الوضوح يبدأ من ترتيب المعلومة قبل إضافة الحركة</div>
+  <div class="body">اختبار عربي باتجاه من اليمين إلى اليسار مع نص طويل نسبيًا، ومسافات طبيعية، ومزيج من الكلمات العربية والإنجليزية مثل LinkedIn وAI بدون خروج النص من مساحة التصميم</div>
+  <div class="metric">معدل التحويل 19.24% مقابل 6.87%</div>
+</div>
+</body>
+</html>

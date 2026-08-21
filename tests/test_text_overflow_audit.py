@@ -45,6 +45,23 @@ class TextOverflowAuditTests(unittest.TestCase):
         self.assertEqual(data['verdict'], 'PASS')
         self.assertEqual(data['violations'], [])
 
+    def test_compliant_arabic_rtl_copy_has_no_false_positive(self):
+        code, data = run_audit('text-overflow-rtl-pass.html')
+        self.assertEqual(code, 0, data['violations'])
+        self.assertEqual(data['verdict'], 'PASS')
+        self.assertEqual(data['violations'], [])
+
+    def test_clipped_arabic_rtl_headline_fails_with_horizontal_evidence(self):
+        code, data = run_audit('text-overflow-rtl-fail.html')
+        self.assertEqual(code, 1)
+        self.assertEqual(data['verdict'], 'FAIL')
+        self.assertGreaterEqual(len(data['violations']), 1)
+        headline = [v for v in data['violations'] if 'headline' in v['element']]
+        self.assertTrue(headline, data['violations'])
+        reasons = ' '.join(r for v in headline for r in v['reasons'])
+        self.assertIn('clipped-x', reasons)
+        self.assertIn('عنوان عربي', headline[0]['sample'])
+
 
 if __name__ == '__main__':
     unittest.main()

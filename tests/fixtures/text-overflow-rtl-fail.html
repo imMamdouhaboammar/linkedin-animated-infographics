@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>Fixture: RTL text clipped</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #222; }
+  #artboard {
+    position: relative;
+    width: 1080px;
+    height: 1350px;
+    overflow: hidden;
+    background: #faf8f4;
+    color: #171717;
+    font-family: Arial, "Noto Sans Arabic", sans-serif;
+    direction: rtl;
+  }
+  .card {
+    position: absolute;
+    top: 120px;
+    right: 96px;
+    width: 520px;
+    height: 150px;
+    overflow: hidden;
+    border: 1px solid #bbb;
+    padding: 20px;
+  }
+  .headline {
+    width: 900px;
+    white-space: nowrap;
+    font-size: 50px;
+    line-height: 1.4;
+    font-weight: 700;
+    text-align: right;
+  }
+</style>
+</head>
+<body>
+<div id="artboard">
+  <div class="card">
+    <div class="headline">هذا عنوان عربي طويل جدًا يجب أن يخرج من البطاقة ويُكتشف كحالة قص فعلية في الاتجاه من اليمين إلى اليسار</div>
+  </div>
+</div>
+</body>
+</html>
