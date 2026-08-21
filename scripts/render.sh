@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# render.sh - one command from HTML artboard to LinkedIn-ready GIF.
+# render.sh — one command from HTML artboard to LinkedIn-ready GIF.
 #
 #   bash scripts/render.sh build/post.html build/post.gif --duration 4.8 --fps 12.5
 #
@@ -52,11 +52,11 @@ BROWSER_CMD=(python3 "$HERE/render_probe.py" browser-path)
 BROWSER="$("${BROWSER_CMD[@]}")"
 [[ -n "$BROWSER" ]] || { echo "render browser could not be resolved" >&2; exit 2; }
 
-echo "-- lint -------------------------------------"
+echo "── lint ─────────────────────────────────────"
 bash "$HERE/lint_artboard.sh" "$HTML"
 
 echo
-echo "-- artboard audit ---------------------------"
+echo "── artboard audit ───────────────────────────"
 set +e
 ARTBOARD_CMD=(python3 "$HERE/artboard_audit.py" "$HTML" --json "$ARTBOARD_JSON")
 ARTBOARD_CMD+=(--browser "$BROWSER")
@@ -66,7 +66,7 @@ set -e
 [[ "$ARTBOARD_STATUS" -le 1 ]] || exit "$ARTBOARD_STATUS"
 
 echo
-echo "-- text overflow audit ----------------------"
+echo "── text overflow audit ──────────────────────"
 set +e
 OVERFLOW_CMD=(python3 "$HERE/text_overflow_audit.py" "$HTML" --json "$OVERFLOW_JSON")
 OVERFLOW_CMD+=(--browser "$BROWSER")
@@ -76,7 +76,7 @@ set -e
 [[ "$OVERFLOW_STATUS" -le 1 ]] || exit "$OVERFLOW_STATUS"
 
 echo
-echo "-- still ------------------------------------"
+echo "── still ────────────────────────────────────"
 set +e
 STILL_CMD=(python3 "$HERE/check_render.py" "$HTML" --out "$STILL" \
   --json "$STILL_JSON" --selector "$SELECTOR" "${MOBILE_ARG[@]}")
@@ -87,7 +87,7 @@ set -e
 [[ "$STILL_STATUS" -le 1 ]] || exit "$STILL_STATUS"
 
 echo
-echo "-- capture ----------------------------------"
+echo "── capture ──────────────────────────────────"
 CAPTURE_CMD=(python3 "$HERE/capture_frames.py" "$HTML" \
   --out "$FRAMES" --duration "$DURATION" --fps "$FPS" \
   --selector "$SELECTOR" --scale "$SCALE")
@@ -96,7 +96,7 @@ CAPTURE_CMD+=(--browser "$BROWSER")
 python3 "$HERE/render_probe.py" stamp-capture "$FRAMES/capture.json" --browser "$BROWSER"
 
 echo
-echo "-- final frame audit ------------------------"
+echo "── final frame audit ────────────────────────"
 set +e
 FINAL_FRAME_CMD=(python3 "$HERE/final_frame_audit.py" "$HTML" \
   --duration "$DURATION" --fps "$FPS" --json "$FINAL_FRAME_JSON")
@@ -107,7 +107,7 @@ set -e
 [[ "$FINAL_FRAME_STATUS" -le 1 ]] || exit "$FINAL_FRAME_STATUS"
 
 echo
-echo "-- assemble ---------------------------------"
+echo "── assemble ─────────────────────────────────"
 set +e
 python3 "$HERE/build_gif.py" "$FRAMES" \
   --out "$OUT" --fps "$FPS" --max-mb "$MAXMB" --colors "$COLORS" \
@@ -117,7 +117,7 @@ set -e
 [[ "$GIF_STATUS" -le 1 ]] || exit "$GIF_STATUS"
 
 echo
-echo "-- merge evidence ---------------------------"
+echo "── merge evidence ───────────────────────────"
 set +e
 python3 "$HERE/render_report.py" merge \
   --artboard "$ARTBOARD_JSON" --text-overflow "$OVERFLOW_JSON" \
