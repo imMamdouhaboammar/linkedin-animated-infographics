@@ -72,7 +72,8 @@ jobs:
           python3 -m unittest -v \
             tests.test_codex_plugin \
             tests.test_openai_submission \
-            tests.test_design_quality_upgrade
+            tests.test_design_quality_upgrade \
+            tests.test_public_plugin_installability
 
       - name: Build deterministic Codex ZIP twice
         run: |
@@ -87,19 +88,36 @@ jobs:
         run: |
           unzip -Z1 dist/linkedin-animated-infographics-codex-plugin-v3.7.0.zip | tee dist/archive-members.txt
           python3 - <<'PY'
+          import json
           import zipfile
           from pathlib import Path
 
           archive = Path('dist/linkedin-animated-infographics-codex-plugin-v3.7.0.zip')
           with zipfile.ZipFile(archive) as zf:
               names = zf.namelist()
+              manifest = json.loads(zf.read('.codex-plugin/plugin.json'))
+
           assert '.codex-plugin/plugin.json' in names
-          assert any(name.startswith('openai-skills/') for name in names)
+          assert manifest['skills'] == './skills/'
+          assert any(name.startswith('skills/') for name in names)
+          assert not any(name.startswith('openai-skills/') for name in names)
+          assert 'skills/host-workspace-operator/SKILL.md' in names
+          assert 'skills/sandbox-python-executor/SKILL.md' in names
+          assert 'assets/logo-light.svg' in names
+          assert 'assets/logo-dark.svg' in names
+          assert 'assets/plugin-icon.svg' in names
           assert not any(name == 'demos' or name.startswith('demos/') for name in names)
           assert not any(name.startswith('tests/') for name in names)
           assert not any(name.startswith('.github/') for name in names)
           assert not any(name.startswith('agents/') for name in names)
-          print(f'Archive boundary OK: {len(names)} members; demos excluded')
+          assert not any(name.startswith('assets/') and name.lower().endswith(('.html', '.gif')) for name in names)
+
+          skill_dirs = sorted({name.split('/', 2)[1] for name in names if name.startswith('skills/')})
+          assert skill_dirs
+          for slug in skill_dirs:
+              assert f'skills/{slug}/SKILL.md' in names, slug
+
+          print(f'Archive boundary OK: {len(names)} members; canonical skills/ root; internal/demo media excluded')
           PY
           sha256sum dist/linkedin-animated-infographics-codex-plugin-v3.7.0.zip | tee dist/SHA256SUMS.txt
 
