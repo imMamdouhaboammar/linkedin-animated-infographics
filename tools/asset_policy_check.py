@@ -48,7 +48,7 @@ def _validate_vibe_source(asset: dict, prefix: str, errors: list[str]) -> None:
         if not isinstance(source_ref, str) or not source_ref.startswith(expected_prefix):
             errors.append(f"{prefix}.source_ref must be immutable and pinned to source_commit")
 
-    if source_path and isinstance(source_ref, str) and source_path not in source_ref:
+    if isinstance(source_path, str) and source_path and isinstance(source_ref, str) and source_path not in source_ref:
         errors.append(f"{prefix}.source_ref must identify the same source_path")
 
 
@@ -103,7 +103,7 @@ def validate(payload: dict) -> list[str]:
                 errors.append(f"{prefix}.source_owner must identify the original identity owner")
             _require_hash(asset, prefix, "integrity_sha256", HEX64_RE, errors)
 
-        if source_type in {"vibe-svgs-logo", "vibe-svgs-community"}:
+        if isinstance(source_type, str) and source_type in {"vibe-svgs-logo", "vibe-svgs-community"}:
             _validate_vibe_source(asset, prefix, errors)
 
         if source_type == "vibe-svgs-logo":
