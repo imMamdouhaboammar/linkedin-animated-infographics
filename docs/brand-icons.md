@@ -1,14 +1,54 @@
-# Brand icons
+# Brand icons and identity assets
 
-Official AI and LLM marks, fetched from a pinned upstream set instead of drawn from memory.
+Named AI/tool marks must come from exact, inspectable sources instead of model memory.
 
-## Why this exists
+## Source precedence
 
-The repository already had a rule for named and official marks: the exact SVG is mandatory, and a lookalike is never acceptable. What it did not have was a way to *get* one. The only available answer was `HOLD: exact SVG required`, which stops a build even when the vendor's own artwork is a fetch away.
+Use the identity source policy in `skills/info-stories/references/asset-source-policy.md`:
 
-Tracing a logo from memory produces a mark that is subtly wrong in a way most reviewers will not catch and the brand owner will. This tool removes the temptation by making the correct asset the easy one.
+1. exact user-supplied official asset
+2. original-owner source when inspectable
+3. pinned Vibe SVGs logo mirror for platform/tool logos
+4. verified Lobe asset for covered identities
+5. HOLD
 
-## Source
+A familiar-looking redraw is never an acceptable fallback.
+
+## Vibe SVGs
+
+Repository: https://github.com/imMamdouhaboammar/vibe-svgs
+
+Vibe SVGs gives the workflow a broader open repository to inspect for platform/tool logos and community visual assets.
+
+### Platform/tool logos
+
+Only files under `svgs/logos/` may satisfy the `vibe-svgs-logo` source class. The Vibe SVGs logo catalog states that third-party marks remain the property of their respective owners and should be kept intact.
+
+For every imported logo record:
+
+- exact repository `source_commit`, never `main`/`latest`
+- `source_path`
+- Git `source_blob_sha`
+- localized `integrity_sha256`
+- `identity_status: supplied-third-party-mark`
+- `alteration_policy: placement-only`
+- local/embedded render disposition
+
+The mark may be sized and positioned. Do not distort it, rebuild it, add internal decoration, modify identity geometry/colors, or imply endorsement.
+
+### Mascots are different
+
+Vibe SVGs `asset-manifest.json` marks its mascot/scene work with `communityArtwork: true` and describes examples as fan-made/community artwork.
+
+That is useful creative material, but it is not an official-mascot authority.
+
+If the brief explicitly accepts community artwork, a pinned Vibe SVGs mascot may be used with `identity_status: community-artwork`, `community_artwork: true`, and `user_confirmed: true`.
+
+If the user asks for the official/original mascot, the workflow must resolve an exact user-supplied or original-owner asset. Otherwise it returns HOLD. Community artwork is never silently upgraded to official status.
+
+## Lobe source
+
+The repository also maintains a deterministic Lobe-backed logo cache.
 
 | | |
 |---|---|
@@ -18,70 +58,60 @@ Tracing a logo from memory produces a mark that is subtly wrong in a way most re
 | Gallery | https://lobehub.com/icons |
 | Licence | MIT |
 
-**The MIT licence covers the packaging of the set. It does not carry any right in the marks themselves.** Every logo remains the trademark of its owner. Use one nominatively, to identify that product where it genuinely appears in the story, and nothing else. Do not use a mark as decoration, do not imply endorsement, do not recolour or restyle it, and do not place it so the reader would infer a partnership or an integration that does not exist.
+The MIT licence covers packaging/code, not ownership of third-party marks. Every logo remains the trademark of its owner. Use it nominatively to identify a product that genuinely appears in the story. Do not use marks as decoration or imply a partnership/integration that does not exist.
 
-## Scope, and where it ends
+Before resolving through Lobe, read `https://lobehub.com/icons/skill.md` and follow current package/slug instructions rather than guessing from memory.
 
-This is an **AI and LLM** set. It covers OpenAI, Claude, Gemini, Perplexity, Mistral, Google, Meta and several hundred more.
+## Scope and mixed-set rule
 
-It does **not** cover general social, advertising or analytics platforms. TikTok, LinkedIn, Reddit, YouTube, Google Analytics and Looker Studio are not in it.
+The Lobe set covers AI/LLM identities broadly but not every social, advertising, analytics, or general software platform. Vibe SVGs may cover some additional platform/tool logos, but neither source should be treated as universal.
 
-Asking for one of those is not an error to route around. The tool reports the gap and stops:
+If a zone names several platforms and only some have verified marks, do not create a visually inconsistent half-branded row by accident. Either resolve every required mark or deliberately use literal product names for the whole zone. Record the decision.
 
-```console
-$ python3 tools/brand_icon.py fetch tiktok
-'tiktok' is not in @lobehub/icons-static-svg@1.94.0. This set covers AI and LLM
-brands... Supply the exact SVG yourself, or keep the literal product name.
-```
-
-That is the same doctrine as the mascot gate. A missing mark is a HOLD, never a substitution.
-
-### The mixed-set trap
-
-If a zone names six platforms and this set only carries two of them, do not give those two real logos and leave the other four as text. A half-branded row reads as a mistake rather than a decision. Either every member of a zone gets its real mark, or the whole zone uses literal product names. Record which rule you applied.
-
-## Use
+## Existing Lobe helper
 
 ```bash
-# what exists
 python3 tools/brand_icon.py list --query claude
-
-# fetch one, sanitise it, record where it came from
 python3 tools/brand_icon.py fetch claude --variant color
-# falls back to the mono mark
 python3 tools/brand_icon.py fetch openai
-
-# verify nothing in the cache drifted
 python3 tools/brand_icon.py check
 ```
 
-Variants are `color`, `mono`, `text` and `brand`. A colour request falls back to the vendor's monochrome mark when that is the only one shipped, which is still that vendor's own artwork rather than a substitution.
+Variants are `color`, `mono`, `text`, and `brand`. A color request may fall back to the source package's monochrome mark when that is the only supplied variant; it still may not synthesize a new brand treatment.
 
-Marks land in `assets/brand-icons/` and every one gets a row in `assets/brand-icons/provenance.json` carrying the resolved name, source URL, pinned version, licence, trademark note, SHA-256 and fetch date.
+Marks land in `assets/brand-icons/` with provenance carrying resolved name, source URL, pinned version, licence/trademark note, SHA-256, and fetch date.
 
-## What the sanitiser rejects
+## Remote SVG safety
 
-A fetched mark is remote input. It is parsed and inspected before it is ever written, and rejected outright if it contains:
+Any fetched SVG is untrusted remote input before validation. Reject:
 
-- a `<script>`, `<style>`, `<foreignObject>`, `<iframe>`, `<audio>` or `<video>` element
-- any `on*` event handler attribute
-- an `href` or `src` pointing at `http:`, `https:`, `//`, `javascript:` or `data:text/html`
-- a `style` attribute pulling an external `url()`
-- a `<!DOCTYPE>` or `<!ENTITY>` declaration, which is the XXE vector
-- more than 256 KB, or anything that does not parse as XML with an `<svg>` root
+- `<script>`, `<style>`, `<foreignObject>`, `<iframe>`, `<audio>`, or `<video>`
+- `on*` event handler attributes
+- external `href`/`src` references
+- `javascript:` or HTML data URLs
+- CSS pulling external `url()` resources
+- DOCTYPE/entity declarations
+- oversized payloads
+- anything that does not parse as SVG XML
 
-`<style>` is rejected outright rather than parsed. The mark gets inlined into the artboard, so a stylesheet inside it is a stylesheet in the host document: `<style>@import url(...)</style>` would both reach the network and restyle the page around it. An icon has no legitimate need for one.
+Final artboards must inline or localize validated SVG assets. Render capture must not depend on remote logo requests.
 
-`check` re-runs the same inspection over the cache and compares each file against its recorded hash, so a mark that is edited after the fact fails rather than shipping quietly.
+## Identity integrity
 
-## This does not satisfy the mascot gate
+Every approved identity becomes identity-locked before creative direction.
 
-The exact-SVG rule for a named or official **mascot** requires the asset the user or the task supplied. This tool does not meet that bar and is not a route around it: an aggregator's copy has different provenance and may be outdated, unofficial, or a community redraw. Use it for brand marks that identify a product inside a story. For mascot identity the HOLD stands until the user supplies or confirms the file, and you may cite this page as a place they might obtain it.
+Protected properties include:
 
-## Using a mark on an artboard
+- SVG path geometry defining the mark/character
+- viewBox/aspect relationship
+- identity colors and exact approved variants
+- wordmark spelling and letterforms
+- mascot face/character-defining geometry
 
-Inline the SVG into the artboard rather than linking it. A fixed 1080x1350 artboard is captured by headless Chrome, and an external reference is a network dependency in the middle of a deterministic render.
+Downstream workers may position/scale approved assets. Any byte-changing identity edit requires reopening asset resolution and recording a new integrity digest.
 
-Keep the vendor's own geometry and colours. If the mark needs to sit on a coloured surface, change the surface, not the mark.
+## Story job
 
-Every logo on an artboard still inherits `evidence-traceability`: it must identify a real source or destination in the story. A logo wall with no story job fails the gate regardless of how official the artwork is.
+A verified logo can still be bad design if it has no communication job. Use a mark to identify an entity, source, destination, comparison member, or verified tool state. A logo wall with no story purpose fails regardless of asset provenance.
+
+Mascots require an even stronger job: reading pointer, state confirmation, payoff, route follower, or another explicit communication role. Decorative character motion is not enough.
