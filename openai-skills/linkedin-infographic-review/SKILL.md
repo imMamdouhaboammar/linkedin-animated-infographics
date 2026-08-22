@@ -33,7 +33,22 @@ Check:
 
 For a 1080x1350 artboard, treat an unexplained vertical gap greater than 120px between the main composition and footer/takeaway as a blocking warning unless negative space has an intentional visual job.
 
-### 2. Component grammar
+### 2. Perception tests
+
+Run the smallest relevant set against the actual visual:
+
+- **one-second hierarchy test**: identify the hook, primary anchor, and takeaway before reading supporting copy
+- **100x100** thumbnail test: the main silhouette and hierarchy must survive at approximately 100x100 pixels
+- squint or blur value-mass test
+- **grayscale** hierarchy test
+- negative-space audit: distinguish intentional framing from accidental dead space
+- edge/crop/tangency review
+- **brand-off specificity** test: without logos, the composition should still feel specific to this story
+- **effect-subtraction** test: removing glow, shadows, 3D, texture, particles, and decorative motion must not remove the concept itself
+
+A failure here does not automatically justify a full redesign. Identify the **smallest responsible dimension** and repair only that dimension.
+
+### 3. Component grammar
 
 Reject generic component patterns when they replace art direction.
 
@@ -45,7 +60,7 @@ Check:
 - no fake dashboards, fake analytics, fake proof bars, or invented metrics
 - visual structure fits the story rather than the easiest HTML pattern
 
-### 3. Copy and evidence
+### 4. Copy and evidence
 
 Check:
 
@@ -56,7 +71,7 @@ Check:
 - claims, numbers, logos, product states, and proof are supported by supplied material
 - no generic filler or exaggerated marketing language
 
-### 4. Motion when animated
+### 5. Motion when animated
 
 Every meaningful animation must explain at least one of:
 
@@ -70,7 +85,7 @@ Fail `motion-on-weak-still` when the composition itself should be repaired befor
 
 Inspect frame zero, a representative mid-state, the final state, and the loop seam.
 
-### 5. Failure taxonomy
+### 6. Failure taxonomy
 
 Return PASS or FAIL for each:
 
@@ -85,6 +100,35 @@ Return PASS or FAIL for each:
 - `decorative-motion`
 - `feed-scale-legibility`
 
+### 7. Severity and pressure
+
+Hard-gate failures remain blocking regardless of score. Classify additional craft findings as:
+
+- `critical`: blocks immediately
+- `major`: pressure 3
+- `minor`: pressure 1
+
+Block on any critical finding, two or more major findings, four or more minor findings, or **cumulative pressure** of 6 or more. Do not average away a serious defect.
+
+Every non-PASS finding should state:
+
+- severity and pressure
+- visible evidence
+- consequence at feed scale
+- smallest responsible dimension
+- exact repair action
+
+Suggested responsibility routing:
+
+- concept/message -> creative direction
+- hierarchy/composition/negative space -> layout
+- typography -> type
+- Arabic/RTL -> Arabic direction when active
+- brand/identity -> asset/brand
+- copy density -> copy compression
+- motion -> motion
+- render/runtime -> render QA
+
 ## Output
 
 Return:
@@ -92,8 +136,9 @@ Return:
 1. verdict: `PASS`, `FAIL:fixable`, or `HOLD`
 2. blocking findings
 3. top three repair actions in priority order
-4. advisory polish, if any
-5. evidence limitations
-6. motion/render notes when applicable
+4. severity counts and cumulative pressure
+5. advisory polish, if any
+6. evidence limitations
+7. motion/render notes when applicable
 
-Do not return PASS while a severe blocking finding remains.
+Do not return PASS while a severe blocking finding remains or while the aggregate pressure threshold is reached. Do not redesign unrelated content.
