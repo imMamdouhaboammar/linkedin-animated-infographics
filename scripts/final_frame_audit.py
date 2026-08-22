@@ -44,9 +44,11 @@ SEEK_ALL = """
 """
 
 AUDIT_FINAL = """
-(finalSampleMs) => {
+({finalSampleMs, selector}) => {
   const violations = [];
   const finite = [];
+  const root = document.querySelector(selector);
+  if (!root) throw new Error(`export selector not found: ${selector}`);
 
   function describeTarget(target) {
     if (!target) return '<unknown>';
@@ -61,6 +63,9 @@ AUDIT_FINAL = """
   document.getAnimations().forEach((animation, index) => {
     const effect = animation.effect;
     if (!effect || !effect.getTiming || !effect.getComputedTiming) return;
+    const target = effect.target || null;
+    if (!(target instanceof Element) || (target !== root && !root.contains(target))) return;
+
     const timing = effect.getTiming();
     if (timing.iterations === Infinity) return;
 
@@ -68,7 +73,6 @@ AUDIT_FINAL = """
     const endTime = Number(computed.endTime);
     if (!Number.isFinite(endTime)) return;
 
-    const target = effect.target || null;
     const row = {
       index,
       animation: animation.animationName || animation.id || `animation-${index}`,
@@ -114,6 +118,7 @@ def main(argv=None) -> int:
     parser.add_argument("html")
     parser.add_argument("--duration", type=float, required=True)
     parser.add_argument("--fps", type=float, default=12.5)
+    parser.add_argument("--selector", default="#artboard")
     parser.add_argument("--json", default="build/.render-evidence/final-frame.json")
     parser.add_argument("--browser")
     parser.add_argument("--settle", type=int, default=300)
@@ -155,7 +160,10 @@ def main(argv=None) -> int:
                 page.wait_for_timeout(args.settle)
                 page.evaluate(PAUSE_ALL)
                 page.evaluate(SEEK_ALL, final_sample_ms)
-                measured = page.evaluate(AUDIT_FINAL, final_sample_ms)
+                measured = page.evaluate(
+                    AUDIT_FINAL,
+                    {"finalSampleMs": final_sample_ms, "selector": args.selector},
+                )
             finally:
                 browser.close()
     except Exception as exc:
@@ -171,6 +179,7 @@ def main(argv=None) -> int:
         "stage": "final-frame",
         "artifact": str(html),
         "artifact_sha256": file_sha256(html),
+        "selector": args.selector,
         "duration_ms": round(loop_ms, 3),
         "fps": args.fps,
         "frames": frames,
