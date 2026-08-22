@@ -31,6 +31,12 @@ Record exact provenance and require local/embedded render disposition. Never gen
 
 Input: evidence inventory, approved asset plan, audience, desired output mode, optional reference diagnosis.
 
+When references are active, deconstruct every selected mechanism using:
+
+`Evidence -> Observation -> Transferable Rule -> Anti-Rule`
+
+For multiple references, assign explicit non-overlapping jobs such as composition, type hierarchy, color, texture, pacing, or motion. Do not blend all references into one mood and do not copy distinctive subject matter, identity, proprietary artwork, or unique layout signatures.
+
 Output at least three meaningfully different creative directions. Each direction must include:
 - visual hook
 - copy hook
@@ -43,6 +49,7 @@ Output at least three meaningfully different creative directions. Each direction
 - negative-space strategy
 - motion behavior and its story job when animated
 - evidence dependencies
+- reference jobs, transferable rules, and anti-rules when references exist
 - risk notes
 
 Apply clean creative structure. Include an editorial low-containment option when the story permits it. Include a diagrammatic or relationship-led option when a real relationship exists. Repeated cards are valid only when repetition is the story.
@@ -106,7 +113,7 @@ Input: evidence, selected direction, story architecture, and approved type spec.
 
 Output copy by slot, not as a paragraph dump. Prioritize one idea per zone. Remove repeated explanation. Preserve mechanism, evidence, useful specificity, and the minimum feed sizes implied by the type spec.
 
-## 8. Layout composer
+## 8. Layout composer and perception preflight
 
 Input: story architecture, asset plan, type spec, copy slots, and palette.
 
@@ -130,9 +137,22 @@ Output an explicit macro-layout specification before HTML or styling details:
 
 Do not solve layout by immediately creating cards around every text block. Preserve the selected clean structure.
 
+Before still construction, run the blocking perception preflight from `visual-quality-contract.md`:
+- one primary focal anchor
+- one-second hierarchy test
+- approximately 100x100 thumbnail test
+- squint/blur value-mass test
+- grayscale hierarchy test
+- negative-space audit
+- edge/crop/tangency test
+- brand-off specificity test
+- effect-subtraction test
+
+Record PASS/FAIL, evidence, consequence, and smallest responsible dimension for each failure. Repair only the failing dimension and preserve unrelated approved work.
+
 ## 9. Still builder
 
-Input: approved layout specification, asset plan, type spec, and copy.
+Input: approved layout specification, passing perception preflight, asset plan, type spec, and copy.
 
 Output a complete still-capable HTML artboard. Build macro zones first, then typography, verified assets, visual relationship, details, and attribution.
 
@@ -142,7 +162,9 @@ The still must communicate the useful idea with animation disabled. Final identi
 
 Input: rendered or directly inspected still plus asset/type specs.
 
-Output the top three visual defects, their severity, and exact repair actions. Apply every blocking rule in `visual-quality-contract.md`, including identity provenance, typography, clean structure, balance, rhythm, visual anchor, content distribution, and generic visual patterns.
+Output the top three visual defects, their severity, pressure, smallest responsible dimension, and exact repair actions. Apply every blocking rule in `visual-quality-contract.md`, including identity provenance, typography, clean structure, balance, rhythm, visual anchor, content distribution, generic visual patterns, and the full perception preflight against the actual render.
+
+Hard gates block independently. Additional craft findings use critical/major/minor severity and cumulative pressure. Do not return PASS when the aggregate blocking thresholds in the visual-quality contract are reached.
 
 ## 11. Motion director
 
@@ -179,10 +201,10 @@ Output:
 
 Input: final render plus evidence, asset plan, and type spec.
 
-Re-run the visual failure taxonomy and explicitly check clean structure, identity provenance, and typography. Assume the first version contains defects and actively look for them.
+Re-run the visual failure taxonomy, perception preflight, severity pressure, clean structure, identity provenance, and typography checks. Assume the first version contains defects and actively look for them. Route every failure to the smallest responsible dimension instead of reopening unrelated approved stages.
 
 ## 15. Final verifier
 
 Input: evidence inventory, asset plan, type spec, final artifact, still critic report, render QA, and final visual critique.
 
-Output `PASS`, `FAIL:fixable`, or `HOLD` with a specific reason. Do not return PASS when any blocking visual, evidence, identity, typography, or render-safety gate remains unresolved.
+Output `PASS`, `FAIL:fixable`, or `HOLD` with a specific reason. Do not return PASS when any blocking visual, evidence, identity, typography, render-safety gate, perception-preflight failure, or aggregate visual-slop threshold remains unresolved.

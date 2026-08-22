@@ -36,14 +36,15 @@ Read `helper/GUIDE.md` before composing structure.
 7. Apply `verified-identity-assets`: place only identity records from `build/asset-plan.json`. Do not create placeholders, redrawn logos, generated official marks, or a second asset source.
 8. Apply `intentional-typography`: copy the approved headline/body/mono roles, fallbacks, and loading strategy from `build/type-spec.json`. Do not silently change families because a layout is dense; edit structure or copy first.
 9. Apply `center-first-composition`: center the primary visual anchor and major story zones by default. An alignment exception is valid only when structure or fidelity benefits, including tables, UI mockups, code/terminal surfaces, timelines, Arabic/RTL flow, or a documented reference-DNA decision. Record the reason in `build/layout-spec.json`; arbitrary asymmetry is not a reason.
-10. When visual references exist, apply `reference-dna` to reuse general structural principles without cloning distinctive layout signatures.
-11. For UI Storyboard or Interface Cutaway, read `skills/info-stories/references/ui-mockup-rules.md`. Keep only story-critical controls/states, preserve feed-width legibility, distinguish documented UI from concept UI, and keep annotations outside critical controls.
-12. If a mascot is active, reserve a non-blocking mascot zone tied to the verified asset record. It must not cover core copy, UI controls, or attribution.
-13. Return the specification to the parent workflow. `artboard-builder` owns HTML execution.
+10. When visual references exist, apply `reference-dna` and the approved creative-direction transfer rules. Reuse only general mechanisms with assigned jobs and anti-rules; do not reconstruct a distinctive layout signature.
+11. Run the full perception preflight before handing the layout to `artboard-builder`: one primary focal anchor, one-second hierarchy test, approximately 100x100 thumbnail test, squint/blur value-mass test, grayscale hierarchy test, negative-space audit, edge/crop/tangency test, brand-off specificity test, and effect-subtraction test. A failing check must identify the smallest responsible dimension and route only that dimension for repair.
+12. For UI Storyboard or Interface Cutaway, read `skills/info-stories/references/ui-mockup-rules.md`. Keep only story-critical controls/states, preserve feed-width legibility, distinguish documented UI from concept UI, and keep annotations outside critical controls.
+13. If a mascot is active, reserve a non-blocking mascot zone tied to the verified asset record. It must not cover core copy, UI controls, or attribution.
+14. Return the specification to the parent workflow. `artboard-builder` owns HTML execution.
 
 ## HOLD conditions
 
-Return a HOLD when the selected concept cannot fit the artboard without breaking legibility, the creative payoff or clean structure would be lost, an identity asset is unresolved, the approved type spec cannot fit without violating feed-scale size, a requested alignment exception has no comprehension/fidelity reason, or the layout would only reproduce a reference/past design through superficial reskinning.
+Return a HOLD when the selected concept cannot fit the artboard without breaking legibility, the creative payoff or clean structure would be lost, an identity asset is unresolved, the approved type spec cannot fit without violating feed-scale size, a requested alignment exception has no comprehension/fidelity reason, the perception preflight has an unresolved blocking structural defect, or the layout would only reproduce a reference/past design through superficial reskinning.
 
 ## Quality gates
 
@@ -53,6 +54,7 @@ Return a HOLD when the selected concept cannot fit the artboard without breaking
 - `intentional-typography`
 - `center-first-composition`
 - design-taste hierarchy/density review
+- perception preflight
 - anti-slop copy-slot fit review
 - feed-scale hierarchy
 - one reading job per zone
@@ -64,5 +66,5 @@ Own and execute `design-dials`, `structural-originality`, and `reference-dna` wh
 
 ## Outputs
 
-Return `build/layout-spec.json` to the parent workflow with zone order, approximate proportions, component counts, visual anchor, hierarchy, alignment mode and exception reason, structural fingerprint, clean-structure confirmation, identity asset placements, exact type roles, UI/mascot reservations, and asset requirements.
+Return `build/layout-spec.json` to the parent workflow with zone order, approximate proportions, component counts, visual anchor, hierarchy, alignment mode and exception reason, structural fingerprint, clean-structure confirmation, identity asset placements, exact type roles, UI/mascot reservations, asset requirements, and a `perception_preflight` object containing every check, PASS/FAIL, evidence, and smallest responsible dimension for any failure.
 Typography zones declare role, stack ID, scripts, weights, and `exact-required` versus `fallback-accepted` policy. Never infer an exact font from pixels; unresolved script coverage is a HOLD.

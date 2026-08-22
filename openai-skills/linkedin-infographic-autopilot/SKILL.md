@@ -72,23 +72,32 @@ python scripts/autopilot_runtime.py init-workspace <task-workspace>/work
 
 If code execution is not observed, apply the same contracts directly from the references. Do not claim the helper ran.
 
+## Reference behavior
+
+When inspectable visual references are supplied, derive reusable guidance rather than copying the reference. For every selected mechanism use:
+
+`Evidence -> Observation -> Transferable Rule -> Anti-Rule`
+
+When multiple references exist, assign explicit non-overlapping jobs such as composition, type hierarchy, color, texture, pacing, or motion. Do not blend them into one vague style and do not copy distinctive subject matter, identity, proprietary artwork, or unique composition signatures.
+
 ## Required production sequence
 
 1. Observe runtime capabilities and select the execution path
 2. Run evidence research/inventory first and finalize `evidence/evidence.json` or its non-materialized equivalent
 3. Only after the evidence artifact is finalized, fan out independent creative discovery side jobs when real delegation is observed
-4. Generate at least three structurally different creative directions from the finalized evidence boundary
+4. Generate at least three structurally different creative directions from the finalized evidence boundary, applying the reference-transfer protocol when references exist
 5. Select the direction and define the primary takeaway
 6. Compress copy into visual slots using only approved evidence
 7. Define macro layout before component styling
-8. Build the still when sandbox writes are observed
-9. Run the complete still critique taxonomy from `references/visual-quality-contract.md`
-10. Repair blocking still defects, maximum two targeted repair attempts
-11. Proceed to motion only after the complete still gate passes
-12. Implement motion only when the requested output and host capabilities support it
-13. Run render QA using actual rendered evidence when image inspection is observed
-14. Run an independent final verification pass
-15. Deliver artifacts plus a truthful capability/execution summary
+8. Run the complete blocking perception preflight from `references/visual-quality-contract.md` and repair only the smallest responsible dimension when a check fails
+9. Build the still when sandbox writes are observed
+10. Run the complete still critique taxonomy, perception tests, severity pressure, and targeted revision routing from `references/visual-quality-contract.md`
+11. Repair blocking still defects, maximum two targeted repair attempts
+12. Proceed to motion only after the complete still gate passes
+13. Implement motion only when the requested output and host capabilities support it
+14. Run render QA using actual rendered evidence when image inspection is observed
+15. Run an independent final verification pass
+16. Deliver artifacts plus a truthful capability/execution summary
 
 ## Side jobs
 
@@ -134,11 +143,13 @@ In particular, for the default LinkedIn format the gate includes:
 - maximum bordered containment depth of two levels
 - one dominant visual anchor at feed scale
 - explicit macro rhythm and footer reservation
+- a blocking perception preflight including one-second hierarchy, 100x100 thumbnail, squint/blur, grayscale, negative-space, tangency, brand-off specificity, and effect-subtraction checks
+- severity-aware visual-slop pressure that never cancels a hard-gate failure
 - rejection of generic UI grammar, nested-card density, weak macro rhythm, weak visual anchor, top-heavy composition, and feed-scale legibility failure
 
 The critic must explicitly return PASS or FAIL for the full taxonomy, including `top-heavy-composition`, `bottom-dead-zone`, `nested-card-density`, `generic-ui-grammar`, `weak-macro-rhythm`, `weak-visual-anchor`, `footer-detachment`, `motion-on-weak-still`, `decorative-motion`, and `feed-scale-legibility`.
 
-Motion cannot begin while any blocking still item fails.
+Motion cannot begin while any blocking still item or perception-preflight item fails.
 
 If a blocking still defect remains after two targeted repairs, return `FAIL:fixable` or `HOLD` instead of shipping weak output.
 
@@ -161,7 +172,10 @@ Return:
 - observed capabilities used
 - side jobs actually executed
 - artifacts actually created
+- perception-preflight verdict
 - complete still taxonomy verdict
+- severity counts and cumulative visual-slop pressure
+- targeted repairs actually performed and their responsible dimensions
 - motion/render verdict when applicable
 - final verdict: `PASS`, `FAIL:fixable`, or `HOLD`
 

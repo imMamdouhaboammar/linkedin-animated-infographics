@@ -43,8 +43,9 @@
     "claude-behavior-regression-protected", "openai-self-contained-runtime", "capability-negotiation-before-execution",
     "no-fake-tool-or-agent-claims", "sandbox-artifact-persistence-when-available", "workspace-agents-optional-not-auto-installed",
     "evidence-integrity", "verified-identity-source-before-concept", "lobe-first-supported-ai-tool-identities",
-    "intentional-render-safe-typography", "clean-creative-structure", "still-before-motion", "bounded-visual-repair",
-    "verified-svg-mascot-rule", "exact-svg-mascot-rule", "canonical-reference-capsule-digest",
-    "deterministic-reference-selection", "no-source-reference-media-export"
+    "intentional-render-safe-typography", "clean-creative-structure", "perception-preflight-before-still",
+    "reference-transfer-not-reference-cloning", "severity-aware-visual-slop-pressure", "smallest-responsible-dimension-repair",
+    "still-before-motion", "bounded-visual-repair", "verified-svg-mascot-rule", "exact-svg-mascot-rule",
+    "canonical-reference-capsule-digest", "deterministic-reference-selection", "no-source-reference-media-export"
   ]
 }

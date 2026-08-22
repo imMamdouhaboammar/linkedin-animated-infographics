@@ -72,13 +72,15 @@ The output must feel designed for this specific idea rather than assembled from 
 Before choosing a layout:
 
 1. identify the useful relationship, tension, comparison, sequence, transformation, or reveal
-2. generate at least three meaningfully different creative directions
-3. define one dominant visual anchor, containment strategy, and negative-space strategy for every direction
-4. include an editorial low-containment direction when the story permits it
-5. include a diagrammatic or relationship-led direction when a real relationship exists
-6. choose an archetype from `references/visual-archetypes.md` or define a justified custom structure
-7. select one direction based on comprehension, memorability, evidence fit, identity fit, and feed behavior
-8. define the macro layout before writing detailed HTML/CSS
+2. when references exist, deconstruct selected mechanisms through `Evidence -> Observation -> Transferable Rule -> Anti-Rule`
+3. when multiple references exist, assign explicit jobs such as composition, type hierarchy, color, texture, pacing, or motion instead of blending them indiscriminately
+4. generate at least three meaningfully different creative directions
+5. define one dominant visual anchor, containment strategy, and negative-space strategy for every direction
+6. include an editorial low-containment direction when the story permits it
+7. include a diagrammatic or relationship-led direction when a real relationship exists
+8. choose an archetype from `references/visual-archetypes.md` or define a justified custom structure
+9. select one direction based on comprehension, memorability, evidence fit, identity fit, reference originality, and feed behavior
+10. define the macro layout before writing detailed HTML/CSS
 
 Repeated cards are valid when repeated units are the story. They are not the default wrapper for unrelated text.
 
@@ -91,6 +93,7 @@ Avoid automatic reliance on:
 - tiny uppercase labels as a substitute for hierarchy
 - excessive explanatory copy
 - decorative 3D, glow, floating objects, or motion with no story job
+- reference mimicry that copies a distinctive composition instead of transferring a general mechanism
 
 ## Required workflow
 
@@ -107,6 +110,8 @@ Create the asset plan before creative direction. Apply the exact user asset then
 ### Phase 3: Creative directions
 
 Create at least three directions with different structural ideas, not three color variations. Each direction needs a visual hook, copy hook, useful payoff, story relationship, dominant anchor, structural archetype, containment strategy, negative-space strategy, and motion job when animated.
+
+When references exist, each direction also records the selected reference jobs, transferable rules, and anti-rules. Never reuse distinctive subject matter, protected identity, proprietary artwork, or a unique layout signature from the reference.
 
 Do not present three directions that all reduce to a headline plus repeated cards.
 
@@ -145,7 +150,7 @@ Write copy by visual slot. Remove repeated explanation before layout. Keep evide
 
 The visual must carry part of the argument. Do not make the headline, subline, body, and takeaway all explain the same idea in different words. Fit copy to the approved minimum type sizes rather than shrinking type to rescue dense copy.
 
-### Phase 8: Macro layout
+### Phase 8: Macro layout and perception preflight
 
 Create an explicit 1080x1350 layout specification before component styling.
 
@@ -153,7 +158,9 @@ Define the major zones, proportional heights or bounding boxes, safe margins, al
 
 State why the selected archetype fits the story relationship.
 
-Apply every blocking rule in `references/visual-quality-contract.md`.
+Then run every blocking perception check in `references/visual-quality-contract.md`: one primary focal anchor, one-second hierarchy, approximately 100x100 thumbnail, squint/blur value-mass, grayscale hierarchy, negative-space audit, edge/crop/tangency, brand-off specificity, and effect-subtraction.
+
+A failing check must record evidence, consequence, and the smallest responsible dimension. Repair only that dimension before still construction. Do not reopen unrelated approved stages.
 
 ### Phase 9: Still construction
 
@@ -167,9 +174,9 @@ When HTML is the requested production format, keep the artboard deterministic an
 
 Inspect the entire artboard at full size and feed scale.
 
-Explicitly score the complete failure taxonomy from `references/visual-quality-contract.md`, including identity-source, typography, and clean-structure failures.
+Explicitly score the complete failure taxonomy from `references/visual-quality-contract.md`, including identity-source, typography, clean-structure, and perception failures. Classify non-hard-gate craft defects as critical, major, or minor, calculate cumulative pressure, and include the smallest responsible dimension for each failed item.
 
-Name the top three defects and repair them. Re-check after repair. Do not proceed to motion while a blocking still defect remains.
+Name the top three defects and repair only the responsible dimensions. Re-check after repair. Do not proceed to motion while a blocking still defect remains.
 
 Maximum two targeted repair attempts.
 
@@ -185,7 +192,7 @@ Do not compensate for weak static composition with more animation. Motion must n
 
 Inspect frame zero, the strongest mid-state, the final state, and the loop seam when relevant.
 
-Re-run the visual failure taxonomy and motion checks. Verify footer clearance, clipping, feed-scale text, asset loads, font loads, pacing, and whether the primary visual relationship remains obvious.
+Re-run the visual failure taxonomy, perception tests, severity pressure, and motion checks. Verify footer clearance, clipping, feed-scale text, asset loads, font loads, pacing, and whether the primary visual relationship remains obvious.
 
 ### Phase 13: Final verification
 
@@ -195,7 +202,7 @@ Return one verdict:
 - `FAIL:fixable`
 - `HOLD`
 
-A PASS requires evidence integrity, verified identity provenance, render-safe typography, a passing still, clean creative structure, a passing visual critique, and passing motion/render checks when animated.
+A PASS requires evidence integrity, verified identity provenance, render-safe typography, a passing perception preflight, a passing still, visual-slop pressure below the blocking threshold, clean creative structure, a passing visual critique, and passing motion/render checks when animated.
 
 ## Mandatory visual gates
 
@@ -214,6 +221,7 @@ Do not ship when any severe version of these is present:
 - excessive nested-card density
 - generic UI grammar replacing real art direction
 - feed-scale legibility failure
+- failed blocking perception preflight
 - motion on a weak still
 - decorative motion dominating explanatory motion
 
@@ -226,7 +234,8 @@ Deliver the final visual artifact plus a concise summary of:
 - visual archetype
 - identity source summary when named identities are present
 - typography direction
-- still critique verdict
+- perception-preflight verdict
+- still critique verdict and cumulative visual-slop pressure
 - motion critique verdict when applicable
 - final verification verdict
 
