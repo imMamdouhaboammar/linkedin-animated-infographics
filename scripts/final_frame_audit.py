@@ -47,8 +47,9 @@ AUDIT_FINAL = """
 ({finalSampleMs, selector}) => {
   const violations = [];
   const finite = [];
-  const root = document.querySelector(selector);
-  if (!root) throw new Error(`export selector not found: ${selector}`);
+  const requestedRoot = document.querySelector(selector);
+  const root = requestedRoot || document.documentElement;
+  const selectorFound = Boolean(requestedRoot);
 
   function describeTarget(target) {
     if (!target) return '<unknown>';
@@ -92,7 +93,7 @@ AUDIT_FINAL = """
     }
   });
 
-  return {finite, violations};
+  return {finite, violations, selectorFound};
 }
 """
 
@@ -180,6 +181,7 @@ def main(argv=None) -> int:
         "artifact": str(html),
         "artifact_sha256": file_sha256(html),
         "selector": args.selector,
+        "selector_found": measured["selectorFound"],
         "duration_ms": round(loop_ms, 3),
         "fps": args.fps,
         "frames": frames,
