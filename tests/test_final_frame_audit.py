@@ -28,6 +28,7 @@ def run_audit(fixture: str) -> tuple[int, dict]:
                 str(FIXTURES / fixture),
                 "--duration", "4",
                 "--fps", "10",
+                "--selector", ".artboard",
                 "--json", str(report),
             ],
             capture_output=True,
@@ -43,14 +44,16 @@ def run_audit(fixture: str) -> tuple[int, dict]:
 
 
 class FinalFrameAuditTests(unittest.TestCase):
-    def test_completed_finite_animation_passes_and_infinite_loop_is_ignored(self):
+    def test_completed_finite_animation_passes_and_ignores_non_exported_and_infinite_animation(self):
         code, data = run_audit("final-frame-pass.html")
         self.assertEqual(code, 0, data)
         self.assertEqual(data["verdict"], "PASS")
+        self.assertEqual(data["selector"], ".artboard")
         self.assertEqual(data["violations"], [])
         self.assertEqual(data["frames"], 40)
         self.assertEqual(data["final_sample_ms"], 3900.0)
         self.assertEqual(len(data["finite_animations"]), 1)
+        self.assertNotIn("outside-preview", json.dumps(data["finite_animations"]))
 
     def test_animation_that_only_finishes_at_loop_endpoint_fails(self):
         code, data = run_audit("final-frame-fail.html")
