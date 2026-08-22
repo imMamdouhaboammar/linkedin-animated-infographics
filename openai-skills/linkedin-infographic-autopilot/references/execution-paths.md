@@ -8,7 +8,7 @@ The strongest path is used only when its required capabilities are observed.
 
 All paths apply the same evidence, identity, narrative-taste, and visual-quality contracts. Capability differences change execution, not standards.
 
-Before creative/layout work, read `narrative-taste.md`. Before using any named logo or mascot, apply the Studio identity policy in the packaged skill set; exact user/original-owner provenance wins, pinned Vibe SVGs logos may be used as intact third-party marks when available, and Vibe SVGs `communityArtwork` mascots must never be promoted to official identities.
+Before creative/layout work, read `narrative-taste.md`. Before using any named logo or mascot, read `asset-source-policy.md`; exact user/original-owner provenance wins, pinned Vibe SVGs logos may be used as intact third-party marks when available, and Vibe SVGs `communityArtwork` mascots must never be promoted to official identities.
 
 ## full-autopilot
 
