@@ -13,10 +13,13 @@
     "claude": {"skills_root": "skills", "agents_root": "agents", "execution": "native-worker-graph"},
     "openai": {
       "skills_root": "openai-skills",
+      "package_skills_root": "skills",
       "execution": "capability-negotiated-autopilot",
       "sandbox_artifacts": true,
       "side_jobs": true,
       "workspace_agents": "optional",
+      "host_workspace_operator": "packaged",
+      "sandbox_python_executor": "packaged-host-native-policy",
       "reference_context": "generated-compact-capsule",
       "persistent_reference_ingestion": false,
       "visual_intelligence_capsules": [
@@ -37,10 +40,17 @@
     "reference_library": "research/reference-studies/visual-library.json"
   },
   "repo_development": {"codex_guide": ".codex/AGENTS.md", "codex_config": ".codex/config.toml", "real_subagents": true},
-  "public_submission": {"type": "skills-only", "skills_root": "openai-skills", "metadata": "submission/openai-plugin.json", "test_cases": "submission/test-cases.json"},
+  "public_submission": {
+    "type": "skills-only",
+    "skills_root": "openai-skills",
+    "package_skills_root": "skills",
+    "metadata": "submission/openai-plugin.json",
+    "test_cases": "submission/test-cases.json"
+  },
   "parity_invariants": [
     "same-plugin-name", "same-release-version", "quality-process-parity-not-visual-identity",
     "claude-behavior-regression-protected", "openai-self-contained-runtime", "capability-negotiation-before-execution",
+    "canonical-public-skills-layout", "host-workspace-operator-packaged", "sandbox-python-executor-packaged",
     "no-fake-tool-or-agent-claims", "sandbox-artifact-persistence-when-available", "workspace-agents-optional-not-auto-installed",
     "evidence-integrity", "verified-identity-source-before-concept", "lobe-first-supported-ai-tool-identities",
     "intentional-render-safe-typography", "clean-creative-structure", "perception-preflight-before-still",
