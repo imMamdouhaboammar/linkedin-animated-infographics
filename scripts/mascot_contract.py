@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+import re
 from pathlib import Path
 
 
@@ -16,7 +17,11 @@ _DIRECTIONS = [
     {"slug":"contextual-micro-reaction","purpose":"React to a nearby highlighted state with one context-specific micro motion.","communication_job":"local confirmation","allowed_parts":["eyes","head if addressable","whole body"],"loop_behavior":"short reaction followed by long neutral hold","motion_budget":"secondary motion only"}
 ]
 
-VERIFIED_SOURCES = {"user-supplied", "task-attached", "lobe"}
+OFFICIAL_SOURCES = {"user-supplied", "task-attached", "original-owner", "lobe"}
+COMMUNITY_SOURCES = {"vibe-svgs-community"}
+VERIFIED_SOURCES = OFFICIAL_SOURCES | COMMUNITY_SOURCES
+HEX40_RE = re.compile(r"^[0-9a-fA-F]{40}$")
+HEX64_RE = re.compile(r"^[0-9a-fA-F]{64}$")
 
 
 def creative_directions():
@@ -28,14 +33,42 @@ def validate_mascot_request(request: dict) -> list[str]:
     requested_name = str(request.get("requested_name") or "").strip()
     source = request.get("source")
     svg_path = request.get("svg_path")
+    identity_status = request.get("identity_status")
+    requests_official = request.get("requires_official") is not False and identity_status != "community-artwork"
+
     if request.get("allow_substitute"):
         errors.append("Mascot substitution is not allowed for a requested official or named mascot.")
+
     if requested_name and source not in VERIFIED_SOURCES:
-        errors.append("An exact verified SVG is required for a requested official or named mascot.")
+        errors.append("An exact verified SVG source is required for a requested named mascot.")
+
+    if requested_name and requests_official and source in COMMUNITY_SOURCES:
+        errors.append("Community artwork cannot satisfy an official/original mascot request.")
+
     if requested_name and not svg_path:
         errors.append("The exact mascot SVG path is required before animation can begin.")
-    if source == "lobe" and not str(request.get("source_ref") or "").strip():
-        errors.append("A Lobe mascot request must include its exact source_ref provenance.")
+
+    if source in {"lobe", "original-owner"} and not str(request.get("source_ref") or "").strip():
+        errors.append(f"A {source} mascot request must include its exact source_ref provenance.")
+
+    if source == "vibe-svgs-community":
+        if request.get("community_artwork") is not True:
+            errors.append("A Vibe SVGs community mascot must record community_artwork: true.")
+        if identity_status != "community-artwork":
+            errors.append("A Vibe SVGs community mascot identity_status must be community-artwork, never official.")
+        if request.get("user_confirmed") is not True:
+            errors.append("A Vibe SVGs community mascot requires explicit user_confirmed: true.")
+        source_commit = request.get("source_commit")
+        if not isinstance(source_commit, str) or not HEX40_RE.fullmatch(source_commit):
+            errors.append("A Vibe SVGs community mascot requires a pinned 40-character source_commit.")
+        digest = request.get("integrity_sha256")
+        if not isinstance(digest, str) or not HEX64_RE.fullmatch(digest):
+            errors.append("A Vibe SVGs community mascot requires a 64-character integrity_sha256.")
+        source_ref = str(request.get("source_ref") or "")
+        if isinstance(source_commit, str) and HEX40_RE.fullmatch(source_commit):
+            if f"/blob/{source_commit}/" not in source_ref:
+                errors.append("A Vibe SVGs community mascot source_ref must be immutable and pinned to source_commit.")
+
     if svg_path:
         path = Path(svg_path)
         if path.suffix.lower() != ".svg":

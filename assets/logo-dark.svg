@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">LinkedIn Animated Infographics logo for dark surfaces</title>
+  <desc id="desc">Three infographic bars with a play marker, representing visual data turned into motion.</desc>
+  <rect x="88" y="96" width="84" height="320" rx="28" fill="#F5F1E8"/>
+  <rect x="214" y="176" width="84" height="240" rx="28" fill="#F5F1E8"/>
+  <rect x="340" y="256" width="84" height="160" rx="28" fill="#F5F1E8"/>
+  <path d="M214 82c0-18 20-29 35-19l94 64c14 10 14 30 0 40l-94 64c-15 10-35-1-35-19V82z" fill="#FF6B4A"/>
+</svg>

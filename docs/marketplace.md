@@ -1,6 +1,6 @@
 # Marketplace Packaging
 
-Version 3.6.0 ships multi-host adapters with shared quality intent and host-specific execution packaging.
+Version 3.7.0 ships multi-host adapters with shared quality intent and host-specific execution packaging.
 
 - Claude marketplace: `.claude-plugin/marketplace.json`
 - Claude plugin manifest: `.claude-plugin/plugin.json`
@@ -67,13 +67,13 @@ Claude and OpenAI may make different creative choices. Both should preserve:
 
 ## Public OpenAI directory
 
-The 3.6.0 OpenAI package is prepared as a skills-only update. Tracked reviewer materials live in `submission/`.
+The 3.7.0 OpenAI package is prepared as a skills-only update. Tracked reviewer materials live in `submission/`.
 
 Repository commits do not automatically replace the package already published in the OpenAI Plugins Directory. A new package/version still needs the supported OpenAI Platform update and publication flow.
 
 ## Versioning
 
-The 3.6.0 release must agree across:
+The 3.7.0 release must agree across:
 
 - `.claude-plugin/plugin.json`
 - the plugin entry inside `.claude-plugin/marketplace.json`

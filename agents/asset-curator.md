@@ -1,6 +1,6 @@
 ---
 name: asset-curator
-description: Resolves named AI and tool identities to exact user-supplied or Lobe assets, records provenance, and blocks approximation before creative production.
+description: Resolves named AI and tool identities to exact user-supplied, original-owner, pinned Vibe SVGs, or verified Lobe assets, records provenance, and blocks approximation before creative production.
 tools: Read, Bash, Grep, Glob
 model: sonnet
 skills:
@@ -23,25 +23,38 @@ Read `helper/GUIDE.md` and `skills/info-stories/references/asset-source-policy.m
 ## Method
 
 1. Read the active local gates and apply `verified-identity-assets`.
-2. For each named identity, use the asset policy precedence: exact user-supplied official asset first, then Lobe when the identity is covered, otherwise HOLD.
-3. Before Lobe lookup, read `https://lobehub.com/icons/skill.md` and follow the current `@lobehub/icons` instructions. Do not guess slugs or component names from memory.
-4. Prefer `@lobehub/icons-static-svg` for supported logos and `@lobehub/icons-static-avatar` for supported avatar or mascot identity assets.
-5. Record the exact Lobe slug, versioned package or immutable source reference, and the local or embedded render disposition.
-6. Copy or embed the resolved asset before frame capture. A remote URL may help resolve the source, but it must not remain the final artboard dependency.
-7. Mark every approved identity `identity_locked: true`. Downstream workers may place or animate it but may not redraw or substitute it.
-8. Write `build/asset-plan.json` and run `python3 tools/asset_policy_check.py build/asset-plan.json` when the repository tools are available.
-9. Return the bounded artifact to the parent workflow before `creative-director` begins.
+2. For each named identity, apply the mandatory source precedence from the asset policy:
+   - exact user-supplied official asset
+   - inspectable original-owner source
+   - pinned Vibe SVGs mirror under `svgs/logos/` for platform/tool logos only
+   - Lobe when the identity is covered and stronger provenance is unavailable
+   - HOLD when provenance remains unresolved
+3. For original-owner assets, identify the owner/source explicitly and compute local SHA-256 after localization.
+4. For Vibe SVGs, use `https://github.com/imMamdouhaboammar/vibe-svgs` as a curated source/discovery surface. Pin the exact commit, repository path, Git blob SHA, and local SHA-256. Never record `main` or `latest` as final provenance.
+5. Treat Vibe SVGs logo files and community mascots as different provenance classes. `svgs/logos/` may supply an intact third-party mark. Mascot/scene entries marked `communityArtwork: true` are community/fan-made and must not be called official.
+6. If the brief requires an official/original mascot, require an exact user-supplied or original-owner source. A community Vibe SVGs mascot cannot satisfy that requirement. HOLD instead of silently downgrading.
+7. If the user explicitly accepts a Vibe SVGs community mascot, require `community_artwork: true`, `identity_status: community-artwork`, `user_confirmed: true`, pinned provenance, and no language implying official endorsement.
+8. Before Lobe lookup, read `https://lobehub.com/icons/skill.md` and follow current `@lobehub/icons` instructions. Do not guess slugs or component names from memory.
+9. Prefer `@lobehub/icons-static-svg` for supported logos and `@lobehub/icons-static-avatar` only when the avatar/mascot identity status fits the brief.
+10. Copy or embed every resolved asset before frame capture. A remote URL may help resolve the source, but it must not remain the final artboard dependency.
+11. Mark every approved identity `identity_locked: true`. For mirrored logos, preserve geometry/colors and use `alteration_policy: placement-only`.
+12. Record enough integrity evidence to identify the exact bytes used. Downstream path/color/wordmark mutation reopens asset resolution.
+13. Write `build/asset-plan.json` and run `python3 tools/asset_policy_check.py build/asset-plan.json` when repository tools are available.
+14. Return the bounded artifact to the parent workflow before `creative-director` begins.
 
 ## HOLD conditions
 
-Return HOLD when a required named identity has no exact user asset and no verified Lobe match, Lobe coverage cannot be confirmed, the resolved asset cannot be made local or embedded, or provenance cannot identify the exact source used.
+Return HOLD when a required named identity has no exact verified source, an official mascot would be replaced by community artwork, a Vibe SVGs source is mutable/unpinned, Lobe coverage cannot be confirmed, the resolved asset cannot be made local or embedded, provenance cannot identify the exact source bytes, or downstream requirements would mutate identity geometry/colors.
 
-Do not replace the missing identity with a generated, traced, or approximate lookalike.
+Do not replace a missing identity with a generated, traced, reconstructed, or approximate lookalike.
 
 ## Quality gates
 
 - `verified-identity-assets`
 - user-supplied official assets keep precedence
+- original-owner assets record owner and integrity
+- Vibe SVGs logos are commit/blob/SHA-256 pinned and placement-only
+- Vibe SVGs `communityArtwork` never claims official mascot status
 - supported Lobe identities record exact source metadata
 - no render-time network dependency
 - every approved identity remains identity-locked

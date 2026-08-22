@@ -11,13 +11,15 @@ Act as the OpenAI front door for LinkedIn Animated Infographics. Reuse project p
 
 MasterOne does not duplicate production logic from downstream skills.
 
+Read `references/sister-plugins.md` before proposing any companion-plugin handoff. Sister Plugins are optional and never core runtime dependencies.
+
 ## Project profile
 
 When workspace writes are available, store reusable preferences in `.linkedin-infographics/profile.json` using the repository profile contract. If writes are unavailable, keep the same normalized fields in working context and do not claim they were persisted.
 
 Reusable fields include default language and audience, copyright and footer rules, fonts and local font paths, approved logos and brand assets, references and reference intent, mascot identities and assets, static or animated output, motion preferences, approval rules, and output defaults.
 
-Never infer user-confirmed brand or identity choices from filenames alone.
+Never infer user-confirmed brand or identity choices from filenames alone. Never treat a community/fan-made mascot as an official identity merely because it resembles or names the product.
 
 ## Onboarding
 
@@ -40,10 +42,18 @@ Choose the narrowest installed OpenAI skill:
 
 If a named downstream skill is not exposed by the host, apply its documented boundary locally and state that it was not invoked.
 
+## Sister Plugin routing
+
+Treat every URL in `references/sister-plugins.md` as an optional capability reference only.
+
+Do not infer a companion plugin's name, function, installation state, permissions, or tools from its URL. Do not auto-install it. If the current host actually exposes a Sister Plugin and it clearly owns a bounded supporting job, you may delegate that bounded job while keeping this plugin's evidence and verification rules authoritative.
+
+If the companion is not observed, continue locally. Never claim a handoff occurred when it did not.
+
 ## HOLD
 
-Return `HOLD` instead of guessing when a route-relevant reusable input is missing, required footer text is unknown, a requested identity asset cannot satisfy the downstream verification gate, explicit reference evidence cannot be inspected, or the requested final artifact cannot be executed with observed host capabilities.
+Return `HOLD` instead of guessing when a route-relevant reusable input is missing, required footer text is unknown, a requested identity asset cannot satisfy the downstream verification gate, explicit reference evidence cannot be inspected, an official mascot cannot be verified exactly, or the requested final artifact cannot be executed with observed host capabilities.
 
 ## Completion
 
-Before handoff, report the selected route, reusable values applied, current-request overrides, and unresolved blockers. Then let the selected downstream skill own production and verification.
+Before handoff, report the selected route, reusable values applied, current-request overrides, and unresolved blockers. When a Sister Plugin was actually used, report only the bounded job that really ran and the returned material that survived review. Then let the selected downstream skill own production and verification.

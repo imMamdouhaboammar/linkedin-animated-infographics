@@ -6,7 +6,7 @@
 
 <br>
 
-[![Version](https://img.shields.io/badge/version-3.6.0-18181b?style=flat-square)](https://github.com/imMamdouhaboammar/linkedin-animated-infographics/releases)
+[![Version](https://img.shields.io/badge/version-3.7.0-18181b?style=flat-square)](https://github.com/imMamdouhaboammar/linkedin-animated-infographics/releases)
 [![Hosts](https://img.shields.io/badge/hosts-Claude%20%7C%20Antigravity%20%7C%20Codex%20%7C%20ChatGPT-18181b?style=flat-square)](#install)
 [![Viewport](https://img.shields.io/badge/viewport-1080%C3%971350%20Vertical-18181b?style=flat-square)](#)
 [![Engine](https://img.shields.io/badge/engine-Info--stories-18181b?style=flat-square)](#)
@@ -40,7 +40,7 @@ If the effect looks good but adds no meaning, it is decoration
 
 ## Install
 
-Version 3.6.0 adds Emil Kowalski fluid motion recipes, Apple design interface physics, Paul Bakaus Impeccable motion craft standards, HeyGen HyperFrames CSS keyframe mechanisms, Mblode transition engines, and a mandatory browser pixel-by-pixel inspection and auto-repair gate while keeping host execution isolated
+Version 3.7.0 adds Emil Kowalski fluid motion recipes, Apple design interface physics, Paul Bakaus Impeccable motion craft standards, HeyGen HyperFrames CSS keyframe mechanisms, Mblode transition engines, and a mandatory browser pixel-by-pixel inspection and auto-repair gate while keeping host execution isolated
 
 - Claude uses the existing `skills/` + `agents/` runtime and native worker graph
 - Google Antigravity uses `plugin.json`, `.agents/`, and the 19 specialized subagents catalog
@@ -325,7 +325,7 @@ claude plugin validate .
 
 ## Public Plugins Directory
 
-The 3.6.0 OpenAI package is prepared as a skills-only update using `openai-skills/`
+The 3.7.0 OpenAI package is prepared as a skills-only update using `openai-skills/`
 
 `submission/` tracks listing metadata, five positive reviewer cases, three negative cases, and the manual OpenAI Platform handoff
 

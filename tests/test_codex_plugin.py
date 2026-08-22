@@ -23,7 +23,7 @@ EXPECTED_CODEX_AGENTS = {
     "reviewer": "read-only",
     "docs_researcher": "read-only",
 }
-EXPECTED_VERSION = "3.6.0"
+EXPECTED_VERSION = "3.7.0"
 
 
 def load_validator():
@@ -95,8 +95,8 @@ class CodexPluginPackagingTests(unittest.TestCase):
         self.assertLessEqual(len(interface["defaultPrompt"]), 3)
         self.assertGreaterEqual(len(interface["defaultPrompt"]), 1)
         self.assertNotIn("screenshots", interface)
-        self.assertEqual("./assets/plugin-mark.svg", interface["composerIcon"])
-        self.assertEqual("./assets/plugin-mark.svg", interface["logo"])
+        self.assertEqual("./assets/plugin-icon.svg", interface["composerIcon"])
+        self.assertEqual("./assets/plugin-icon.svg", interface["logo"])
 
     def test_openai_studio_is_self_contained(self):
         self.assertTrue((OPENAI_SKILL / "SKILL.md").is_file())
@@ -174,16 +174,21 @@ class CodexPluginParityTests(unittest.TestCase):
         self.assertEqual("skills", data["canonical"]["skills_root"])
         self.assertEqual("skills", data["distributions"]["claude"]["skills_root"])
         self.assertEqual("openai-skills", data["distributions"]["openai"]["skills_root"])
+        self.assertEqual("skills", data["distributions"]["openai"]["package_skills_root"])
         self.assertEqual("native-worker-graph", data["distributions"]["claude"]["execution"])
         self.assertEqual("capability-negotiated-autopilot", data["distributions"]["openai"]["execution"])
         self.assertEqual("helper/router.json", data["canonical"]["router"])
         self.assertEqual("architecture/plugin-graph.json", data["canonical"]["worker_graph"])
         self.assertEqual("skills-only", data["public_submission"]["type"])
         self.assertEqual("openai-skills", data["public_submission"]["skills_root"])
+        self.assertEqual("skills", data["public_submission"]["package_skills_root"])
         self.assertIn("codex", data["surfaces"])
         self.assertIn("chatgpt", data["surfaces"])
         self.assertIn("verified-identity-source-before-concept", data["parity_invariants"])
         self.assertIn("intentional-render-safe-typography", data["parity_invariants"])
+        self.assertIn("canonical-public-skills-layout", data["parity_invariants"])
+        self.assertIn("host-workspace-operator-packaged", data["parity_invariants"])
+        self.assertIn("sandbox-python-executor-packaged", data["parity_invariants"])
         self.assertEqual(
             "skills/info-stories/extensions/idea-mechanisms.json",
             data["canonical"]["visual_mechanisms"],

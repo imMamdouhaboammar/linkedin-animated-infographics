@@ -11,7 +11,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_NAME = "linkedin-animated-infographics"
-EXPECTED_VERSION = "3.6.0"
+EXPECTED_VERSION = "3.7.0"
 
 EXPECTED_AGENTS = {
     "artboard-builder",
