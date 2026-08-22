@@ -51,7 +51,7 @@ class NarrativeTasteTests(unittest.TestCase):
             query_path = Path(tmp) / "query.json"
             query_path.write_text(json.dumps(self.query), encoding="utf-8")
             result = subprocess.run(
-                [sys.executable, str(ROOT / "tools" / "demo_taste.py"), "--query", str(query_path), "--max-demos", "3"],
+                [sys.executable, str(ROOT / "scripts" / "demo_taste.py"), "--query", str(query_path), "--max-demos", "3"],
                 cwd=ROOT,
                 text=True,
                 capture_output=True,
