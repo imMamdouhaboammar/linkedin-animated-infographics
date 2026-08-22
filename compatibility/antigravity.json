@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plugin_name": "linkedin-animated-infographics",
-  "plugin_version": "3.6.0",
+  "plugin_version": "3.7.0",
   "surfaces": [
     "antigravity",
     "gemini-cli"
@@ -69,6 +69,10 @@
     "lobe-first-supported-ai-tool-identities",
     "intentional-render-safe-typography",
     "clean-creative-structure",
+    "perception-preflight-before-still",
+    "reference-transfer-not-reference-cloning",
+    "severity-aware-visual-slop-pressure",
+    "smallest-responsible-dimension-repair",
     "still-before-motion",
     "bounded-visual-repair",
     "verified-svg-mascot-rule",
