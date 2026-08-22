@@ -99,7 +99,7 @@ echo
 echo "── final frame audit ────────────────────────"
 set +e
 FINAL_FRAME_CMD=(python3 "$HERE/final_frame_audit.py" "$HTML" \
-  --duration "$DURATION" --fps "$FPS" --json "$FINAL_FRAME_JSON")
+  --duration "$DURATION" --fps "$FPS" --selector "$SELECTOR" --json "$FINAL_FRAME_JSON")
 FINAL_FRAME_CMD+=(--browser "$BROWSER")
 "${FINAL_FRAME_CMD[@]}"
 FINAL_FRAME_STATUS=$?
@@ -121,7 +121,7 @@ echo "── merge evidence ─────────────────�
 set +e
 python3 "$HERE/render_report.py" merge \
   --artboard "$ARTBOARD_JSON" --text-overflow "$OVERFLOW_JSON" \
-  --still "$STILL_JSON" --gif "$GIF_JSON" \
+  --final-frame "$FINAL_FRAME_JSON" --still "$STILL_JSON" --gif "$GIF_JSON" \
   --input "$HTML" --output "$OUT" --out "$REPORT"
 REPORT_STATUS=$?
 set -e
