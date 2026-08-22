@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plugin_name": "linkedin-animated-infographics",
-  "plugin_version": "3.6.0",
+  "plugin_version": "3.7.0",
   "surfaces": [
     "antigravity",
     "gemini-cli"
