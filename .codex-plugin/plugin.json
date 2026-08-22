@@ -16,21 +16,18 @@
     "visual-storytelling",
     "narrative-taste",
     "autopilot",
-    "multi-agent",
     "creative-direction",
     "visual-qa",
     "verified-identity",
-    "lobe-icons",
     "typography",
-    "signal-desk",
     "arabic",
     "rtl"
   ],
   "skills": "./openai-skills/",
   "interface": {
     "displayName": "LinkedIn Animated Infographics",
-    "shortDescription": "Create LinkedIn visual stories with stronger design checks and verified assets",
-    "longDescription": "Build feed-ready LinkedIn infographics through evidence checks, narrative architecture, verified logo and mascot sourcing, concept exploration, perception preflight, macro-layout planning, still-first critique, disciplined motion, targeted visual repair, and final verification.",
+    "shortDescription": "Build LinkedIn visual stories",
+    "longDescription": "Build feed-ready LinkedIn infographics through evidence checks, narrative architecture, verified logo and mascot sourcing, concept exploration, perception preflight, macro-layout planning, still-first critique, disciplined motion, targeted visual repair, and final verification. The Skills-only package can use host-native workspace and Python capabilities when those capabilities are actually available, without requiring an external app or MCP server.",
     "developerName": "Mamdouh Aboammar",
     "category": "Productivity",
     "capabilities": [
@@ -41,11 +38,12 @@
     "privacyPolicyURL": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics/blob/main/PRIVACY.md",
     "termsOfServiceURL": "https://github.com/imMamdouhaboammar/linkedin-animated-infographics/blob/main/TERMS.md",
     "defaultPrompt": [
-      "Start with MasterOne, reuse my project preferences, then run this in autopilot and turn the idea into an animated LinkedIn infographic.",
+      "Use MasterOne and autopilot to turn this idea into an animated LinkedIn infographic.",
       "Create an Info-story from this material and choose the best story shape before designing it.",
       "Review this finished LinkedIn infographic and tell me what must be fixed before publishing."
     ],
-    "composerIcon": "./assets/plugin-mark.svg",
-    "logo": "./assets/plugin-mark.svg"
+    "brandColor": "#111111",
+    "composerIcon": "./assets/plugin-icon.svg",
+    "logo": "./assets/plugin-icon.svg"
   }
 }
