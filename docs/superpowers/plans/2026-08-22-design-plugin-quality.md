@@ -4,7 +4,7 @@
 
 **Goal:** Strengthen design perception, reference transfer, visual-slop detection, and targeted revision behavior while keeping the public OpenAI package self-contained and Skills-only.
 
-**Architecture:** Extend canonical design guidance first, then carry the same behavioral contract into the self-contained OpenAI Studio, Autopilot, and Review Skills. Lock the behavior with tests, refresh current 3.6.0 candidate metadata, update submission evidence, then merge only from an exact head with required checks green.
+**Architecture:** Extend canonical design guidance first, then carry the same behavioral contract into the self-contained OpenAI Studio, Autopilot, and Review Skills. Lock the behavior with tests, refresh current 3.7.0 candidate metadata, update submission evidence, then merge only from an exact head with required checks green.
 
 **Tech Stack:** Markdown Agent Skills, Python 3.11 validators/tests, JSON plugin manifests and compatibility registries, GitHub Actions.
 
@@ -17,7 +17,7 @@
 - User facts, official identities, exact SVGs, approved typography, and evidence boundaries remain higher priority than aesthetic preferences.
 - Motion remains blocked until the still passes.
 - Capability negotiation remains truthful and host-observed.
-- Current pre-submission candidate remains version `3.6.0` across release-coupled surfaces.
+- Current pre-submission candidate remains version `3.7.0` across release-coupled surfaces.
 - Submission state remains `prepared-not-submitted`.
 
 ---
@@ -33,7 +33,7 @@
 
 - [ ] Add assertions for one-second hierarchy, 100x100 thumbnail, squint, grayscale, negative-space audit, tangency, brand-off specificity, effect-subtraction, `Evidence -> Observation -> Transferable Rule -> Anti-Rule`, cumulative pressure, and smallest responsible dimension.
 - [ ] Require the Review Skill to expose critical/major/minor severity and bounded targeted repair.
-- [ ] Require OpenAI metadata to remain Skills-only, 3.6.0, and `prepared-not-submitted`.
+- [ ] Require OpenAI metadata to remain Skills-only, 3.7.0, and `prepared-not-submitted`.
 
 ### Task 2: Strengthen canonical design judgment
 
@@ -84,7 +84,7 @@
 
 **Interfaces:**
 - Consumes: implemented design behavior.
-- Produces: clearer directory-facing descriptions and cross-host parity invariants with version preserved at 3.6.0.
+- Produces: clearer directory-facing descriptions and cross-host parity invariants with version preserved at 3.7.0.
 
 - [ ] Refresh descriptions to name stronger design perception checks and targeted QA.
 - [ ] Add cross-host invariants for perception preflight, reference transfer, severity pressure, and smallest-responsible-dimension repair.
@@ -98,7 +98,7 @@
 - Modify: `tests/test_openai_submission.py` only if the existing assertions require new supported behavior.
 
 **Interfaces:**
-- Consumes: implemented 3.6.0 behavior.
+- Consumes: implemented 3.7.0 behavior.
 - Produces: a prepared-not-submitted Skills-only pack with exactly five positive and three negative reviewer cases.
 
 - [ ] Update description and release-candidate notes from confirmed behavior only.

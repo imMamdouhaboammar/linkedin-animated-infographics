@@ -82,9 +82,9 @@ Capability negotiation remains truthful. Shell, Python, sandbox writes, image in
 
 ## Release decision
 
-The current public package is still `prepared-not-submitted`, so this work strengthens the existing `3.6.0` release candidate instead of creating version churn before first submission.
+The current public package is still `prepared-not-submitted`, so this work strengthens the existing `3.7.0` release candidate instead of creating version churn before first submission.
 
-All host manifests, compatibility registries, marketplace metadata, validators, tests, and submission metadata remain aligned on `3.6.0`. A future published snapshot can cut a new version when there is an actual distribution boundary that requires it.
+All host manifests, compatibility registries, marketplace metadata, validators, tests, and submission metadata remain aligned on `3.7.0`. A future published snapshot can cut a new version when there is an actual distribution boundary that requires it.
 
 ## Submission boundary
 

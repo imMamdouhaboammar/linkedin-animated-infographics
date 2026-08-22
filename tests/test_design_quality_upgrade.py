@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-EXPECTED_VERSION = "3.6.0"
+EXPECTED_VERSION = "3.7.0"
 
 
 class DesignQualityUpgradeTests(unittest.TestCase):
