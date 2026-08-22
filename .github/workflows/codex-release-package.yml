@@ -40,14 +40,14 @@ jobs:
               text=True,
           )
           for name in result.stdout.splitlines():
-              if name.startswith("demos/"):
+              if name.startswith("demos/") or name.startswith(".github/workflows/"):
                   continue
               path = Path(name)
               text = path.read_text(encoding="utf-8")
               path.write_text(text.replace("3.6.0", "3.7.0"), encoding="utf-8")
           PY
-          if git grep -I -n '3\.6\.0' -- ':!demos/**'; then
-            echo 'Unaligned 3.6.0 release reference remains outside demos/' >&2
+          if git grep -I -n '3\.6\.0' -- ':!demos/**' ':!.github/workflows/**'; then
+            echo 'Unaligned 3.6.0 release reference remains outside excluded paths' >&2
             exit 1
           fi
 
