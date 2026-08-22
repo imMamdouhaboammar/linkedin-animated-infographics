@@ -18,7 +18,7 @@ TOOLCHAIN_MARKERS = (
 )
 
 
-def run_audit(fixture: str) -> tuple[int, dict]:
+def run_audit(fixture: str, selector: str = ".artboard") -> tuple[int, dict]:
     with tempfile.TemporaryDirectory() as tmp:
         report = Path(tmp) / "final-frame.json"
         proc = subprocess.run(
@@ -28,7 +28,7 @@ def run_audit(fixture: str) -> tuple[int, dict]:
                 str(FIXTURES / fixture),
                 "--duration", "4",
                 "--fps", "10",
-                "--selector", ".artboard",
+                "--selector", selector,
                 "--json", str(report),
             ],
             capture_output=True,
@@ -49,6 +49,7 @@ class FinalFrameAuditTests(unittest.TestCase):
         self.assertEqual(code, 0, data)
         self.assertEqual(data["verdict"], "PASS")
         self.assertEqual(data["selector"], ".artboard")
+        self.assertTrue(data["selector_found"])
         self.assertEqual(data["violations"], [])
         self.assertEqual(data["frames"], 40)
         self.assertEqual(data["final_sample_ms"], 3900.0)
@@ -65,6 +66,14 @@ class FinalFrameAuditTests(unittest.TestCase):
         self.assertIn("headline", violation["element"])
         self.assertAlmostEqual(violation["remaining_ms"], 100.0, places=1)
         self.assertLess(violation["progress"], 1)
+
+    def test_missing_selector_falls_back_to_document_like_frame_capture(self):
+        code, data = run_audit("final-frame-fail.html", ".missing-export-root")
+        self.assertEqual(code, 1, data)
+        self.assertFalse(data["selector_found"])
+        self.assertEqual(data["selector"], ".missing-export-root")
+        self.assertEqual(data["verdict"], "FAIL")
+        self.assertGreaterEqual(len(data["finite_animations"]), 1)
 
 
 if __name__ == "__main__":
