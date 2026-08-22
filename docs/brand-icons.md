@@ -58,7 +58,7 @@ The repository also maintains a deterministic Lobe-backed logo cache.
 | Gallery | https://lobehub.com/icons |
 | Licence | MIT |
 
-The MIT licence covers packaging/code, not ownership of third-party marks. Every logo remains the trademark of its owner. Use it nominatively to identify a product that genuinely appears in the story. Do not use marks as decoration or imply a partnership/integration that does not exist.
+The MIT licence covers packaging/code, not ownership of third-party marks. It does not carry trademark ownership, endorsement rights, or permission to present a third-party identity as ours. Every logo remains the trademark of its owner. Use it nominatively to identify a product that genuinely appears in the story. Do not use marks as decoration or imply a partnership/integration that does not exist.
 
 Before resolving through Lobe, read `https://lobehub.com/icons/skill.md` and follow current package/slug instructions rather than guessing from memory.
 
