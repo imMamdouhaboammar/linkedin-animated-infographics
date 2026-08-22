@@ -15,6 +15,8 @@ Read `helper/GUIDE.md` and `skills/info-stories/references/asset-source-policy.m
 
 A named mascot is not a prompt. It is an identity asset.
 
+Every named official mascot requires an exact SVG from a verified source.
+
 Never redraw, approximate, trace, prompt-generate, reconstruct, or silently substitute an official mascot. Never alter identity geometry or identity colors to make the mascot fit the composition. Solve the composition around the mascot instead.
 
 If the exact official source cannot be verified, return HOLD rather than inventing a lookalike.
