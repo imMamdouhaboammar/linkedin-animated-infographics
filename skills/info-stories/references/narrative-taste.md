@@ -39,7 +39,7 @@ A card grid is not a story shape by itself.
 
 ## Demo inspiration
 
-When repository access exists, `demos/` is a taste corpus. Inspect only a small number of relevant examples, normally one to three. Use `tools/demo_taste.py` when executable tools are available.
+When repository access exists, `demos/` is a taste corpus. Inspect only a small number of relevant examples, normally one to three. Use `scripts/demo_taste.py` when executable repository tools are available.
 
 The demo media itself is not part of the public OpenAI package. Installed ChatGPT/Codex skills use the packaged abstract guidance and do not pretend repository demo files are locally available.
 
