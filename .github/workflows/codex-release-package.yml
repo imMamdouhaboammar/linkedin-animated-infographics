@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - release/codex-plugin-3.7.0
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: write
