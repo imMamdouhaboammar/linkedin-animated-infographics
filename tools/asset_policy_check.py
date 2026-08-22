@@ -4,13 +4,52 @@ import json
 import re
 from pathlib import Path
 
-ALLOWED_SOURCE_TYPES = {"user-official", "lobe"}
+ALLOWED_SOURCE_TYPES = {
+    "user-official",
+    "original-owner",
+    "lobe",
+    "vibe-svgs-logo",
+    "vibe-svgs-community",
+}
 ALLOWED_RENDER_DISPOSITIONS = {"local", "embedded"}
 LOBE_PACKAGE_RE = re.compile(r"^@lobehub/icons-(?:static-svg|static-avatar)@[^@\s:]+$")
+HEX40_RE = re.compile(r"^[0-9a-fA-F]{40}$")
+HEX64_RE = re.compile(r"^[0-9a-fA-F]{64}$")
+VIBE_REPO = "imMamdouhaboammar/vibe-svgs"
+VIBE_BLOB_PREFIX = "https://github.com/imMamdouhaboammar/vibe-svgs/blob/"
 
 
 def _nonempty_string(value) -> bool:
     return isinstance(value, str) and bool(value.strip())
+
+
+def _require_hash(asset, prefix, field, regex, errors):
+    value = asset.get(field)
+    if not isinstance(value, str) or not regex.fullmatch(value.strip()):
+        errors.append(f"{prefix}.{field} must be a pinned hexadecimal digest")
+
+
+def _validate_vibe_source(asset: dict, prefix: str, errors: list[str]) -> None:
+    if asset.get("source_repo") != VIBE_REPO:
+        errors.append(f"{prefix}.source_repo must be {VIBE_REPO}")
+
+    _require_hash(asset, prefix, "source_commit", HEX40_RE, errors)
+    _require_hash(asset, prefix, "source_blob_sha", HEX40_RE, errors)
+    _require_hash(asset, prefix, "integrity_sha256", HEX64_RE, errors)
+
+    source_path = asset.get("source_path")
+    if not _nonempty_string(source_path) or not source_path.endswith(".svg"):
+        errors.append(f"{prefix}.source_path must be a repository-relative SVG path")
+
+    source_ref = asset.get("source_ref")
+    commit = asset.get("source_commit")
+    if isinstance(commit, str) and HEX40_RE.fullmatch(commit.strip()):
+        expected_prefix = VIBE_BLOB_PREFIX + commit.strip() + "/"
+        if not isinstance(source_ref, str) or not source_ref.startswith(expected_prefix):
+            errors.append(f"{prefix}.source_ref must be immutable and pinned to source_commit")
+
+    if source_path and isinstance(source_ref, str) and source_path not in source_ref:
+        errors.append(f"{prefix}.source_ref must identify the same source_path")
 
 
 def validate(payload: dict) -> list[str]:
@@ -33,7 +72,10 @@ def validate(payload: dict) -> list[str]:
 
         source_type = asset.get("source_type")
         if not isinstance(source_type, str) or source_type not in ALLOWED_SOURCE_TYPES:
-            errors.append(f"{prefix}.source_type must be user-official or lobe")
+            errors.append(
+                f"{prefix}.source_type must be one of "
+                "user-official, original-owner, lobe, vibe-svgs-logo, vibe-svgs-community"
+            )
 
         if source_type == "lobe":
             if not _nonempty_string(asset.get("lobe_slug")):
@@ -43,12 +85,61 @@ def validate(payload: dict) -> list[str]:
             if not isinstance(package, str):
                 errors.append(f"{prefix}.package must be a versioned @lobehub/icons static package string")
             elif not LOBE_PACKAGE_RE.fullmatch(package.strip()):
-                errors.append(f"{prefix}.package must include an explicit version, for example @lobehub/icons-static-svg@1.91.0")
+                errors.append(
+                    f"{prefix}.package must include an explicit version, "
+                    "for example @lobehub/icons-static-svg@1.91.0"
+                )
 
             source_ref = asset.get("source_ref")
             if isinstance(package, str) and LOBE_PACKAGE_RE.fullmatch(package.strip()):
                 if not isinstance(source_ref, str) or not source_ref.startswith(package.strip() + ":"):
-                    errors.append(f"{prefix}.source_ref must include the same versioned Lobe package followed by an immutable asset reference")
+                    errors.append(
+                        f"{prefix}.source_ref must include the same versioned Lobe package "
+                        "followed by an immutable asset reference"
+                    )
+
+        if source_type == "original-owner":
+            if not _nonempty_string(asset.get("source_owner")):
+                errors.append(f"{prefix}.source_owner must identify the original identity owner")
+            _require_hash(asset, prefix, "integrity_sha256", HEX64_RE, errors)
+
+        if source_type in {"vibe-svgs-logo", "vibe-svgs-community"}:
+            _validate_vibe_source(asset, prefix, errors)
+
+        if source_type == "vibe-svgs-logo":
+            source_path = asset.get("source_path")
+            if isinstance(source_path, str) and not source_path.startswith("svgs/logos/"):
+                errors.append(f"{prefix}.source_path must stay under svgs/logos/ for vibe-svgs-logo")
+            kind = asset.get("kind")
+            if isinstance(kind, str) and "logo" not in kind.lower():
+                errors.append(f"{prefix}.kind must identify a logo for vibe-svgs-logo")
+            if asset.get("identity_status") != "supplied-third-party-mark":
+                errors.append(
+                    f"{prefix}.identity_status must be supplied-third-party-mark for vibe-svgs-logo"
+                )
+            if asset.get("alteration_policy") != "placement-only":
+                errors.append(f"{prefix}.alteration_policy must be placement-only for mirrored logos")
+
+        if source_type == "vibe-svgs-community":
+            source_path = asset.get("source_path")
+            if isinstance(source_path, str) and not (
+                source_path.startswith("svgs/mascots/") or source_path.startswith("svgs/scenes/")
+            ):
+                errors.append(
+                    f"{prefix}.source_path must stay under svgs/mascots/ or svgs/scenes/ "
+                    "for vibe-svgs-community"
+                )
+            if asset.get("community_artwork") is not True:
+                errors.append(f"{prefix}.community_artwork must be true for vibe-svgs-community")
+            identity_status = asset.get("identity_status")
+            if identity_status != "community-artwork":
+                errors.append(
+                    f"{prefix}.identity_status must be community-artwork; community artwork cannot be called official"
+                )
+            if asset.get("user_confirmed") is not True:
+                errors.append(
+                    f"{prefix}.user_confirmed must be true before community artwork is used as a mascot"
+                )
 
         disposition = asset.get("render_disposition")
         if not isinstance(disposition, str) or disposition not in ALLOWED_RENDER_DISPOSITIONS:
