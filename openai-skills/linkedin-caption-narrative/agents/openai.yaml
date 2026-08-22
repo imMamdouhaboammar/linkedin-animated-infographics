@@ -1,0 +1,4 @@
+interface:
+  display_name: "LinkedIn Caption Narrative"
+  short_description: "Write high-signal LinkedIn captions"
+  default_prompt: "Turn the supplied topic, proof, links, and visual into a high-signal LinkedIn caption with a matching first comment when useful, following the Skill's mechanism-first narrative, evidence rules, visual alignment, and house-style constraints"
