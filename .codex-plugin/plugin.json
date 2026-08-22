@@ -1,7 +1,7 @@
 {
   "name": "linkedin-animated-infographics",
   "version": "3.7.0",
-  "description": "Create animated LinkedIn visual stories with MasterOne routing, verified identity sourcing, intentional typography, capability-aware execution, stronger design perception checks, disciplined motion, and strict QA.",
+  "description": "Create animated LinkedIn visual stories with MasterOne routing, narrative taste, verified identity sourcing, capability-aware execution, stronger design perception checks, disciplined motion, and strict QA.",
   "author": {
     "name": "Mamdouh Aboammar",
     "url": "https://github.com/imMamdouhaboammar"
@@ -14,10 +14,12 @@
     "infographic",
     "animation",
     "visual-storytelling",
+    "narrative-taste",
     "autopilot",
     "multi-agent",
     "creative-direction",
     "visual-qa",
+    "verified-identity",
     "lobe-icons",
     "typography",
     "signal-desk",
@@ -28,7 +30,7 @@
   "interface": {
     "displayName": "LinkedIn Animated Infographics",
     "shortDescription": "Create LinkedIn visual stories with stronger design checks and verified assets",
-    "longDescription": "Build feed-ready LinkedIn infographics through evidence checks, verified identity sourcing, intentional typography, concept exploration, perception preflight, macro-layout planning, still-first critique, disciplined motion, targeted visual repair, and final verification.",
+    "longDescription": "Build feed-ready LinkedIn infographics through evidence checks, narrative architecture, verified logo and mascot sourcing, concept exploration, perception preflight, macro-layout planning, still-first critique, disciplined motion, targeted visual repair, and final verification.",
     "developerName": "Mamdouh Aboammar",
     "category": "Productivity",
     "capabilities": [
