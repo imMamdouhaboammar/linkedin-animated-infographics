@@ -42,6 +42,7 @@ STILL="$OUT_DIR/still.png"
 REPORT="$OUT_DIR/render-report.json"
 ARTBOARD_JSON="$EVIDENCE/artboard.json"
 OVERFLOW_JSON="$EVIDENCE/text-overflow.json"
+FINAL_FRAME_JSON="$EVIDENCE/final-frame.json"
 STILL_JSON="$EVIDENCE/still.json"
 GIF_JSON="$EVIDENCE/gif.json"
 mkdir -p "$EVIDENCE"
@@ -95,6 +96,17 @@ CAPTURE_CMD+=(--browser "$BROWSER")
 python3 "$HERE/render_probe.py" stamp-capture "$FRAMES/capture.json" --browser "$BROWSER"
 
 echo
+echo "── final frame audit ────────────────────────"
+set +e
+FINAL_FRAME_CMD=(python3 "$HERE/final_frame_audit.py" "$HTML" \
+  --duration "$DURATION" --fps "$FPS" --selector "$SELECTOR" --json "$FINAL_FRAME_JSON")
+FINAL_FRAME_CMD+=(--browser "$BROWSER")
+"${FINAL_FRAME_CMD[@]}"
+FINAL_FRAME_STATUS=$?
+set -e
+[[ "$FINAL_FRAME_STATUS" -le 1 ]] || exit "$FINAL_FRAME_STATUS"
+
+echo
 echo "── assemble ─────────────────────────────────"
 set +e
 python3 "$HERE/build_gif.py" "$FRAMES" \
@@ -109,10 +121,10 @@ echo "── merge evidence ─────────────────�
 set +e
 python3 "$HERE/render_report.py" merge \
   --artboard "$ARTBOARD_JSON" --text-overflow "$OVERFLOW_JSON" \
-  --still "$STILL_JSON" --gif "$GIF_JSON" \
+  --final-frame "$FINAL_FRAME_JSON" --still "$STILL_JSON" --gif "$GIF_JSON" \
   --input "$HTML" --output "$OUT" --out "$REPORT"
 REPORT_STATUS=$?
 set -e
 [[ "$REPORT_STATUS" -le 1 ]] || exit "$REPORT_STATUS"
 
-[[ "$ARTBOARD_STATUS" -eq 0 && "$OVERFLOW_STATUS" -eq 0 && "$STILL_STATUS" -eq 0 && "$GIF_STATUS" -eq 0 && "$REPORT_STATUS" -eq 0 ]]
+[[ "$ARTBOARD_STATUS" -eq 0 && "$OVERFLOW_STATUS" -eq 0 && "$STILL_STATUS" -eq 0 && "$FINAL_FRAME_STATUS" -eq 0 && "$GIF_STATUS" -eq 0 && "$REPORT_STATUS" -eq 0 ]]
