@@ -1,7 +1,7 @@
 {
   "name": "linkedin-animated-infographics",
-  "version": "3.6.0",
-  "description": "Antigravity plugin for evidence-safe vertical LinkedIn animated infographics, SVG mascot animation, and Arabic typography.",
+  "version": "3.7.0",
+  "description": "Antigravity plugin for evidence-safe vertical LinkedIn animated infographics, stronger design perception checks, SVG mascot animation, and Arabic typography.",
   "author": {
     "name": "Mamdouh Aboammar",
     "url": "https://github.com/imMamdouhaboammar"
@@ -30,8 +30,8 @@
   ],
   "interface": {
     "displayName": "LinkedIn Animated Infographics",
-    "shortDescription": "Create animated LinkedIn visual stories with verified assets and intentional type",
-    "longDescription": "Build feed-ready LinkedIn infographics through verified identity sourcing, intentional typography, evidence checks, concept exploration, macro-layout planning, still-first critique, disciplined motion, and final verification.",
+    "shortDescription": "Create LinkedIn visual stories with stronger design checks and verified assets",
+    "longDescription": "Build feed-ready LinkedIn infographics through verified identity sourcing, intentional typography, evidence checks, concept exploration, perception preflight, macro-layout planning, still-first critique, disciplined motion, targeted visual repair, and final verification.",
     "developerName": "Mamdouh Aboammar",
     "category": "Productivity",
     "capabilities": [
