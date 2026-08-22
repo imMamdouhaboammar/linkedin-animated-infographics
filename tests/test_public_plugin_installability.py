@@ -40,13 +40,17 @@ class PublicPluginInstallabilityTests(unittest.TestCase):
         for slug in skill_dirs:
             self.assertIn(f"skills/{slug}/SKILL.md", names)
 
-    def test_workspace_and_python_baseline_skills_are_packaged(self):
+    def test_workspace_python_and_mainline_caption_skills_are_packaged(self):
         output, _ = self.build_archive()
         with zipfile.ZipFile(output) as archive:
             names = set(archive.namelist())
 
         self.assertIn("skills/host-workspace-operator/SKILL.md", names)
         self.assertIn("skills/sandbox-python-executor/SKILL.md", names)
+        self.assertIn("skills/linkedin-caption-narrative/SKILL.md", names)
+        self.assertIn("skills/linkedin-caption-narrative/agents/openai.yaml", names)
+        self.assertIn("skills/linkedin-caption-narrative/references/quality-gates.md", names)
+        self.assertIn("skills/linkedin-caption-narrative/references/reference-examples.md", names)
 
     def test_public_brand_pack_is_complete_and_declared_icon_is_present(self):
         output, _ = self.build_archive()
