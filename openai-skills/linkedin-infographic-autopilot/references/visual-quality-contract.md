@@ -19,6 +19,30 @@ This contract is blocking for autopilot still construction and final delivery. I
 - A dense story earns density through editing, grouping, scale, and whitespace, not by shrinking text or adding more containers.
 - At 25% preview size, the viewer should still perceive one obvious hook, one obvious visual relationship, and one obvious takeaway.
 
+## Perception preflight
+
+Run a blocking **perception preflight** after macro layout and before still construction:
+
+- exactly one primary focal anchor; three or more equal-emphasis anchors fail
+- **one-second hierarchy test** for hook, primary anchor, and takeaway
+- **100x100** thumbnail test for dominant silhouette and hierarchy
+- **squint** or blur value-mass test for the intended reading path
+- **grayscale** hierarchy test so structure does not depend on hue alone
+- **negative-space audit** that distinguishes intentional framing from accidental dead space
+- edge, crop, and **tangency** test
+- **brand-off specificity** test so the structure remains story-specific without logos
+- **effect-subtraction** test so glow, shadows, 3D, texture, or decorative motion are not carrying the concept
+
+For each failure, record visible evidence, consequence, and the **smallest responsible dimension**. Repair only that dimension and preserve unrelated approved work.
+
+## Reference transfer
+
+When inspectable references exist, apply:
+
+`Evidence -> Observation -> Transferable Rule -> Anti-Rule`
+
+With multiple references, assign explicit non-overlapping jobs such as composition, type hierarchy, color harmony, texture, pacing, or motion. Do not blend references indiscriminately and do not copy distinctive subject matter, identity, proprietary artwork, or unique composition signatures.
+
 ## Containment and generic UI grammar
 
 - Maximum bordered containment depth is two levels.
@@ -49,6 +73,7 @@ Motion cannot begin while any of these remain unresolved:
 - generic UI grammar
 - weak macro rhythm
 - feed-scale legibility failure
+- failed perception preflight
 
 ## Failure taxonomy
 
@@ -67,17 +92,45 @@ The critic must explicitly return PASS or FAIL for each item:
 
 Any severe failure blocks delivery.
 
+## Severity and visual-slop pressure
+
+Hard gates remain blocking independently. Additional craft findings use:
+
+- `critical`: blocks immediately
+- `major`: pressure 3
+- `minor`: pressure 1
+
+Block on any critical finding, **two or more major** findings, **four or more minor** findings, or **cumulative pressure** of 6 or more. The aggregate score never cancels a hard-gate failure.
+
+Every finding records severity, pressure, visible evidence, consequence, smallest responsible dimension, and exact repair action.
+
+## Targeted revision routing
+
+Route to the smallest responsible dimension:
+
+- concept/message -> creative direction
+- hierarchy/composition/negative space -> layout
+- typography -> type
+- Arabic/RTL when active -> Arabic direction
+- brand/identity -> asset/brand
+- copy density -> copy compression
+- motion -> motion direction or implementation
+- render/runtime -> render QA
+
+Retry from the last approved artifact for that dimension. Do not rerun unrelated stages and do not compound drift by repairing on top of a known-bad visual state.
+
 ## Still critique loop
 
 After the first still:
 
 1. inspect the whole 1080x1350 composition, not isolated components
-2. name the top three visual defects
-3. repair those defects directly
-4. inspect again
+2. re-run the full perception preflight against the actual render
+3. name the top three visual defects with severity and responsible dimension
+4. repair only those defects
+5. inspect again
 
 Maximum two targeted repair attempts. A third unresolved blocking failure returns HOLD or FAIL instead of shipping.
 
 ## Acceptance statement
 
-A still is ready for motion only when the composition feels intentional at full size and feed size, the useful relationship is visually obvious, the footer belongs to the page, and no generic component pattern is doing the creative work that the concept should be doing.
+A still is ready for motion only when the composition feels intentional at full size and feed size, the useful relationship is visually obvious, the footer belongs to the page, the perception preflight passes, cumulative visual-slop pressure remains below the blocking threshold, and no generic component pattern is doing the creative work that the concept should be doing.
