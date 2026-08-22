@@ -1,0 +1,110 @@
+name: Codex Release Package
+
+on:
+  push:
+    branches:
+      - release/codex-plugin-3.7.0
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout release branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          ref: release/codex-plugin-3.7.0
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: "3.12"
+
+      - name: Align release-coupled version references
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+
+          result = subprocess.run(
+              ["git", "grep", "-Il", "3.6.0"],
+              check=False,
+              capture_output=True,
+              text=True,
+          )
+          for name in result.stdout.splitlines():
+              if name.startswith("demos/"):
+                  continue
+              path = Path(name)
+              text = path.read_text(encoding="utf-8")
+              path.write_text(text.replace("3.6.0", "3.7.0"), encoding="utf-8")
+          PY
+          if git grep -I -n '3\.6\.0' -- ':!demos/**'; then
+            echo 'Unaligned 3.6.0 release reference remains outside demos/' >&2
+            exit 1
+          fi
+
+      - name: Validate release metadata and focused contracts
+        run: |
+          python3 scripts/validate_codex_plugin.py
+          python3 scripts/validate_antigravity_plugin.py
+          python3 -m unittest -v \
+            tests.test_codex_plugin \
+            tests.test_openai_submission \
+            tests.test_design_quality_upgrade
+
+      - name: Build deterministic Codex ZIP twice
+        run: |
+          mkdir -p dist
+          python3 scripts/package_codex_release.py dist/linkedin-animated-infographics-codex-plugin-v3.7.0-a.zip --json
+          python3 scripts/package_codex_release.py dist/linkedin-animated-infographics-codex-plugin-v3.7.0-b.zip --json
+          cmp dist/linkedin-animated-infographics-codex-plugin-v3.7.0-a.zip dist/linkedin-animated-infographics-codex-plugin-v3.7.0-b.zip
+          mv dist/linkedin-animated-infographics-codex-plugin-v3.7.0-a.zip dist/linkedin-animated-infographics-codex-plugin-v3.7.0.zip
+          rm dist/linkedin-animated-infographics-codex-plugin-v3.7.0-b.zip
+
+      - name: Inspect archive boundary
+        run: |
+          unzip -Z1 dist/linkedin-animated-infographics-codex-plugin-v3.7.0.zip | tee dist/archive-members.txt
+          python3 - <<'PY'
+          import zipfile
+          from pathlib import Path
+
+          archive = Path('dist/linkedin-animated-infographics-codex-plugin-v3.7.0.zip')
+          with zipfile.ZipFile(archive) as zf:
+              names = zf.namelist()
+          assert '.codex-plugin/plugin.json' in names
+          assert any(name.startswith('openai-skills/') for name in names)
+          assert not any(name == 'demos' or name.startswith('demos/') for name in names)
+          assert not any(name.startswith('tests/') for name in names)
+          assert not any(name.startswith('.github/') for name in names)
+          assert not any(name.startswith('agents/') for name in names)
+          print(f'Archive boundary OK: {len(names)} members; demos excluded')
+          PY
+          sha256sum dist/linkedin-animated-infographics-codex-plugin-v3.7.0.zip | tee dist/SHA256SUMS.txt
+
+      - name: Commit aligned release references
+        run: |
+          if [[ -n "$(git status --porcelain --untracked-files=no)" ]]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -u
+            git commit -m "release: align version references for 3.7.0"
+            git push origin HEAD:release/codex-plugin-3.7.0
+          else
+            echo 'Release references already aligned.'
+          fi
+
+      - name: Upload Codex release artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: linkedin-animated-infographics-codex-plugin-v3.7.0
+          path: |
+            dist/linkedin-animated-infographics-codex-plugin-v3.7.0.zip
+            dist/SHA256SUMS.txt
+            dist/archive-members.txt
+          if-no-files-found: error
+          retention-days: 30
