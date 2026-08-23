@@ -118,6 +118,8 @@ def final_frame_finding(fragment: dict) -> dict:
             "reasons": r.get("reasons", []),
             "rect": r.get("rect"),
             "opacity": r.get("opacity"),
+            "visible_ratio": r.get("visible_ratio"),
+            "clipping": r.get("clipping"),
         }
         for r in violations[:8] if isinstance(r, dict)
     ]

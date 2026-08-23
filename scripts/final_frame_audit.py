@@ -62,6 +62,10 @@ AUDIT_FINAL = """
     return `${tag}${classes}`;
   }
 
+  function rounded(value) {
+    return Math.round(value * 1000) / 1000;
+  }
+
   document.getAnimations().forEach((animation, index) => {
     const effect = animation.effect;
     if (!effect || !effect.getTiming || !effect.getComputedTiming) return;
@@ -108,12 +112,28 @@ AUDIT_FINAL = """
       && rect.left < rootRect.right - 0.5
       && rect.bottom > rootRect.top + 0.5
       && rect.top < rootRect.bottom - 0.5;
+    const fullyInsideRoot = rect.left >= rootRect.left - 0.5
+      && rect.right <= rootRect.right + 0.5
+      && rect.top >= rootRect.top - 0.5
+      && rect.bottom <= rootRect.bottom + 0.5;
+    const intersectionWidth = Math.max(0, Math.min(rect.right, rootRect.right) - Math.max(rect.left, rootRect.left));
+    const intersectionHeight = Math.max(0, Math.min(rect.bottom, rootRect.bottom) - Math.max(rect.top, rootRect.top));
+    const area = Math.max(0, rect.width) * Math.max(0, rect.height);
+    const visibleArea = intersectionWidth * intersectionHeight;
+    const visibleRatio = area > 0 ? visibleArea / area : 0;
+    const clipping = {
+      left_px: rounded(Math.max(0, rootRect.left - rect.left)),
+      right_px: rounded(Math.max(0, rect.right - rootRect.right)),
+      top_px: rounded(Math.max(0, rootRect.top - rect.top)),
+      bottom_px: rounded(Math.max(0, rect.bottom - rootRect.bottom)),
+    };
 
     if (style.display === 'none') reasons.push('display-none');
     if (style.visibility === 'hidden' || style.visibility === 'collapse') reasons.push(`visibility-${style.visibility}`);
     if (Number.isFinite(opacity) && opacity <= 0.01) reasons.push('opacity-zero');
     if (rect.width <= 0.5 || rect.height <= 0.5) reasons.push('zero-area');
     if (!intersectsRoot) reasons.push('outside-export-root');
+    else if (!fullyInsideRoot) reasons.push('clipped-by-export-root');
 
     let ancestor = target.parentElement;
     while (ancestor && ancestor !== root.parentElement) {
@@ -138,15 +158,17 @@ AUDIT_FINAL = """
     const uniqueReasons = [...new Set(reasons)];
     const row = {
       element: describeTarget(target),
-      opacity: Number.isFinite(opacity) ? Math.round(opacity * 1000) / 1000 : null,
+      opacity: Number.isFinite(opacity) ? rounded(opacity) : null,
       display: style.display,
       visibility: style.visibility,
       rect: {
-        x: Math.round(rect.x * 1000) / 1000,
-        y: Math.round(rect.y * 1000) / 1000,
-        width: Math.round(rect.width * 1000) / 1000,
-        height: Math.round(rect.height * 1000) / 1000,
+        x: rounded(rect.x),
+        y: rounded(rect.y),
+        width: rounded(rect.width),
+        height: rounded(rect.height),
       },
+      visible_ratio: rounded(visibleRatio),
+      clipping,
       reasons: uniqueReasons,
     };
     requiredVisible.push(row);
@@ -268,7 +290,7 @@ def main(argv=None) -> int:
                     f"{row['remaining_ms']:.1f}ms remains after last exported frame"
                 )
             else:
-                print(f"  {row['element']}: hidden final state ({', '.join(row.get('reasons', []))})")
+                print(f"  {row['element']}: invalid final state ({', '.join(row.get('reasons', []))})")
         return 1
 
     print(
