@@ -115,6 +115,27 @@ AUDIT_FINAL = """
     if (rect.width <= 0.5 || rect.height <= 0.5) reasons.push('zero-area');
     if (!intersectsRoot) reasons.push('outside-export-root');
 
+    let ancestor = target.parentElement;
+    while (ancestor && ancestor !== root.parentElement) {
+      const ancestorStyle = getComputedStyle(ancestor);
+      const ancestorOpacity = Number.parseFloat(ancestorStyle.opacity);
+      if (ancestorStyle.display === 'none') {
+        reasons.push('ancestor-display-none');
+        break;
+      }
+      if (ancestorStyle.visibility === 'hidden' || ancestorStyle.visibility === 'collapse') {
+        reasons.push(`ancestor-visibility-${ancestorStyle.visibility}`);
+        break;
+      }
+      if (Number.isFinite(ancestorOpacity) && ancestorOpacity <= 0.01) {
+        reasons.push('ancestor-opacity-zero');
+        break;
+      }
+      if (ancestor === root) break;
+      ancestor = ancestor.parentElement;
+    }
+
+    const uniqueReasons = [...new Set(reasons)];
     const row = {
       element: describeTarget(target),
       opacity: Number.isFinite(opacity) ? Math.round(opacity * 1000) / 1000 : null,
@@ -126,11 +147,11 @@ AUDIT_FINAL = """
         width: Math.round(rect.width * 1000) / 1000,
         height: Math.round(rect.height * 1000) / 1000,
       },
-      reasons,
+      reasons: uniqueReasons,
     };
     requiredVisible.push(row);
 
-    if (reasons.length) {
+    if (uniqueReasons.length) {
       violations.push({
         ...row,
         reason: 'required-final-element-hidden',
