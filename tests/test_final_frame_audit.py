@@ -55,6 +55,10 @@ class FinalFrameAuditTests(unittest.TestCase):
         self.assertEqual(data["final_sample_ms"], 3900.0)
         self.assertEqual(len(data["finite_animations"]), 1)
         self.assertNotIn("outside-preview", json.dumps(data["finite_animations"]))
+        self.assertEqual(len(data["required_visible_elements"]), 1)
+        required = data["required_visible_elements"][0]
+        self.assertEqual(required["reasons"], [])
+        self.assertGreater(required["opacity"], 0.99)
 
     def test_animation_that_only_finishes_at_loop_endpoint_fails(self):
         code, data = run_audit("final-frame-fail.html")
@@ -66,6 +70,19 @@ class FinalFrameAuditTests(unittest.TestCase):
         self.assertIn("headline", violation["element"])
         self.assertAlmostEqual(violation["remaining_ms"], 100.0, places=1)
         self.assertLess(violation["progress"], 1)
+
+    def test_required_final_element_that_finishes_hidden_fails(self):
+        code, data = run_audit("final-state-hidden.html")
+        self.assertEqual(code, 1, data)
+        self.assertEqual(data["verdict"], "FAIL")
+        self.assertEqual(len(data["finite_animations"]), 1)
+        self.assertEqual(len(data["required_visible_elements"]), 1)
+        self.assertEqual(len(data["violations"]), 1)
+        violation = data["violations"][0]
+        self.assertEqual(violation["reason"], "required-final-element-hidden")
+        self.assertIn("opacity-zero", violation["reasons"])
+        self.assertIn("headline", violation["element"])
+        self.assertNotEqual(violation["reason"], "finite-animation-incomplete")
 
     def test_missing_selector_falls_back_to_document_like_frame_capture(self):
         code, data = run_audit("final-frame-fail.html", ".missing-export-root")

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fail when finite browser animations are still in progress on the last exported frame."""
+"""Fail when exported final-frame motion or required final-state visibility is incomplete."""
 
 from __future__ import annotations
 
@@ -47,6 +47,7 @@ AUDIT_FINAL = """
 ({finalSampleMs, selector}) => {
   const violations = [];
   const finite = [];
+  const requiredVisible = [];
   const requestedRoot = document.querySelector(selector);
   const root = requestedRoot || document.documentElement;
   const selectorFound = Boolean(requestedRoot);
@@ -93,7 +94,72 @@ AUDIT_FINAL = """
     }
   });
 
-  return {finite, violations, selectorFound};
+  const visibilityTargets = [];
+  if (root instanceof Element && root.hasAttribute('data-final-visible')) visibilityTargets.push(root);
+  root.querySelectorAll('[data-final-visible]').forEach(node => visibilityTargets.push(node));
+  const rootRect = root.getBoundingClientRect();
+
+  visibilityTargets.forEach(target => {
+    const style = getComputedStyle(target);
+    const rect = target.getBoundingClientRect();
+    const opacity = Number.parseFloat(style.opacity);
+    const reasons = [];
+    const intersectsRoot = rect.right > rootRect.left + 0.5
+      && rect.left < rootRect.right - 0.5
+      && rect.bottom > rootRect.top + 0.5
+      && rect.top < rootRect.bottom - 0.5;
+
+    if (style.display === 'none') reasons.push('display-none');
+    if (style.visibility === 'hidden' || style.visibility === 'collapse') reasons.push(`visibility-${style.visibility}`);
+    if (Number.isFinite(opacity) && opacity <= 0.01) reasons.push('opacity-zero');
+    if (rect.width <= 0.5 || rect.height <= 0.5) reasons.push('zero-area');
+    if (!intersectsRoot) reasons.push('outside-export-root');
+
+    let ancestor = target.parentElement;
+    while (ancestor && ancestor !== root.parentElement) {
+      const ancestorStyle = getComputedStyle(ancestor);
+      const ancestorOpacity = Number.parseFloat(ancestorStyle.opacity);
+      if (ancestorStyle.display === 'none') {
+        reasons.push('ancestor-display-none');
+        break;
+      }
+      if (ancestorStyle.visibility === 'hidden' || ancestorStyle.visibility === 'collapse') {
+        reasons.push(`ancestor-visibility-${ancestorStyle.visibility}`);
+        break;
+      }
+      if (Number.isFinite(ancestorOpacity) && ancestorOpacity <= 0.01) {
+        reasons.push('ancestor-opacity-zero');
+        break;
+      }
+      if (ancestor === root) break;
+      ancestor = ancestor.parentElement;
+    }
+
+    const uniqueReasons = [...new Set(reasons)];
+    const row = {
+      element: describeTarget(target),
+      opacity: Number.isFinite(opacity) ? Math.round(opacity * 1000) / 1000 : null,
+      display: style.display,
+      visibility: style.visibility,
+      rect: {
+        x: Math.round(rect.x * 1000) / 1000,
+        y: Math.round(rect.y * 1000) / 1000,
+        width: Math.round(rect.width * 1000) / 1000,
+        height: Math.round(rect.height * 1000) / 1000,
+      },
+      reasons: uniqueReasons,
+    };
+    requiredVisible.push(row);
+
+    if (uniqueReasons.length) {
+      violations.push({
+        ...row,
+        reason: 'required-final-element-hidden',
+      });
+    }
+  });
+
+  return {finite, requiredVisible, violations, selectorFound};
 }
 """
 
@@ -187,21 +253,29 @@ def main(argv=None) -> int:
         "frames": frames,
         "final_sample_ms": round(final_sample_ms, 3),
         "finite_animations": measured["finite"],
+        "required_visible_elements": measured["requiredVisible"],
         "violations": violations,
         "verdict": "FAIL" if violations else "PASS",
     }
     write_report(report_path, report)
 
     if violations:
-        print(f"final-frame audit: FAIL ({len(violations)} unfinished finite animation(s))")
+        print(f"final-frame audit: FAIL ({len(violations)} final-state violation(s))")
         for row in violations[:8]:
-            print(
-                f"  {row['element']} {row['animation']}: "
-                f"{row['remaining_ms']:.1f}ms remains after last exported frame"
-            )
+            if row["reason"] == "finite-animation-incomplete":
+                print(
+                    f"  {row['element']} {row['animation']}: "
+                    f"{row['remaining_ms']:.1f}ms remains after last exported frame"
+                )
+            else:
+                print(f"  {row['element']}: hidden final state ({', '.join(row.get('reasons', []))})")
         return 1
 
-    print(f"final-frame audit: PASS ({len(measured['finite'])} finite animation(s) complete)")
+    print(
+        "final-frame audit: PASS "
+        f"({len(measured['finite'])} finite animation(s) complete, "
+        f"{len(measured['requiredVisible'])} required final element(s) visible)"
+    )
     return 0
 
 

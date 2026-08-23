@@ -92,6 +92,25 @@ class RenderReportMergeTests(unittest.TestCase):
         finding = next(r for r in report["findings"] if r["gate"] == "final-frame")
         self.assertEqual(finding["severity"], "blocking"); self.assertEqual(finding["evidence"][0]["remaining_ms"], 100.0)
 
+    def test_hidden_required_final_state_is_preserved_as_blocking_evidence(self):
+        violation = {
+            "element": "div.headline",
+            "reason": "required-final-element-hidden",
+            "reasons": ["opacity-zero"],
+            "opacity": 0.0,
+            "rect": {"x": 120, "y": 120, "width": 500, "height": 80},
+        }
+        self.final_frame.write_text(json.dumps(bind_fragment(sidecar_fragment("final-frame", [violation]), self.html)))
+        outcome = self.run_merge(); self.assertEqual(outcome.returncode, 1, outcome.stderr)
+        report = json.loads(self.report.read_text()); self.assertEqual(report["verdict"], "FAIL")
+        finding = next(r for r in report["findings"] if r["gate"] == "final-frame")
+        self.assertIn("completion or visibility", finding["detail"])
+        evidence = finding["evidence"][0]
+        self.assertEqual(evidence["reason"], "required-final-element-hidden")
+        self.assertEqual(evidence["reasons"], ["opacity-zero"])
+        self.assertEqual(evidence["opacity"], 0.0)
+        self.assertEqual(evidence["rect"]["width"], 500)
+
     def test_sidecar_verdict_must_match_violations(self):
         fragment = bind_fragment(sidecar_fragment("final-frame"), self.html); fragment["verdict"] = "FAIL"
         self.final_frame.write_text(json.dumps(fragment)); outcome = self.run_merge()

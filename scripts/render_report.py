@@ -109,12 +109,23 @@ def overflow_finding(fragment: dict) -> dict:
 
 def final_frame_finding(fragment: dict) -> dict:
     violations = fragment["violations"]
-    evidence = [{"element": r.get("element"), "animation": r.get("animation"), "remaining_ms": r.get("remaining_ms"), "reason": r.get("reason")} for r in violations[:8] if isinstance(r, dict)]
+    evidence = [
+        {
+            "element": r.get("element"),
+            "animation": r.get("animation"),
+            "remaining_ms": r.get("remaining_ms"),
+            "reason": r.get("reason"),
+            "reasons": r.get("reasons", []),
+            "rect": r.get("rect"),
+            "opacity": r.get("opacity"),
+        }
+        for r in violations[:8] if isinstance(r, dict)
+    ]
     return {
         "threshold_id": "motion.final_frame_complete", "gate": FINAL_FRAME_KIND, "severity": BLOCKING,
         "status": FAIL if violations else PASS, "measured": len(violations), "threshold": 0,
         "unit": "violations",
-        "detail": f"{len(violations)} finite animation(s) unfinished on the last exported frame" if violations else "all finite animations in the exported subtree complete by the last frame",
+        "detail": f"{len(violations)} final-frame completion or visibility violation(s)" if violations else "final-frame timing and required visibility checks passed",
         "evidence": evidence,
     }
 
