@@ -75,14 +75,12 @@ AUDIT_FINAL = """
       return {sample_count: 0, visible_samples: 0, blockers: []};
     }
 
-    const xs = [0.2, 0.5, 0.8];
-    const ys = [0.2, 0.5, 0.8];
     const fractions = [
-      [xs[1], ys[1]],
-      [xs[0], ys[0]],
-      [xs[2], ys[0]],
-      [xs[0], ys[2]],
-      [xs[2], ys[2]],
+      [0.5, 0.5],
+      [0.2, 0.2],
+      [0.8, 0.2],
+      [0.2, 0.8],
+      [0.8, 0.8],
     ];
     const blockers = new Set();
     let visibleSamples = 0;
@@ -94,10 +92,11 @@ AUDIT_FINAL = """
         const y = top + (bottom - top) * fy;
         const stack = document.elementsFromPoint(x, y);
         const targetIndex = stack.findIndex(node => node === target || target.contains(node));
-        if (targetIndex >= 0) {
+        if (targetIndex === 0) {
           visibleSamples += 1;
         } else if (stack.length) {
-          blockers.add(describeTarget(stack[0]));
+          const blocker = targetIndex > 0 ? stack[0] : stack[0];
+          blockers.add(describeTarget(blocker));
         }
       }
     } finally {
