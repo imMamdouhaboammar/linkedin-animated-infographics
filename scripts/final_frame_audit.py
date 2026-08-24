@@ -66,6 +66,20 @@ AUDIT_FINAL = """
     return Math.round(value * 1000) / 1000;
   }
 
+  function isPaintVisible(node) {
+    let current = node;
+    while (current instanceof Element) {
+      const style = getComputedStyle(current);
+      const opacity = Number.parseFloat(style.opacity);
+      if (style.display === 'none') return false;
+      if (style.visibility === 'hidden' || style.visibility === 'collapse') return false;
+      if (Number.isFinite(opacity) && opacity <= 0.01) return false;
+      if (current === root) break;
+      current = current.parentElement;
+    }
+    return true;
+  }
+
   function finalHitTest(target, rect, rootRect) {
     const left = Math.max(rect.left, rootRect.left, 0);
     const right = Math.min(rect.right, rootRect.right, window.innerWidth);
@@ -84,23 +98,23 @@ AUDIT_FINAL = """
     ];
     const blockers = new Set();
     let visibleSamples = 0;
-    const previousPointerEvents = target.style.pointerEvents;
-    target.style.pointerEvents = 'auto';
+    const probeStyle = document.createElement('style');
+    probeStyle.textContent = '* { pointer-events: auto !important; }';
+    document.head.appendChild(probeStyle);
     try {
       for (const [fx, fy] of fractions) {
         const x = left + (right - left) * fx;
         const y = top + (bottom - top) * fy;
-        const stack = document.elementsFromPoint(x, y);
+        const stack = document.elementsFromPoint(x, y).filter(isPaintVisible);
         const targetIndex = stack.findIndex(node => node === target || target.contains(node));
         if (targetIndex === 0) {
           visibleSamples += 1;
         } else if (stack.length) {
-          const blocker = targetIndex > 0 ? stack[0] : stack[0];
-          blockers.add(describeTarget(blocker));
+          blockers.add(describeTarget(stack[0]));
         }
       }
     } finally {
-      target.style.pointerEvents = previousPointerEvents;
+      probeStyle.remove();
     }
     return {
       sample_count: fractions.length,
