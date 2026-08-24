@@ -98,7 +98,7 @@ class FinalFrameAuditTests(unittest.TestCase):
         self.assertGreater(violation["visible_ratio"], 0)
         self.assertLess(violation["visible_ratio"], 1)
 
-    def test_required_final_element_fully_covered_by_overlay_fails(self):
+    def test_required_final_element_fully_covered_by_noninteractive_overlay_fails(self):
         code, data = run_audit("final-state-occluded.html")
         self.assertEqual(code, 1, data)
         self.assertEqual(data["verdict"], "FAIL")
@@ -110,6 +110,15 @@ class FinalFrameAuditTests(unittest.TestCase):
         self.assertEqual(violation["hit_test"]["visible_samples"], 0)
         self.assertGreaterEqual(violation["hit_test"]["sample_count"], 5)
         self.assertTrue(any("cover" in blocker for blocker in violation["hit_test"]["blockers"]))
+
+    def test_fully_transparent_overlay_does_not_count_as_occlusion(self):
+        code, data = run_audit("final-state-transparent-overlay.html")
+        self.assertEqual(code, 0, data)
+        self.assertEqual(data["verdict"], "PASS")
+        self.assertEqual(data["violations"], [])
+        required = data["required_visible_elements"][0]
+        self.assertNotIn("occluded", required["reasons"])
+        self.assertGreater(required["hit_test"]["visible_samples"], 0)
 
     def test_missing_selector_falls_back_to_document_like_frame_capture(self):
         code, data = run_audit("final-frame-fail.html", ".missing-export-root")
