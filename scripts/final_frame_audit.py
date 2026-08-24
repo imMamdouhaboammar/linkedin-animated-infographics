@@ -66,6 +66,50 @@ AUDIT_FINAL = """
     return Math.round(value * 1000) / 1000;
   }
 
+  function finalHitTest(target, rect, rootRect) {
+    const left = Math.max(rect.left, rootRect.left, 0);
+    const right = Math.min(rect.right, rootRect.right, window.innerWidth);
+    const top = Math.max(rect.top, rootRect.top, 0);
+    const bottom = Math.min(rect.bottom, rootRect.bottom, window.innerHeight);
+    if (right - left <= 1 || bottom - top <= 1) {
+      return {sample_count: 0, visible_samples: 0, blockers: []};
+    }
+
+    const xs = [0.2, 0.5, 0.8];
+    const ys = [0.2, 0.5, 0.8];
+    const fractions = [
+      [xs[1], ys[1]],
+      [xs[0], ys[0]],
+      [xs[2], ys[0]],
+      [xs[0], ys[2]],
+      [xs[2], ys[2]],
+    ];
+    const blockers = new Set();
+    let visibleSamples = 0;
+    const previousPointerEvents = target.style.pointerEvents;
+    target.style.pointerEvents = 'auto';
+    try {
+      for (const [fx, fy] of fractions) {
+        const x = left + (right - left) * fx;
+        const y = top + (bottom - top) * fy;
+        const stack = document.elementsFromPoint(x, y);
+        const targetIndex = stack.findIndex(node => node === target || target.contains(node));
+        if (targetIndex >= 0) {
+          visibleSamples += 1;
+        } else if (stack.length) {
+          blockers.add(describeTarget(stack[0]));
+        }
+      }
+    } finally {
+      target.style.pointerEvents = previousPointerEvents;
+    }
+    return {
+      sample_count: fractions.length,
+      visible_samples: visibleSamples,
+      blockers: [...blockers].slice(0, 5),
+    };
+  }
+
   document.getAnimations().forEach((animation, index) => {
     const effect = animation.effect;
     if (!effect || !effect.getTiming || !effect.getComputedTiming) return;
@@ -155,6 +199,11 @@ AUDIT_FINAL = """
       ancestor = ancestor.parentElement;
     }
 
+    const hitTest = finalHitTest(target, rect, rootRect);
+    if (reasons.length === 0 && hitTest.sample_count > 0 && hitTest.visible_samples === 0) {
+      reasons.push('occluded');
+    }
+
     const uniqueReasons = [...new Set(reasons)];
     const row = {
       element: describeTarget(target),
@@ -169,6 +218,7 @@ AUDIT_FINAL = """
       },
       visible_ratio: rounded(visibleRatio),
       clipping,
+      hit_test: hitTest,
       reasons: uniqueReasons,
     };
     requiredVisible.push(row);
