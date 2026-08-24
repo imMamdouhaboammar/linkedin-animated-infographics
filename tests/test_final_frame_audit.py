@@ -59,6 +59,7 @@ class FinalFrameAuditTests(unittest.TestCase):
         required = data["required_visible_elements"][0]
         self.assertEqual(required["reasons"], [])
         self.assertGreater(required["opacity"], 0.99)
+        self.assertGreater(required["hit_test"]["visible_samples"], 0)
 
     def test_animation_that_only_finishes_at_loop_endpoint_fails(self):
         code, data = run_audit("final-frame-fail.html")
@@ -96,6 +97,19 @@ class FinalFrameAuditTests(unittest.TestCase):
         self.assertGreater(violation["clipping"]["bottom_px"], 50)
         self.assertGreater(violation["visible_ratio"], 0)
         self.assertLess(violation["visible_ratio"], 1)
+
+    def test_required_final_element_fully_covered_by_overlay_fails(self):
+        code, data = run_audit("final-state-occluded.html")
+        self.assertEqual(code, 1, data)
+        self.assertEqual(data["verdict"], "FAIL")
+        self.assertEqual(len(data["required_visible_elements"]), 1)
+        self.assertEqual(len(data["violations"]), 1)
+        violation = data["violations"][0]
+        self.assertEqual(violation["reason"], "required-final-element-hidden")
+        self.assertIn("occluded", violation["reasons"])
+        self.assertEqual(violation["hit_test"]["visible_samples"], 0)
+        self.assertGreaterEqual(violation["hit_test"]["sample_count"], 5)
+        self.assertTrue(any("cover" in blocker for blocker in violation["hit_test"]["blockers"]))
 
     def test_missing_selector_falls_back_to_document_like_frame_capture(self):
         code, data = run_audit("final-frame-fail.html", ".missing-export-root")
