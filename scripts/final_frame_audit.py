@@ -66,6 +66,63 @@ AUDIT_FINAL = """
     return Math.round(value * 1000) / 1000;
   }
 
+  function isPaintVisible(node) {
+    let current = node;
+    while (current instanceof Element) {
+      const style = getComputedStyle(current);
+      const opacity = Number.parseFloat(style.opacity);
+      if (style.display === 'none') return false;
+      if (style.visibility === 'hidden' || style.visibility === 'collapse') return false;
+      if (Number.isFinite(opacity) && opacity <= 0.01) return false;
+      if (current === root) break;
+      current = current.parentElement;
+    }
+    return true;
+  }
+
+  function finalHitTest(target, rect, rootRect) {
+    const left = Math.max(rect.left, rootRect.left, 0);
+    const right = Math.min(rect.right, rootRect.right, window.innerWidth);
+    const top = Math.max(rect.top, rootRect.top, 0);
+    const bottom = Math.min(rect.bottom, rootRect.bottom, window.innerHeight);
+    if (right - left <= 1 || bottom - top <= 1) {
+      return {sample_count: 0, visible_samples: 0, blockers: []};
+    }
+
+    const fractions = [
+      [0.5, 0.5],
+      [0.2, 0.2],
+      [0.8, 0.2],
+      [0.2, 0.8],
+      [0.8, 0.8],
+    ];
+    const blockers = new Set();
+    let visibleSamples = 0;
+    const probeStyle = document.createElement('style');
+    probeStyle.textContent = '* { pointer-events: auto !important; }';
+    document.head.appendChild(probeStyle);
+    try {
+      for (const [fx, fy] of fractions) {
+        const x = left + (right - left) * fx;
+        const y = top + (bottom - top) * fy;
+        const stack = document.elementsFromPoint(x, y).filter(isPaintVisible);
+        const targetIndex = stack.findIndex(node => node === target || target.contains(node));
+        if (targetIndex === 0) {
+          visibleSamples += 1;
+        } else if (stack.length) {
+          blockers.add(describeTarget(stack[0]));
+        }
+      }
+    } finally {
+      probeStyle.remove();
+    }
+    return {
+      sample_count: fractions.length,
+      visible_samples: visibleSamples,
+      blockers: [...blockers].slice(0, 5),
+    };
+  }
+
   document.getAnimations().forEach((animation, index) => {
     const effect = animation.effect;
     if (!effect || !effect.getTiming || !effect.getComputedTiming) return;
@@ -155,6 +212,11 @@ AUDIT_FINAL = """
       ancestor = ancestor.parentElement;
     }
 
+    const hitTest = finalHitTest(target, rect, rootRect);
+    if (reasons.length === 0 && hitTest.sample_count > 0 && hitTest.visible_samples === 0) {
+      reasons.push('occluded');
+    }
+
     const uniqueReasons = [...new Set(reasons)];
     const row = {
       element: describeTarget(target),
@@ -169,6 +231,7 @@ AUDIT_FINAL = """
       },
       visible_ratio: rounded(visibleRatio),
       clipping,
+      hit_test: hitTest,
       reasons: uniqueReasons,
     };
     requiredVisible.push(row);
