@@ -107,6 +107,14 @@ set -e
 [[ "$FINAL_FRAME_STATUS" -le 1 ]] || exit "$FINAL_FRAME_STATUS"
 
 echo
+echo "── final frame visibility policy ────────────"
+set +e
+python3 "$HERE/final_frame_policy.py" "$FINAL_FRAME_JSON"
+FINAL_FRAME_POLICY_STATUS=$?
+set -e
+[[ "$FINAL_FRAME_POLICY_STATUS" -le 1 ]] || exit "$FINAL_FRAME_POLICY_STATUS"
+
+echo
 echo "── assemble ─────────────────────────────────"
 set +e
 python3 "$HERE/build_gif.py" "$FRAMES" \
@@ -127,4 +135,4 @@ REPORT_STATUS=$?
 set -e
 [[ "$REPORT_STATUS" -le 1 ]] || exit "$REPORT_STATUS"
 
-[[ "$ARTBOARD_STATUS" -eq 0 && "$OVERFLOW_STATUS" -eq 0 && "$STILL_STATUS" -eq 0 && "$FINAL_FRAME_STATUS" -eq 0 && "$GIF_STATUS" -eq 0 && "$REPORT_STATUS" -eq 0 ]]
+[[ "$ARTBOARD_STATUS" -eq 0 && "$OVERFLOW_STATUS" -eq 0 && "$STILL_STATUS" -eq 0 && "$FINAL_FRAME_STATUS" -eq 0 && "$FINAL_FRAME_POLICY_STATUS" -eq 0 && "$GIF_STATUS" -eq 0 && "$REPORT_STATUS" -eq 0 ]]
