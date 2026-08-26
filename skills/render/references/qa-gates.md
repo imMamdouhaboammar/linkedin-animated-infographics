@@ -106,7 +106,18 @@ screenshot anyone takes of your post is a single frame.
 - [ ] No element is mid-fade, half-drawn, or at `opacity: 0` in frame 0
 - [ ] The first highlighted element is the one you want seen first
 
-## Gate 7 — File
+## Gate 7 — Final-frame visibility
+
+Elements marked `data-final-visible` are required to remain substantially visible at the
+last exported frame. The browser hit-test samples five points inside each element; at least
+60% of those samples must remain visible. Full occlusion and severe partial occlusion are
+blocking failures.
+
+- [ ] Required headlines and CTAs are visible at the final sampled frame
+- [ ] No overlay covers more than two of the five hit-test samples
+- [ ] `final-frame.json` records the threshold id and sampled visibility ratio
+
+## Gate 8 — File
 
 ```bash
 ffprobe -v error -show_entries stream=width,height,nb_frames,duration \
@@ -119,7 +130,7 @@ ls -la build/post.gif
 - [ ] 1080x1350
 - [ ] Loops infinitely (open it in a browser and watch it repeat)
 
-## Gate 8 — Content
+## Gate 9 — Content
 
 - [ ] Every number on the artboard is real and verifiable
 - [ ] Every product name is spelled the way the company spells it
@@ -130,7 +141,7 @@ ls -la build/post.gif
 Search the HTML for the template placeholders before you export. This is the most
 embarrassing failure and the easiest to prevent.
 
-## Gate 9 — Caption
+## Gate 10 — Caption
 
 - [ ] Line 1 is under 60 characters and works alone
 - [ ] Every line has a blank line after it unless it is a tight list
@@ -143,7 +154,7 @@ embarrassing failure and the easiest to prevent.
 
 Read the caption top to bottom out loud. Anything you would not say out loud, cut.
 
-## Gate 10 — RTL, if applicable
+## Gate 11 — RTL, if applicable
 
 See `references/arabic-rtl.md` for the full list.
 
