@@ -6,23 +6,40 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from collections.abc import Mapping
 from pathlib import Path
 
-DEFAULT_MIN_VISIBLE_SAMPLE_RATIO = 0.60
+from scripts.visual_contract import VisualContract
+
+THRESHOLD_ID = "final_frame.min_visible_sample_ratio"
 
 
 def rounded(value: float) -> float:
     return round(value, 3)
 
 
-def apply_policy(report: dict, min_visible_sample_ratio: float) -> dict:
-    if not 0 < min_visible_sample_ratio <= 1:
+def contract_min_visible_sample_ratio() -> float:
+    return float(VisualContract().value(THRESHOLD_ID))
+
+
+def apply_policy(report: dict, min_visible_sample_ratio: float | None = None) -> dict:
+    if not isinstance(report, Mapping):
+        raise ValueError("final-frame report must be a JSON object")
+
+    threshold = (
+        contract_min_visible_sample_ratio()
+        if min_visible_sample_ratio is None
+        else min_visible_sample_ratio
+    )
+    if not 0 < threshold <= 1:
         raise ValueError("min-visible-sample-ratio must be > 0 and <= 1")
 
     required = report.get("required_visible_elements")
     violations = report.get("violations")
     if not isinstance(required, list) or not isinstance(violations, list):
         raise ValueError("final-frame report is missing required visibility evidence")
+    if not all(isinstance(row, Mapping) for row in [*required, *violations]):
+        raise ValueError("final-frame visibility evidence contains an invalid row")
 
     existing_elements = {
         row.get("element")
@@ -32,16 +49,22 @@ def apply_policy(report: dict, min_visible_sample_ratio: float) -> dict:
 
     for row in required:
         hit_test = row.get("hit_test") or {}
+        if not isinstance(hit_test, Mapping):
+            raise ValueError("final-frame hit-test evidence must be a JSON object")
+
         sample_count = int(hit_test.get("sample_count") or 0)
         visible_samples = int(hit_test.get("visible_samples") or 0)
         ratio = visible_samples / sample_count if sample_count > 0 else None
         row["visible_sample_ratio"] = rounded(ratio) if ratio is not None else None
 
         reasons = row.setdefault("reasons", [])
+        if not isinstance(reasons, list):
+            raise ValueError("final-frame visibility reasons must be a list")
+
         is_partial_occlusion = (
             ratio is not None
             and 0 < visible_samples < sample_count
-            and ratio < min_visible_sample_ratio
+            and ratio < threshold
         )
         if not is_partial_occlusion:
             continue
@@ -57,7 +80,8 @@ def apply_policy(report: dict, min_visible_sample_ratio: float) -> dict:
             existing_elements.add(row.get("element"))
 
     report["final_frame_policy"] = {
-        "min_visible_sample_ratio": min_visible_sample_ratio,
+        "threshold_id": THRESHOLD_ID,
+        "min_visible_sample_ratio": threshold,
         "sampling_basis": "browser-hit-test",
     }
     report["verdict"] = "FAIL" if violations else "PASS"
@@ -70,7 +94,8 @@ def main(argv=None) -> int:
     parser.add_argument(
         "--min-visible-sample-ratio",
         type=float,
-        default=DEFAULT_MIN_VISIBLE_SAMPLE_RATIO,
+        default=None,
+        help="Override the visual-contract threshold for diagnostics only",
     )
     args = parser.parse_args(argv)
 
@@ -82,7 +107,7 @@ def main(argv=None) -> int:
     try:
         report = json.loads(path.read_text())
         apply_policy(report, args.min_visible_sample_ratio)
-    except (ValueError, json.JSONDecodeError) as exc:
+    except (TypeError, ValueError, json.JSONDecodeError) as exc:
         print(str(exc), file=sys.stderr)
         return 2
 
@@ -101,9 +126,10 @@ def main(argv=None) -> int:
         )
         return 1
 
+    threshold = report["final_frame_policy"]["min_visible_sample_ratio"]
     print(
         "final-frame policy: PASS "
-        f"(minimum visible hit-test ratio {args.min_visible_sample_ratio:.0%})"
+        f"(minimum visible hit-test ratio {threshold:.0%})"
     )
     return 0
 
