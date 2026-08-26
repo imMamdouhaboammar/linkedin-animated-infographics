@@ -4,7 +4,7 @@ from __future__ import annotations
 import copy
 import unittest
 
-from scripts.final_frame_policy import apply_policy
+from scripts.final_frame_policy import apply_policy, contract_min_visible_sample_ratio
 
 
 BASE = {
@@ -25,6 +25,9 @@ BASE = {
 
 
 class FinalFramePolicyTests(unittest.TestCase):
+    def test_default_threshold_comes_from_visual_contract(self):
+        self.assertEqual(contract_min_visible_sample_ratio(), 0.60)
+
     def test_fully_visible_required_element_passes(self):
         report = apply_policy(copy.deepcopy(BASE), 0.60)
         self.assertEqual(report["verdict"], "PASS")
@@ -70,6 +73,22 @@ class FinalFramePolicyTests(unittest.TestCase):
             apply_policy(copy.deepcopy(BASE), 0)
         with self.assertRaises(ValueError):
             apply_policy(copy.deepcopy(BASE), 1.1)
+
+    def test_non_object_root_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "JSON object"):
+            apply_policy([], 0.60)
+
+    def test_null_required_row_is_rejected(self):
+        source = copy.deepcopy(BASE)
+        source["required_visible_elements"] = [None]
+        with self.assertRaisesRegex(ValueError, "invalid row"):
+            apply_policy(source, 0.60)
+
+    def test_non_object_hit_test_is_rejected(self):
+        source = copy.deepcopy(BASE)
+        source["required_visible_elements"][0]["hit_test"] = "broken"
+        with self.assertRaisesRegex(ValueError, "hit-test evidence"):
+            apply_policy(source, 0.60)
 
 
 if __name__ == "__main__":
