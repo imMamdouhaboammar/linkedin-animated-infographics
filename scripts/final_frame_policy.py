@@ -9,6 +9,11 @@ import sys
 from collections.abc import Mapping
 from pathlib import Path
 
+# Keep direct CLI execution consistent with the rest of the render scripts. When Python
+# executes ``scripts/final_frame_policy.py`` directly, sys.path starts at ``scripts/``;
+# add the repository root so package imports resolve the same way they do in unit tests.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from scripts.visual_contract import VisualContract
 
 THRESHOLD_ID = "final_frame.min_visible_sample_ratio"
