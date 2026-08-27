@@ -263,6 +263,18 @@
         "skills/artboard/references/design-systems.md": ["font"]
       }
     },
+    "final_frame.min_visible_sample_ratio": {
+      "value": 0.6,
+      "comparison": "min",
+      "unit": "ratio",
+      "severity": "blocking",
+      "gate": "final-frame-visibility",
+      "measured_by": "scripts/final_frame_policy.py",
+      "rationale": "Required final-frame content must remain visible at at least three of the five browser hit-test sample points. Below 60% sampled visibility, a headline or CTA is severely occluded even when it is not fully covered.",
+      "doc_assertions": {
+        "skills/render/references/qa-gates.md": ["60%"]
+      }
+    },
     "gif.max_bytes": {
       "value": 5242880,
       "comparison": "max",
@@ -290,6 +302,7 @@
     "motion-budget": "Per-frame changed-pixel cost stays inside the encode budget.",
     "font-determinism": "The typography that rendered is recorded, so it can never differ silently between machines.",
     "loop-close": "The loop seam is indistinguishable from any other frame boundary.",
+    "final-frame-visibility": "Required final-frame content remains substantially visible in the exported composition.",
     "file-budget": "The encoded GIF fits the delivery budget."
   }
 }
