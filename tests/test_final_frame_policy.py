@@ -2,11 +2,17 @@
 from __future__ import annotations
 
 import copy
+import json
+import subprocess
+import sys
+import tempfile
 import unittest
+from pathlib import Path
 
 from scripts.final_frame_policy import apply_policy, contract_min_visible_sample_ratio
 
 
+ROOT = Path(__file__).resolve().parents[1]
 BASE = {
     "required_visible_elements": [
         {
@@ -89,6 +95,20 @@ class FinalFramePolicyTests(unittest.TestCase):
         source["required_visible_elements"][0]["hit_test"] = "broken"
         with self.assertRaisesRegex(ValueError, "hit-test evidence"):
             apply_policy(source, 0.60)
+
+    def test_cli_executes_directly_from_repository_root(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            report_path = Path(tmpdir) / "final-frame.json"
+            report_path.write_text(json.dumps(BASE))
+            result = subprocess.run(
+                [sys.executable, "scripts/final_frame_policy.py", str(report_path)],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("final-frame policy: PASS", result.stdout)
 
 
 if __name__ == "__main__":
