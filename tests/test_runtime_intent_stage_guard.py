@@ -27,7 +27,7 @@ class RuntimeIntentStageGuardTests(unittest.TestCase):
         return workspace
 
     def _error_codes(self, result):
-        self.assertNotEqual(0, result.returncode, result.stdout + result.stderr)
+        self.assertEqual(2, result.returncode, result.stdout + result.stderr)
         payload = json.loads(result.stderr.strip().splitlines()[-1])
         self.assertFalse(payload.get("ok", True))
         return [e["code"] for e in payload["errors"]]
@@ -72,6 +72,13 @@ class RuntimeIntentStageGuardTests(unittest.TestCase):
         payload = json.loads(result.stdout)
         self.assertEqual("post-critic", payload["stage"])
         self.assertFalse(payload["cacheable"])
+
+    def test_consumer_only_stage_still_prepares(self):
+        ws = self._workspace()
+        result = self._run("prepare", "--intent", "share-demo", "--stage", "community-publisher", workspace=ws)
+        self.assertEqual(0, result.returncode, result.stderr)
+        payload = json.loads(result.stdout)
+        self.assertEqual("community-publisher", payload["stage"])
 
     def test_store_also_rejects_unknown_stage(self):
         ws = self._workspace()
