@@ -36,11 +36,20 @@ def allowed_intents(data):
     return set(data["router"].get("routes", {}))
 
 def allowed_worker_stages(data):
-    """Executable worker stages = artifact producers, excluding parent: pseudo-stages."""
-    return {
-        producer for producer in (c.get("producer") for c in data["artifacts"].values())
-        if producer and not str(producer).startswith("parent:")
-    }
+    """Executable worker stages from artifact producers and consumers.
+
+    Exclude parent: pseudo-stages so they cannot become prepare/store path components.
+    Consumer-only workers (e.g. community-publisher) must remain valid.
+    """
+    stages = set()
+    for contract in data["artifacts"].values():
+        producer = contract.get("producer")
+        if producer and not str(producer).startswith("parent:"):
+            stages.add(producer)
+        for consumer in contract.get("consumers", []):
+            if consumer and not str(consumer).startswith("parent:"):
+                stages.add(consumer)
+    return stages
 
 def identifier_is_unsafe(value):
     if not isinstance(value, str) or not value:
