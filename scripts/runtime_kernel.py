@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import argparse, hashlib, json, shutil
+import argparse, hashlib, json, shutil, sys
 from pathlib import Path
 
 from runtime_directory_digest import directory_descriptor
@@ -30,6 +30,58 @@ def regs():
         "research": load(ROOT / "research/capability-notes/gates.json")["gates"],
         "plugin": load(ROOT / ".claude-plugin/plugin.json"),
     }
+
+
+def allowed_intents(data):
+    return set(data["router"].get("routes", {}))
+
+def allowed_worker_stages(data):
+    """Executable worker stages = artifact producers, excluding parent: pseudo-stages."""
+    return {
+        producer for producer in (c.get("producer") for c in data["artifacts"].values())
+        if producer and not str(producer).startswith("parent:")
+    }
+
+def identifier_is_unsafe(value):
+    if not isinstance(value, str) or not value:
+        return True
+    if value in (".", "..") or ".." in value:
+        return True
+    if "/" in value or "\\" in value or "\0" in value:
+        return True
+    if value.startswith("~"):
+        return True
+    return False
+
+def validate_intent_stage(intent, stage, data):
+    """Reject unknown/unsafe intent and stage before any filesystem use."""
+    errors = []
+    intents = allowed_intents(data)
+    stages = allowed_worker_stages(data)
+    if identifier_is_unsafe(intent):
+        errors.append({"code": "unsafe-intent", "message": "intent identifier is empty or path-like"})
+    elif intent not in intents:
+        errors.append({"code": "unknown-intent", "message": f"unknown intent: {intent}", "allowed": sorted(intents)})
+    if not isinstance(stage, str) or not stage:
+        errors.append({"code": "unsafe-stage", "message": "stage identifier is empty or path-like"})
+    elif stage.startswith("parent:"):
+        errors.append({
+            "code": "parent-stage-rejected",
+            "message": f"parent pseudo-stage is not an executable worker stage: {stage}",
+        })
+    elif identifier_is_unsafe(stage):
+        errors.append({"code": "unsafe-stage", "message": "stage identifier is empty or path-like"})
+    elif stage not in stages:
+        errors.append({"code": "unknown-stage", "message": f"unknown stage: {stage}", "allowed": sorted(stages)})
+    return errors
+
+def reject_invalid_ids(intent, stage, data):
+    errors = validate_intent_stage(intent, stage, data)
+    if not errors:
+        return 0
+    print(json.dumps({"ok": False, "errors": errors}, separators=(",", ":")), file=sys.stderr)
+    return 2
+
 
 def request(workspace, data):
     path = workspace / data["runtime"]["capsule_root"] / "request.json"
@@ -104,7 +156,10 @@ def restore(workspace, stage, key, data, enabled):
     return restored
 
 def prepare(intent, stage, workspace):
-    data=regs(); cap,key,req=capsule(intent,stage,workspace,data); enabled,reason=effective_cache(stage,req,data)
+    data=regs()
+    if (code := reject_invalid_ids(intent, stage, data)):
+        return code
+    cap,key,req=capsule(intent,stage,workspace,data); enabled,reason=effective_cache(stage,req,data)
     cap["cache_key"]=key; raw=len(canon(cap)); limit=cap["budget"].get("capsule_max_bytes"); cap["budget_status"]="over-soft-budget" if limit and raw>limit else "within-soft-budget"
     target=workspace/data["runtime"]["capsule_root"]/f"{stage}.json"; target.parent.mkdir(parents=True,exist_ok=True); target.write_text(json.dumps(cap,indent=2,ensure_ascii=False)+"\n")
     restored=restore(workspace,stage,key,data,enabled)
@@ -112,7 +167,10 @@ def prepare(intent, stage, workspace):
     return 0
 
 def store(intent, stage, workspace):
-    data=regs(); cap,key,req=capsule(intent,stage,workspace,data); enabled,reason=effective_cache(stage,req,data)
+    data=regs()
+    if (code := reject_invalid_ids(intent, stage, data)):
+        return code
+    cap,key,req=capsule(intent,stage,workspace,data); enabled,reason=effective_cache(stage,req,data)
     if not enabled: print(json.dumps({"stage":stage,"stored":False,"reason":reason})); return 0
     entry=cache_path(workspace,stage,key,data); saved={}
     for rel in cap["outputs"]:
