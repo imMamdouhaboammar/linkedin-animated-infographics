@@ -64,6 +64,14 @@ class SupplyChainPolicyTests(unittest.TestCase):
             self.assertRegex(ref, r"^[0-9a-f]{40}$", action)
             self.assertRegex(version, r"^v\d+\.\d+\.\d+$", action)
 
+    def test_plugin_scanner_uses_explicit_runner_and_timeout(self):
+        workflow = SCANNER_WORKFLOW.read_text()
+        self.assertNotIn("ubuntu-latest", workflow)
+        self.assertEqual(1, workflow.count("runs-on: ubuntu-24.04"))
+        timeout = re.search(r"(?m)^    timeout-minutes: (\d+)$", workflow)
+        self.assertIsNotNone(timeout)
+        self.assertLessEqual(int(timeout.group(1)), 15)
+
     def test_dependabot_maintains_runtime_and_action_dependencies(self):
         text = DEPENDABOT.read_text()
         self.assertIn('package-ecosystem: "pip"', text)
