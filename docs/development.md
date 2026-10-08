@@ -41,6 +41,8 @@ For Claude packaging:
 claude plugin validate .
 ```
 
+The Plugin Scanner workflow (`.github/workflows/scanner.yml`) runs on the same explicit `ubuntu-24.04` image as the other gates, pins its actions to commit SHAs with the upstream version in a trailing comment, and has a 10-minute job timeout (normal scans take well under a minute). A timeout shows up as a cancelled job, not as a scanner finding.
+
 CI also performs the same-repository Claude Marketplace add/list/install smoke. OpenAI packaging is validated structurally and for host-isolation contracts by `scripts/validate_codex_plugin.py`; any Codex CLI marketplace smoke must use documented non-interactive behavior rather than a fabricated install command.
 
 ## Visual intelligence contracts
