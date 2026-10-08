@@ -5,6 +5,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 VALIDATION_WORKFLOW = ROOT / ".github" / "workflows" / "claude-plugin-validation.yml"
 SECURITY_WORKFLOW = ROOT / ".github" / "workflows" / "security.yml"
+SCANNER_WORKFLOW = ROOT / ".github" / "workflows" / "scanner.yml"
 DEPENDABOT = ROOT / ".github" / "dependabot.yml"
 RUNTIME_REQUIREMENTS = ROOT / "requirements-runtime.txt"
 SECURITY_REQUIREMENTS = ROOT / "requirements-security.txt"
@@ -51,6 +52,17 @@ class SupplyChainPolicyTests(unittest.TestCase):
         self.assertGreaterEqual(len(action_refs), 5)
         for ref in action_refs:
             self.assertRegex(ref, r"^[0-9a-f]{40}$", ref)
+
+    def test_plugin_scanner_pins_actions_to_documented_commit_shas(self):
+        workflow = SCANNER_WORKFLOW.read_text()
+        uses = re.findall(r"uses:\s+([^@\s]+)@(\S+)(?:\s+#\s+(\S+))?", workflow)
+        self.assertEqual(
+            ["actions/checkout", "hashgraph-online/ai-plugin-scanner-action"],
+            [action for action, _, _ in uses],
+        )
+        for action, ref, version in uses:
+            self.assertRegex(ref, r"^[0-9a-f]{40}$", action)
+            self.assertRegex(version, r"^v\d+\.\d+\.\d+$", action)
 
     def test_dependabot_maintains_runtime_and_action_dependencies(self):
         text = DEPENDABOT.read_text()
