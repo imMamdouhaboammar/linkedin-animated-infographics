@@ -72,3 +72,48 @@ English:
 - **No Keyword Gradient Fills**: Use font weight or primary palette tokens instead
 - **No Card Over-Nesting**: Limit visual containment to a single defined boundary
 - **No Neon Purple on Dark Themes**: Maintain restrained contrast palettes with approved contrast ratios
+
+## 6 Mandatory TypeScript & JavaScript Code Anti-Slop Discipline
+
+Enforce the `install-anti-slop` Oxlint rules on all TypeScript/JavaScript projects:
+- `anti-slop/no-chained-type-assertions`: Reject chained type assertions (`as unknown as T`)
+- `anti-slop/no-conditional-empty-object-spread`: Reject `{ ...(cond ? a : {}) }`
+- `anti-slop/no-known-value-widening`: Reject widening known types to generic primitives
+- `anti-slop/no-module-mocking`: Reject runtime monkey-patching and module mocking in tests
+- `anti-slop/no-unsafe-dictionary-type`: Enforce strict key/value record typing
+- `anti-slop/require-safety-comment-for-type-assertion`: Mandate safety rationale for every explicit type cast
+
+## 7 Universal Doctrine: Direct Payload and Zero Affordance Narration Invariant
+
+Transition directly from domain headers to technical payloads (tables, code blocks, schemas, media) with zero transitional conversational fluff:
+- **Zero Affordance Coaching**: Never explain standard interaction mechanics (e.g. how to play videos, expand accordions, copy blocks, or scroll); label items strictly by technical identity, never user action coaching
+- **Zero Conversational Preambles**: Ban meta-transitional phrases before payloads (e.g. "The following table outlines...", "In this section we will explore...", "Below is a code snippet...")
+- **Zero Bilingual Title-Stacking**: Never duplicate identical concepts side-by-side in English and Arabic in headings (`Title · الترجمة`)
+- **Zero Mechanical Hand-Holding**: Never treat engineers as computer novices (e.g. "open your terminal", "save the file before running")
+- **Zero Superlative Inflation**: Never label mundane artifacts as "Live Interactive Showcases" or small scripts as "Enterprise Scalable Pipelines"
+
+## 8 The Zero-Obviousness & Anti-Truism Doctrine
+
+High engineering discipline values silence over noise:
+- **Zero Syntax Narration**: Ban line-by-line syntax commentary in comments (`// increment counter`, `// check if null`, `// return result`); comments must document non-obvious invariants and architectural rationales only
+- **Zero Tautological Docstrings**: Ban docstrings merely restating function/variable names without adding error contracts, concurrency guarantees, units, or null semantics
+- **Zero Patronizing UI Microcopy**: Ban redundant instructional labels beneath obvious UI inputs and buttons (`"Please enter your email"`, `"Click here to submit"`)
+- **Zero Speculative Platform Dossiers**: Never invent unprompted third-party platform submission guides, fake reviewer packets, or dead distribution URLs (`docs/OPENAI_SUBMISSION.md`, `platform.openai.com/plugins`)
+
+## 9 The Canonical Grounding & Authority Invariant
+
+Never improvise scaffolding or dependencies:
+- Rely strictly on official CLI installers, generators, and starter boilerplates (`uv init`, `cargo new`, `bun create`) rather than hand-crafting directory layouts or configs from LLM memory
+- Query package registries and pin verified latest stable releases strictly; never guess outdated version strings
+
+## 10 The Audience Boundary & Zero Meta-Leakage Invariant
+
+Complete physical isolation between internal engineering context and external user-facing surfaces:
+- Never render internal developer instructions, agent reminders, mock data banners, or architecture apologies into user-visible DOM/JSX
+- Keep internal engineering commentary strictly in code comments or design docs
+
+## 11 The Visual Restraint & Single-Purpose Density Invariant
+
+Every visual element must justify its existence through a distinct, non-redundant primary user objective:
+- Prohibit cosmetic clutter masquerading as functionality: overcrowded headers/navbars, multi-row icon spam, repetitive buttons, nested card shells, ornamental badges
+- Prioritize purposeful white space, visual hierarchy, and quiet functional utility
